@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 
 from .logger import Logger
+from .epic_tenant import EpicTenant
 
 import requests
 import json
@@ -39,6 +40,8 @@ class ContainerPlatformClient(object):
         self.api_host = api_host
         self.api_port = api_port  
         self.use_ssl  = use_ssl
+        
+        self.epic_tenant = EpicTenant(self)
 
     def create_session(self):
 
@@ -62,48 +65,6 @@ class ContainerPlatformClient(object):
         return response
 
     
-    def _request_headers(self):
-
-        auth_token = self.get_auth_token()
-        access_token = auth_token['access_token']
-        token_type = auth_token['token_type']
-
-        headers = {
-            'accept': 'application/json',
-            'authorization': '{} {}'.format(token_type, access_token),
-            'cache-control': 'no-cache', 
-            'content-type': 'application/json'
-            }
-        return headers
-
-    def _request(self, url, http_method='get', data=None, description='', create_auth_headers=True, additional_headers={}):
-        if create_auth_headers:
-            headers = self._request_headers()
-        else:
-            headers = {}
-            
-        all_headers = {}
-        all_headers.update(headers)
-        all_headers.update(additional_headers)
-        
-        try:
-            if http_method == 'get':
-                response = requests.get(url, headers=all_headers)
-            elif http_method == 'post':
-                response = requests.post(url, headers=all_headers, data=json.dumps(data))
-            elif http_method == 'delete':
-                response = requests.delete(url, headers=all_headers)
-
-            response.raise_for_status()
-        except requests.exceptions.RequestException as e:
-            self.log.debug('{} : {} {} : {} {}'.format(description, http_method, url, response.status_code, response.text))
-            raise ContainerPlatformClientException(message=response.text)
-
-        try:
-            self.log.debug('{} : {} {} : {} {}'.format(description, http_method, url, response.status_code, json.dumps(response.json())))
-        except ValueError:
-            self.log.debug('{} : {} {} : {} {}'.format(description, http_method, url, response.status_code, response.text))
-
-        return response
+   
 
     

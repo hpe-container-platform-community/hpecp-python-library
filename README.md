@@ -36,9 +36,11 @@ client = ContainerPlatformClient(username='hpecp_username',
                                 password='hpecp_password', 
                                 api_host='hpecp_controller_ip', 
                                 api_port='hpecp_controller_port',
-                                ssl=True)
+                                use_ssl=True)
 
 client.create_session()
 
-# TODO - more to follow ...
+# TODO - the following hasn't been implemented yet
+
+client.epic_tenant.list()
 ```
