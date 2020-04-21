@@ -10,7 +10,9 @@ This project is a prototype - not much to see here yet!
 
 ## Installation
 
+```
 pip install --upgrade git+https://github.com/hpe-container-platform-community/hpecp-client@master
+```
 
 ## Logging
 
