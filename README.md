@@ -32,7 +32,7 @@ from hpecp import ContainerPlatformClient
 client = ContainerPlatformClient(username='hpecp_username', 
                                 password='hpecp_password', 
                                 api_host='hpecp_controller_ip', 
-                                api_port='hpecp_controller_port',
+                                api_port=hpecp_controller_port,
                                 use_ssl=True)
 
 client.create_session()
