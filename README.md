@@ -37,7 +37,5 @@ client = ContainerPlatformClient(username='hpecp_username',
 
 client.create_session()
 
-# TODO - the following hasn't been implemented yet
-
 client.epic_tenant.list()
 ```

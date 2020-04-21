@@ -28,6 +28,8 @@ class ContainerPlatformClient(object):
                  api_host = None,
                  api_port = 8080,
                  use_ssl  = True):
+
+        self.log = Logger().get_logger(self.__class__.__name__)
         
         assert isinstance(username, string_types), "'username' parameter must be of type string"
         assert isinstance(password, string_types), "'password' parameter must be of type string"
@@ -41,16 +43,19 @@ class ContainerPlatformClient(object):
         self.api_port = api_port  
         self.use_ssl  = use_ssl
         
-        self.epic_tenant = EpicTenant(self)
-
-    def create_session(self):
-
         if self.use_ssl:
             scheme = 'https'
         else:
             scheme = 'http'
 
-        url = "{}://{}:{}/api/v1/login".format(scheme, self.api_host, self.api_port)
+        self.base_url = "{}://{}:{}/api/v1".format(scheme, self.api_host, self.api_port)
+
+        # register endpoint modules
+        self.epic_tenant = EpicTenant(self)
+
+    def create_session(self):
+
+        url = self.base_url + "/login"
         auth = { "name": self.username, "password": self.password }
 
         try:
@@ -62,6 +67,49 @@ class ContainerPlatformClient(object):
             raise
 
         self.session_headers = response.headers
+        self.session_id = response.headers['location']
+        return response
+
+    def _request_headers(self):
+
+        headers = {
+            'accept': 'application/json',
+            'X-BDS-SESSION': self.session_id,
+            'cache-control': 'no-cache', 
+            'content-type': 'application/json'
+            }
+        return headers
+
+    def _request(self, url, http_method='get', data=None, description='', create_auth_headers=True, additional_headers={}):
+        if create_auth_headers:
+            headers = self._request_headers()
+        else:
+            headers = {}
+            
+        all_headers = {}
+        all_headers.update(headers)
+        all_headers.update(additional_headers)
+
+        url = url = self.base_url + url
+        
+        try:
+            if http_method == 'get':
+                response = requests.get(url, headers=all_headers, verify=False)
+            elif http_method == 'post':
+                response = requests.post(url, headers=all_headers, data=json.dumps(data), verify=False)
+            elif http_method == 'delete':
+                response = requests.delete(url, headers=all_headers, verify=False)
+
+            response.raise_for_status()
+        except requests.exceptions.RequestException as e:
+            self.log.debug('{} : {} {} : {} {}'.format(description, http_method, url, response.status_code, response.text))
+            raise ContainerPlatformClientException(message=response.text)
+
+        try:
+            self.log.debug('{} : {} {} : {} {}'.format(description, http_method, url, response.status_code, json.dumps(response.json())))
+        except ValueError:
+            self.log.debug('{} : {} {} : {} {}'.format(description, http_method, url, response.status_code, response.text))
+
         return response
 
     

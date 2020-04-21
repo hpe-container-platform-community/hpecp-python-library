@@ -17,10 +17,8 @@ class EpicTenant:
     def __init__(self, client):
         self.client = client
 
-
-    # curl -X GET -H "X-BDS-SESSION:${SESSION_ID}" http://${CONTROLLER_IP}:8080/api/v1/tenant
+    # TODO parse response and populate EpicTenantList object
     def list(self):
-        #url = self.region.rc_endpoint() + '/v1/resource_instances'
-        #response = self.client._request(url=url, http_method='post', description='create_resource_instances', data=data)
-        #return response.json()
-        raise BaseException('Not implemented yet!')
+        # curl -X GET -H "X-BDS-SESSION:${SESSION_ID}" http://${CONTROLLER_IP}:8080/api/v1/tenant
+        response = self.client._request(url='/tenant', http_method='get', description='epic_tenant_list')
+        return response.json()
