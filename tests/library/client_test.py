@@ -29,7 +29,7 @@ class MockResponse:
 class TestAuth(TestCase):
 
     def mocked_requests_get(*args, **kwargs):
-        raise RuntimeError("Unhandle POST request: " + args[0]) 
+        raise RuntimeError("Unhandle GET request: " + args[0]) 
 
     def mocked_requests_post(*args, **kwargs):
         if args[0] == 'https://127.0.0.1:8080/api/v1/login':
