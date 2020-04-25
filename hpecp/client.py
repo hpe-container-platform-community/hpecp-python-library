@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 
 from .logger import Logger
-from .epic_tenant import EpicTenant
+from .epic_tenant import EpicTenantController
 
 import requests
 import json
@@ -51,7 +51,7 @@ class ContainerPlatformClient(object):
         self.base_url = "{}://{}:{}/api/v1".format(scheme, self.api_host, self.api_port)
 
         # register endpoint modules
-        self.epic_tenant = EpicTenant(self)
+        self.epic_tenant = EpicTenantController(self)
 
     def create_session(self):
 

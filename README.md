@@ -28,16 +28,17 @@ Typical valid values are `ERROR`, `WARNING`, `INFO`, `DEBUG`. For a full list of
 
 ## Basic Usage
 
-```
+```py3
 from hpecp import ContainerPlatformClient
 
-client = ContainerPlatformClient(username='hpecp_username', 
-                                password='hpecp_password', 
-                                api_host='hpecp_controller_ip', 
-                                api_port=hpecp_controller_port,
+client = ContainerPlatformClient(username='admin', 
+                                password='admin123', 
+                                api_host='127.0.0.1', 
+                                api_port=8080,
                                 use_ssl=True)
 
 client.create_session()
 
-client.epic_tenant.list()
+tenants = client.epic_tenant.list()
+print( "{} | {} | {}".format(tenants[1].name, tenants[1].description, tenants[1].status) )
 ```
