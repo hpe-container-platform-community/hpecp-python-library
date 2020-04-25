@@ -17,8 +17,6 @@ class EpicTenant():
     def __init__(self, json):
         self.json = json
 
-    def get_obj(self): return self.json
-
     @property
     def status(self): return self.json['status']
 

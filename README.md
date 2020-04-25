@@ -42,5 +42,7 @@ client.create_session()
 tenants = client.epic_tenant.list()
 
 for tenant in tenants:
-    print( "{:>16} | {:>16} | {:>10}".format(tenant.name, tenant.description, tenant.status) )
+    print( "{:>16} | {:>40} | {:>10}".format(tenant.name, tenant.description, tenant.status) )
+
+client.epic_tenant.list()[0].json
 ```
