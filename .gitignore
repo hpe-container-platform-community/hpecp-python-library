@@ -105,3 +105,4 @@ vcap*.json
 .DS_Store
 
 hpecp.egg-info/
+.coverage

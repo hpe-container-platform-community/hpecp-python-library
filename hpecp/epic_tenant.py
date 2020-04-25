@@ -26,25 +26,6 @@ class EpicTenant():
     @property
     def description(self): return self.json['label']['description']
 
-
-        #"{u'_embedded': {u'tenants': 
-        # 
-        # [{u'status': u'ready', u'features': 
-        #       {u'ml_project': False, u'kubernetes_access': False}, 
-        #   u'persistent_supported': True, u'member_key_available': u'all_admins', u'quota': 
-        #       {}, u'cluster_isolation_supported': True, 
-        #   u'inusequota': 
-        #       {u'disk': 0, u'cores': 0, u'memory': 0, u'persistent': 0, u'gpus': 0}, 
-        #   u'external_user_groups': [], u'gpu_usage_supported': True, 
-        #   u'_links': 
-        #       {u'self': {u'href': u'/api/v1/tenant/1'}}, 
-        #   u'filesystem_mount_supported': True, u'tenant_enforcements': [], 
-        #   u'label': 
-        #       {u'name': u'Site Admin', u'description': u'Site Admin Tenant for BlueData clusters'}, 
-        #   u'constraints_supported': False, 
-        #   u'tenant_storage_quota_supported': False}, 
-        #  {u'status': u'ready', u'tenant_type': u'docker', u'features': {u'ml_project': False, u'kubernetes_access': False}, u'persistent_supported': True, u'member_key_available': u'all_admins', u'quota': {}, u'cluster_isolation_supported': True, u'inusequota': {u'disk': 0, u'cores': 0, u'memory': 0, u'persistent': 0, u'gpus': 0}, u'external_user_groups': [], u'gpu_usage_supported': True, u'_links': {u'self': {u'href': u'/api/v1/tenant/2'}}, u'filesystem_mount_supported': True, u'tenant_enforcements': [], u'label': {u'name': u'Demo Tenant', u'description': u'Demo Tenant for BlueData Clusters'}, u'constraints_supported': True, u'tenant_storage_quota_supported': True, u'qos_multiplier': 1}]}, u'_links': {u'self': {u'href': u'/api/v1/tenant'}}}"
-
 class EpicTenantList():
 
     def __init__(self, json):
