@@ -40,5 +40,7 @@ client = ContainerPlatformClient(username='admin',
 client.create_session()
 
 tenants = client.epic_tenant.list()
-print( "{} | {} | {}".format(tenants[1].name, tenants[1].description, tenants[1].status) )
+
+for tenant in tenants:
+    print( "{:>16} | {:>16} | {:>10}".format(tenant.name, tenant.description, tenant.status) )
 ```
