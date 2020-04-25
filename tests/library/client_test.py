@@ -28,10 +28,27 @@ class MockResponse:
 
 class TestAuth(TestCase):
 
-    def mocked_requests_get(*args, **kwargs):
-        raise RuntimeError("Unhandle GET request: " + args[0]) 
-
     def mocked_requests_post(*args, **kwargs):
+        if args[0] == 'http://127.0.0.1:8080/api/v1/login':
+            return MockResponse (
+                json_data = { }, 
+                status_code = 200,
+                headers = { "location": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71" }
+                )
+        raise RuntimeError("Unhandle POST request: " + args[0]) 
+
+    @patch('requests.post', side_effect=mocked_requests_post)
+    def test_auth(self, mock_post):
+
+        client = ContainerPlatformClient(
+                                username='admin', 
+                                password='admin123', 
+                                api_host='127.0.0.1', 
+                                api_port=8080,
+                                use_ssl=False)
+        client.create_session()
+
+    def mocked_requests_post_ssl(*args, **kwargs):
         if args[0] == 'https://127.0.0.1:8080/api/v1/login':
             return MockResponse (
                 json_data = { }, 
@@ -40,9 +57,9 @@ class TestAuth(TestCase):
                 )
         raise RuntimeError("Unhandle POST request: " + args[0]) 
 
-    @patch('requests.get', side_effect=mocked_requests_get)
-    @patch('requests.post', side_effect=mocked_requests_post)
-    def test_auth(self, mock_get, mock_post):
+    #@patch('requests.get', side_effect=mocked_requests_get)
+    @patch('requests.post', side_effect=mocked_requests_post_ssl)
+    def test_auth_ssl(self, mock_post):
 
         client = ContainerPlatformClient(
                                 username='admin', 
