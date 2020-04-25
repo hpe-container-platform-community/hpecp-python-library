@@ -64,6 +64,12 @@ class TestTentants(TestCase):
 
         tenants = client.epic_tenant.list()
 
-        client.epic_tenant.list()[0].json
+        assert client.epic_tenant.list()[0].json is not None
+
+        assert tenants[0].status == 'ready'
+        assert tenants[0].name == 'Site Admin'
+        assert tenants[0].description == 'Site Admin Tenant for BlueData clusters'
+
+
 
    
