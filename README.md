@@ -6,7 +6,9 @@
 
 ----
 
-This project is a prototype - not much to see here yet!
+```diff
+- This project is a prototype - not much to see here yet!
+```
 
 ## Installation
 
