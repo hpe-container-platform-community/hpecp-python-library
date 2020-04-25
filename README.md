@@ -10,7 +10,7 @@ This project is a prototype - not much to see here yet!
 
 ## Installation
 
-```
+```shell
 pip install --upgrade git+https://github.com/hpe-container-platform-community/hpecp-client@master
 ```
 
@@ -20,7 +20,7 @@ Log level is controlled with the environment variable `LOG_LEVEL`.
 
 You may set it programmatically in your code:
 
-```
+```py3
 os.environ["LOG_LEVEL"] = "DEBUG"
 ```
 
