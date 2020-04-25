@@ -34,7 +34,7 @@ class TestAuth(TestCase):
     def mocked_requests_post(*args, **kwargs):
         if args[0] == 'https://127.0.0.1:8080/api/v1/login':
             return MockResponse (
-                json_data = { "authorization_endpoint": "https://login.ng.bluemix.net/UAALoginServerWAR"}, 
+                json_data = { }, 
                 status_code = 200,
                 headers = { "location": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71" }
                 )
