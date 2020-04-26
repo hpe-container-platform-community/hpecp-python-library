@@ -24,11 +24,22 @@ class ContainerPlatformClientException(Exception):
 class ContainerPlatformClient(object):
 
     def __init__(self, 
-                 username = None, 
-                 password = None,
-                 api_host = None,
-                 api_port = 8080,
-                 use_ssl  = True):
+                 username   = None, 
+                 password   = None,
+                 api_host   = None,
+                 api_port   = 8080,
+                 use_ssl    = True,
+                 verify_ssl = True):
+        """ContainerPlatformClient object.
+
+        Keyword arguments:
+        username   -- HPECP username
+        password   -- HPECP password
+        api_host   -- HPECP api_host
+        api_port   -- HPECP api_port
+        use_ssl    -- Connect to HPECP using SSL: True|False
+        verify_ssl -- Verify the HPECP SSL Certificate? True|False|path to a CA_BUNDLE file or directory with certificates of trusted CAs
+        """
 
         self.log = Logger().get_logger(self.__class__.__name__)
         
@@ -37,12 +48,14 @@ class ContainerPlatformClient(object):
         assert isinstance(api_host, string_types), "'api_host' parameter must be of type string"
         assert isinstance(api_port, int), "'api_port' parameter must be of type int"
         assert isinstance(use_ssl, bool), "'use_ssl' parameter must be of type bool"
+        # TODO - assert verify_ssl
 
         self.username = username
         self.password = password
         self.api_host = api_host
         self.api_port = api_port  
         self.use_ssl  = use_ssl
+        self.verify_ssl = verify_ssl
         
         if self.use_ssl:
             scheme = 'https'
@@ -62,7 +75,7 @@ class ContainerPlatformClient(object):
 
         try:
             # TODO allow verifying the ssl cert
-            response = requests.post(url, json=auth, verify=False)
+            response = requests.post(url, json=auth, verify=self.verify_ssl)
             response.raise_for_status()
         except requests.exceptions.RequestException as e:
             self.log.error('Auth Response: ' + response.text)
@@ -70,7 +83,6 @@ class ContainerPlatformClient(object):
 
         self.session_headers = response.headers
         self.session_id = response.headers['location']
-        return response
 
     def _request_headers(self):
 
@@ -96,11 +108,11 @@ class ContainerPlatformClient(object):
         
         try:
             if http_method == 'get':
-                response = requests.get(url, headers=all_headers, verify=False)
+                response = requests.get(url, headers=all_headers, verify=self.verify_ssl)
             elif http_method == 'post':
-                response = requests.post(url, headers=all_headers, data=json.dumps(data), verify=False)
+                response = requests.post(url, headers=all_headers, data=json.dumps(data), verify=self.verify_ssl)
             elif http_method == 'delete':
-                response = requests.delete(url, headers=all_headers, verify=False)
+                response = requests.delete(url, headers=all_headers, verify=self.verify_ssl)
 
             response.raise_for_status()
         except requests.exceptions.RequestException as e:
