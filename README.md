@@ -107,4 +107,22 @@ client.epic_tenant.auth_setup(
             }]}
     )
 
+################
+# Add K8S host # 
+################
+
+with open('/certs/controller.prv_key', 'r') as f:
+    prvkey = f.read()
+
+client.worker.add_k8shost(
+            data ={
+                "ipaddr":"10.1.0.176",
+                "credentials":{
+                    "type":"ssh_key_access",
+                    "ssh_key_data":prvkey
+                },
+                "tags":[]
+            }
+    )
+
 ```

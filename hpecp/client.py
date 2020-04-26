@@ -3,6 +3,7 @@ from __future__ import absolute_import
 from .logger import Logger
 from .epic_tenant import EpicTenantController
 from .config import ConfigController
+from .worker import WorkerController
 
 import requests
 import json
@@ -67,6 +68,7 @@ class ContainerPlatformClient(object):
         # register endpoint modules
         self.epic_tenant = EpicTenantController(self)
         self.config = ConfigController(self)
+        self.worker = WorkerController(self)
 
     def create_session(self):
 
