@@ -72,6 +72,8 @@ class TestTentants(TestCase):
         assert tenants[0].name == 'Site Admin'
         assert tenants[0].description == 'Site Admin Tenant for BlueData clusters'
 
+        assert [ tenant.tenant_id for tenant in client.epic_tenant.list() ] == [ 1, 2 ]
+
 
 
    

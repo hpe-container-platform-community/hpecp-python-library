@@ -38,6 +38,12 @@ class EpicTenantList():
     def __getitem__(self, item):
         return self.tenants[item]
 
+    def next(self):
+        if not self.tenants:
+           raise StopIteration
+        return self.tenants.pop(0)
+
+    # TODO do we need  both next() and __next__()?
     def __next__(self):
         if not self.tenants:
            raise StopIteration
