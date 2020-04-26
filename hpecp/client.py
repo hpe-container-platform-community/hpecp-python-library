@@ -2,6 +2,7 @@ from __future__ import absolute_import
 
 from .logger import Logger
 from .epic_tenant import EpicTenantController
+from .config import ConfigController
 
 import requests
 import json
@@ -48,14 +49,15 @@ class ContainerPlatformClient(object):
         else:
             scheme = 'http'
 
-        self.base_url = "{}://{}:{}/api/v1".format(scheme, self.api_host, self.api_port)
+        self.base_url = "{}://{}:{}/api".format(scheme, self.api_host, self.api_port)
 
         # register endpoint modules
         self.epic_tenant = EpicTenantController(self)
+        self.config = ConfigController(self)
 
     def create_session(self):
 
-        url = self.base_url + "/login"
+        url = self.base_url + "/v1/login"
         auth = { "name": self.username, "password": self.password }
 
         try:

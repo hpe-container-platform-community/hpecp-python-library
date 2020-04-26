@@ -48,7 +48,7 @@ class EpicTenantController:
         self.client = client
 
     def list(self):
-        response = self.client._request(url='/tenant', http_method='get', description='epic_tenant_list')
+        response = self.client._request(url='/v1/tenant', http_method='get', description='epic_tenant_list')
         tenants = EpicTenantList(response.json()['_embedded']['tenants'])
         return tenants
 

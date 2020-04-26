@@ -31,6 +31,7 @@ class TestTentants(TestCase):
     def mocked_requests_get(*args, **kwargs):
         if args[0] == 'https://127.0.0.1:8080/api/v1/tenant':
             return MockResponse  (
+                #  This json data was captured from calling the /tenants api on a clean HPECP 5.0 installation.
                 json_data = 
                     {'_embedded': {'tenants': [
                             {'status': 'ready', 'features': {'ml_project': False, 'kubernetes_access': False}, 'persistent_supported': True, 'member_key_available': 'all_admins', 'quota': {}, 'cluster_isolation_supported': True, 'inusequota': {'disk': 0, 'cores': 0, 'memory': 0, 'persistent': 0, 'gpus': 0}, 'external_user_groups': [], 'gpu_usage_supported': True, '_links': {'self': {'href': '/api/v1/tenant/1'}}, 'filesystem_mount_supported': True, 'tenant_enforcements': [],  'label':  {'name': 'Site Admin', 'description': 'Site Admin Tenant for BlueData clusters'}, 'constraints_supported': False, 'tenant_storage_quota_supported': False},
