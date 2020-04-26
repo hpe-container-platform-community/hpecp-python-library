@@ -3,6 +3,7 @@ from __future__ import absolute_import
 from .logger import Logger
 
 from datetime import datetime, timedelta
+from operator import attrgetter
 import time
 import requests
 import json
@@ -18,6 +19,9 @@ class EpicTenant():
         self.json = json
 
     @property
+    def tenant_id(self): return int(self.json['_links']['self']['href'].split('/')[-1])
+
+    @property
     def status(self): return self.json['status']
 
     @property
@@ -29,7 +33,7 @@ class EpicTenant():
 class EpicTenantList():
 
     def __init__(self, json):
-        self.tenants = [EpicTenant(t) for t in json]
+        self.tenants = sorted([EpicTenant(t) for t in json],  key=attrgetter('tenant_id'))
 
     def __getitem__(self, item):
         return self.tenants[item]
@@ -37,7 +41,7 @@ class EpicTenantList():
     def __next__(self):
         if not self.tenants:
            raise StopIteration
-        return self.tenants.pop()
+        return self.tenants.pop(0)
 
     def __iter__(self):
         return self
