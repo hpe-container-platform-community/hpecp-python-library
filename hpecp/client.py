@@ -74,7 +74,6 @@ class ContainerPlatformClient(object):
         auth = { "name": self.username, "password": self.password }
 
         try:
-            # TODO allow verifying the ssl cert
             response = requests.post(url, json=auth, verify=self.verify_ssl)
             response.raise_for_status()
         except requests.exceptions.RequestException as e:

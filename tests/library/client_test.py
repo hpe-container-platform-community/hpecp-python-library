@@ -57,7 +57,6 @@ class TestAuth(TestCase):
                 )
         raise RuntimeError("Unhandle POST request: " + args[0]) 
 
-    #@patch('requests.get', side_effect=mocked_requests_get)
     @patch('requests.post', side_effect=mocked_requests_post_ssl)
     def test_auth_ssl(self, mock_post):
 
@@ -68,3 +67,28 @@ class TestAuth(TestCase):
                                 api_port=8080,
                                 use_ssl=True)
         client.create_session()
+
+
+    def mocked_requests_post_return_500(*args, **kwargs):
+        if args[0] == 'https://127.0.0.1:8080/api/v1/login':
+            return MockResponse (
+                json_data = { }, 
+                status_code = 500,
+                headers = {},
+                raise_for_status_flag = True
+                )
+        raise RuntimeError("Unhandle POST request: " + args[0]) 
+
+    @patch('requests.post', side_effect=mocked_requests_post_return_500)
+    def test_auth_ssl_with_error(self, mock_post):
+
+        client = ContainerPlatformClient(
+                                username='admin', 
+                                password='admin123', 
+                                api_host='127.0.0.1', 
+                                api_port=8080,
+                                use_ssl=True)
+
+        with self.assertRaises(requests.exceptions.HTTPError):
+            client.create_session()
+        
