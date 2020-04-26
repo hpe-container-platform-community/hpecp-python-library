@@ -108,6 +108,8 @@ class ContainerPlatformClient(object):
         try:
             if http_method == 'get':
                 response = requests.get(url, headers=all_headers, verify=self.verify_ssl)
+            elif http_method == 'put':
+                response = requests.put(url, headers=all_headers, data=json.dumps(data), verify=self.verify_ssl)
             elif http_method == 'post':
                 response = requests.post(url, headers=all_headers, data=json.dumps(data), verify=self.verify_ssl)
             elif http_method == 'delete':

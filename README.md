@@ -30,6 +30,14 @@ Typical valid values are `ERROR`, `WARNING`, `INFO`, `DEBUG`. For a full list of
 
 ## Basic Usage
 
+For development purpose, you can setup a tunnel to the controller:
+
+```bash
+./generated/ssh_controller.sh -L 8080:localhost:8080
+```
+
+Python commands:
+
 ```py3
 from hpecp import ContainerPlatformClient
 
@@ -42,6 +50,10 @@ client = ContainerPlatformClient(username='admin',
 
 client.create_session()
 
+################################
+# Retrieve the list of Tenants #
+################################
+
 for tenant in client.epic_tenant.list():
     # shorten name and description fields if they are too long
     name = (tenant.name[0:18] + '..') if len(tenant.name) > 20 else tenant.name
@@ -49,7 +61,10 @@ for tenant in client.epic_tenant.list():
     
     print( "{:>2} | {:>20} | {:>40} | {:>10}".format( tenant.tenant_id, name, description, tenant.status) )
 
-# Configure HPE CP global authentication
+###################################
+# Configure global authentication #
+###################################
+
 active_directory_host = "10.1.0.77"
 client.config.auth(
             { "external_identity_server":  {
@@ -64,4 +79,32 @@ client.config.auth(
                 "type":"Active Directory",
                 "port":636 }
             })
+
+###################################
+# Configure Tenant authentication #
+###################################
+
+# Set up only the AD Admins Group
+client.epic_tenant.auth_setup(
+        tenant_id = 2,
+        data =  {"external_user_groups":[{ 
+            "role":"/api/v1/role/2", # 2 = Admins
+            "group":"CN=DemoTenantAdmins,CN=Users,DC=samdom,DC=example,DC=com"
+            }]}
+    )
+
+# Set up both the AD Admins and Members
+client.epic_tenant.auth_setup(
+        tenant_id = 2,
+        data =  {"external_user_groups":[
+            {
+                "role":"/api/v1/role/2", # 2 = Admins
+                "group":"CN=DemoTenantAdmins,CN=Users,DC=samdom,DC=example,DC=com"
+            },
+            { 
+                "role":"/api/v1/role/3", # 3 = Members
+                "group":"CN=DemoTenantUsers,CN=Users,DC=samdom,DC=example,DC=com"
+            }]}
+    )
+
 ```
