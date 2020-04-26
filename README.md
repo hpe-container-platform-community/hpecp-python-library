@@ -16,18 +16,6 @@
 pip install --upgrade git+https://github.com/hpe-container-platform-community/hpecp-client@master
 ```
 
-## Logging
-
-Log level is controlled with the environment variable `LOG_LEVEL`.
-
-You may set it programmatically in your code:
-
-```py3
-os.environ["LOG_LEVEL"] = "DEBUG"
-```
-
-Typical valid values are `ERROR`, `WARNING`, `INFO`, `DEBUG`. For a full list of values, see [here](https://docs.python.org/3/library/logging.html#logging-levels)
-
 ## Basic Usage
 
 For development purpose, you can setup a tunnel to the controller:
