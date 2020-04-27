@@ -128,7 +128,7 @@ class ContainerPlatformClient(object):
             except:
                 response_info = response.text
 
-            raise ContainerPlatformClientException(message=e + " " + response_info)
+            raise ContainerPlatformClientException(message=response_info)
 
         try:
             self.log.debug('{} : {} {} : {} {}'.format(description, http_method, url, response.status_code, json.dumps(response.json())))
