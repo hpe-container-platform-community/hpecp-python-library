@@ -125,7 +125,7 @@ class ContainerPlatformClient(object):
 
             response.raise_for_status()
         except requests.exceptions.RequestException as e:
-            self.log.debug('{} : {} {}'.format(description, http_method, url))
+            self.log.error('{} : {} {}'.format(description, http_method, url))
 
             try:
                 response_info = response.json()
