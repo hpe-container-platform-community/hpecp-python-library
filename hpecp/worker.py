@@ -3,6 +3,7 @@ from __future__ import absolute_import
 from .logger import Logger
 
 from datetime import datetime, timedelta
+from operator import attrgetter
 import time
 import requests
 import json
@@ -12,10 +13,57 @@ try:
 except ImportError:
     from urllib.parse import quote  # Python 3+
 
+class WorkerK8s():
+
+    def __init__(self, json):
+        self.json = json
+
+    @property
+    def worker_id(self): return int(self.json['_links']['self']['href'].split('/')[-1])
+
+    @property
+    def status(self): return self.json['status']
+
+    @property
+    def hostname(self): return self.json['hostname']
+
+    @property
+    def ipaddr(self): return self.json['ipaddr']
+
+    @property
+    def href(self): return self.json['_links']['self']['href']
+
+class WorkerK8sList():
+
+    def __init__(self, json):
+        self.tenants = sorted([WorkerK8s(t) for t in json],  key=attrgetter('worker_id'))
+
+    def __getitem__(self, item):
+        return self.tenants[item]
+
+    def next(self):
+        if not self.tenants:
+           raise StopIteration
+        return self.tenants.pop(0)
+
+    # TODO do we need  both next() and __next__()?
+    def __next__(self):
+        if not self.tenants:
+           raise StopIteration
+        return self.tenants.pop(0)
+
+    def __iter__(self):
+        return self
+
 class WorkerController:
 
     def __init__(self, client):
         self.client = client
+
+    def get_k8shosts(self):
+        response = self.client._request(url='/v2/worker/k8shost/', http_method='get', description='worker/get_k8shosts')
+        hosts = WorkerK8sList(response.json()['_embedded']['k8shosts'])
+        return hosts
 
     def add_k8shost(self, data):
         '''
