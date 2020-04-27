@@ -28,5 +28,5 @@ class LicenseController:
         response = self.client._request(url='/v2/hpelicense', http_method='post', data=data, description='license/register')
         return response
 
-# TODO
-# DELETE /api/v2/hpelicense/ABCD..License_Key..ABCD/
+# TODO:
+# DELETE /api/v2/hpelicense/ABCD..License_Key..ABCD/
