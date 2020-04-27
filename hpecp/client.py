@@ -122,7 +122,13 @@ class ContainerPlatformClient(object):
             response.raise_for_status()
         except requests.exceptions.RequestException as e:
             self.log.debug('{} : {} {}'.format(description, http_method, url))
-            raise ContainerPlatformClientException(message=e)
+
+            try:
+                response_info = response.json()
+            except:
+                response_info = response.text
+
+            raise ContainerPlatformClientException(message=e + " " + response_info)
 
         try:
             self.log.debug('{} : {} {} : {} {}'.format(description, http_method, url, response.status_code, json.dumps(response.json())))
