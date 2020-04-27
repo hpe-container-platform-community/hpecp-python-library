@@ -49,3 +49,7 @@ for tenant in client.epic_tenant.list():
     
     print( "{:>2} | {:>20} | {:>40} | {:>10}".format( tenant.tenant_id, name, description, tenant.status) )
 ```
+
+## Examples
+
+See [./docs/scripts](./docs/scripts) for more examples.
