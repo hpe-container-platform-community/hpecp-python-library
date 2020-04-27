@@ -35,16 +35,12 @@ client = ContainerPlatformClient(username='admin',
                                 api_port=8080,
                                 use_ssl=True,
                                 verify_ssl='/certs/hpecp-ca-cert.pem')
-# Login
-client.create_session()
 
-# Retrieve the list of Tenants
-for tenant in client.epic_tenant.list():
-    # shorten name and description fields if they are too long
-    name = (tenant.name[0:18] + '..') if len(tenant.name) > 20 else tenant.name
-    description = (tenant.description[0:38] + '..') if len(tenant.description) > 40 else tenant.description
-    
-    print( "{:>2} | {:>20} | {:>40} | {:>10}".format( tenant.tenant_id, name, description, tenant.status) )
+client.create_session() # Login
+
+# Print the list of Tenants
+for tenant in client.epic_tenant.list():    
+    print( "{:>2} | {:>10} | {}".format( tenant.tenant_id, tenant.status, tenant.name ) )
 ```
 
 ## Examples
