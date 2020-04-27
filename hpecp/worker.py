@@ -7,6 +7,7 @@ from operator import attrgetter
 import time
 import requests
 import json
+from tabulate import tabulate
 
 try:
     from urllib import quote  # Python 2.X
@@ -15,8 +16,18 @@ except ImportError:
 
 class WorkerK8s():
 
+    @staticmethod
+    def __class_dir__():
+        return [ 'worker_id', 'status', 'hostname', 'ipaddr', 'href' ]
+
     def __init__(self, json):
         self.json = json
+    
+    def __dir__(self):
+        return WorkerK8s.__class_dir__()
+
+    def __getitem__(self, item):
+        return getattr(self, self.__dir__()[item])
 
     @property
     def worker_id(self): return int(self.json['_links']['self']['href'].split('/')[-1])
@@ -33,9 +44,13 @@ class WorkerK8s():
     @property
     def href(self): return self.json['_links']['self']['href']
 
+    def __len__(self):
+        return len(dir(self))
+
 class WorkerK8sList():
 
     def __init__(self, json):
+        self.json = json
         self.tenants = sorted([WorkerK8s(t) for t in json],  key=attrgetter('worker_id'))
 
     def __getitem__(self, item):
@@ -54,6 +69,12 @@ class WorkerK8sList():
 
     def __iter__(self):
         return self
+
+    def __len__(self):
+        return len(self.tenants)
+
+    def tabulate(self):
+        return tabulate(self, headers=WorkerK8s.__class_dir__())
 
 class WorkerController:
 
@@ -79,6 +100,23 @@ class WorkerController:
             },
         '''
         response = self.client._request(url='/v2/worker/k8shost/', http_method='post', data=data, description='worker/add_k8shost')
+        return response
+
+    def add_gateway(self, data):
+        '''
+        Example:
+            data ={
+                "ipaddr":"10.1.0.105",
+                "credentials":{
+                    "type":"ssh_key_access",
+                    "ssh_key_data":"-----BEGIN RSA PRIVATE KEY-----...-----END RSA PRIVATE KEY-----\n"
+                },
+                "tags":[],
+                "proxy_nodes_hostname":"ip-10-1-0-19.eu-west-2.compute.internal",
+                "purpose":"proxy"
+            },
+        '''
+        response = self.client._request(url='/v1/workers/', http_method='post', data=data, description='worker/add_gateway')
         return response
 
 

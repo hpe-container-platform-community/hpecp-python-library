@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from hpecp import ContainerPlatformClient
+from tabulate import tabulate
 
 client = ContainerPlatformClient(username='admin', 
                                 password='admin123', 
@@ -13,5 +14,5 @@ client.create_session()
 
 hosts = client.worker.get_k8shosts()
 
-for h in hosts:
-    print("{} | {} | {} | {} | {}".format(h.worker_id, h.hostname, h.ipaddr, h.status, h.href))
+print( client.worker.get_k8shosts().tabulate() )
+ 
