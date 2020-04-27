@@ -74,7 +74,7 @@ class WorkerK8sList():
         return len(self.tenants)
 
     def tabulate(self):
-        return tabulate(self, headers=WorkerK8s.__class_dir__())
+        return tabulate(self, headers=WorkerK8s.__class_dir__(), tablefmt="pretty")
 
 class WorkerController:
 
