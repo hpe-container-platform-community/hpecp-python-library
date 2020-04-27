@@ -29,4 +29,4 @@ class LicenseController:
         return response
 
 # TODO
-# 'DELETE' /api/v2/hpelicense/ABCD..License_Key..ABCD/
+# DELETE /api/v2/hpelicense/ABCD..License_Key..ABCD/
