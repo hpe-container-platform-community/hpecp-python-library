@@ -4,6 +4,7 @@ from .logger import Logger
 from .epic_tenant import EpicTenantController
 from .config import ConfigController
 from .worker import WorkerController
+from .license import LicenseController
 
 import requests
 import json
@@ -69,6 +70,7 @@ class ContainerPlatformClient(object):
         self.epic_tenant = EpicTenantController(self)
         self.config = ConfigController(self)
         self.worker = WorkerController(self)
+        self.license = LicenseController(self)
 
     def create_session(self):
 
