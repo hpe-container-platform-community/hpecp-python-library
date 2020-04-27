@@ -90,7 +90,7 @@ class WorkerController:
         '''
         Example:
         
-            data ={
+            data = {
                 "ipaddr":"10.1.0.105",
                 "credentials":{
                     "type":"ssh_key_access",
@@ -105,7 +105,7 @@ class WorkerController:
     def add_gateway(self, data):
         '''
         Example:
-            data ={
+            data = {
                 "ipaddr":"10.1.0.105",
                 "credentials":{
                     "type":"ssh_key_access",

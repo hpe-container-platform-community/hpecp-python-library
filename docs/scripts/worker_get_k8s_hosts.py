@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 from hpecp import ContainerPlatformClient
-from tabulate import tabulate
 
 client = ContainerPlatformClient(username='admin', 
                                 password='admin123', 

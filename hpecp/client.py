@@ -111,12 +111,16 @@ class ContainerPlatformClient(object):
         
         try:
             if http_method == 'get':
+                self.log.debug('{} : {} {}'.format(description, http_method, url))
                 response = requests.get(url, headers=all_headers, verify=self.verify_ssl)
             elif http_method == 'put':
+                self.log.debug('{} : {} {} {}'.format(description, http_method, url, data))
                 response = requests.put(url, headers=all_headers, data=json.dumps(data), verify=self.verify_ssl)
             elif http_method == 'post':
+                self.log.debug('{} : {} {} {}'.format(description, http_method, url, data))
                 response = requests.post(url, headers=all_headers, data=json.dumps(data), verify=self.verify_ssl)
             elif http_method == 'delete':
+                self.log.debug('{} : {} {}'.format(description, http_method, url))
                 response = requests.delete(url, headers=all_headers, verify=self.verify_ssl)
 
             response.raise_for_status()
