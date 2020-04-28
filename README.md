@@ -46,3 +46,15 @@ for tenant in client.epic_tenant.list():
 ## Examples
 
 See [./docs/scripts](./docs/scripts) for more examples.
+
+## Logging
+
+Log level is controlled with the environment variable `LOG_LEVEL`.
+
+You may set it programmatically in your code:
+
+```python
+os.environ["LOG_LEVEL"] = "DEBUG"
+```
+
+Typical valid values are ERROR, WARNING, INFO, DEBUG. For a full list of values, see [here](https://docs.python.org/3/library/logging.html#logging-levels)
