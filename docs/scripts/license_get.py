@@ -12,11 +12,7 @@ client = ContainerPlatformClient(username='admin',
 client.create_session()
 
 print("*" * 80)
-
 print( "Platform ID: " + client.license.get_platform_id() )
-
 print("*" * 80)
-
 print( client.license.get_license() )
-
 print("*" * 80)

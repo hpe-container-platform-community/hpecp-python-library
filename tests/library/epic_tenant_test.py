@@ -61,17 +61,23 @@ class TestTentants(TestCase):
                                 api_host='127.0.0.1', 
                                 api_port=8080,
                                 use_ssl=True)
+
+        # Makes POST Request: https://127.0.0.1:8080/api/v1/login
         client.create_session()
 
+        # Makes GET Request: https://127.0.0.1:8080/api/v1/tenant
         tenants = client.epic_tenant.list()
 
+        # Test that json response is saved in each EpicTenant object
         assert client.epic_tenant.list()[0].json is not None
 
+        # Test EpicTenantList subscriptable access and EpicTenant property setters
         assert tenants[0].tenant_id == 1
         assert tenants[0].status == 'ready'
         assert tenants[0].name == 'Site Admin'
         assert tenants[0].description == 'Site Admin Tenant for BlueData clusters'
 
+        # Test EpicTenantList iterators
         assert [ tenant.tenant_id for tenant in client.epic_tenant.list() ] == [ 1, 2 ]
 
 

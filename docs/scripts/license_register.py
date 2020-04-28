@@ -12,6 +12,9 @@ client = ContainerPlatformClient(username='admin',
 
 client.create_session()
 
+# TODO provide an example for uploading a license to controller over ssh
+#      to /srv/bluedata/license/LICENSE
+
 try:
     print( client.license.register_license("/srv/bluedata/license/LICENSE") )
     time.sleep(5)
