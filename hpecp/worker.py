@@ -155,7 +155,7 @@ class WorkerController:
         except polling.TimeoutException:
             raise Exception(
                     "Timed out waiting for status: '{}' on K8S Worker: {}".format(
-                        WorkerK8sList.status_name[status], worker_id))
+                        WorkerK8sStatus.status_name(status), worker_id))
 
     def add_k8shost(self, data):
         '''
@@ -177,7 +177,7 @@ class WorkerController:
         '''
         Example:
             data = {
-                "ipaddr":"10.1.0.105",
+                "ip":"10.1.0.105",
                 "credentials":{
                     "type":"ssh_key_access",
                     "ssh_key_data":"-----BEGIN RSA PRIVATE KEY-----...-----END RSA PRIVATE KEY-----\n"
