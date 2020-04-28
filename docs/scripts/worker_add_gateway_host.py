@@ -26,7 +26,7 @@ if gateway_host_ip is None:
 with open('/certs/controller.prv_key', 'r') as f:
     prvkey = f.read()
 
-response = client.worker.add_gateway(
+gw_id = client.worker.add_gateway(
             data ={
                 "ip":gateway_host_ip,
                 "credentials":{
@@ -39,4 +39,5 @@ response = client.worker.add_gateway(
             }
     )
 
-print(response)
+# wait 10 minutes for gateway to  have state of 'installed'
+client.worker.wait_for_gateway_state(id=gw_id, timeout_secs=600, state=['installed'])
