@@ -58,3 +58,6 @@ os.environ["LOG_LEVEL"] = "DEBUG"
 ```
 
 Typical valid values are ERROR, WARNING, INFO, DEBUG. For a full list of values, see [here](https://docs.python.org/3/library/logging.html#logging-levels)
+
+- INFO: Significant Events
+- DEBUG: API Request Parameters

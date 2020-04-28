@@ -1,15 +1,12 @@
 #!/usr/bin/env python3
 
 from hpecp import ContainerPlatformClient
-from hpecp.worker import WorkerK8sStatus
-
 import os
 os.environ["LOG_LEVEL"] = "INFO"
 
 # Disable the SSL warnings - don't do this on productions!  
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
 
 client = ContainerPlatformClient(username='admin', 
                                 password='admin123', 
@@ -20,14 +17,5 @@ client = ContainerPlatformClient(username='admin',
 
 client.create_session()
 
-host = client.worker.get_k8shost(worker_id=2)
-print("Found host: " + str(host))
-
-try:
-	client.worker.wait_for_k8shost_status(worker_id=2, timeout_secs=5, status=WorkerK8sStatus.configured)
-	print("Host: 2 has status 'configured'")
-except:
-	pass
-
-client.worker.wait_for_k8shost_status(worker_id=2, timeout_secs=5, status=WorkerK8sStatus.deleting)
-print("Host: 2 has status 'deleting'")
+hosts = client.worker.get_gateways()
+print( hosts[0]['state'] )

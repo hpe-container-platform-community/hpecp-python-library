@@ -148,7 +148,7 @@ class WorkerController:
         try:
             polling.poll(
                 lambda: self.get_k8shost(worker_id).status == status,
-                step=60,
+                step=10,
                 poll_forever=False,
                 timeout=timeout_secs
             )
@@ -189,3 +189,42 @@ class WorkerController:
         '''
         response = self.client._request(url='/api/v1/workers/', http_method='post', data=data, description='worker/add_gateway')
         return response
+
+    def get_gateways(self):
+        """
+        See: https://<<controller_ip>>/apidocs/site-admin-api.html for the schema of the  response object
+        """
+        response = self.client._request(url='/api/v1/workers/', http_method='get', description='worker/get_gateways')
+        return [ worker for worker in response.json()["_embedded"]["workers"] if worker['purpose'] == 'proxy' ]
+
+    def get_gateway(self, id):
+        """
+        See: https://<<controller_ip>>/apidocs/site-admin-api.html for the schema of the  response object
+        """
+        response = self.client._request(url='/api/v1/workers/', http_method='get', description='worker/get_gateways')
+        workers = response.json()["_embedded"]["workers"]
+        return [ worker for worker in workers if worker['purpose'] == 'proxy' and worker['_links']['self']['href'].split('/')[-1] == str(id) ][0]
+
+    def wait_for_gateway_state(self, id, state=[], timeout_secs=60):
+        """
+        Uses: https://github.com/justiniso/polling/blob/master/polling.py
+
+        status: WorkerK8sStatus value, e.g. WorkerK8sStatus.configured
+
+        raises: Exception
+        """
+        assert timeout_secs >= 0, "'timeout_secs' must be >= 0"
+
+        try:
+            polling.poll(
+                lambda: self.get_gateway(id)['state'] in state,
+                step=10,
+                poll_forever=False,
+                timeout=timeout_secs
+            )
+        except polling.TimeoutException:
+            message = "Timed out waiting for status: '{}' on Gateway ID: {}".format(state, id)
+            self.client.log.error(message)
+            raise Exception(message)
+
+        self.client.log.info("Gateway ID: {} was detected to have state {}".format(id, state))
