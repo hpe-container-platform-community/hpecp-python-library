@@ -17,8 +17,8 @@ client = ContainerPlatformClient(username='admin',
 
 client.create_session()
 
-gateway_host_ip = '10.1.0.30' # None  # Set to  your Host IP Address
-gateway_host_dns = "ip-10-1-0-30.eu-west-2.compute.internal"
+gateway_host_ip = '10.1.0.233' # None  # Set to  your Host IP Address
+gateway_host_dns = "ip-10-1-0-233.eu-west-2.compute.internal"
 
 if gateway_host_ip is None:
     raise Exception("Aborting. You must set the variable 'gateway_host_ip'.")
@@ -28,7 +28,7 @@ with open('/certs/controller.prv_key', 'r') as f:
 
 response = client.worker.add_gateway(
             data ={
-                "ipaddr":gateway_host_ip,
+                "ip":gateway_host_ip,
                 "credentials":{
                     "type":"ssh_key_access",
                     "ssh_key_data":prvkey

@@ -173,6 +173,7 @@ class WorkerController:
         response = self.client._request(url='/api/v2/worker/k8shost/', http_method='post', data=data, description='worker/add_k8shost')
         return response
 
+    # TODO return gateway object
     def add_gateway(self, data):
         '''
         Example:
@@ -186,9 +187,11 @@ class WorkerController:
                 "proxy_nodes_hostname":"ip-10-1-0-19.eu-west-2.compute.internal",
                 "purpose":"proxy"
             },
+
+            Returns: gateway ID
         '''
         response = self.client._request(url='/api/v1/workers/', http_method='post', data=data, description='worker/add_gateway')
-        return response
+        return response.headers['location'].split('/')[-1]
 
     def get_gateways(self):
         """

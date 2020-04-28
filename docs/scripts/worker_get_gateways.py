@@ -17,5 +17,9 @@ client = ContainerPlatformClient(username='admin',
 
 client.create_session()
 
-hosts = client.worker.get_gateways()
-print( hosts[0]['state'] )
+host = client.worker.get_gateways()[0]
+print("Gateway: {} | {} | {} | {}".format( 
+        host['_links']['self']['href'], 
+        host['ip'], 
+        host['purpose'], 
+        host['state'] ))
