@@ -8,6 +8,7 @@ import time
 import requests
 import json
 from tabulate import tabulate
+import polling
 
 try:
     from urllib import quote  # Python 2.X
@@ -19,6 +20,13 @@ class WorkerK8s():
     @staticmethod
     def __class_dir__():
         return [ 'worker_id', 'status', 'hostname', 'ipaddr', 'href' ]
+
+    def __repr__(self):
+        return "<WorkerK8S worker_id:{} status:{} ipaddr:{}>".format( self.worker_id, self.status, self.ipaddr)
+
+    def __str__(self):
+        return "WorkerK8s(worker_id={}, status={}, ipaddr={})".format(
+                    self.worker_id, self.status, self.ipaddr)
 
     def __init__(self, json):
         self.json = json
@@ -88,6 +96,27 @@ class WorkerController:
         response = self.client._request(url='/v2/worker/k8shost/', http_method='get', description='worker/get_k8shosts')
         hosts = WorkerK8sList(response.json()['_embedded']['k8shosts'])
         return hosts
+
+    def get_k8shost(self, worker_id):
+        """
+        See: https://<<controller_ip>>/apidocs/site-admin-api.html for the schema of the  response object
+        """
+        response = self.client._request(url='/v2/worker/k8shost/{}'.format(worker_id), http_method='get', description='worker/get_k8shosts')
+        host = WorkerK8s(response.json())
+        return host
+
+    def wait_for_k8shost_status(self, worker_id, status=None, timeout_secs=60):
+        assert status is not None, "'status' must be provided"
+        assert timeout_secs >= 0, "'timeout_secs' must be >= 0"
+        try:
+            polling.poll(
+                lambda: self.get_k8shost(worker_id).status == status,
+                step=60,
+                poll_forever=False,
+                timeout=timeout_secs
+            )
+        except polling.TimeoutException:
+            raise TimeoutError("Timed out waiting for status: '{}' on K8S Worker: {}".format(status, worker_id))
 
     def add_k8shost(self, data):
         '''

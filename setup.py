@@ -8,7 +8,7 @@ setup(
   url='https://github.com/hpe-container-platform-community/hpecp-client',
   packages = ['hpecp'],
   keywords = '',
-  install_requires=[ 'requests', 'tabulate' ],
+  install_requires=[ 'requests', 'tabulate', 'futures; python_version == "2.7"', 'polling' ],
   test_suite='nose.collector',
   tests_require=['nose'],
   classifiers=[

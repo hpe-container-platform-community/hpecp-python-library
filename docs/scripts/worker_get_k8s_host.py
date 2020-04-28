@@ -13,8 +13,10 @@ client = ContainerPlatformClient(username='admin',
 
 client.create_session()
 
-hosts = client.worker.get_k8shosts()
-print( "Host ID: {} status '{}'".format(hosts[0].worker_id, hosts[0].status))
+host = client.worker.get_k8shost(worker_id=2)
+print("Found host: " + str(host))
 
-print( client.worker.get_k8shosts().tabulate() )
- 
+client.worker.wait_for_k8shost_status(worker_id=2, timeout_secs=5, status='configured')
+print("Host: 2 has status 'configured'")
+
+client.worker.wait_for_k8shost_status(worker_id=2, timeout_secs=5, status='blah')
