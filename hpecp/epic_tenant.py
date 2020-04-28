@@ -58,13 +58,13 @@ class EpicTenantController:
         self.client = client
 
     def list(self):
-        response = self.client._request(url='/v1/tenant', http_method='get', description='epic_tenant_list')
+        response = self.client._request(url='/api/v1/tenant', http_method='get', description='epic_tenant_list')
         tenants = EpicTenantList(response.json()['_embedded']['tenants'])
         return tenants
 
     def auth_setup(self, tenant_id, data):
         self.client._request(
-            url='/v1/tenant/{}?external_user_groups'.format(tenant_id), 
+            url='/api/v1/tenant/{}?external_user_groups'.format(tenant_id), 
             http_method='put', 
             data=data,
             description='epic_tenant_auth'

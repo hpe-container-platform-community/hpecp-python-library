@@ -34,4 +34,4 @@ class ConfigController:
                 "port":636 }
             }
         '''
-        self.client._request(url='/v2/config/auth', http_method='post', data=data, description='config/auth')
+        self.client._request(url='/api/v2/config/auth', http_method='post', data=data, description='config/auth')

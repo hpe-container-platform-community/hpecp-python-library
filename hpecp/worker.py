@@ -15,6 +15,28 @@ try:
 except ImportError:
     from urllib.parse import quote  # Python 3+
 
+class WorkerK8sStatus():
+    
+    bundle = 1
+    installing = 2
+    installed = 3
+    ready = 4
+    unlicensed = 5
+    configuring = 6
+    configured = 7
+    error = 8
+    sysinfo = 9 
+    unconfiguring = 10 
+    deleting = 11
+    storage_pending = 12 
+    storage_configuring = 13
+    storage_error = 14
+
+    @staticmethod
+    def status_name(index):
+        items = {v: k for k, v in WorkerK8sStatus.__dict__.items()}
+        return items[index]
+
 class WorkerK8s():
 
     @staticmethod
@@ -93,7 +115,7 @@ class WorkerController:
         """
         See: https://<<controller_ip>>/apidocs/site-admin-api.html for the schema of the  response object
         """
-        response = self.client._request(url='/v2/worker/k8shost/', http_method='get', description='worker/get_k8shosts')
+        response = self.client._request(url='/api/v2/worker/k8shost/', http_method='get', description='worker/get_k8shosts')
         hosts = WorkerK8sList(response.json()['_embedded']['k8shosts'])
         return hosts
 
@@ -101,13 +123,28 @@ class WorkerController:
         """
         See: https://<<controller_ip>>/apidocs/site-admin-api.html for the schema of the  response object
         """
-        response = self.client._request(url='/v2/worker/k8shost/{}'.format(worker_id), http_method='get', description='worker/get_k8shosts')
+        response = self.client._request(url='/api/v2/worker/k8shost/{}'.format(worker_id), http_method='get', description='worker/get_k8shosts')
         host = WorkerK8s(response.json())
         return host
 
     def wait_for_k8shost_status(self, worker_id, status=None, timeout_secs=60):
+        """
+        Uses: https://github.com/justiniso/polling/blob/master/polling.py
+
+        status: WorkerK8sStatus value, e.g. WorkerK8sStatus.configured
+
+        raises: Exception
+        """
         assert status is not None, "'status' must be provided"
+        #TODO assert status is WorkerK8sStatus value
         assert timeout_secs >= 0, "'timeout_secs' must be >= 0"
+
+        # current_status = self.get_k8shost(worker_id).status
+
+        # # if we aren't configuring,  we aren't going to change state
+        # if current_status.find('configuring') < 0:
+        #     raise Exception('Host status is: {} - not polling for an update'.format(current_status))
+
         try:
             polling.poll(
                 lambda: self.get_k8shost(worker_id).status == status,
@@ -116,7 +153,9 @@ class WorkerController:
                 timeout=timeout_secs
             )
         except polling.TimeoutException:
-            raise TimeoutError("Timed out waiting for status: '{}' on K8S Worker: {}".format(status, worker_id))
+            raise Exception(
+                    "Timed out waiting for status: '{}' on K8S Worker: {}".format(
+                        WorkerK8sList.status_name[status], worker_id))
 
     def add_k8shost(self, data):
         '''
@@ -131,7 +170,7 @@ class WorkerController:
                 "tags":[]
             },
         '''
-        response = self.client._request(url='/v2/worker/k8shost/', http_method='post', data=data, description='worker/add_k8shost')
+        response = self.client._request(url='/api/v2/worker/k8shost/', http_method='post', data=data, description='worker/add_k8shost')
         return response
 
     def add_gateway(self, data):
@@ -148,5 +187,5 @@ class WorkerController:
                 "purpose":"proxy"
             },
         '''
-        response = self.client._request(url='/v1/workers/', http_method='post', data=data, description='worker/add_gateway')
+        response = self.client._request(url='/api/v1/workers/', http_method='post', data=data, description='worker/add_gateway')
         return response

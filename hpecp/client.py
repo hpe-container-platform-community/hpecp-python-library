@@ -5,6 +5,7 @@ from .epic_tenant import EpicTenantController
 from .config import ConfigController
 from .worker import WorkerController
 from .license import LicenseController
+from .lock import LockController
 
 import requests
 import json
@@ -64,24 +65,29 @@ class ContainerPlatformClient(object):
         else:
             scheme = 'http'
 
-        self.base_url = "{}://{}:{}/api".format(scheme, self.api_host, self.api_port)
+        self.base_url = "{}://{}:{}".format(scheme, self.api_host, self.api_port)
 
         # register endpoint modules
         self.epic_tenant = EpicTenantController(self)
         self.config = ConfigController(self)
         self.worker = WorkerController(self)
         self.license = LicenseController(self)
+        self.lock = LockController(self)
 
     def create_session(self):
 
-        url = self.base_url + "/v1/login"
+        url = self.base_url + "/api/v1/login"
         auth = { "name": self.username, "password": self.password }
 
+        response = None
         try:
             response = requests.post(url, json=auth, verify=self.verify_ssl)
             response.raise_for_status()
         except requests.exceptions.RequestException as e:
-            self.log.error('Auth Response: ' + response.text)
+            if response is not None:
+                self.log.error('Auth Response: ' + response.text)
+            else:
+                self.log.error(e)
             raise
 
         self.session_headers = response.headers

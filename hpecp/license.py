@@ -14,11 +14,11 @@ class LicenseController:
         self.client = client
 
     def get_platform_id(self):
-        response = self.client._request(url='/v1/license', http_method='get', description='license/get_platform_id')
+        response = self.client._request(url='/api/v1/license', http_method='get', description='license/get_platform_id')
         return response.json()['uuid']
 
     def get_license(self):
-        response = self.client._request(url='/v2/hpelicense', http_method='get', description='license/get_license')
+        response = self.client._request(url='/api/v2/hpelicense', http_method='get', description='license/get_license')
         return response.json()
 
     def upload_license(self, base64enc_license):
@@ -26,7 +26,7 @@ class LicenseController:
 
     def register_license(self, server_filename):
         data = { "hpelicense_file": server_filename }
-        response = self.client._request(url='/v2/hpelicense', http_method='post', data=data, description='license/register')
+        response = self.client._request(url='/api/v2/hpelicense', http_method='post', data=data, description='license/register')
         return response
 
     def delete_license(self, license_key):
@@ -35,6 +35,6 @@ class LicenseController:
         except:
             lic = urllib.pathname2url(license_key) # python 3
 
-        response = self.client._request(url='/v2/hpelicense/{}/'.format(lic), http_method='delete', description='license/delete')
+        response = self.client._request(url='/api/v2/hpelicense/{}/'.format(lic), http_method='delete', description='license/delete')
         return response
 
