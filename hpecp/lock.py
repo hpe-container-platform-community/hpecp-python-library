@@ -37,7 +37,7 @@ class LockController:
         # before external locks
         try:
             polling.poll(
-                lambda: len(self.get_locks()['_embedded']['internal_locks']) > 0,
+                lambda: len(self.get_locks()['_embedded']['internal_locks']) == 0,
                 step=60,
                 poll_forever=False,
                 timeout=timeout_secs
