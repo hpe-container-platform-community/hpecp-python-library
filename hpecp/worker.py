@@ -235,7 +235,7 @@ class WorkerController:
 
         try:
             polling.poll(
-                lambda: self.get_gateway(id).state in state,
+                lambda: self.get_gateway(id)['state'] in state,
                 step=10,
                 poll_forever=False,
                 timeout=timeout_secs
