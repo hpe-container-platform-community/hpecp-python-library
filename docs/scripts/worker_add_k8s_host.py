@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from hpecp import ContainerPlatformClient
+from hpecp.worker import WorkerK8sStatus
 
 client = ContainerPlatformClient(username='admin', 
                                 password='admin123', 
@@ -23,7 +24,7 @@ if k8s_host_ip is None:
 with open('/certs/controller.prv_key', 'r') as f:
     prvkey = f.read()
 
-client.worker.add_k8shost(
+worker_id = client.worker.add_k8shost(
             data ={
                 "ipaddr":k8s_host_ip,
                 "credentials":{
@@ -33,3 +34,5 @@ client.worker.add_k8shost(
                 "tags":[]
             }
     )
+
+client.worker.wait_for_k8shost_status(worker_id=worker_id, timeout_secs=600, status=[ WorkerK8sStatus.unlicensed ])

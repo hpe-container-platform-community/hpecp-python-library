@@ -2,6 +2,15 @@
 
 from hpecp import ContainerPlatformClient
 from hpecp.worker import WorkerK8sStatus
+import argparse
+
+parser = argparse.ArgumentParser(description='Get K8S Worker Host.')
+parser.add_argument('worker_id', metavar='worker_id', type=int, nargs=1,
+                   help='worker id (int)')
+
+args = parser.parse_args()
+worker_id = args.worker_id[0]
+
 
 import os
 os.environ["LOG_LEVEL"] = "INFO"
@@ -20,14 +29,20 @@ client = ContainerPlatformClient(username='admin',
 
 client.create_session()
 
-host = client.worker.get_k8shost(worker_id=2)
-print("Found host: " + str(host))
+host = client.worker.get_k8shost(worker_id=worker_id)
+print("Found worker: " + str(host))
 
 try:
-	client.worker.wait_for_k8shost_status(worker_id=2, timeout_secs=5, status=WorkerK8sStatus.configured)
-	print("Host: 2 has status 'configured'")
+    statuses=[ WorkerK8sStatus.configured ]
+    client.worker.wait_for_k8shost_status(worker_id=worker_id, timeout_secs=10, status=statuses)
+    print("Worker {} has status in {}".format(worker_id, WorkerK8sStatus.status_names(statuses)))
 except:
-	pass
+    print("Time out waiting for host {} to have status of {}".format(worker_id, WorkerK8sStatus.status_names(statuses)))
 
-client.worker.wait_for_k8shost_status(worker_id=2, timeout_secs=5, status=WorkerK8sStatus.deleting)
-print("Host: 2 has status 'deleting'")
+try:
+    statuses=[ WorkerK8sStatus.unlicensed ]
+    client.worker.wait_for_k8shost_status(worker_id=worker_id, timeout_secs=40, status=statuses)
+    print("Worker {} has status in {}".format(worker_id, WorkerK8sStatus.status_names(statuses)))
+except:
+    print("Time out waiting for host {} to have status of {}".format(worker_id, WorkerK8sStatus.status_names(statuses)))
+

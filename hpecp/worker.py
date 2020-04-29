@@ -37,6 +37,10 @@ class WorkerK8sStatus():
         items = {v: k for k, v in WorkerK8sStatus.__dict__.items()}
         return items[index]
 
+    @staticmethod
+    def status_names(indices=[]):
+       return [ WorkerK8sStatus.status_name(i) for i in indices ]
+
 class WorkerK8s():
 
     @staticmethod
@@ -127,7 +131,8 @@ class WorkerController:
         host = WorkerK8s(response.json())
         return host
 
-    def wait_for_k8shost_status(self, worker_id, status=None, timeout_secs=60):
+    # TODO rename status parameter to statuses
+    def wait_for_k8shost_status(self, worker_id, status=[], timeout_secs=60):
         """
         Uses: https://github.com/justiniso/polling/blob/master/polling.py
 
@@ -135,8 +140,7 @@ class WorkerController:
 
         raises: Exception
         """
-        assert status is not None, "'status' must be provided"
-        #TODO assert status is WorkerK8sStatus value
+        assert len(status) > 0, "At least one 'status' must be provided"
         assert timeout_secs >= 0, "'timeout_secs' must be >= 0"
 
         # current_status = self.get_k8shost(worker_id).status
@@ -147,15 +151,16 @@ class WorkerController:
 
         try:
             polling.poll(
-                lambda: self.get_k8shost(worker_id).status == status,
+                lambda: self.get_k8shost(worker_id).status in WorkerK8sStatus.status_names(status),
                 step=10,
                 poll_forever=False,
                 timeout=timeout_secs
             )
         except polling.TimeoutException:
+            status_names = [ WorkerK8sStatus.status_name(s) for s in status ]
             raise Exception(
-                    "Timed out waiting for status: '{}' on K8S Worker: {}".format(
-                        WorkerK8sStatus.status_name(status), worker_id))
+                    "Timed out waiting for status(es): {} on K8S Worker: {}".format(
+                        status_names, worker_id))
 
     def add_k8shost(self, data):
         '''
@@ -171,7 +176,15 @@ class WorkerController:
             },
         '''
         response = self.client._request(url='/api/v2/worker/k8shost/', http_method='post', data=data, description='worker/add_k8shost')
-        return response
+        return response.headers['location'].split('/')[-1]
+
+    def set_storage_k8shost(self, worker_id, data):
+        """
+        Example:
+        {"op_spec": {"persistent_disks": ["/dev/nvme2n1"], "ephemeral_disks": ["/dev/nvme1n1"]}, "op": "storage"}
+        """
+        self.client._request(url='/api/v2/worker/k8shost/{}'.format(worker_id), http_method='post', data=data, description='worker/add_k8shost')
+        # no response - just status code
 
     # TODO return gateway object
     def add_gateway(self, data):
@@ -208,6 +221,8 @@ class WorkerController:
         workers = response.json()["_embedded"]["workers"]
         return [ worker for worker in workers if worker['purpose'] == 'proxy' and worker['_links']['self']['href'].split('/')[-1] == str(id) ][0]
 
+    # TODO use an enum like WorkerK8sStatus
+    # TODO rename state parameter to states
     def wait_for_gateway_state(self, id, state=[], timeout_secs=60):
         """
         Uses: https://github.com/justiniso/polling/blob/master/polling.py
@@ -220,7 +235,7 @@ class WorkerController:
 
         try:
             polling.poll(
-                lambda: self.get_gateway(id)['state'] in state,
+                lambda: self.get_gateway(id).state in state,
                 step=10,
                 poll_forever=False,
                 timeout=timeout_secs
