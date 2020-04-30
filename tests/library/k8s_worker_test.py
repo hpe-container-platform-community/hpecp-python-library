@@ -102,7 +102,7 @@ class TestWorkers(TestCase):
         # Test that json response is saved in each WorkerK8s object
         assert client.k8s_worker.get_k8shosts()[0].json is not None
 
-        # Test WorkerK8sList subscriptable access and EpicTenant property setters
+        # Test WorkerK8sList subscriptable access and property setters
         assert workers[0].worker_id == 4
         assert workers[0].status == WorkerK8sStatus.unlicensed.name
         assert workers[0].hostname == 'ip-10-1-0-238.eu-west-2.compute.internal'

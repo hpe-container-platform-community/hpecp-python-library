@@ -5,6 +5,7 @@ from .epic_tenant import EpicTenantController
 from .config import ConfigController
 from .epic_worker import EpicWorkerController
 from .k8s_worker import K8sWorkerController
+from .k8s_cluster import K8sClusterController
 from .license import LicenseController
 from .lock import LockController
 
@@ -73,6 +74,7 @@ class ContainerPlatformClient(object):
         self.config = ConfigController(self)
         self.epic_worker = EpicWorkerController(self)
         self.k8s_worker = K8sWorkerController(self)
+        self.k8s_cluster = K8sClusterController(self)
         self.license = LicenseController(self)
         self.lock = LockController(self)
 
@@ -105,7 +107,7 @@ class ContainerPlatformClient(object):
             }
         return headers
 
-    def _request(self, url, http_method='get', data=None, description='', create_auth_headers=True, additional_headers={}):
+    def _request(self, url, http_method='get', data={}, description='', create_auth_headers=True, additional_headers={}):
         if create_auth_headers:
             headers = self._request_headers()
         else:
@@ -116,7 +118,7 @@ class ContainerPlatformClient(object):
         all_headers.update(additional_headers)
 
         url = url = self.base_url + url
-        
+
         try:
             if http_method == 'get':
                 self.log.debug('{} : {} {}'.format(description, http_method, url))
@@ -133,7 +135,7 @@ class ContainerPlatformClient(object):
 
             response.raise_for_status()
         except requests.exceptions.RequestException as e:
-            self.log.error('{} : {} {}'.format(description, http_method, url))
+            self.log.exception('{} : {} {} Request: {}'.format(description, http_method, url, json.dumps(data)))
 
             try:
                 response_info = response.json()

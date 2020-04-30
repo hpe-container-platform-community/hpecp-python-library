@@ -17,8 +17,8 @@ client = ContainerPlatformClient(username='admin',
 
 client.create_session()
 
-hosts = client.worker.get_k8shosts()
+hosts = client.k8s_worker.get_k8shosts()
 print( "Host ID: {} status '{}'".format(hosts[0].worker_id, hosts[0].status))
 
-print( client.worker.get_k8shosts().tabulate() )
+print( client.k8s_worker.get_k8shosts().tabulate() )
  

@@ -3,20 +3,16 @@
 from hpecp import ContainerPlatformClient
 from hpecp.worker import WorkerK8sStatus
 import argparse
+import os
+import urllib3
 
 parser = argparse.ArgumentParser(description='Get K8S Worker Host.')
-parser.add_argument('worker_id', metavar='worker_id', type=int, nargs=1,
-                   help='worker id (int)')
-
+parser.add_argument('worker_id', metavar='worker_id', type=int, nargs=1, help='worker id (int)')
 args = parser.parse_args()
 worker_id = args.worker_id[0]
 
-
-import os
 os.environ["LOG_LEVEL"] = "INFO"
-
 # Disable the SSL warnings - don't do this on productions!  
-import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
