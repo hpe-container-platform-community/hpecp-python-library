@@ -34,6 +34,14 @@ class APIException(Exception):
         self.request_data = request_data
         super( APIException, self).__init__(message, request_method, request_url, request_data, *args) 
 
+class APIItemNotFoundException(APIException):
+    def __init__(self, message, request_method, request_url, request_data=None, *args):
+        self.message = message
+        self.request_method = request_method
+        self.request_url = request_url
+        self.request_data = request_data
+        super( APIException, self).__init__(message, request_method, request_url, request_data, *args) 
+
 class ContainerPlatformClient(object):
 
     def __init__(self, 
@@ -150,7 +158,10 @@ class ContainerPlatformClient(object):
             except:
                 response_info = response.text
 
-            raise APIException(message=response_info, request_method=http_method, request_url=url, request_data=json.dumps(data))
+            if response.status_code == 404:
+                raise APIItemNotFoundException(message=response_info, request_method=http_method, request_url=url, request_data=json.dumps(data))
+            else:
+                raise APIException(message=response_info, request_method=http_method, request_url=url, request_data=json.dumps(data))
 
         try:
             self.log.debug('{} : {} {} : {} {}'.format(description, http_method, url, response.status_code, json.dumps(response.json())))

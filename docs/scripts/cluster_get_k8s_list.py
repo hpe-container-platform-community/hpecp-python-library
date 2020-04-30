@@ -4,7 +4,7 @@ from hpecp import ContainerPlatformClient, APIException
 from hpecp.k8s_cluster import K8sClusterHostConfig
 
 import os
-os.environ["LOG_LEVEL"] = "INFO"
+os.environ["LOG_LEVEL"] = "DEBUG"
 
 # Disable the SSL warnings - don't do this on productions!  
 import urllib3

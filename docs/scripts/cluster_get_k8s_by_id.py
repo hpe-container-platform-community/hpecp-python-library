@@ -23,6 +23,6 @@ client.create_session()
 
 print( client.k8s_cluster.list().tabulate() )
 
-first_cluster_id = client.k8s_cluster.list()[0].id
+first_cluster_id = 21 # client.k8s_cluster.list()[0].id
 
 print( client.k8s_cluster.get(first_cluster_id) )
