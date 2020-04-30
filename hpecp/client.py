@@ -3,7 +3,8 @@ from __future__ import absolute_import
 from .logger import Logger
 from .epic_tenant import EpicTenantController
 from .config import ConfigController
-from .worker import WorkerController
+from .epic_worker import EpicWorkerController
+from .k8s_worker import K8sWorkerController
 from .license import LicenseController
 from .lock import LockController
 
@@ -70,7 +71,8 @@ class ContainerPlatformClient(object):
         # register endpoint modules
         self.epic_tenant = EpicTenantController(self)
         self.config = ConfigController(self)
-        self.worker = WorkerController(self)
+        self.epic_worker = EpicWorkerController(self)
+        self.k8s_worker = K8sWorkerController(self)
         self.license = LicenseController(self)
         self.lock = LockController(self)
 

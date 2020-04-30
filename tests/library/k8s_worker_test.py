@@ -8,6 +8,7 @@ import json
 import requests
 from requests.exceptions import RequestException
 from hpecp import ContainerPlatformClient
+from hpecp.k8s_worker import WorkerK8sStatus
 
 
 class MockResponse:
@@ -96,20 +97,20 @@ class TestWorkers(TestCase):
         client.create_session()
 
         # Makes GET Request: https://127.0.0.1:8080/api/v2/worker/k8shost/
-        workers = client.worker.get_k8shosts()
+        workers = client.k8s_worker.get_k8shosts()
 
         # Test that json response is saved in each WorkerK8s object
-        assert client.worker.get_k8shosts()[0].json is not None
+        assert client.k8s_worker.get_k8shosts()[0].json is not None
 
         # Test WorkerK8sList subscriptable access and EpicTenant property setters
         assert workers[0].worker_id == 4
-        assert workers[0].status == 'unlicensed'
+        assert workers[0].status == WorkerK8sStatus.unlicensed.name
         assert workers[0].hostname == 'ip-10-1-0-238.eu-west-2.compute.internal'
         assert workers[0].ipaddr == '10.1.0.238'
         assert workers[0].href == '/api/v2/worker/k8shost/4'
 
         # Test WorkerK8sList iterators
-        assert [ worker.worker_id for worker in client.worker.get_k8shosts() ] == [ 4, 5 ]
+        assert [ worker.worker_id for worker in client.k8s_worker.get_k8shosts() ] == [ 4, 5 ]
 
  
 
