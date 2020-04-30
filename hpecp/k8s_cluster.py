@@ -67,8 +67,8 @@ class K8sClusterController:
 
         """
         assert isinstance(name, string_types) and len(name) > 0,"'name' must be provided and must be a string"
-        assert description is None or isinstance(description, string_types), "'description' must be a string"
-        assert k8s_version is None or isinstance(k8s_version, string_types), "'k8s_version' must be a string"
+        assert description is None or isinstance(description, string_types), "'description' if provided, must be a string"
+        assert k8s_version is None or isinstance(k8s_version, string_types), "'k8s_version' if provided, must be a string"
         assert isinstance(pod_network_range, string_types), "'pod_network_range' must be a string"
         assert isinstance(service_network_range, string_types), "'service_network_range' must be a string"
         assert isinstance(pod_dns_domain, string_types), "'pod_dns_domain' must be a string"
