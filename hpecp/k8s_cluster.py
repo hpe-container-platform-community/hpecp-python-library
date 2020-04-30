@@ -16,6 +16,111 @@ else:
     string_types = basestring
 
 
+class K8sCluster():
+    """
+    #TODO add fields
+    label required common.label
+    Kubernetes cluster name and optional description.
+
+    k8s_version required string
+    The version of Kubernetes currently on the cluster. type: string required: true
+
+    created_by_user required string
+    The resource path of the EPIC user that submitted the cluster creation.
+
+    created_by_user_name required string
+    The name of the EPIC user that submitted the cluster creation. Note that this name is captured at cluster creation submission time and does not track any subsequent user name changes.
+
+    created_time required integer
+    Timestamp for cluster submission (in the EPIC platform's timezone). Format is POSIX time.
+
+    k8shosts_config required k8s.k8shost_config []
+    List of kubernetes hosts and config information
+
+    admin_kube_config required string
+    admin kube config that can be used with kubectl commands
+
+    dashboard_token required string
+    base64 encoded token that provides admin access to kubernetes dashboard. Token must be decoded prior to using it with dashboard.
+
+    api_endpoint_access required string
+    URL in the form of : specifies endpoint access to kubernetes api server.
+
+    dashboard_endpoint_access required string
+    URL in the form of ":" specifies endpoint access to kubernetes dashboard.
+
+    cert_data required string
+    The public root CA data provided at install time, if applicable. type: k8scluster_read_certs_obj required: false
+
+    status required, one of (ready, creating, updating, upgrading, deleting, error, warning) string
+    Cluster status. Initially this is the status resulting from the launch and configuration of the initial set of nodes. Any future change request that affects the nodes can also change this overall cluster status.
+
+    status_message string
+    Brief elaboration on the cluster status. For transient statuses this can contain progress messages. For error/warning statuses, the type of issue.
+
+    _links required common.resource_links
+    """
+
+    @staticmethod
+    def __class_dir__():
+        return [ 'id', 'status', ]
+
+    def __repr__(self):
+        return "<ClusterK8S id:{} status:{}>".format( self.id, self.status)
+
+    def __str__(self):
+        return "WorkerK8s(id={}, status={})".format(
+                    self.id, self.status)
+
+    def __init__(self, json):
+        self.json = json
+    
+    def __dir__(self):
+        return K8sCluster.__class_dir__()
+
+    def __getitem__(self, item):
+        return getattr(self, self.__dir__()[item])
+
+    @property
+    def id(self): return int(self.json['_links']['self']['href'].split('/')[-1])
+
+    @property
+    def status(self): return self.json['status']
+
+    def __len__(self):
+        return len(dir(self))
+
+class K8sClusterList():
+
+    def __init__(self, json):
+        self.json = json
+        self.tenants = sorted([K8sCluster(t) for t in json],  key=attrgetter('id'))
+
+    def __getitem__(self, item):
+        return self.tenants[item]
+
+    # Python 2
+    def next(self):
+        if not self.tenants:
+           raise StopIteration
+        return self.tenants.pop(0)
+
+    # Python 3
+    def __next__(self):
+        if not self.tenants:
+           raise StopIteration
+        return self.tenants.pop(0)
+
+    def __iter__(self):
+        return self
+
+    def __len__(self):
+        return len(self.tenants)
+
+    def tabulate(self):
+        return tabulate(self, headers=K8sCluster.__class_dir__(), tablefmt="pretty")
+
+
 class K8sClusterHostConfig():
     def __init__(self, node_id, node_role):
         assert isinstance(node_id, int), "'node_id' must be an int"
@@ -46,7 +151,7 @@ class K8sClusterController:
                 persistent_storage_nimble_csi=False,
                 k8shosts_config = [],
                 ):
-        """Send an API Request to create a K8S Cluster.
+        """Create a K8S Cluster.
 
         Args:
             name: required, at least 1 characters
@@ -63,7 +168,7 @@ class K8sClusterController:
             int: The ID for the K8S Cluster
             
         Raises:
-            Exception: TODO - describe
+            APIException
 
         """
         assert isinstance(name, string_types) and len(name) > 0,"'name' must be provided and must be a string"
@@ -97,4 +202,39 @@ class K8sClusterController:
         response = self.client._request(url='/api/v2/k8scluster', http_method='post', data=data, description='k8s_cluster/create')
         return response.headers['Location'].split('/')[-1]
 
- 
+    def list(self):
+        """Retrieve list of K8S Clusters.
+
+        Returns:
+            K8sClusterList: List of K8s Clusters
+            
+        Raises:
+            APIException
+
+        """
+        response = self.client._request(url='/api/v2/k8scluster', http_method='get', description='k8s_cluster/list')
+        hosts = K8sClusterList(response.json()['_embedded']['k8sclusters'])
+        return hosts
+
+    def get(self, k8scluster_id=None, setup_log=False):
+        """Retrieve a K8S Cluster details.
+
+        Args:
+            k8scluster_id: (int) the K8S cluster ID
+            setup_log: (bool) set to True to return the cluster setup log
+
+        Returns:
+            K8sCluster: object representing K8S Cluster
+            
+        Raises:
+            APIException
+
+        """
+        if setup_log == True:
+            params = '?setup_log'
+        else:
+            params = ''
+
+        response = self.client._request(url='/api/v2/k8scluster/{}{}'.format(k8scluster_id, params), http_method='get', description='k8s_cluster/list')
+        host = K8sCluster(response.json())
+        return host
