@@ -228,6 +228,8 @@ class K8sClusterController:
         Raises:
             APIException
         """
+        assert isinstance(k8scluster_id, str),"'k8scluster_id' must be provided and must be a string"
+
         if setup_log == True:
             params = '?setup_log'
         else:

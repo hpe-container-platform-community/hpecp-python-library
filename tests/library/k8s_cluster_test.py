@@ -98,7 +98,7 @@ class TestClusters(TestCase):
         #assert clusters[0].status == ClusterK8sStatus.read.name
 
         # Test iterators
-        #assert [ cluster.id for cluster in client.k8s_cluster.get() ] == [ '/api/v2/k8scluster/20' ]
+        assert [ cluster.id for cluster in client.k8s_cluster.list() ] == [ '/api/v2/k8scluster/20' ]
 
  
 
