@@ -5,7 +5,7 @@ from hpecp.k8s_cluster import K8sClusterHostConfig
 from kubernetes import client, config
 import tempfile
 import time
-import os
+import os, sys
 import urllib3
 
 os.environ["LOG_LEVEL"] = "INFO"
@@ -20,8 +20,11 @@ hpeclient = ContainerPlatformClient(username='admin',
                                 verify_ssl='/certs/hpecp-ca-cert.pem')
 
 hpeclient.create_session()
-cluster_list = hpeclient.k8s_cluster.list()
 
+print("\nHPE Container Platform K8S Clusters:\n")
+print(hpeclient.k8s_cluster.list().tabulate())
+
+cluster_list = hpeclient.k8s_cluster.list()
 if len(cluster_list) == 0:
     print("No clusters found. Aborting.")
     sys.exit(1)
@@ -39,7 +42,7 @@ else:
 
         # list the pods        
         v1 = client.CoreV1Api()
-        print("Listing pods with their IPs:")
+        print("\nListing pods with their IPs:\n")
         ret = v1.list_pod_for_all_namespaces(watch=False)
         for i in ret.items:
             print("{:>12}   {:>20}   {}".format(i.status.pod_ip, i.metadata.namespace, i.metadata.name))

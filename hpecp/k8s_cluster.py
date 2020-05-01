@@ -127,7 +127,6 @@ class K8sClusterList():
     def tabulate(self):
         return tabulate(self, headers=K8sCluster.__class_dir__(), tablefmt="pretty")
 
-
 class K8sClusterHostConfig():
     def __init__(self, node, role):
         assert isinstance(node, string_types), "'node' must be an string"
