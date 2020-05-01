@@ -7,12 +7,12 @@ import os
 import json
 import requests
 from requests.exceptions import RequestException
-from hpecp import ContainerPlatformClient, APIException
+from hpecp import ContainerPlatformClient, APIException, APIItemNotFoundException
 from hpecp.k8s_cluster import K8sClusterHostConfig
 
 
 class MockResponse:
-    def __init__(self, json_data, status_code, headers, raise_for_status_flag=False, text_data='', ):
+    def __init__(self, json_data, status_code, headers, raise_for_status_flag=False, text_data=''):
         self.json_data = json_data
         self.text = text_data
         self.status_code = status_code
@@ -210,3 +210,60 @@ class TestCreateCluster(TestCase):
 
         with self.assertRaises(APIException):
             get_client().k8s_cluster.create(name='a', k8shosts_config=[ K8sClusterHostConfig('/api/v2/worker/k8shost/1', 'master') ])
+
+class TestGetCluster(TestCase):
+
+    def mocked_requests_get(*args, **kwargs ):
+        if args[0] == 'https://127.0.0.1:8080/api/v2/k8scluster/999':
+            return MockResponse  (
+                json_data = { },
+                status_code = 404,
+                raise_for_status_flag = True,
+                headers = { }
+            )
+        if args[0] == 'https://127.0.0.1:8080/api/v2/k8scluster/123':
+            return MockResponse  (
+                json_data = {  
+                    "_links": {"self": {"href": "/api/v2/k8scluster/123"}}, 
+                    "label": {"name": "def", "description": "my cluster"}, 
+                    "k8s_version": "1.17.0", 
+                    "pod_network_range": "10.192.0.0/12", 
+                    "service_network_range": "10.96.0.0/12", 
+                    "pod_dns_domain": "cluster.local", 
+                    "created_by_user_id": "/api/v1/user/5", 
+                    "created_by_user_name": "admin", 
+                    "created_time": 1588260014, 
+                    "k8shosts_config": [ {"node": "/api/v2/worker/k8shost/4", "role": "worker"}, {"node": "/api/v2/worker/k8shost/5", "role": "master"} ], 
+                    "status": "ready", 
+                    "status_message": "really ready", 
+                    "api_endpoint_access": "api:1234", 
+                    "dashboard_endpoint_access": "dashboard:1234", 
+                    "admin_kube_config": "xyz==", 
+                    "dashboard_token": "abc==", 
+                    "persistent_storage": {"nimble_csi": False}
+                        },
+                status_code = 200,
+                headers = { }
+            )
+        raise RuntimeError("Unhandle GET request: " + args[0]) 
+
+    def mocked_requests_post(*args, **kwargs):
+        if args[0] == 'https://127.0.0.1:8080/api/v1/login':
+            return MockResponse (
+                json_data = { }, 
+                status_code = 200,
+                headers = { "location": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71" }
+                )
+        raise RuntimeError("Unhandle POST request: " + args[0]) 
+
+    @patch('requests.get', side_effect=mocked_requests_get)
+    @patch('requests.post', side_effect=mocked_requests_post)
+    def test_get_k8scluster(self, mock_get, mock_post):
+
+        with self.assertRaises(APIItemNotFoundException):
+            get_client().k8s_cluster.get(k8scluster_id='/api/v2/k8scluster/999', setup_log=False)
+
+        get_client().k8s_cluster.get(k8scluster_id='/api/v2/k8scluster/123', setup_log=False)
+
+class TestWaitForClusterStatus(TestCase):
+    pass
