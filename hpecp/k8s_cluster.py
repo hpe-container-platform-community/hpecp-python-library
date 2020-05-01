@@ -241,5 +241,5 @@ class K8sClusterController:
         else:
             params = ''
 
-        response = self.client._request(url='/api/v2/k8scluster/{}{}'.format(k8scluster_id, params), http_method='get', description='k8s_cluster/list')
+        response = self.client._request(url='{}{}'.format(k8scluster_id, params), http_method='get', description='k8s_cluster/list')
         return K8sCluster(response.json())
