@@ -47,6 +47,8 @@ for tenant in client.epic_tenant.list():
 
 See [./docs/scripts](./docs/scripts) for more examples.
 
+See [Notebook](https://nbviewer.jupyter.org/github/hpe-container-platform-community/hpecp-python-library/blob/master/docs/scripts/cluster_get_k8s_and_list_pods.ipynb) example creating a K8S cluster and listing pods.
+
 ## Logging
 
 Log level is controlled with the environment variable `LOG_LEVEL`.
