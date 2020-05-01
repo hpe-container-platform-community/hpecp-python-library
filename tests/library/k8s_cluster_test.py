@@ -108,7 +108,7 @@ class TestClusterList(TestCase):
         self.assertEqual(clusters[0].dashboard_token, 'abc==')
         self.assertEqual(clusters[0].api_endpoint_access, 'api:1234')
         self.assertEqual(clusters[0].dashboard_endpoint_access, 'dashboard:1234')
-        self.assertIsNone(clusters[0].cert_data) # The cluster wasn't created with certs 
+        self.assertIsNone(clusters[0].cert_data) # The cluster wasn't created with certs - TODO: need a test with this value set
         self.assertEqual(clusters[0].status, 'ready')
         self.assertEqual(clusters[0].status_message, 'really ready')
         self.assertDictEqual(clusters[0]._links, {"self": {"href": "/api/v2/k8scluster/20"}})
