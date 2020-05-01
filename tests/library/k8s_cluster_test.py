@@ -145,43 +145,43 @@ class TestCreateCluster(TestCase):
     @patch('requests.post', side_effect=mocked_requests_create_post)
     def test_create(self, mock_post):
 
-        with self.assertRaisesRegex(AssertionError, "'name' must be provided and must be a string"):
+        with self.assertRaisesRegexp(AssertionError, "'name' must be provided and must be a string"):
             get_client().k8s_cluster.create()
 
-        with self.assertRaisesRegex(AssertionError, "'description' if provided, must be a string"):
+        with self.assertRaisesRegexp(AssertionError, "'description' if provided, must be a string"):
             get_client().k8s_cluster.create(name='a', description=1)
  
-        with self.assertRaisesRegex(AssertionError, "'k8s_version' if provided, must be a string"):
+        with self.assertRaisesRegexp(AssertionError, "'k8s_version' if provided, must be a string"):
             get_client().k8s_cluster.create(name='a', k8s_version=1)
    
-        with self.assertRaisesRegex(AssertionError, "'pod_network_range' must be a string"):
+        with self.assertRaisesRegexp(AssertionError, "'pod_network_range' must be a string"):
             get_client().k8s_cluster.create(name='a', pod_network_range=1)
 
-        with self.assertRaisesRegex(AssertionError, "'service_network_range' must be a string"):
+        with self.assertRaisesRegexp(AssertionError, "'service_network_range' must be a string"):
             get_client().k8s_cluster.create(name='a', service_network_range=1)
 
-        with self.assertRaisesRegex(AssertionError, "'pod_dns_domain' must be a string"):
+        with self.assertRaisesRegexp(AssertionError, "'pod_dns_domain' must be a string"):
             get_client().k8s_cluster.create(name='a', pod_dns_domain=1)
 
-        with self.assertRaisesRegex(AssertionError, "'persistent_storage_local' must be True or False"):
+        with self.assertRaisesRegexp(AssertionError, "'persistent_storage_local' must be True or False"):
             get_client().k8s_cluster.create(name='a', persistent_storage_local=1)
         
-        with self.assertRaisesRegex(AssertionError, "'persistent_storage_nimble_csi' must be True or False"):
+        with self.assertRaisesRegexp(AssertionError, "'persistent_storage_nimble_csi' must be True or False"):
             get_client().k8s_cluster.create(name='a', persistent_storage_nimble_csi=1)
 
-        with self.assertRaisesRegex(AssertionError, "'k8shosts_config' must be a list"):
+        with self.assertRaisesRegexp(AssertionError, "'k8shosts_config' must be a list"):
             get_client().k8s_cluster.create(name='a', k8shosts_config=1)
 
-        with self.assertRaisesRegex(AssertionError, "'k8shosts_config' must have at least one item"):
+        with self.assertRaisesRegexp(AssertionError, "'k8shosts_config' must have at least one item"):
             get_client().k8s_cluster.create(name='a', k8shosts_config=[])
 
-        with self.assertRaisesRegex(AssertionError, "'k8shosts_config' item '0' is not of type K8sClusterHostConfig"):
+        with self.assertRaisesRegexp(AssertionError, "'k8shosts_config' item '0' is not of type K8sClusterHostConfig"):
             get_client().k8s_cluster.create(name='a', k8shosts_config=[ 1, 2 ])
 
-        with self.assertRaisesRegex(AssertionError, "'node' must have format '\/api\/v2\/worker\/k8shost\/\[0-9\]\+'"):
+        with self.assertRaisesRegexp(AssertionError, "'node' must have format '\/api\/v2\/worker\/k8shost\/\[0-9\]\+'"):
             get_client().k8s_cluster.create(name='a', k8shosts_config=[ K8sClusterHostConfig('a', 'b') ])
 
-        with self.assertRaisesRegex(AssertionError, "'role' must one of \['master, worker'\]"):
+        with self.assertRaisesRegexp(AssertionError, "'role' must one of \['master, worker'\]"):
             get_client().k8s_cluster.create(name='a', k8shosts_config=[ K8sClusterHostConfig('/api/v2/worker/k8shost/1', 'b') ])
 
         # Finally we can create a cluster 
