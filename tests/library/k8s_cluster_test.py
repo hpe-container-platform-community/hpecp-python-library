@@ -56,15 +56,12 @@ class TestClusterList(TestCase):
                                 "created_by_user_id": "/api/v1/user/5", 
                                 "created_by_user_name": "admin", 
                                 "created_time": 1588260014, 
-                                "k8shosts_config": [
-                                    {"node": "/api/v2/worker/k8shost/4", "role": "worker"}, 
-                                    {"node": "/api/v2/worker/k8shost/5", "role": "master"}
-                                ], 
+                                "k8shosts_config": [ {"node": "/api/v2/worker/k8shost/4", "role": "worker"}, {"node": "/api/v2/worker/k8shost/5", "role": "master"} ], 
                                 "status": "ready", 
-                                "status_message": "", 
-                                "api_endpoint_access": "https://ip-10-1-0-48.eu-west-2.compute.internal:10002", 
-                                "dashboard_endpoint_access": "https://ip-10-1-0-48.eu-west-2.compute.internal:10000", 
-                                "admin_kube_config": "apiVersion: v1\nclusters:\n- cluster:\n    certificate-authority-data: xyz=\n    server: https://ip-10-1-0-48.eu-west-2.compute.internal:10002\n  name: k8s-20\ncontexts:\n- context:\n    cluster: k8s-20\n    user: kubernetes-admin\n  name: kubernetes-admin@k8s-20\ncurrent-context: kubernetes-admin@k8s-20\nkind: Config\npreferences: {}\nusers:\n- name: kubernetes-admin\n  user:\n    client-certificate-data: 123=\n    client-key-data: def=", 
+                                "status_message": "really ready", 
+                                "api_endpoint_access": "api:1234", 
+                                "dashboard_endpoint_access": "dashboard:1234", 
+                                "admin_kube_config": "xyz=", 
                                 "dashboard_token": "abc==", 
                                 "persistent_storage": {"nimble_csi": False}
                             }
@@ -94,8 +91,26 @@ class TestClusterList(TestCase):
         #assert client.k8s_cluster.get()[0].json is not None
 
         # Test WorkerK8sList subscriptable access and property setters
-        assert clusters[0].id == '/api/v2/k8scluster/20'
-        #assert clusters[0].status == ClusterK8sStatus.read.name
+        self.assertEqual(clusters[0].id, '/api/v2/k8scluster/20')
+        self.assertEqual(clusters[0].name, 'def')
+        self.assertEqual(clusters[0].description, 'my cluster')
+        self.assertEqual(clusters[0].k8s_version, '1.17.0')
+        self.assertEqual(clusters[0].created_by_user_id, '/api/v1/user/5')
+        self.assertEqual(clusters[0].created_by_user_name, 'admin')
+        self.assertEqual(clusters[0].created_time, 1588260014)
+
+        self.maxDiff = None
+        self.assertListEqual(clusters[0].k8shosts_config, [
+                                                        {'node': '/api/v2/worker/k8shost/4', 'role': 'worker'},
+                                                        {'node': '/api/v2/worker/k8shost/5', 'role': 'master'}
+                                                        ])
+        self.assertEqual(clusters[0].dashboard_token, 'abc==')
+        self.assertEqual(clusters[0].api_endpoint_access, 'api:1234')
+        self.assertEqual(clusters[0].dashboard_endpoint_access, 'dashboard:1234')
+        self.assertIsNone(clusters[0].cert_data) # The cluster wasn't created with certs 
+        self.assertEqual(clusters[0].status, 'ready')
+        self.assertEqual(clusters[0].status_message, 'really ready')
+        self.assertDictEqual(clusters[0]._links, {"self": {"href": "/api/v2/k8scluster/20"}})
 
         # Test iterators
         assert [ cluster.id for cluster in get_client().k8s_cluster.list() ] == [ '/api/v2/k8scluster/20' ]

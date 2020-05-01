@@ -78,7 +78,11 @@ class K8sCluster():
     def dashboard_endpoint_access(self): return self.json['dashboard_endpoint_access']
 
     @property
-    def cert_data(self): return self.json['cert_data']
+    def cert_data(self):
+        try:
+            return self.json['cert_data']
+        except KeyError:
+            return None
 
     # (ready, creating, updating, upgrading, deleting, error, warning)
     @property
