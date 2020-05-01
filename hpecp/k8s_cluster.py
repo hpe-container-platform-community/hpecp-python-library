@@ -276,12 +276,11 @@ class K8sClusterController:
 
         try:
             polling.poll(
-                lambda: self.get(k8scluster_id).status in status,
+                lambda: self.get(k8scluster_id).status in [ s.name for s in status ],
                 step=10,
                 poll_forever=False,
                 timeout=timeout_secs
             )
+            return True
         except polling.TimeoutException:
             return False
-
-        return True
