@@ -268,10 +268,13 @@ class K8sClusterController:
             APIException: if a generic API exception occurred
         """
    
+        assert isinstance(k8scluster_id, string_types), "'k8scluster_id' must be a string"
+        assert re.match(r'\/api\/v2\/k8scluster\/[0-9]+', k8scluster_id), "'k8scluster_id' must have format '/api/v2/worker/k8scluster/[0-9]+'"
         assert isinstance(status, list), "'status' must be a list"
         assert len(status) > 0, "At least one 'status' must be provided"
         for i, s in enumerate(status):
             assert isinstance(s, K8sClusterStatus), "'status' item '{}' is not of type K8sClusterStatus".format(i)
+        assert isinstance(timeout_secs, int), "'timeout_secs' must be an int"   
         assert timeout_secs >= 0, "'timeout_secs' must be >= 0"
 
         try:

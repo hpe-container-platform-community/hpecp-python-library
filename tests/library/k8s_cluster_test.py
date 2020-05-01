@@ -292,6 +292,13 @@ class TestWaitForClusterStatus(TestCase):
                 status_code = 200,
                 headers = { }
             )
+        if args[0] == 'https://127.0.0.1:8080/api/v2/k8scluster/999':
+            return MockResponse  (
+                json_data = { },
+                status_code = 404,
+                raise_for_status_flag = True,
+                headers = { }
+            )
         raise RuntimeError("Unhandle GET request: " + args[0]) 
 
     def mocked_requests_post(*args, **kwargs):
@@ -308,7 +315,31 @@ class TestWaitForClusterStatus(TestCase):
     def test_wait_for_status_k8scluster(self, mock_get, mock_post):
 
         # FIXME speed these tests up
-        
+
+        with self.assertRaisesRegexp(AssertionError, "'k8scluster_id' must be a string"):
+            get_client().k8s_cluster.wait_for_status(
+                k8scluster_id=1, timeout_secs=1, status=[ K8sClusterStatus.ready ])
+
+        with self.assertRaisesRegexp(AssertionError, "'k8scluster_id' must have format '\/api\/v2\/worker\/k8scluster\/\[0-9\]\+'"):
+            get_client().k8s_cluster.wait_for_status(
+                k8scluster_id='garbage', timeout_secs=1, status=[ K8sClusterStatus.ready ])
+
+        with self.assertRaisesRegexp(AssertionError, "'timeout_secs' must be an int"):
+            get_client().k8s_cluster.wait_for_status(
+                k8scluster_id='/api/v2/k8scluster/123', timeout_secs='blah', status=[ K8sClusterStatus.ready ])
+
+        with self.assertRaisesRegexp(AssertionError, "'timeout_secs' must be >= 0"):
+            get_client().k8s_cluster.wait_for_status(
+                k8scluster_id='/api/v2/k8scluster/123', timeout_secs=-1, status=[ K8sClusterStatus.ready ])
+
+        with self.assertRaisesRegexp(AssertionError, "At least one 'status' must be provided"):
+            get_client().k8s_cluster.wait_for_status(
+                k8scluster_id='/api/v2/k8scluster/123', timeout_secs=1, status=[ ])
+
+        with self.assertRaisesRegexp(AssertionError, "'status' item '0' is not of type K8sClusterStatus"):
+            get_client().k8s_cluster.wait_for_status(
+                k8scluster_id='/api/v2/k8scluster/123', timeout_secs=1, status=[ 'abc' ])
+
         self.assertTrue(
             get_client().k8s_cluster.wait_for_status(
                 k8scluster_id='/api/v2/k8scluster/123', timeout_secs=1, status=[ K8sClusterStatus.ready ]))
@@ -325,3 +356,7 @@ class TestWaitForClusterStatus(TestCase):
             get_client().k8s_cluster.wait_for_status(
                 k8scluster_id='/api/v2/k8scluster/123', timeout_secs=1, status=[ K8sClusterStatus.warning, K8sClusterStatus.upgrading ]))
 
+        # Get the status of a Cluster ID that doesn't exist
+        with self.assertRaises(APIItemNotFoundException):
+            get_client().k8s_cluster.wait_for_status(
+                k8scluster_id='/api/v2/k8scluster/999', timeout_secs=1, status=[ K8sClusterStatus.ready ])
