@@ -61,7 +61,7 @@ class TestClusterList(TestCase):
                                 "status_message": "really ready", 
                                 "api_endpoint_access": "api:1234", 
                                 "dashboard_endpoint_access": "dashboard:1234", 
-                                "admin_kube_config": "xyz=", 
+                                "admin_kube_config": "xyz==", 
                                 "dashboard_token": "abc==", 
                                 "persistent_storage": {"nimble_csi": False}
                             }
@@ -104,6 +104,7 @@ class TestClusterList(TestCase):
                                                         {'node': '/api/v2/worker/k8shost/4', 'role': 'worker'},
                                                         {'node': '/api/v2/worker/k8shost/5', 'role': 'master'}
                                                         ])
+        self.assertEqual(clusters[0].admin_kube_config, 'xyz==')
         self.assertEqual(clusters[0].dashboard_token, 'abc==')
         self.assertEqual(clusters[0].api_endpoint_access, 'api:1234')
         self.assertEqual(clusters[0].dashboard_endpoint_access, 'dashboard:1234')
