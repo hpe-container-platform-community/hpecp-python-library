@@ -134,7 +134,7 @@ class K8sClusterHostConfig():
         assert role in [ 'master', 'worker' ], "'role' must one of ['master, worker']"
 
         self.node = node
-        self.role = node
+        self.role = role
 
     def to_dict(self):
         return { 
