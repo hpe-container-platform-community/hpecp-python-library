@@ -169,7 +169,7 @@ class K8sClusterController:
             k8shosts_config: list of K8sClusterHostConfig objects
 
         Returns:
-            int: The ID for the K8S Cluster
+            int: The ID for the K8S Cluster with format '/api/v2/k8scluster/[0-9]+'
             
         Raises:
             APIException
