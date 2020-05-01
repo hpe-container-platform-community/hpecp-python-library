@@ -6,6 +6,7 @@ from operator import attrgetter
 from tabulate import tabulate
 import polling
 from enum import Enum
+import re
 
 import sys
 PY3 = sys.version_info[0] == 3
@@ -126,7 +127,8 @@ class K8sClusterList():
 class K8sClusterHostConfig():
     def __init__(self, node, role):
         assert isinstance(node, string_types), "'node' must be an string"
-        assert role in [ 'master', 'worker' ], "'node_role' must one of ['master, worker']"
+        assert re.match(r'\/api\/v2\/worker\/k8shost\/[0-9]+', node), "'node' must have format '/api/v2/worker/k8shost/[0-9]+'"
+        assert role in [ 'master', 'worker' ], "'role' must one of ['master, worker']"
 
         self.node = node
         self.role = node
@@ -180,6 +182,7 @@ class K8sClusterController:
         assert isinstance(pod_dns_domain, string_types), "'pod_dns_domain' must be a string"
         assert isinstance(persistent_storage_local, bool), "'persistent_storage_local' must be True or False"
         assert isinstance(persistent_storage_nimble_csi, bool), "'persistent_storage_nimble_csi' must be True or False"
+        assert isinstance(k8shosts_config, list), "'k8shosts_config' must be a list"
         assert len(k8shosts_config) > 0, "'k8shosts_config' must have at least one item"
         for i, conf in enumerate(k8shosts_config):
             assert isinstance(conf, K8sClusterHostConfig), "'k8shosts_config' item '{}' is not of type K8sClusterHostConfig".format(i)

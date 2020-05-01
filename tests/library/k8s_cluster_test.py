@@ -7,8 +7,8 @@ import os
 import json
 import requests
 from requests.exceptions import RequestException
-from hpecp import ContainerPlatformClient
-#from hpecp.k8s_cluster import ClusterK8sStatus
+from hpecp import ContainerPlatformClient, APIException
+from hpecp.k8s_cluster import K8sClusterHostConfig
 
 
 class MockResponse:
@@ -73,19 +73,21 @@ class TestClusters(TestCase):
                 )
         raise RuntimeError("Unhandle POST request: " + args[0]) 
 
-    @patch('requests.get', side_effect=mocked_requests_get)
-    @patch('requests.post', side_effect=mocked_requests_post)
-    def test_get_k8shosts(self, mock_get, mock_post):
-
+    def get_client(self):
         client = ContainerPlatformClient(
                                 username='admin', 
                                 password='admin123', 
                                 api_host='127.0.0.1', 
                                 api_port=8080,
                                 use_ssl=True)
-
-        # Makes POST Request: https://127.0.0.1:8080/api/v1/login
         client.create_session()
+        return client
+
+    @patch('requests.get', side_effect=mocked_requests_get)
+    @patch('requests.post', side_effect=mocked_requests_post)
+    def test_get_k8sclusters(self, mock_get, mock_post):
+
+        client = self.get_client()
 
         # Makes GET Request: https://127.0.0.1:8080/api/v2/k8sclusters/
         clusters = client.k8s_cluster.list()
@@ -100,7 +102,87 @@ class TestClusters(TestCase):
         # Test iterators
         assert [ cluster.id for cluster in client.k8s_cluster.list() ] == [ '/api/v2/k8scluster/20' ]
 
+    def mocked_requests_create_post(*args, **kwargs):
+        if args[0] == 'https://127.0.0.1:8080/api/v1/login':
+            return MockResponse (
+                json_data = { }, 
+                status_code = 200,
+                headers = { "location": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71" }
+                )
+        elif args[0] == 'https://127.0.0.1:8080/api/v2/k8scluster':
+            return MockResponse (
+                json_data = { }, 
+                status_code = 200,
+                headers = { "Location": "/api/v2/k8sclusters/99" }
+                ) 
+        raise RuntimeError("Unhandle POST request: " + args[0]) 
+
+    @patch('requests.get', side_effect=mocked_requests_get)
+    @patch('requests.post', side_effect=mocked_requests_create_post)
+    def test_create(self, mock_get, mock_post):
+
+        with self.assertRaisesRegexp(AssertionError, "'name' must be provided and must be a string"):
+            self.get_client().k8s_cluster.create()
+
+        with self.assertRaisesRegexp(AssertionError, "'description' if provided, must be a string"):
+            self.get_client().k8s_cluster.create(name='a', description=1)
  
-
-
+        with self.assertRaisesRegexp(AssertionError, "'k8s_version' if provided, must be a string"):
+            self.get_client().k8s_cluster.create(name='a', k8s_version=1)
    
+        with self.assertRaisesRegexp(AssertionError, "'pod_network_range' must be a string"):
+            self.get_client().k8s_cluster.create(name='a', pod_network_range=1)
+
+        with self.assertRaisesRegexp(AssertionError, "'service_network_range' must be a string"):
+            self.get_client().k8s_cluster.create(name='a', service_network_range=1)
+
+        with self.assertRaisesRegexp(AssertionError, "'pod_dns_domain' must be a string"):
+            self.get_client().k8s_cluster.create(name='a', pod_dns_domain=1)
+
+        with self.assertRaisesRegexp(AssertionError, "'persistent_storage_local' must be True or False"):
+            self.get_client().k8s_cluster.create(name='a', persistent_storage_local=1)
+        
+        with self.assertRaisesRegexp(AssertionError, "'persistent_storage_nimble_csi' must be True or False"):
+            self.get_client().k8s_cluster.create(name='a', persistent_storage_nimble_csi=1)
+
+        with self.assertRaisesRegexp(AssertionError, "'k8shosts_config' must be a list"):
+            self.get_client().k8s_cluster.create(name='a', k8shosts_config=1)
+
+        with self.assertRaisesRegexp(AssertionError, "'k8shosts_config' must have at least one item"):
+            self.get_client().k8s_cluster.create(name='a', k8shosts_config=[])
+
+        with self.assertRaisesRegexp(AssertionError, "'k8shosts_config' item '0' is not of type K8sClusterHostConfig"):
+            self.get_client().k8s_cluster.create(name='a', k8shosts_config=[ 1, 2 ])
+
+        with self.assertRaisesRegexp(AssertionError, "'node' must have format '\/api\/v2\/worker\/k8shost\/\[0-9\]\+'"):
+            self.get_client().k8s_cluster.create(name='a', k8shosts_config=[ K8sClusterHostConfig('a', 'b') ])
+
+        with self.assertRaisesRegexp(AssertionError, "'role' must one of \['master, worker'\]"):
+            self.get_client().k8s_cluster.create(name='a', k8shosts_config=[ K8sClusterHostConfig('/api/v2/worker/k8shost/1', 'b') ])
+
+        # Finally we can create a cluster 
+        id = self.get_client().k8s_cluster.create(name='a', k8shosts_config=[ K8sClusterHostConfig('/api/v2/worker/k8shost/1', 'master') ])
+        self.assertEqual(id, '/api/v2/k8sclusters/99')
+
+    def mocked_requests_create_error_post(*args, **kwargs):
+        if args[0] == 'https://127.0.0.1:8080/api/v1/login':
+            return MockResponse (
+                json_data = { }, 
+                status_code = 200,
+                headers = { "location": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71" }
+                )
+        elif args[0] == 'https://127.0.0.1:8080/api/v2/k8scluster':
+            return MockResponse (
+                json_data = { }, 
+                raise_for_status_flag = True,
+                status_code = 500,
+                headers = {}
+                ) 
+        raise RuntimeError("Unhandle POST request: " + args[0]) 
+
+    @patch('requests.get', side_effect=mocked_requests_get)
+    @patch('requests.post', side_effect=mocked_requests_create_error_post)
+    def test_create_with_APIException(self, mock_get, mock_post):
+
+        with self.assertRaises(APIException):
+            self.get_client().k8s_cluster.create(name='a', k8shosts_config=[ K8sClusterHostConfig('/api/v2/worker/k8shost/1', 'master') ])
