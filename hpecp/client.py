@@ -152,17 +152,18 @@ class ContainerPlatformClient(object):
                 response = requests.delete(url, headers=all_headers, verify=self.verify_ssl)
 
             response.raise_for_status()
-        except requests.exceptions.RequestException as e:
-            self.log.exception('{} : {} {} Request: {}'.format(description, http_method, url, json.dumps(data)))
-
+        except requests.exceptions.RequestException:
             try:
                 response_info = response.json()
             except:
                 response_info = response.text
 
             if response.status_code == 404:
+                # This is expected for some method calls so do not log as an error
+                self.log.debug('{} : {} {} Request: {}'.format(description, http_method, url, json.dumps(data)))
                 raise APIItemNotFoundException(message=response_info, request_method=http_method, request_url=url, request_data=json.dumps(data))
             else:
+                self.log.exception('{} : {} {} Request: {}'.format(description, http_method, url, json.dumps(data)))
                 raise APIException(message=response_info, request_method=http_method, request_url=url, request_data=json.dumps(data))
 
         try:
