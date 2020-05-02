@@ -35,10 +35,10 @@ class K8sCluster():
         return [ 'id', 'name', 'description', 'k8s_version', 'created_by_user_id', 'created_by_user_name', 'created_time', 'status' ]
 
     def __repr__(self):
-        return "<ClusterK8S id:{} name:{} description:{} status:{}>".format( self.id, self.name, self.description, self.status)
+        return "<K8sCluster id:{} name:{} description:{} status:{}>".format( self.id, self.name, self.description, self.status)
 
     def __str__(self):
-        return "WorkerK8s(id={}, name={}, description={}, status={})".format(
+        return "K8sCluster(id={}, name={}, description={}, status={})".format(
                     self.id, self.name, self.description, self.status)
 
     def __init__(self, json):
@@ -116,28 +116,28 @@ class K8sClusterList():
             json {[type]} -- [description]
         """
         self.json = json
-        self.tenants = sorted([K8sCluster(t) for t in json],  key=attrgetter('id'))
+        self.clusters = sorted([K8sCluster(t) for t in json],  key=attrgetter('id'))
 
     def __getitem__(self, item):
-        return self.tenants[item]
+        return self.clusters[item]
 
     # Python 2
     def next(self):
-        if not self.tenants:
+        if not self.clusters:
            raise StopIteration
-        return self.tenants.pop(0)
+        return self.clusters.pop(0)
 
     # Python 3
     def __next__(self):
-        if not self.tenants:
+        if not self.clusters:
            raise StopIteration
-        return self.tenants.pop(0)
+        return self.clusters.pop(0)
 
     def __iter__(self):
         return self
 
     def __len__(self):
-        return len(self.tenants)
+        return len(self.clusters)
 
     def tabulate(self):
         """[summary]

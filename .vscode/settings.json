@@ -1,5 +1,11 @@
 {
     "files.exclude": {
         "/**/*.pyc": true
-    }
+    },
+    "python.testing.nosetestArgs": [
+        "tests/library"
+    ],
+    "python.testing.pytestEnabled": true,
+    "python.testing.unittestEnabled": true,
+    "python.testing.nosetestsEnabled": true
 }

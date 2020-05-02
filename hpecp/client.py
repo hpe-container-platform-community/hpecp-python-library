@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 
 from .logger import Logger
-from .epic_tenant import EpicTenantController
+from .tenant import TenantController
 from .config import ConfigController
 from .epic_worker import EpicWorkerController
 from .k8s_worker import K8sWorkerController
@@ -86,7 +86,7 @@ class ContainerPlatformClient(object):
         self.base_url = "{}://{}:{}".format(scheme, self.api_host, self.api_port)
 
         # register endpoint modules
-        self.epic_tenant = EpicTenantController(self)
+        self.tenant = TenantController(self)
         self.config = ConfigController(self)
         self.epic_worker = EpicWorkerController(self)
         self.k8s_worker = K8sWorkerController(self)
@@ -157,6 +157,8 @@ class ContainerPlatformClient(object):
                 response_info = response.json()
             except:
                 response_info = response.text
+            else:
+                response_info = ''
 
             if response.status_code == 404:
                 # This is expected for some method calls so do not log as an error

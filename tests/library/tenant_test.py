@@ -53,7 +53,7 @@ class TestTentants(TestCase):
 
     @patch('requests.get', side_effect=mocked_requests_get)
     @patch('requests.post', side_effect=mocked_requests_post)
-    def test_epic_tenant_list(self, mock_get, mock_post):
+    def test_tenant_list(self, mock_get, mock_post):
 
         client = ContainerPlatformClient(
                                 username='admin', 
@@ -66,20 +66,16 @@ class TestTentants(TestCase):
         client.create_session()
 
         # Makes GET Request: https://127.0.0.1:8080/api/v1/tenant
-        tenants = client.epic_tenant.list()
+        tenants = client.tenant.list()
 
-        # Test that json response is saved in each EpicTenant object
-        assert client.epic_tenant.list()[0].json is not None
+        # Test that json response is saved in each Tenant object
+        self.assertIsNotNone(client.tenant.list()[0].json)
 
-        # Test EpicTenantList subscriptable access and EpicTenant property setters
-        assert tenants[0].tenant_id == 1
-        assert tenants[0].status == 'ready'
-        assert tenants[0].name == 'Site Admin'
-        assert tenants[0].description == 'Site Admin Tenant for BlueData clusters'
+        # Test TenantList subscriptable access and Tenant property setters
+        self.assertEqual(tenants[0].id, '/api/v1/tenant/1')
+        self.assertEqual(tenants[0].status, 'ready')
+        self.assertEqual(tenants[0].name, 'Site Admin')
+        self.assertEqual(tenants[0].description, 'Site Admin Tenant for BlueData clusters')
 
-        # Test EpicTenantList iterators
-        assert [ tenant.tenant_id for tenant in client.epic_tenant.list() ] == [ 1, 2 ]
-
-
-
-   
+        # Test TenantList iterators
+        self.assertEqual([ tenant.id for tenant in client.tenant.list() ], [ '/api/v1/tenant/1', '/api/v1/tenant/2' ])

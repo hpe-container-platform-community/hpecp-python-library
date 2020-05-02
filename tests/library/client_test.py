@@ -68,7 +68,6 @@ class TestAuth(TestCase):
                                 use_ssl=True)
         client.create_session()
 
-
     def mocked_requests_post_return_500(*args, **kwargs):
         if args[0] == 'https://127.0.0.1:8080/api/v1/login':
             return MockResponse (
