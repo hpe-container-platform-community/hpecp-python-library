@@ -39,6 +39,7 @@ def get_client():
 
 class TestClusterList(TestCase):
 
+    # pylint: disable=no-method-argument 
     def mocked_requests_get(*args, **kwargs):
         if args[0] == 'https://127.0.0.1:8080/api/v2/k8scluster':
             return MockResponse  (
@@ -128,6 +129,7 @@ class TestClusterList(TestCase):
 
 class TestCreateCluster(TestCase):
 
+    # pylint: disable=no-method-argument 
     def mocked_requests_create_post(*args, **kwargs):
         if args[0] == 'https://127.0.0.1:8080/api/v1/login':
             return MockResponse (
@@ -179,6 +181,7 @@ class TestCreateCluster(TestCase):
         with self.assertRaisesRegexp(AssertionError, "'k8shosts_config' item '0' is not of type K8sClusterHostConfig"):
             get_client().k8s_cluster.create(name='a', k8shosts_config=[ 1, 2 ])
 
+        # pylint: disable=anomalous-backslash-in-string 
         with self.assertRaisesRegexp(AssertionError, "'node' must have format '\/api\/v2\/worker\/k8shost\/\[0-9\]\+'"):
             get_client().k8s_cluster.create(name='a', k8shosts_config=[ K8sClusterHostConfig('a', 'b') ])
 
@@ -213,6 +216,7 @@ class TestCreateCluster(TestCase):
 
 class TestGetCluster(TestCase):
 
+    # pylint: disable=no-method-argument 
     def mocked_requests_get(*args, **kwargs ):
         if args[0] == 'https://127.0.0.1:8080/api/v2/k8scluster/999':
             return MockResponse  (
@@ -269,6 +273,7 @@ class TestGetCluster(TestCase):
 
 class TestWaitForClusterStatus(TestCase):
 
+    # pylint: disable=no-method-argument 
     def mocked_requests_get(*args, **kwargs):
         if args[0] == 'https://127.0.0.1:8080/api/v2/k8scluster/123':
             return MockResponse  (
@@ -322,6 +327,7 @@ class TestWaitForClusterStatus(TestCase):
             get_client().k8s_cluster.wait_for_status(
                 k8scluster_id=1, timeout_secs=1, status=[ K8sClusterStatus.ready ])
 
+        # pylint: disable=anomalous-backslash-in-string 
         with self.assertRaisesRegexp(AssertionError, "'k8scluster_id' must have format '\/api\/v2\/worker\/k8scluster\/\[0-9\]\+'"):
             get_client().k8s_cluster.wait_for_status(
                 k8scluster_id='garbage', timeout_secs=1, status=[ K8sClusterStatus.ready ])
@@ -362,3 +368,63 @@ class TestWaitForClusterStatus(TestCase):
         with self.assertRaises(APIItemNotFoundException):
             get_client().k8s_cluster.wait_for_status(
                 k8scluster_id='/api/v2/k8scluster/999', timeout_secs=1, status=[ K8sClusterStatus.ready ])
+
+class TestDeleteCluster(TestCase):
+
+    # pylint: disable=no-method-argument 
+    def mocked_requests_delete(*args, **kwargs ):
+        if args[0] == 'https://127.0.0.1:8080/api/v2/k8scluster/999':
+            return MockResponse  (
+                json_data = { },
+                status_code = 404,
+                raise_for_status_flag = True,
+                headers = { }
+            )
+        if args[0] == 'https://127.0.0.1:8080/api/v2/k8scluster/123':
+            return MockResponse  (
+                json_data = {  
+                    "_links": {"self": {"href": "/api/v2/k8scluster/123"}}, 
+                    "label": {"name": "def", "description": "my cluster"}, 
+                    "k8s_version": "1.17.0", 
+                    "pod_network_range": "10.192.0.0/12", 
+                    "service_network_range": "10.96.0.0/12", 
+                    "pod_dns_domain": "cluster.local", 
+                    "created_by_user_id": "/api/v1/user/5", 
+                    "created_by_user_name": "admin", 
+                    "created_time": 1588260014, 
+                    "k8shosts_config": [ {"node": "/api/v2/worker/k8shost/4", "role": "worker"}, {"node": "/api/v2/worker/k8shost/5", "role": "master"} ], 
+                    "status": "ready", 
+                    "status_message": "really ready", 
+                    "api_endpoint_access": "api:1234", 
+                    "dashboard_endpoint_access": "dashboard:1234", 
+                    "admin_kube_config": "xyz==", 
+                    "dashboard_token": "abc==", 
+                    "persistent_storage": {"nimble_csi": False}
+                        },
+                status_code = 200,
+                headers = { }
+            )
+        raise RuntimeError("Unhandle GET request: " + args[0]) 
+
+    def mocked_requests_post(*args, **kwargs):
+        if args[0] == 'https://127.0.0.1:8080/api/v1/login':
+            return MockResponse (
+                json_data = { }, 
+                status_code = 200,
+                headers = { "location": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71" }
+                )
+        raise RuntimeError("Unhandle POST request: " + args[0]) 
+
+    @patch('requests.delete', side_effect=mocked_requests_delete)
+    @patch('requests.post', side_effect=mocked_requests_post)
+    def test_delete_k8scluster(self, mock_get, mock_post):
+
+        # pylint: disable=anomalous-backslash-in-string 
+        with self.assertRaisesRegexp(AssertionError, "'k8scluster_id' must have format '\/api\/v2\/worker\/k8scluster\/\[0-9\]\+'"):
+            get_client().k8s_cluster.delete(
+                k8scluster_id='garbage')
+
+        with self.assertRaises(APIItemNotFoundException):
+            get_client().k8s_cluster.delete(k8scluster_id='/api/v2/k8scluster/999')
+
+        get_client().k8s_cluster.delete(k8scluster_id='/api/v2/k8scluster/123')

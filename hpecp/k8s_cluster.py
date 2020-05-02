@@ -286,13 +286,14 @@ class K8sClusterController:
             APIException
         """
         assert isinstance(k8scluster_id, str),"'k8scluster_id' must be provided and must be a string"
+        assert re.match(r'\/api\/v2\/k8scluster\/[0-9]+', k8scluster_id), "'k8scluster_id' must have format '/api/v2/worker/k8scluster/[0-9]+'"
 
         if setup_log == True:
             params = '?setup_log'
         else:
             params = ''
 
-        response = self.client._request(url='{}{}'.format(k8scluster_id, params), http_method='get', description='k8s_cluster/list')
+        response = self.client._request(url='{}{}'.format(k8scluster_id, params), http_method='get', description='k8s_cluster/get')
         return K8sCluster(response.json())
 
     def wait_for_status(self, k8scluster_id, status=[], timeout_secs=60):
@@ -330,3 +331,19 @@ class K8sClusterController:
             return True
         except polling.TimeoutException:
             return False
+
+    def delete(self, k8scluster_id):
+        """Delete a K8S Cluster.
+
+        You can use `watch_for_status()` to check for the cluster state/existence.
+
+        Args:
+            k8scluster_id: (int) the K8S cluster ID
+            
+        Raises:
+            APIException
+        """
+        assert isinstance(k8scluster_id, str),"'k8scluster_id' must be provided and must be a string"
+        assert re.match(r'\/api\/v2\/k8scluster\/[0-9]+', k8scluster_id), "'k8scluster_id' must have format '/api/v2/worker/k8scluster/[0-9]+'"
+
+        self.client._request(url=k8scluster_id, http_method='delete', description='k8s_cluster/delete')

@@ -11,7 +11,7 @@ Aim for 100% test coverage to ensure library will work with all specified python
 ### FORMATTING
 
 ```
-autopep8 --in-place --aggressive --aggressive
+autopep8 --in-place --aggressive --recursive hpecp/
 ```
 
 #### BUILDING DOCS
