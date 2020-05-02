@@ -111,12 +111,11 @@ class TenantController:
         tenants = TenantList(response.json()['_embedded']['tenants'])
         return tenants
 
-    def create(self,
+    def create(self, 
                 name=None, 
                 description=None,
                 tenant_type=None,
-                k8s_cluster=None
-                ):
+                k8s_cluster=None):
 
         self.client.log.warning('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
         self.client.log.warning('!!!! The method `tenant.create()` is experimental !!!!')
@@ -137,6 +136,16 @@ class TenantController:
 
         response = self.client._request(url='/api/v1/tenant', http_method='post', data=data, description='tenant/create')
         return response.headers['Location']
+
+    def get(self, tenant_id):
+
+        self.client.log.warning('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+        self.client.log.warning('!!!! The method `tenant.get()` is experimental !!!!')
+        self.client.log.warning('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+
+        response = self.client._request(url=tenant_id, http_method='get', description='tenant/get')
+        return Tenant(response.json())
+        
 
     def auth_setup(self, tenant_id, data):
         """[summary]
