@@ -106,8 +106,15 @@ class K8sCluster():
         return len(dir(self))
 
 class K8sClusterList():
+    """[summary]
+    """
 
     def __init__(self, json):
+        """[summary]
+
+        Arguments:
+            json {[type]} -- [description]
+        """
         self.json = json
         self.tenants = sorted([K8sCluster(t) for t in json],  key=attrgetter('id'))
 
@@ -133,10 +140,23 @@ class K8sClusterList():
         return len(self.tenants)
 
     def tabulate(self):
+        """[summary]
+
+        Returns:
+            [type] -- [description]
+        """
         return tabulate(self, headers=K8sCluster.__class_dir__(), tablefmt="pretty")
 
 class K8sClusterHostConfig():
+    """[summary]
+    """
     def __init__(self, node, role):
+        """[summary]
+
+        Arguments:
+            node {[type]} -- [description]
+            role {[type]} -- [description]
+        """
         assert isinstance(node, string_types), "'node' must be an string"
         assert re.match(r'\/api\/v2\/worker\/k8shost\/[0-9]+', node), "'node' must have format '/api/v2/worker/k8shost/[0-9]+'"
         assert role in [ 'master', 'worker' ], "'role' must one of ['master, worker']"
@@ -145,14 +165,26 @@ class K8sClusterHostConfig():
         self.role = role
 
     def to_dict(self):
+        """[summary]
+
+        Returns:
+            [type] -- [description]
+        """
         return { 
                 'node': self.node, 
                 'role': self.role 
             }
         
 class K8sClusterController:
+    """[summary]
+    """
 
     def __init__(self, client):
+        """[summary]
+
+        Arguments:
+            client {[type]} -- [description]
+        """
         self.client = client
 
     def create(self, 
@@ -166,25 +198,36 @@ class K8sClusterController:
                 persistent_storage_nimble_csi=False,
                 k8shosts_config = [],
                 ):
-        """Create a K8S Cluster.
+        """[summary]
 
-        Args:
-            name: required, at least 1 characters
-            description: defaults to empty string if not provided
-            k8s_version: Kubernetes version to configure. If not specified defaults to the latest version as supported by the rpms.
-            pod_network_range: Network range to be used for kubernetes pods. Defaults to 10.192.0.0/12
-            service_network_range: Network range to be used for kubernetes services that are exposed with Cluster IP. Defaults to 10.96.0.0/12
-            pod_dns_domain: DNS Domain to be used for kubernetes pods. Defaults to cluster.local
-            persistent_storage_local: Enables local host storage to be available in the kubernetes cluster
-            persistent_storage_nimble_csi: Installs the Nimble CSI plugin for Nimble storage to be available in the kubernetes cluster
-            k8shosts_config: list of K8sClusterHostConfig objects
+        Keyword Arguments:
+            name {[type]} -- [description] (default: {None})
+            description {[type]} -- [description] (default: {None})
+            k8s_version {[type]} -- [description] (default: {None})
+            pod_network_range {str} -- [description] (default: {'10.192.0.0/12'})
+            service_network_range {str} -- [description] (default: {'10.96.0.0/12'})
+            pod_dns_domain {str} -- [description] (default: {'cluster.local'})
+            persistent_storage_local {bool} -- [description] (default: {False})
+            persistent_storage_nimble_csi {bool} -- [description] (default: {False})
+            k8shosts_config {list} -- [description] (default: {[]})
 
         Returns:
-            int: The ID for the K8S Cluster with format '/api/v2/k8scluster/[0-9]+'
-            
-        Raises:
-            APIException
+            [type] -- [description]
         """
+
+        # Create a K8S Cluster.
+        #     name: required, at least 1 characters
+        #     description: defaults to empty string if not provided
+        #     k8s_version: Kubernetes version to configure. If not specified defaults to the latest version as supported by the rpms.
+        #     pod_network_range: Network range to be used for kubernetes pods. Defaults to 10.192.0.0/12
+        #     service_network_range: Network range to be used for kubernetes services that are exposed with Cluster IP. Defaults to 10.96.0.0/12
+        #     pod_dns_domain: DNS Domain to be used for kubernetes pods. Defaults to cluster.local
+        #     persistent_storage_local: Enables local host storage to be available in the kubernetes cluster
+        #     persistent_storage_nimble_csi: Installs the Nimble CSI plugin for Nimble storage to be available in the kubernetes cluster
+        #     k8shosts_config: list of K8sClusterHostConfig objects
+        #     int: The ID for the K8S Cluster with format '/api/v2/k8scluster/[0-9]+'
+        #     APIException
+
         assert isinstance(name, string_types) and len(name) > 0,"'name' must be provided and must be a string"
         assert description is None or isinstance(description, string_types), "'description' if provided, must be a string"
         assert k8s_version is None or isinstance(k8s_version, string_types), "'k8s_version' if provided, must be a string"

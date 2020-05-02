@@ -265,6 +265,8 @@ class TestGetCluster(TestCase):
 
         get_client().k8s_cluster.get(k8scluster_id='/api/v2/k8scluster/123', setup_log=False)
 
+        # TODO test with setup_log = True
+
 class TestWaitForClusterStatus(TestCase):
 
     def mocked_requests_get(*args, **kwargs):

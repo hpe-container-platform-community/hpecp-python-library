@@ -95,6 +95,8 @@ class ContainerPlatformClient(object):
         self.lock = LockController(self)
 
     def create_session(self):
+        """[summary]
+        """
 
         url = self.base_url + "/api/v1/login"
         auth = { "name": self.username, "password": self.password }

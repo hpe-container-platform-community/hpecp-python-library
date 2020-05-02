@@ -31,6 +31,8 @@ class EpicTenant():
     def description(self): return self.json['label']['description']
 
 class EpicTenantList():
+    """[summary]
+    """
 
     def __init__(self, json):
         self.tenants = sorted([EpicTenant(t) for t in json],  key=attrgetter('tenant_id'))
@@ -54,6 +56,8 @@ class EpicTenantList():
         return self
 
 class EpicTenantController:
+    """[summary]
+    """
 
     def __init__(self, client):
         self.client = client
@@ -64,6 +68,12 @@ class EpicTenantController:
         return tenants
 
     def auth_setup(self, tenant_id, data):
+        """[summary]
+
+        Arguments:
+            tenant_id {[type]} -- [description]
+            data {[type]} -- [description]
+        """
         self.client._request(
             url='/api/v1/tenant/{}?external_user_groups'.format(tenant_id), 
             http_method='put', 
