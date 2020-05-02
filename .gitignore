@@ -106,3 +106,5 @@ vcap*.json
 
 hpecp.egg-info/
 .coverage
+docs/build/
+
