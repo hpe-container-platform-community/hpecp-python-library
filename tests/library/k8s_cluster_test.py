@@ -340,10 +340,6 @@ class TestWaitForClusterStatus(TestCase):
             get_client().k8s_cluster.wait_for_status(
                 k8scluster_id='/api/v2/k8scluster/123', timeout_secs=-1, status=[ K8sClusterStatus.ready ])
 
-        with self.assertRaisesRegexp(AssertionError, "At least one 'status' must be provided"):
-            get_client().k8s_cluster.wait_for_status(
-                k8scluster_id='/api/v2/k8scluster/123', timeout_secs=1, status=[ ])
-
         with self.assertRaisesRegexp(AssertionError, "'status' item '0' is not of type K8sClusterStatus"):
             get_client().k8s_cluster.wait_for_status(
                 k8scluster_id='/api/v2/k8scluster/123', timeout_secs=1, status=[ 'abc' ])
@@ -368,6 +364,11 @@ class TestWaitForClusterStatus(TestCase):
         with self.assertRaises(APIItemNotFoundException):
             get_client().k8s_cluster.wait_for_status(
                 k8scluster_id='/api/v2/k8scluster/999', timeout_secs=1, status=[ K8sClusterStatus.ready ])
+
+        # Get the status of a Cluster ID that doesn't exist - without providing a status
+        with self.assertRaises(APIItemNotFoundException):
+            get_client().k8s_cluster.wait_for_status(
+                k8scluster_id='/api/v2/k8scluster/999', timeout_secs=1, status=[])
 
 class TestDeleteCluster(TestCase):
 
