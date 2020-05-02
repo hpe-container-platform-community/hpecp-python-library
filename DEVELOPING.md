@@ -18,8 +18,9 @@ autopep8 --in-place --aggressive --aggressive
 
 ```
 cd docs/
+sphinx-apidoc -o source/ ../hpecp
 make clean html
-open _build/html/index.html
+open build/html/index.html
 ```
 
 ### RELEASING
