@@ -22,7 +22,8 @@ hpeclient = ContainerPlatformClient(username='admin',
 hpeclient.create_session()
 
 print("\nHPE Container Platform K8S Clusters:\n")
-print(hpeclient.k8s_cluster.list().tabulate())
+for c in hpeclient.k8s_cluster.list():
+    print("{:>12} {:>12} {:>12}".format(c.id, c.name, c.k))
 
 cluster_list = hpeclient.k8s_cluster.list()
 if len(cluster_list) == 0:
