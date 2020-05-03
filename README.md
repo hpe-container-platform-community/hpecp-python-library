@@ -38,9 +38,16 @@ client = ContainerPlatformClient(username='admin',
 
 client.create_session() # Login
 
-# Print the list of Tenants
-for tenant in client.epic_tenant.list():    
-    print( "{:>2} | {:>10} | {}".format( tenant.tenant_id, tenant.status, tenant.name ) )
+client.k8s_cluster.list().tabulate(columns=['description', 'id'])
+```
+
+Displays:
+```
++-------------+-----------------------+
+| description |          id           |
++-------------+-----------------------+
+| my cluster  | /api/v2/k8scluster/20 |
++-------------+-----------------------+
 ```
 
 ## Examples
@@ -56,10 +63,27 @@ Log level is controlled with the environment variable `LOG_LEVEL`.
 You may set it programmatically in your code:
 
 ```python
+import os
 os.environ["LOG_LEVEL"] = "DEBUG"
 ```
 
-Typical valid values are ERROR, WARNING, INFO, DEBUG. For a full list of values, see [here](https://docs.python.org/3/library/logging.html#logging-levels)
+Typical valid values are `ERROR`, `WARNING`, `INFO`, `DEBUG`. For a full list of values, see [here](https://docs.python.org/3/library/logging.html#logging-levels)
 
-- INFO: Significant Events
-- DEBUG: API Request Parameters
+- `INFO`: Significant Events
+- `DEBUG`: API Request Parameters
+
+## Documentation
+
+https://hpe-container-platform-community.github.io/hpecp-python-library/index.html (coming soon)
+
+## Features Implemented
+
+| Group        | Method                  | Status   | Bugs/Features        |
+| -------------|-------------------------| --------:|----------------------|
+| Session      | Create Session (login)  | Complete | Reconnect on session expiration [#2](https://github.com/hpe-container-platform-community/hpecp-python-library/issues/2) |
+| K8s Cluster  | Create                  | Complete |                      |
+|              | List                    | Complete |                      |
+|              | Get                     | Complete |                      |
+|              | Delete                  | Complete |                      |
+|              | Watch for status        | Complete |                      |
+| Tenant       | ...                     |          |                      |
