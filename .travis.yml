@@ -15,8 +15,19 @@ script:
   - tox
   - coverage run --source hpecp setup.py test
   - coverage report -m
+
+before_deploy:
   - cd docs
   - make html
+  
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  keep_history: true
+  on:
+    branch: master
+
 
 after_success:
   - coveralls
