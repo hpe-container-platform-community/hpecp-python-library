@@ -1,9 +1,11 @@
-=============================
-HPE Container Platform Python
-=============================
+============
+HPECP Python
+============
 
 Overview
 =========
+
+Python library for HPE Container Platform (HPECP).
 
 Example usage:
 
