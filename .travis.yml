@@ -9,7 +9,6 @@ install:
   - pip install tox-travis
   - pip install python-coveralls
   - pip install coverage==4.5.4
-  - pip install sphinx
 
 script:
   - tox
@@ -20,7 +19,7 @@ jobs:
   include:
     - stage: deploy
         python: 3.8
-        install: pip install -e .[dev]
+        install: pip install sphinx
         script:
           - cd docs
           - make html
