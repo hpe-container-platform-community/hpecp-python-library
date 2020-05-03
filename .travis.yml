@@ -14,7 +14,8 @@ script:
   - tox
   - coverage run --source hpecp setup.py test
   - coverage report -m
-  - cd docs && make html
+  - cd docs
+  - make html
 
 after_success:
   - coveralls
