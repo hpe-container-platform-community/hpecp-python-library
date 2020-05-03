@@ -1,7 +1,8 @@
+=============================
 HPE Container Platform Python
 =============================
 
-Some Code
+Overview
 =========
 
 .. code-block:: python
@@ -13,16 +14,9 @@ Guide
 =====
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Contents:
 
+   installation
+   hpecp
    license
-   help
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
