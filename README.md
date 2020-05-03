@@ -63,6 +63,7 @@ Log level is controlled with the environment variable `LOG_LEVEL`.
 You may set it programmatically in your code:
 
 ```python
+import os
 os.environ["LOG_LEVEL"] = "DEBUG"
 ```
 
