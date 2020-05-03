@@ -26,6 +26,9 @@ jobs:
         - pip install tox-travis
         - pip install python-coveralls
         - pip install coverage==4.5.4
+        - pip install tabulate
+        - pip install six
+        - pip install polling
         - pip install sphinx
       script:
         - cd docs
