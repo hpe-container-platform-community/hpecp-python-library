@@ -32,8 +32,64 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="hpecp-epic-worker-module">
-<h1>hpecp.epic_worker module<a class="headerlink" href="#hpecp-epic-worker-module" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-hpecp.epic_worker">
+<span id="hpecp-epic-worker-module"></span><h1>hpecp.epic_worker module<a class="headerlink" href="#module-hpecp.epic_worker" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="hpecp.epic_worker.EpicWorkerController">
+<em class="property">class </em><code class="sig-prename descclassname">hpecp.epic_worker.</code><code class="sig-name descname">EpicWorkerController</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">client</span></em><span class="sig-paren">)</span><a class="headerlink" href="#hpecp.epic_worker.EpicWorkerController" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="hpecp.epic_worker.EpicWorkerController.add_gateway">
+<code class="sig-name descname">add_gateway</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="headerlink" href="#hpecp.epic_worker.EpicWorkerController.add_gateway" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl>
+<dt>Example:</dt><dd><dl>
+<dt>data = {</dt><dd><p>“ip”:”10.1.0.105”,
+“credentials”:{</p>
+<blockquote>
+<div><p>“type”:”ssh_key_access”,
+“ssh_key_data”:”—–BEGIN RSA PRIVATE KEY—–…—–END RSA PRIVATE KEY—–</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+<dl>
+<dt>“</dt><dd><blockquote>
+<div><p>},
+“tags”:[],
+“proxy_nodes_hostname”:”ip-10-1-0-19.eu-west-2.compute.internal”,
+“purpose”:”proxy”</p>
+</div></blockquote>
+<p>},</p>
+<p>Returns: gateway ID</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="hpecp.epic_worker.EpicWorkerController.get_gateway">
+<code class="sig-name descname">get_gateway</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#hpecp.epic_worker.EpicWorkerController.get_gateway" title="Permalink to this definition">¶</a></dt>
+<dd><p>See: <a class="reference external" href="https:/">https:/</a>/&lt;&lt;controller_ip&gt;&gt;/apidocs/site-admin-api.html for the schema of the  response object</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="hpecp.epic_worker.EpicWorkerController.get_gateways">
+<code class="sig-name descname">get_gateways</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hpecp.epic_worker.EpicWorkerController.get_gateways" title="Permalink to this definition">¶</a></dt>
+<dd><p>See: <a class="reference external" href="https:/">https:/</a>/&lt;&lt;controller_ip&gt;&gt;/apidocs/site-admin-api.html for the schema of the  response object</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="hpecp.epic_worker.EpicWorkerController.wait_for_gateway_state">
+<code class="sig-name descname">wait_for_gateway_state</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">state</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">timeout_secs</span><span class="o">=</span><span class="default_value">60</span></em><span class="sig-paren">)</span><a class="headerlink" href="#hpecp.epic_worker.EpicWorkerController.wait_for_gateway_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses: <a class="reference external" href="https://github.com/justiniso/polling/blob/master/polling.py">https://github.com/justiniso/polling/blob/master/polling.py</a></p>
+<p>status: WorkerK8sStatus value, e.g. WorkerK8sStatus.configured</p>
+<p>raises: Exception</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 

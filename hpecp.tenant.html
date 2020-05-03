@@ -32,8 +32,110 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="hpecp-tenant-module">
-<h1>hpecp.tenant module<a class="headerlink" href="#hpecp-tenant-module" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-hpecp.tenant">
+<span id="hpecp-tenant-module"></span><h1>hpecp.tenant module<a class="headerlink" href="#module-hpecp.tenant" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="hpecp.tenant.Tenant">
+<em class="property">class </em><code class="sig-prename descclassname">hpecp.tenant.</code><code class="sig-name descname">Tenant</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">json</span></em><span class="sig-paren">)</span><a class="headerlink" href="#hpecp.tenant.Tenant" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="hpecp.tenant.Tenant.description">
+<em class="property">property </em><code class="sig-name descname">description</code><a class="headerlink" href="#hpecp.tenant.Tenant.description" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="hpecp.tenant.Tenant.id">
+<em class="property">property </em><code class="sig-name descname">id</code><a class="headerlink" href="#hpecp.tenant.Tenant.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="hpecp.tenant.Tenant.name">
+<em class="property">property </em><code class="sig-name descname">name</code><a class="headerlink" href="#hpecp.tenant.Tenant.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="hpecp.tenant.Tenant.status">
+<em class="property">property </em><code class="sig-name descname">status</code><a class="headerlink" href="#hpecp.tenant.Tenant.status" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="hpecp.tenant.Tenant.tenant_type">
+<em class="property">property </em><code class="sig-name descname">tenant_type</code><a class="headerlink" href="#hpecp.tenant.Tenant.tenant_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="hpecp.tenant.TenantController">
+<em class="property">class </em><code class="sig-prename descclassname">hpecp.tenant.</code><code class="sig-name descname">TenantController</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">client</span></em><span class="sig-paren">)</span><a class="headerlink" href="#hpecp.tenant.TenantController" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>[summary]</p>
+<dl class="py method">
+<dt id="hpecp.tenant.TenantController.auth_setup">
+<code class="sig-name descname">auth_setup</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tenant_id</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="headerlink" href="#hpecp.tenant.TenantController.auth_setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>[summary]</p>
+<dl>
+<dt>Arguments:</dt><dd><p>tenant_id {[type]} – [description]
+data {[type]} – [description]</p>
+</dd>
+<dt>Example:</dt><dd><dl>
+<dt>data =  {“external_user_groups”:[</dt><dd><dl class="simple">
+<dt>{</dt><dd><p>“role”:”/api/v1/role/2”, # 2 = Admins
+“group”:”CN=DemoTenantAdmins,CN=Users,DC=samdom,DC=example,DC=com”</p>
+</dd>
+</dl>
+<p>},
+{</p>
+<blockquote>
+<div><p>“role”:”/api/v1/role/3”, # 3 = Members
+“group”:”CN=DemoTenantUsers,CN=Users,DC=samdom,DC=example,DC=com”</p>
+</div></blockquote>
+<p>}]}</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="hpecp.tenant.TenantController.create">
+<code class="sig-name descname">create</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">description</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">tenant_type</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">k8s_cluster</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#hpecp.tenant.TenantController.create" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="hpecp.tenant.TenantController.get">
+<code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tenant_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#hpecp.tenant.TenantController.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="hpecp.tenant.TenantController.list">
+<code class="sig-name descname">list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hpecp.tenant.TenantController.list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="hpecp.tenant.TenantList">
+<em class="property">class </em><code class="sig-prename descclassname">hpecp.tenant.</code><code class="sig-name descname">TenantList</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">json</span></em><span class="sig-paren">)</span><a class="headerlink" href="#hpecp.tenant.TenantList" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>[summary]</p>
+<dl class="py method">
+<dt id="hpecp.tenant.TenantList.next">
+<code class="sig-name descname">next</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hpecp.tenant.TenantList.next" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="hpecp.tenant.TenantList.tabulate">
+<code class="sig-name descname">tabulate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hpecp.tenant.TenantList.tabulate" title="Permalink to this definition">¶</a></dt>
+<dd><p>[summary]</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>[type] – [description]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 
