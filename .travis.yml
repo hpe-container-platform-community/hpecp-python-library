@@ -16,19 +16,23 @@ script:
   - coverage run --source hpecp setup.py test
   - coverage report -m
 
-before_deploy:
-  - cd docs
-  - make html
-  
-deploy:
-  provider: pages
-  skip_cleanup: true
-  github_token: $GITHUB_TOKEN
-  keep_history: true
-  on:
-    branch: master
-  local-dir: docs/build/html
-
+jobs:
+  include:
+    - stage: deploy
+        python: 3.8
+        install: pip install -e .[dev]
+        script:
+          - cd docs
+          - make html
+        deploy:
+          provider: pages
+          skip_cleanup: true
+          github_token: $GITHUB_TOKEN
+          keep-history: true
+          on:
+          branch: master
+          local_dir: docs/build/html
+          
 after_success:
   - coveralls
 
