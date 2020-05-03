@@ -9,6 +9,7 @@ from .k8s_worker import K8sWorkerController
 from .k8s_cluster import K8sClusterController
 from .license import LicenseController
 from .lock import LockController
+from .exceptions import ContainerPlatformClientException, APIException, APIItemNotFoundException
 
 import requests
 import json
@@ -21,27 +22,6 @@ if PY3:
     string_types = str
 else:
     string_types = basestring
-
-class ContainerPlatformClientException(Exception):
-    def __init__(self, message, *args):
-        self.message = message
-        super( ContainerPlatformClientException, self).__init__(message, *args) 
-
-class APIException(Exception):
-    def __init__(self, message, request_method, request_url, request_data=None, *args):
-        self.message = message
-        self.request_method = request_method
-        self.request_url = request_url
-        self.request_data = request_data
-        super( APIException, self).__init__(message, request_method, request_url, request_data, *args) 
-
-class APIItemNotFoundException(APIException):
-    def __init__(self, message, request_method, request_url, request_data=None, *args):
-        self.message = message
-        self.request_method = request_method
-        self.request_url = request_url
-        self.request_data = request_data
-        super( APIException, self).__init__(message, request_method, request_url, request_data, *args) 
 
 class ContainerPlatformClient(object):
 

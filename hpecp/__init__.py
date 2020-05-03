@@ -9,4 +9,6 @@ from __future__ import absolute_import
 
 from .logger import Logger
 
-from .client import ContainerPlatformClient, ContainerPlatformClientException, APIException, APIItemNotFoundException
+from .client import ContainerPlatformClient
+
+from .exceptions import ContainerPlatformClientException, APIException, APIItemNotFoundException
