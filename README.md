@@ -38,9 +38,16 @@ client = ContainerPlatformClient(username='admin',
 
 client.create_session() # Login
 
-# Print the list of Tenants
-for tenant in client.epic_tenant.list():    
-    print( "{:>2} | {:>10} | {}".format( tenant.tenant_id, tenant.status, tenant.name ) )
+client.k8s_cluster.list().tabulate(['description', 'id'])
+```
+
+Displays:
+```
++-------------+-----------------------+
+| description |          id           |
++-------------+-----------------------+
+| my cluster  | /api/v2/k8scluster/20 |
++-------------+-----------------------+
 ```
 
 ## Examples
