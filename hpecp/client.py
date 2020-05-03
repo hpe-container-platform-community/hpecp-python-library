@@ -1,4 +1,5 @@
 from __future__ import absolute_import
+from six import raise_from
 
 from .logger import Logger
 from .tenant import TenantController
@@ -107,20 +108,12 @@ class ContainerPlatformClient(object):
             response.raise_for_status()
 
         except requests.exceptions.ConnectionError as e:
-            
-            if PY3:
-                raise APIException(
+            raise_from(APIException(
                         message='Could not connect to controller', 
                         request_method='post', 
                         request_url=url
-                        ) from None
-            else:
-                # Python 2x users will have to put up with ugly stacktrace
-                raise APIException(
-                        message='Could not connect to controller', 
-                        request_method='post', 
-                        request_url=url
-                        )
+                        ), None)
+
         except requests.exceptions.RequestException as e:
             if response is not None:
                 self.log.error('Auth Response: ' + response.text)
