@@ -43,12 +43,17 @@ class K8sCluster():
 
     def __init__(self, json):
         self.json = json
+        self.columns = K8sCluster.__class_dir__()
     
     def __dir__(self):
-        return K8sCluster.__class_dir__()
+        return self.columns
+        #return K8sCluster.__class_dir__()
 
     def __getitem__(self, item):
         return getattr(self, self.__dir__()[item])
+
+    def set_columns(self, columns):
+        self.columns = columns
 
     @property
     def id(self): return self.json['_links']['self']['href']
@@ -117,6 +122,7 @@ class K8sClusterList():
         """
         self.json = json
         self.clusters = sorted([K8sCluster(t) for t in json],  key=attrgetter('id'))
+        self.tenant_columns = K8sCluster.__class_dir__()
 
     def __getitem__(self, item):
         return self.clusters[item]
@@ -125,13 +131,17 @@ class K8sClusterList():
     def next(self):
         if not self.clusters:
            raise StopIteration
-        return self.clusters.pop(0)
+        tenant = self.clusters.pop(0)
+        tenant.set_columns(self.tenant_columns)
+        return tenant
 
     # Python 3
     def __next__(self):
         if not self.clusters:
            raise StopIteration
-        return self.clusters.pop(0)
+        tenant = self.clusters.pop(0)
+        tenant.set_columns(self.tenant_columns)
+        return tenant
 
     def __iter__(self):
         return self
@@ -139,13 +149,16 @@ class K8sClusterList():
     def __len__(self):
         return len(self.clusters)
 
-    def tabulate(self):
+    def tabulate(self, columns=[]):
         """[summary]
 
         Returns:
             [type] -- [description]
         """
-        return tabulate(self, headers=K8sCluster.__class_dir__(), tablefmt="pretty")
+        if len(columns):
+            self.tenant_columns = columns
+
+        return tabulate(self, headers=self.tenant_columns, tablefmt="pretty")
 
 class K8sClusterHostConfig():
     """[summary]
