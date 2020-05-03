@@ -30,9 +30,11 @@ class K8sCluster():
     """
     """
 
+    all_fields = [ 'id', 'name', 'description', 'k8s_version', 'created_by_user_id', 'created_by_user_name', 'created_time', 'status' ]
+
     @staticmethod
     def __class_dir__():
-        return [ 'id', 'name', 'description', 'k8s_version', 'created_by_user_id', 'created_by_user_name', 'created_time', 'status' ]
+        return K8sCluster.all_fields
 
     def __repr__(self):
         return "<K8sCluster id:{} name:{} description:{} status:{}>".format( self.id, self.name, self.description, self.status)
@@ -122,7 +124,7 @@ class K8sClusterList():
         """
         self.json = json
         self.clusters = sorted([K8sCluster(t) for t in json],  key=attrgetter('id'))
-        self.tenant_columns = K8sCluster.__class_dir__()
+        self.tenant_columns = K8sCluster.all_fields
 
     def __getitem__(self, item):
         return self.clusters[item]
@@ -149,16 +151,29 @@ class K8sClusterList():
     def __len__(self):
         return len(self.clusters)
 
-    def tabulate(self, columns=[]):
-        """[summary]
+    def tabulate(self, columns=K8sCluster.all_fields):
+        """Provide a tabular represenation of the Cluster List
+
+        Keyword Arguments:
+            columns {list[str]} -- list of columns to return in the table (default: {K8sCluster.all_fields})
 
         Returns:
-            [type] -- [description]
-        """
-        if len(columns):
-            self.tenant_columns = columns
+            str -- table output
 
-        return tabulate(self, headers=self.tenant_columns, tablefmt="pretty")
+        Example:
+            # Print the cluster list with all the fields
+            print(hpeclient.cluster.list().tabulate())
+
+            # Print the cluster list with a subset of the fields
+            print(hpeclient.cluster.list().tabulate(columns=['id', 'name', 'description']))
+        """
+        if columns != K8sCluster.all_fields:
+            assert isinstance(columns, list), "'columns' parameter must be list"
+            for field in K8sCluster.all_fields:
+                assert field in K8sCluster.all_fields, "item '{}' is not a field in K8sCluster.all_fields".format(field)
+
+        self.tenant_columns = columns
+        return tabulate(self, headers=columns, tablefmt="pretty")
 
 class K8sClusterHostConfig():
     """[summary]

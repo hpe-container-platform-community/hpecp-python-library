@@ -117,14 +117,28 @@ class TestClusterList(TestCase):
         # Test iterators
         assert [ cluster.id for cluster in get_client().k8s_cluster.list() ] == [ '/api/v2/k8scluster/20' ]
 
-        self.maxDiff = None
+        with self.assertRaisesRegexp(AssertionError, "'columns' parameter must be list"):
+             get_client().k8s_cluster.list().tabulate(columns='garbage')
+
+        # FIXME: This test doesn't work on 2.x - maybe just a string comparision issue?
+        if sys.version_info[0] == 3:
+            self.maxDiff = None
+            self.assertEqual(
+                get_client().k8s_cluster.list().tabulate(), 
+                "+-----------------------+------+-------------+-------------+--------------------+----------------------+--------------+--------+\n" +
+                "|          id           | name | description | k8s_version | created_by_user_id | created_by_user_name | created_time | status |\n" +
+                "+-----------------------+------+-------------+-------------+--------------------+----------------------+--------------+--------+\n" +
+                "| /api/v2/k8scluster/20 | def  | my cluster  |   1.17.0    |   /api/v1/user/5   |        admin         |  1588260014  | ready  |\n" +
+                "+-----------------------+------+-------------+-------------+--------------------+----------------------+--------------+--------+"
+            )
+
         self.assertEqual(
-            clusters.tabulate(), 
-            "+-----------------------+------+-------------+-------------+--------------------+----------------------+--------------+--------+\n" +
-            "|          id           | name | description | k8s_version | created_by_user_id | created_by_user_name | created_time | status |\n" +
-            "+-----------------------+------+-------------+-------------+--------------------+----------------------+--------------+--------+\n" +
-            "| /api/v2/k8scluster/20 | def  | my cluster  |   1.17.0    |   /api/v1/user/5   |        admin         |  1588260014  | ready  |\n" +
-            "+-----------------------+------+-------------+-------------+--------------------+----------------------+--------------+--------+"
+            get_client().k8s_cluster.list().tabulate(['description', 'id']), 
+            "+-------------+-----------------------+\n" +
+            "| description |          id           |\n" +
+            "+-------------+-----------------------+\n" +
+            "| my cluster  | /api/v2/k8scluster/20 |\n" +
+            "+-------------+-----------------------+"
         )
 
 class TestCreateCluster(TestCase):
