@@ -107,11 +107,20 @@ class ContainerPlatformClient(object):
             response.raise_for_status()
 
         except requests.exceptions.ConnectionError as e:
-            raise APIException(
-                    message='Could not connect to controller', 
-                    request_method='post', 
-                    request_url=url
-                    ) from None
+            
+            if PY3:
+                raise APIException(
+                        message='Could not connect to controller', 
+                        request_method='post', 
+                        request_url=url
+                        ) from None
+            else:
+                # Python 2x users will have to put up with ugly stacktrace
+                raise APIException(
+                        message='Could not connect to controller', 
+                        request_method='post', 
+                        request_url=url
+                        )
         except requests.exceptions.RequestException as e:
             if response is not None:
                 self.log.error('Auth Response: ' + response.text)
