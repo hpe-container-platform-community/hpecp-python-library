@@ -71,6 +71,10 @@ Typical valid values are `ERROR`, `WARNING`, `INFO`, `DEBUG`. For a full list of
 - `INFO`: Significant Events
 - `DEBUG`: API Request Parameters
 
+## Documentation
+
+https://hpe-container-platform-community.github.io/hpecp-python-library/index.html (coming soon)
+
 ## Features Implemented
 
 | Group        | Method                  | Status   | Bugs/Features        |
