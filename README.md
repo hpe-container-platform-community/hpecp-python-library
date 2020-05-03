@@ -70,3 +70,15 @@ Typical valid values are ERROR, WARNING, INFO, DEBUG. For a full list of values,
 
 - INFO: Significant Events
 - DEBUG: API Request Parameters
+
+## Features Implemented
+
+| Group        | Method                  | Status   | Bugs/Features        |
+| -------------|-------------------------| --------:|----------------------|
+| Session      | Create Session (login)  | Complete | Reconnect on session expiration [#2](https://github.com/hpe-container-platform-community/hpecp-python-library/issues/2) |
+| K8s Cluster  | Create                  | Complete |                      |
+|              | List                    | Complete |                      |
+|              | Get                     | Complete |                      |
+|              | Delete                  | Complete |                      |
+|              | Watch for status        | Complete |                      |
+| Tenant       | ...                     |          |                      |
