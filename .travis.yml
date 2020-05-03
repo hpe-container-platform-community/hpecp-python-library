@@ -27,7 +27,7 @@ deploy:
   keep_history: true
   on:
     branch: master
-
+  local-dir: docs/build/html
 
 after_success:
   - coveralls
