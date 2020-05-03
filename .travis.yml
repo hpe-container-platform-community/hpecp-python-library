@@ -28,7 +28,6 @@ jobs:
         - pip install coverage==4.5.4
         - pip install sphinx
       script:
-        - tox
         - cd docs
         - make html
         - touch ./build/html/.nojekyll
