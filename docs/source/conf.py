@@ -20,7 +20,7 @@ print(sys.path[0])
 
 # -- Project information -----------------------------------------------------
 
-project = 'HPE Container Platform Python Library'
+project = 'HPE Container Platform'
 copyright = '2020, Chris Snow'
 author = 'Chris Snow'
 
