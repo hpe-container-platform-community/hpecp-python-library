@@ -31,7 +31,7 @@ jobs:
         - tox
         - cd docs
         - make html
-        - touch /html/.nojekyll
+        - touch ./build/html/.nojekyll
       deploy:
          provider: pages
          skip_cleanup: true
