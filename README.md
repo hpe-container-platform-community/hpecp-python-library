@@ -8,6 +8,7 @@
 
 ```diff
 - This project is a prototype - not much to see here yet!
+- APIs are very likely to change between commits and could break your code.
 ```
 
 ## Installation
