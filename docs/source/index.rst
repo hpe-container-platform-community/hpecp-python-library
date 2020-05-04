@@ -29,6 +29,7 @@ Contents
 
    installation
    hpecp
+   logging
    license
 
 GitHub
