@@ -27,7 +27,7 @@ def setup(app):
 
 # -- Project information -----------------------------------------------------
 
-project = 'HPE Container Platform'
+project = 'HPE Container Platform Python Library'
 copyright = '2020, Chris Snow'
 author = 'Chris Snow'
 
