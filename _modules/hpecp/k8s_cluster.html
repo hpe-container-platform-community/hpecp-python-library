@@ -84,6 +84,13 @@
     <span class="n">string_types</span> <span class="o">=</span> <span class="n">basestring</span>
 
 <div class="viewcode-block" id="K8sClusterStatus"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterStatus">[docs]</a><span class="k">class</span> <span class="nc">K8sClusterStatus</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The statuses for a K8S Cluster</span>
+
+<span class="sd">    Bases: enum.Enum</span>
+
+<span class="sd">    Note: The integer values do not have a meaning outside of this library</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">ready</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">creating</span> <span class="o">=</span> <span class="mi">2</span>
     <span class="n">updating</span> <span class="o">=</span> <span class="mi">3</span>
@@ -94,14 +101,40 @@
 
 
 <div class="viewcode-block" id="K8sCluster"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sCluster">[docs]</a><span class="k">class</span> <span class="nc">K8sCluster</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;This class represents a K8s Cluster&quot;&quot;&quot;</span>
 
-    <span class="n">all_fields</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;description&#39;</span><span class="p">,</span> <span class="s1">&#39;k8s_version&#39;</span><span class="p">,</span> <span class="s1">&#39;created_by_user_id&#39;</span><span class="p">,</span> <span class="s1">&#39;created_by_user_name&#39;</span><span class="p">,</span> <span class="s1">&#39;created_time&#39;</span><span class="p">,</span> <span class="s1">&#39;status&#39;</span> <span class="p">]</span>
+    <span class="n">all_fields</span> <span class="o">=</span> <span class="p">[</span> 
+        <span class="s1">&#39;id&#39;</span><span class="p">,</span> 
+        <span class="s1">&#39;name&#39;</span><span class="p">,</span> 
+        <span class="s1">&#39;description&#39;</span><span class="p">,</span> 
+        <span class="s1">&#39;k8s_version&#39;</span><span class="p">,</span> 
+        <span class="s1">&#39;created_by_user_id&#39;</span><span class="p">,</span> 
+        <span class="s1">&#39;created_by_user_name&#39;</span><span class="p">,</span> 
+        <span class="s1">&#39;created_time&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;k8shosts_config&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;admin_kube_config&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;dashboard_token&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;api_endpoint_access&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;dashboard_endpoint_access&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;cert_data&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;status&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;status_message&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;_links&#39;</span>
+        <span class="p">]</span>
 
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">__class_dir__</span><span class="p">():</span>
-        <span class="k">return</span> <span class="n">K8sCluster</span><span class="o">.</span><span class="n">all_fields</span>
+<div class="viewcode-block" id="K8sCluster.__init__"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sCluster.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create an instance of K8sCluster from json data returned from the HPE Container Platform API.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            json : str</span>
+<span class="sd">                HPECP username</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            K8sCluster: </span>
+<span class="sd">                An instance of K8sCluster</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">json</span> <span class="o">=</span> <span class="n">json</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">K8sCluster</span><span class="o">.</span><span class="n">all_fields</span></div>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;&lt;K8sCluster id:</span><span class="si">{}</span><span class="s2"> name:</span><span class="si">{}</span><span class="s2"> description:</span><span class="si">{}</span><span class="s2"> status:</span><span class="si">{}</span><span class="s2">&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>
@@ -110,13 +143,8 @@
         <span class="k">return</span> <span class="s2">&quot;K8sCluster(id=</span><span class="si">{}</span><span class="s2">, name=</span><span class="si">{}</span><span class="s2">, description=</span><span class="si">{}</span><span class="s2">, status=</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>
 
-<div class="viewcode-block" id="K8sCluster.__init__"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sCluster.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">json</span> <span class="o">=</span> <span class="n">json</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">K8sCluster</span><span class="o">.</span><span class="n">__class_dir__</span><span class="p">()</span></div>
-    
     <span class="k">def</span> <span class="fm">__dir__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">columns</span>
-        <span class="c1">#return K8sCluster.__class_dir__()</span>
 
     <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__dir__</span><span class="p">()[</span><span class="n">item</span><span class="p">])</span>

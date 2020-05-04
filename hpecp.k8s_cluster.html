@@ -90,8 +90,9 @@
 <dl class="py class">
 <dt id="hpecp.k8s_cluster.K8sClusterStatus">
 <em class="property">class </em><code class="sig-prename descclassname">hpecp.k8s_cluster.</code><code class="sig-name descname">K8sClusterStatus</code><a class="reference internal" href="_modules/hpecp/k8s_cluster.html#K8sClusterStatus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_cluster.K8sClusterStatus" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
-<p>An enumeration.</p>
+<dd><p>The statuses for a K8S Cluster</p>
+<p>Bases: enum.Enum</p>
+<p>Note: The integer values do not have a meaning outside of this library</p>
 <dl class="py attribute">
 <dt id="hpecp.k8s_cluster.K8sClusterStatus.ready">
 <code class="sig-name descname">ready</code><em class="property"> = 1</em><a class="headerlink" href="#hpecp.k8s_cluster.K8sClusterStatus.ready" title="Permalink to this definition">¶</a></dt>
@@ -132,16 +133,28 @@
 <dl class="py class">
 <dt id="hpecp.k8s_cluster.K8sCluster">
 <em class="property">class </em><code class="sig-prename descclassname">hpecp.k8s_cluster.</code><code class="sig-name descname">K8sCluster</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">json</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_cluster.html#K8sCluster"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_cluster.K8sCluster" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dd><p>This class represents a K8s Cluster</p>
 <dl class="py attribute">
 <dt id="hpecp.k8s_cluster.K8sCluster.all_fields">
-<code class="sig-name descname">all_fields</code><em class="property"> = ['id', 'name', 'description', 'k8s_version', 'created_by_user_id', 'created_by_user_name', 'created_time', 'status']</em><a class="headerlink" href="#hpecp.k8s_cluster.K8sCluster.all_fields" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">all_fields</code><em class="property"> = ['id', 'name', 'description', 'k8s_version', 'created_by_user_id', 'created_by_user_name', 'created_time', 'k8shosts_config', 'admin_kube_config', 'dashboard_token', 'api_endpoint_access', 'dashboard_endpoint_access', 'cert_data', 'status', 'status_message', '_links']</em><a class="headerlink" href="#hpecp.k8s_cluster.K8sCluster.all_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="hpecp.k8s_cluster.K8sCluster.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">json</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_cluster.html#K8sCluster.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_cluster.K8sCluster.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+<dd><p>Create an instance of K8sCluster from json data returned from the HPE Container Platform API.</p>
+<dl class="simple">
+<dt>Parameters:</dt><dd><dl class="simple">
+<dt>json<span class="classifier">str</span></dt><dd><p>HPECP username</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>K8sCluster: </dt><dd><p>An instance of K8sCluster</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -229,8 +242,7 @@
 <dl class="py class">
 <dt id="hpecp.k8s_cluster.K8sClusterList">
 <em class="property">class </em><code class="sig-prename descclassname">hpecp.k8s_cluster.</code><code class="sig-name descname">K8sClusterList</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">json</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_cluster.html#K8sClusterList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_cluster.K8sClusterList" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>[summary]</p>
+<dd><p>[summary]</p>
 <dl class="py method">
 <dt id="hpecp.k8s_cluster.K8sClusterList.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">json</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_cluster.html#K8sClusterList.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_cluster.K8sClusterList.__init__" title="Permalink to this definition">¶</a></dt>
@@ -248,7 +260,7 @@
 
 <dl class="py method">
 <dt id="hpecp.k8s_cluster.K8sClusterList.tabulate">
-<code class="sig-name descname">tabulate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">columns</span><span class="o">=</span><span class="default_value">['id', 'name', 'description', 'k8s_version', 'created_by_user_id', 'created_by_user_name', 'created_time', 'status']</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_cluster.html#K8sClusterList.tabulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_cluster.K8sClusterList.tabulate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">tabulate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">columns</span><span class="o">=</span><span class="default_value">['id', 'name', 'description', 'k8s_version', 'created_by_user_id', 'created_by_user_name', 'created_time', 'k8shosts_config', 'admin_kube_config', 'dashboard_token', 'api_endpoint_access', 'dashboard_endpoint_access', 'cert_data', 'status', 'status_message', '_links']</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_cluster.html#K8sClusterList.tabulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_cluster.K8sClusterList.tabulate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Provide a tabular represenation of the Cluster List</p>
 <dl>
 <dt>Keyword Arguments:</dt><dd><p>columns {list[str]} – list of columns to return in the table (default: {K8sCluster.all_fields})</p>
@@ -268,8 +280,7 @@ print(hpeclient.cluster.list().tabulate(columns=[‘id’, ‘name’, ‘descri
 <dl class="py class">
 <dt id="hpecp.k8s_cluster.K8sClusterHostConfig">
 <em class="property">class </em><code class="sig-prename descclassname">hpecp.k8s_cluster.</code><code class="sig-name descname">K8sClusterHostConfig</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em>, <em class="sig-param"><span class="n">role</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_cluster.html#K8sClusterHostConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_cluster.K8sClusterHostConfig" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>[summary]</p>
+<dd><p>[summary]</p>
 <dl class="py method">
 <dt id="hpecp.k8s_cluster.K8sClusterHostConfig.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em>, <em class="sig-param"><span class="n">role</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_cluster.html#K8sClusterHostConfig.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_cluster.K8sClusterHostConfig.__init__" title="Permalink to this definition">¶</a></dt>
@@ -296,8 +307,7 @@ role {[type]} – [description]</p>
 <dl class="py class">
 <dt id="hpecp.k8s_cluster.K8sClusterController">
 <em class="property">class </em><code class="sig-prename descclassname">hpecp.k8s_cluster.</code><code class="sig-name descname">K8sClusterController</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">client</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_cluster.html#K8sClusterController"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_cluster.K8sClusterController" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>[summary]</p>
+<dd><p>[summary]</p>
 <dl class="py method">
 <dt id="hpecp.k8s_cluster.K8sClusterController.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">client</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_cluster.html#K8sClusterController.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_cluster.K8sClusterController.__init__" title="Permalink to this definition">¶</a></dt>
