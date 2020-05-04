@@ -1,3 +1,7 @@
+"""
+This module is the main module that users of this library will interact with.
+"""
+
 from __future__ import absolute_import
 from six import raise_from
 
@@ -31,18 +35,32 @@ class ContainerPlatformClient(object):
                  api_host   = None,
                  api_port   = 8080,
                  use_ssl    = True,
-                 verify_ssl = True):
-        """ContainerPlatformClient object.
+                 verify_ssl = True
+                 ):
+        """The ContainerPlatformClient object is the central object that users of this library work with.  Other
 
-        Keyword arguments:
-        username   -- HPECP username
-        password   -- HPECP password
-        api_host   -- HPECP api_host
-        api_port   -- HPECP api_port
-        use_ssl    -- Connect to HPECP using SSL: True|False
-        verify_ssl -- Verify the HPECP SSL Certificate? True|False|path to a CA_BUNDLE file or directory with certificates of trusted CAs
+        Parameters:
+            username : str
+            password : str
+                HPECP password
+            api_host : str
+                HPECP api_host 
+            api_port : int
+                HPECP api_port 
+            use_ssl : bool:
+                Connect to HPECP using SSL: True|False 
+            verify_ssl : bool|str
+                See https://requests.readthedocs.io/en/master/user/advanced/#ssl-cert-verification
+            
+        Returns:
+            ContainerPlatformClient: 
+                An instance of ContainerPlatformClient is returned.
+
+        Notes:
+            Instantiating the ContainerPlatformClient does not make any connection to the HPE Container Platform API. The 
+            initial connection would be made by calling the method :py:meth:`create_session`.
+
         """
-
         self.log = Logger().get_logger(self.__class__.__name__)
         
         assert isinstance(username, string_types), "'username' parameter must be of type string"
@@ -75,9 +93,35 @@ class ContainerPlatformClient(object):
         self.license = LicenseController(self)
         self.lock = LockController(self)
 
-    def create_session(self):
-        """[summary]
+    @property
+    def tenant(self):
         """
+        This attribute is a reference to an object of type `.tenant.TenantController`.
+
+        See the class :py:class:`.tenant.TenantController` for the methods available.
+
+        Example::
+
+            client = ContainerPlatformClient(...)
+            client.create_session()
+            client.tenant.list()
+        
+        This example calls the method :py:meth:`list() <.tenant.TenantController.list>` in :py:class:`.tenant.TenantController`.
+        """
+
+        return self.tenant
+
+    @property
+    def log(self):
+        """
+        This attribute is a reference to :py:class:`.logger.Logger`
+
+        Example:
+        """
+
+        return self.tenant
+
+    def create_session(self):
 
         url = self.base_url + "/api/v1/login"
         auth = { "name": self.username, "password": self.password }

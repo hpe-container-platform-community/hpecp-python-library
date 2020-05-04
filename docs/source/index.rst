@@ -25,12 +25,11 @@ Example usage:
    client.k8s_cluster.list().tabulate(columns=['description', 'id'])
 
 
-Guide
-=====
+Contents
+========
 
 .. toctree::
    :maxdepth: 1
-   :caption: Contents:
 
    installation
    hpecp
