@@ -21,27 +21,15 @@ Example usage:
    client.k8s_cluster.list().tabulate(columns=['description', 'id'])
 
 
-Installation
-============
-
-:ref:`Installation Instructions <installation>`
-
-API Docs
+Contents
 ========
 
-:ref:`API Documenation <apidocs>`
+.. toctree::
+   :maxdepth: 1
 
-Logging
-=======
+   installation
+   hpecp
+   logging
+   github
+   license
 
-:ref:`Logging information <logging>`
-
-GitHub
-======
-
-`Source Repository <https://github.com/hpe-container-platform-community/hpecp-python-library>`_
-
-License
-=======
-
-:ref:`Apache 2.0 License <license>`
