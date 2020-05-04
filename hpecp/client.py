@@ -115,9 +115,20 @@ class ContainerPlatformClient(object):
     @property
     def log(self):
         """
-        This attribute is a reference to :py:class:`.logger.Logger`
+        This attribute is a reference to :py:class:`.logger.Logger`.  The log function can be called from controller objects
+        via the `client` parameter passed in during instantiation of the controller.
 
-        Example:
+        Example::
+
+            class K8sClusterController:
+                ...
+
+                def __init__(self, client):
+                    self.client = client
+
+                def some_method(self):
+                    ...
+                    self.client.log.error("Some Error")
         """
 
         return self._log
@@ -135,7 +146,7 @@ class ContainerPlatformClient(object):
             requests.exceptions.RequestException
                 for exceptions that are not a connection error
         """
-        
+
         url = self.base_url + "/api/v1/login"
         auth = { "name": self.username, "password": self.password }
 
