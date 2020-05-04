@@ -56,7 +56,7 @@ class ContainerPlatformClient(object):
             
         Returns:
             ContainerPlatformClient: 
-                An instance of ContainerPlatformClient is returned.
+                An instance of ContainerPlatformClient
 
         Notes:
             Instantiating the ContainerPlatformClient does not make any connection to the HPE Container Platform API. The 

@@ -17,6 +17,13 @@ else:
     string_types = basestring
 
 class K8sClusterStatus(Enum):
+    """The statuses for a K8S Cluster
+
+    Bases: enum.Enum
+
+    Note: The integer values do not have a meaning outside of this library
+    """
+
     ready = 1
     creating = 2
     updating = 3
@@ -27,7 +34,7 @@ class K8sClusterStatus(Enum):
 
 
 class K8sCluster():
-    """This class represents a K8s Cluster """
+    """This class represents a K8s Cluster"""
 
     all_fields = [ 
         'id', 
@@ -49,6 +56,16 @@ class K8sCluster():
         ]
 
     def __init__(self, json):
+        """Create an instance of K8sCluster from json data returned from the HPE Container Platform API.
+
+        Parameters:
+            json : str
+                HPECP username
+
+        Returns:
+            K8sCluster: 
+                An instance of K8sCluster
+        """
         self.json = json
         self.columns = K8sCluster.all_fields
 
