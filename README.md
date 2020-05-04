@@ -19,13 +19,7 @@ pip install --upgrade git+https://github.com/hpe-container-platform-community/hp
 
 ## Basic Usage
 
-For development purpose, you can setup a tunnel to the controller allowing you to use `127.0.0.1` for the `api_host`:
-
-```bash
-./generated/ssh_controller.sh -L 8080:localhost:8080
-```
-
-Python commands:
+Python example:
 
 ```py3
 from hpecp import ContainerPlatformClient
@@ -39,7 +33,7 @@ client = ContainerPlatformClient(username='admin',
 
 client.create_session() # Login
 
-client.k8s_cluster.list().tabulate(columns=['description', 'id'])
+print(client.k8s_cluster.list().tabulate(columns=['description', 'id']))
 ```
 
 Displays:

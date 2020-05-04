@@ -1,8 +1,6 @@
 ### DEVELOPMENT ENVIRONMENT
 
-I use [Jupyterlab](https://jupyterlab.readthedocs.io/en/stable/) for development.
-
-See [Development](./Development.ipynb) for an example development notebook.
+I use Visual Studio Code for development.
 
 ### COVERAGE
 
@@ -18,12 +16,13 @@ autopep8 --in-place --aggressive --recursive hpecp/
 
 ```
 cd docs/
-sphinx-apidoc -o source/ ../hpecp
 make clean html
 open build/html/index.html
 ```
 
 ### RELEASING
+
+ - Not applicable while pre-alpha.
 
 ```
 vi setup.py # increment version
@@ -47,7 +46,7 @@ Run all tests with coverage output:
 coverage erase && coverage run --source hpecp setup.py test && coverage report -m
 ```
 
-Run single test.
+Run a single test.
 
 ```
 pytest tests/doc/test_create_cluster.py
