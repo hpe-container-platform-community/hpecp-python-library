@@ -34,4 +34,4 @@ Contents
 GitHub
 ======
 
-   `hpecp-python-library repository <https://github.com/hpe-container-platform-community/hpecp-python-library>`_
+   `Repository <https://github.com/hpe-container-platform-community/hpecp-python-library>`_
