@@ -51,12 +51,6 @@ Displays:
 +-------------+-----------------------+
 ```
 
-## Examples
-
-See [./docs/scripts](./docs/scripts) for more examples.
-
-See [Notebook](https://nbviewer.jupyter.org/github/hpe-container-platform-community/hpecp-python-library/blob/master/docs/scripts/cluster_get_k8s_and_list_pods.ipynb) example creating a K8S cluster and listing pods.
-
 ## Documentation
 
 [See here](https://hpe-container-platform-community.github.io/hpecp-python-library/index.html)
@@ -72,3 +66,10 @@ See [Notebook](https://nbviewer.jupyter.org/github/hpe-container-platform-commun
 |              | [Delete](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.delete)  | Complete | Not Started |                     |
 |              | [Wait for status](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.wait_for_status) | Complete | Not Started |                     |
 | Tenant       | ...                     |          |                      | |
+
+
+## Examples
+
+See [./docs/scripts](./docs/scripts) for more examples.
+
+See [Notebook](https://nbviewer.jupyter.org/github/hpe-container-platform-community/hpecp-python-library/blob/master/docs/scripts/cluster_get_k8s_and_list_pods.ipynb) example creating a K8S cluster and listing pods.
