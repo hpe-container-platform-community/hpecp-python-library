@@ -54,6 +54,7 @@ class K8sCluster():
         'status_message',
         '_links'
         ]
+    """All of the fields of a K8s Cluster objects that are returned by the HPE Container Platform API"""
 
     def __init__(self, json):
         """Create an instance of K8sCluster from json data returned from the HPE Container Platform API.
@@ -83,72 +84,109 @@ class K8sCluster():
         return getattr(self, self.__dir__()[item])
 
     def set_columns(self, columns):
+        """[summary]
+
+        Parameters:
+            columns : list[str]
+                Set the colums to return. For example, when using :py:meth:`.K8sClusterList.tabulate`
+        """
         self.columns = columns
 
     @property
-    def id(self): return self.json['_links']['self']['href']
+    def id(self): 
+        """from json['_links']['self']['href']"""
+        return self.json['_links']['self']['href']
 
     @property
-    def name(self): return self.json['label']['name']
+    def name(self): 
+        """from json['label']['name']"""
+        return self.json['label']['name']
 
     @property
-    def description(self): return self.json['label']['description']
+    def description(self):
+        """from json['label']['description']"""
+        return self.json['label']['description']
+    
+    @property
+    def k8s_version(self):
+        """from json['k8s_version']"""
+        return self.json['k8s_version']
+    
+    @property
+    def created_by_user_id(self):
+        """from json['created_by_user_id']"""
+        return self.json['created_by_user_id']
+    
+    @property
+    def created_by_user_name(self):
+        """from json['created_by_user_name']"""
+        return self.json['created_by_user_name']
+    
+    @property
+    def created_time(self):
+        """from json['created_time']"""
+        return self.json['created_time']
+    
+    @property
+    def k8shosts_config(self):
+        """from json['k8shosts_config']"""
+        return self.json['k8shosts_config']
+    
+    @property
+    def admin_kube_config(self):
+        """from json['admin_kube_config']"""
+        return self.json['admin_kube_config']
+    
+    @property
+    def dashboard_token(self):
+        """from json['dashboard_token']"""
+        return self.json['dashboard_token']
+    
+    @property
+    def api_endpoint_access(self):
+        """from json['api_endpoint_access']"""
+        return self.json['api_endpoint_access']
 
     @property
-    def k8s_version(self): return self.json['k8s_version']
-
-    @property
-    def created_by_user_id(self): return self.json['created_by_user_id']
-
-    @property
-    def created_by_user_name(self): return self.json['created_by_user_name']
-
-    @property
-    def created_time(self): return self.json['created_time']
-
-    @property
-    def k8shosts_config(self): return self.json['k8shosts_config']
-
-    @property
-    def admin_kube_config(self): return self.json['admin_kube_config']
-
-    @property
-    def dashboard_token(self): return self.json['dashboard_token']
-
-    @property
-    def api_endpoint_access(self): return self.json['api_endpoint_access']
-
-    @property
-    def dashboard_endpoint_access(self): return self.json['dashboard_endpoint_access']
-
+    def dashboard_endpoint_access(self):
+        """from json['dashboard_endpoint_access']"""
+        return self.json['dashboard_endpoint_access']
+    
     @property
     def cert_data(self):
+        """from json['cert_data'] or None if cert_data not available"""
         try:
             return self.json['cert_data']
         except KeyError:
             return None
 
     @property
-    def status(self): return self.json['status']
+    def status(self):
+        """from json['status']"""
+        return self.json['status']
 
     @property
-    def status_message(self): return self.json['status_message']
+    def status_message(self):
+        """from json['status_message']"""
+        return self.json['status_message']
 
     @property
-    def _links(self): return self.json['_links']
+    def _links(self):
+        """from json['_links']"""
+        return self.json['_links']
 
     def __len__(self):
         return len(dir(self))
 
 class K8sClusterList():
-    """[summary]
-    """
+    """A list of :py:obj:`.K8sCluster` objects"""
 
     def __init__(self, json):
-        """[summary]
+        """Create a list of :py:obj:`.K8sCluster` objects
 
-        Arguments:
-            json {[type]} -- [description]
+        Parameters:
+            json : str
+                json data returned from the HPE Container Platform API get request to /api/v2/k8scluster
         """
         self.json = json
         self.clusters = sorted([K8sCluster(t) for t in json],  key=attrgetter('id'))
@@ -182,14 +220,16 @@ class K8sClusterList():
     def tabulate(self, columns=K8sCluster.all_fields):
         """Provide a tabular represenation of the Cluster List
 
-        Keyword Arguments:
-            columns {list[str]} -- list of columns to return in the table (default: {K8sCluster.all_fields})
+        Parameters:
+            columns : list[str]
+                list of columns to return in the table - default :py:attr:`.K8sCluster.all_fields`
 
         Returns:
-            str -- table output
+            str : table output
 
-        Example:
-            # Print the cluster list with all the fields
+        Example::
+
+            # Print the cluster list with all of the avaialble fields
             print(hpeclient.cluster.list().tabulate())
 
             # Print the cluster list with a subset of the fields
