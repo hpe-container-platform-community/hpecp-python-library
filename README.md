@@ -81,7 +81,7 @@ https://hpe-container-platform-community.github.io/hpecp-python-library/index.ht
 
 | Group        | Method                  | Status   | Bugs/Features        |
 | -------------|-------------------------| --------:|----------------------|
-| Session      | Create Session (login)  | Complete | Reconnect on session expiration [#2](https://github.com/hpe-container-platform-community/hpecp-python-library/issues/2) |
+| Session      | [Create Session](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.client.html#hpecp.client.ContainerPlatformClient.create_session) (login)  | Complete | Reconnect on session expiration [#2](https://github.com/hpe-container-platform-community/hpecp-python-library/issues/2) |
 | K8s Cluster  | Create                  | Complete |                      |
 |              | List                    | Complete |                      |
 |              | Get                     | Complete |                      |
