@@ -3,6 +3,10 @@ Overview
 
 Python library for HPE Container Platform (HPECP).
 
+This library is pre-alpha. The API of this library may be unstable and 
+subject to change until this library reaches beta.
+
+
 Example usage:
 
 .. code-block:: python
