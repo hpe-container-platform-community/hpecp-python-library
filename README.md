@@ -59,7 +59,7 @@ See [Notebook](https://nbviewer.jupyter.org/github/hpe-container-platform-commun
 
 ## Documentation
 
-[Documentation](https://hpe-container-platform-community.github.io/hpecp-python-library/index.html)
+[See here](https://hpe-container-platform-community.github.io/hpecp-python-library/index.html)
 
 ## Features Implemented
 
