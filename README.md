@@ -57,25 +57,9 @@ See [./docs/scripts](./docs/scripts) for more examples.
 
 See [Notebook](https://nbviewer.jupyter.org/github/hpe-container-platform-community/hpecp-python-library/blob/master/docs/scripts/cluster_get_k8s_and_list_pods.ipynb) example creating a K8S cluster and listing pods.
 
-## Logging
-
-Log level is controlled with the environment variable `LOG_LEVEL`.
-
-You may set it programmatically in your code:
-
-```python
-import os
-os.environ["LOG_LEVEL"] = "DEBUG"
-```
-
-Typical valid values are `ERROR`, `WARNING`, `INFO`, `DEBUG`. For a full list of values, see [here](https://docs.python.org/3/library/logging.html#logging-levels)
-
-- `INFO`: Significant Events
-- `DEBUG`: API Request Parameters
-
 ## Documentation
 
-https://hpe-container-platform-community.github.io/hpecp-python-library/index.html (coming soon)
+[Documentation](https://hpe-container-platform-community.github.io/hpecp-python-library/index.html)
 
 ## Features Implemented
 
