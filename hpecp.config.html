@@ -92,22 +92,22 @@
 <dt id="hpecp.config.ConfigController.auth">
 <code class="sig-name descname">auth</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="headerlink" href="#hpecp.config.ConfigController.auth" title="Permalink to this definition">¶</a></dt>
 <dd><p>Example:</p>
-<blockquote>
-<div><dl class="simple">
-<dt>{ “external_identity_server”:  {</dt><dd><p>“bind_pwd”:”5ambaPwd&#64;”,
-“user_attribute”:”sAMAccountName”,
-“bind_type”:”search_bind”,
-“bind_dn”:”cn=Administrator,CN=Users,DC=samdom,DC=example,DC=com”,
-“host”:”10.1.0.77”,
-“security_protocol”:”ldaps”,
-“base_dn”:”CN=Users,DC=samdom,DC=example,DC=com”,
-“verify_peer”: False,
-“type”:”Active Directory”,
-“port”:636 }</p>
-</dd>
-</dl>
-<p>}</p>
-</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span> 
+    <span class="s2">&quot;external_identity_server&quot;</span><span class="p">:</span>  <span class="p">{</span>
+    <span class="s2">&quot;bind_pwd&quot;</span><span class="p">:</span><span class="s2">&quot;5ambaPwd@&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;user_attribute&quot;</span><span class="p">:</span><span class="s2">&quot;sAMAccountName&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bind_type&quot;</span><span class="p">:</span><span class="s2">&quot;search_bind&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bind_dn&quot;</span><span class="p">:</span><span class="s2">&quot;cn=Administrator,CN=Users,DC=samdom,DC=example,DC=com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.1.0.77&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;security_protocol&quot;</span><span class="p">:</span><span class="s2">&quot;ldaps&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;base_dn&quot;</span><span class="p">:</span><span class="s2">&quot;CN=Users,DC=samdom,DC=example,DC=com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;verify_peer&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;Active Directory&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">636</span> 
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>

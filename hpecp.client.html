@@ -134,6 +134,63 @@ initial connection would be made by calling the method <a class="reference inter
 </dd></dl>
 
 <dl class="py method">
+<dt id="hpecp.client.ContainerPlatformClient.tenant">
+<em class="property">property </em><code class="sig-name descname">tenant</code><a class="headerlink" href="#hpecp.client.ContainerPlatformClient.tenant" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute is a reference to an object of type <cite>.tenant.TenantController</cite>.</p>
+<p>See the class <a class="reference internal" href="hpecp.tenant.html#hpecp.tenant.TenantController" title="hpecp.tenant.TenantController"><code class="xref py py-class docutils literal notranslate"><span class="pre">tenant.TenantController</span></code></a> for the methods available.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">client</span> <span class="o">=</span> <span class="n">ContainerPlatformClient</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="n">client</span><span class="o">.</span><span class="n">create_session</span><span class="p">()</span>
+<span class="n">client</span><span class="o">.</span><span class="n">tenant</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This example calls the method <a class="reference internal" href="hpecp.tenant.html#hpecp.tenant.TenantController.list" title="hpecp.tenant.TenantController.list"><code class="xref py py-meth docutils literal notranslate"><span class="pre">list()</span></code></a> in <a class="reference internal" href="hpecp.tenant.html#hpecp.tenant.TenantController" title="hpecp.tenant.TenantController"><code class="xref py py-class docutils literal notranslate"><span class="pre">tenant.TenantController</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="hpecp.client.ContainerPlatformClient.config">
+<em class="property">property </em><code class="sig-name descname">config</code><a class="headerlink" href="#hpecp.client.ContainerPlatformClient.config" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute is a reference to an object of type <cite>.config.ConfigController</cite>.</p>
+<p>See the class <a class="reference internal" href="hpecp.config.html#hpecp.config.ConfigController" title="hpecp.config.ConfigController"><code class="xref py py-class docutils literal notranslate"><span class="pre">config.ConfigController</span></code></a> for the methods available.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">client</span> <span class="o">=</span> <span class="n">ContainerPlatformClient</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="n">client</span><span class="o">.</span><span class="n">create_session</span><span class="p">()</span>
+<span class="n">client</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">auth</span><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;external_identity_server&quot;</span><span class="p">:</span>  <span class="p">{</span>
+            <span class="s2">&quot;bind_pwd&quot;</span><span class="p">:</span><span class="s2">&quot;5ambaPwd@&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;user_attribute&quot;</span><span class="p">:</span><span class="s2">&quot;sAMAccountName&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;bind_type&quot;</span><span class="p">:</span><span class="s2">&quot;search_bind&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;bind_dn&quot;</span><span class="p">:</span><span class="s2">&quot;cn=Administrator,CN=Users,DC=samdom,DC=example,DC=com&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.1.0.77&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;security_protocol&quot;</span><span class="p">:</span><span class="s2">&quot;ldaps&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;base_dn&quot;</span><span class="p">:</span><span class="s2">&quot;CN=Users,DC=samdom,DC=example,DC=com&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;verify_peer&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;Active Directory&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">636</span> 
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>This example calls the method <a class="reference internal" href="hpecp.config.html#hpecp.config.ConfigController.auth" title="hpecp.config.ConfigController.auth"><code class="xref py py-meth docutils literal notranslate"><span class="pre">auth()</span></code></a> in <a class="reference internal" href="hpecp.config.html#hpecp.config.ConfigController" title="hpecp.config.ConfigController"><code class="xref py py-class docutils literal notranslate"><span class="pre">config.ConfigController</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="hpecp.client.ContainerPlatformClient.k8s_cluster">
+<em class="property">property </em><code class="sig-name descname">k8s_cluster</code><a class="headerlink" href="#hpecp.client.ContainerPlatformClient.k8s_cluster" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute is a reference to an object of type <cite>.k8s_cluster.K8sClusterController</cite>.</p>
+<p>See the class <a class="reference internal" href="hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController" title="hpecp.k8s_cluster.K8sClusterController"><code class="xref py py-class docutils literal notranslate"><span class="pre">k8s_cluster.K8sClusterController</span></code></a> for the methods available.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">client</span> <span class="o">=</span> <span class="n">ContainerPlatformClient</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="n">client</span><span class="o">.</span><span class="n">create_session</span><span class="p">()</span>
+<span class="n">client</span><span class="o">.</span><span class="n">k8s_cluster</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This example calls the method <a class="reference internal" href="hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.list" title="hpecp.k8s_cluster.K8sClusterController.list"><code class="xref py py-meth docutils literal notranslate"><span class="pre">list()</span></code></a> in <a class="reference internal" href="hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController" title="hpecp.k8s_cluster.K8sClusterController"><code class="xref py py-class docutils literal notranslate"><span class="pre">k8s_cluster.K8sClusterController</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="hpecp.client.ContainerPlatformClient.log">
 <em class="property">property </em><code class="sig-name descname">log</code><a class="headerlink" href="#hpecp.client.ContainerPlatformClient.log" title="Permalink to this definition">¶</a></dt>
 <dd><p>This attribute is a reference to <a class="reference internal" href="hpecp.logger.html#hpecp.logger.Logger" title="hpecp.logger.Logger"><code class="xref py py-class docutils literal notranslate"><span class="pre">logger.Logger</span></code></a>.  The log function can be called from controller objects
@@ -150,20 +207,6 @@ via the <cite>client</cite> parameter passed in during instantiation of the cont
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Some Error&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-</dd></dl>
-
-<dl class="py method">
-<dt id="hpecp.client.ContainerPlatformClient.tenant">
-<em class="property">property </em><code class="sig-name descname">tenant</code><a class="headerlink" href="#hpecp.client.ContainerPlatformClient.tenant" title="Permalink to this definition">¶</a></dt>
-<dd><p>This attribute is a reference to an object of type <cite>.tenant.TenantController</cite>.</p>
-<p>See the class <a class="reference internal" href="hpecp.tenant.html#hpecp.tenant.TenantController" title="hpecp.tenant.TenantController"><code class="xref py py-class docutils literal notranslate"><span class="pre">tenant.TenantController</span></code></a> for the methods available.</p>
-<p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">client</span> <span class="o">=</span> <span class="n">ContainerPlatformClient</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
-<span class="n">client</span><span class="o">.</span><span class="n">create_session</span><span class="p">()</span>
-<span class="n">client</span><span class="o">.</span><span class="n">tenant</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>This example calls the method <a class="reference internal" href="hpecp.tenant.html#hpecp.tenant.TenantController.list" title="hpecp.tenant.TenantController.list"><code class="xref py py-meth docutils literal notranslate"><span class="pre">list()</span></code></a> in <a class="reference internal" href="hpecp.tenant.html#hpecp.tenant.TenantController" title="hpecp.tenant.TenantController"><code class="xref py py-class docutils literal notranslate"><span class="pre">tenant.TenantController</span></code></a>.</p>
 </dd></dl>
 
 </dd></dl>
