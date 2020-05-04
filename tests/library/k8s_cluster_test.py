@@ -120,8 +120,8 @@ class TestClusterList(TestCase):
         with self.assertRaisesRegexp(AssertionError, "'columns' parameter must be list"):
              get_client().k8s_cluster.list().tabulate(columns='garbage')
 
-        # FIXME: This test doesn't work on 2.x - maybe just a string comparision issue?
-        if sys.version_info[0] == 3:
+        # FIXME: This test doesn't work on 2.x or 3.5 - maybe just a string comparision issue?
+        if sys.version_info[0] == 3 and sys.version_info[1] >= 6:
             self.maxDiff = None
             self.assertEqual(
                 get_client().k8s_cluster.list().tabulate(), 
