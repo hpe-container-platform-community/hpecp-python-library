@@ -85,53 +85,14 @@ class ContainerPlatformClient(object):
 
         self.base_url = "{}://{}:{}".format(scheme, self.api_host, self.api_port)
 
-        # register endpoint modules
+        # register endpoint modules - see @property definitions at end of file for each module
         self._tenant = TenantController(self)
-        self.config = ConfigController(self)
+        self._config = ConfigController(self)
         self.epic_worker = EpicWorkerController(self)
         self.k8s_worker = K8sWorkerController(self)
-        self.k8s_cluster = K8sClusterController(self)
+        self._k8s_cluster = K8sClusterController(self)
         self.license = LicenseController(self)
         self.lock = LockController(self)
-
-    @property
-    def tenant(self):
-        """
-        This attribute is a reference to an object of type `.tenant.TenantController`.
-
-        See the class :py:class:`.tenant.TenantController` for the methods available.
-
-        Example::
-
-            client = ContainerPlatformClient(...)
-            client.create_session()
-            client.tenant.list()
-        
-        This example calls the method :py:meth:`list() <.tenant.TenantController.list>` in :py:class:`.tenant.TenantController`.
-        """
-
-        return self._tenant
-
-    @property
-    def log(self):
-        """
-        This attribute is a reference to :py:class:`.logger.Logger`.  The log function can be called from controller objects
-        via the `client` parameter passed in during instantiation of the controller.
-
-        Example::
-
-            class K8sClusterController:
-                ...
-
-                def __init__(self, client):
-                    self.client = client
-
-                def some_method(self):
-                    ...
-                    self.client.log.error("Some Error")
-        """
-
-        return self._log
 
     def create_session(self):
         """Create a session with the HPE CP controller defined in the object :py:class:`ContainerPlatformClient`.
@@ -233,6 +194,95 @@ class ContainerPlatformClient(object):
         return response
 
     
+    @property
+    def tenant(self):
+        """
+        This attribute is a reference to an object of type `.tenant.TenantController`.
+
+        See the class :py:class:`.tenant.TenantController` for the methods available.
+
+        Example::
+
+            client = ContainerPlatformClient(...)
+            client.create_session()
+            client.tenant.list()
+        
+        This example calls the method :py:meth:`list() <.tenant.TenantController.list>` in :py:class:`.tenant.TenantController`.
+        """
+
+        return self._tenant
+
+    @property
+    def config(self):
+        """
+        This attribute is a reference to an object of type `.config.ConfigController`.
+
+        See the class :py:class:`.config.ConfigController` for the methods available.
+
+        Example::
+
+            client = ContainerPlatformClient(...)
+            client.create_session()
+            client.config.auth(
+                {
+                    "external_identity_server":  {
+                        "bind_pwd":"5ambaPwd@",
+                        "user_attribute":"sAMAccountName",
+                        "bind_type":"search_bind",
+                        "bind_dn":"cn=Administrator,CN=Users,DC=samdom,DC=example,DC=com",
+                        "host":"10.1.0.77",
+                        "security_protocol":"ldaps",
+                        "base_dn":"CN=Users,DC=samdom,DC=example,DC=com",
+                        "verify_peer": False,
+                        "type":"Active Directory",
+                        "port":636 
+                    }
+                }
+            )
+        
+        This example calls the method :py:meth:`auth() <.config.ConfigController.auth>` in :py:class:`.config.ConfigController`.
+        """
+
+        return self._config
+
+    @property
+    def k8s_cluster(self):
+        """
+        This attribute is a reference to an object of type `.k8s_cluster.K8sClusterController`.
+
+        See the class :py:class:`.k8s_cluster.K8sClusterController` for the methods available.
+
+        Example::
+
+            client = ContainerPlatformClient(...)
+            client.create_session()
+            client.k8s_cluster.list()
+        
+        This example calls the method :py:meth:`list() <.k8s_cluster.K8sClusterController.list>` in :py:class:`.k8s_cluster.K8sClusterController`.
+        """
+
+        return self._k8s_cluster
+
+    @property
+    def log(self):
+        """
+        This attribute is a reference to :py:class:`.logger.Logger`.  The log function can be called from controller objects
+        via the `client` parameter passed in during instantiation of the controller.
+
+        Example::
+
+            class K8sClusterController:
+                ...
+
+                def __init__(self, client):
+                    self.client = client
+
+                def some_method(self):
+                    ...
+                    self.client.log.error("Some Error")
+        """
+
+        return self._log
    
 
     

@@ -19,9 +19,10 @@ class ConfigController:
 
     def auth(self, data):
         '''
-        Example:
+        Example::
         
-            { "external_identity_server":  {
+            data = { 
+                "external_identity_server":  {
                 "bind_pwd":"5ambaPwd@",
                 "user_attribute":"sAMAccountName",
                 "bind_type":"search_bind",
@@ -31,7 +32,8 @@ class ConfigController:
                 "base_dn":"CN=Users,DC=samdom,DC=example,DC=com",
                 "verify_peer": False,
                 "type":"Active Directory",
-                "port":636 }
+                "port":636 
+                }
             }
         '''
         self.client._request(url='/api/v2/config/auth', http_method='post', data=data, description='config/auth')

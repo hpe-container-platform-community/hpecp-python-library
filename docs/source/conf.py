@@ -25,6 +25,11 @@ def setup(app):
     app.connect("autodoc-skip-member", skip)
 
 
+autodoc_default_options = {
+    'member-order': 'bysource'
+}
+
+
 # -- Project information -----------------------------------------------------
 
 project = 'HPE Container Platform Python Library'
