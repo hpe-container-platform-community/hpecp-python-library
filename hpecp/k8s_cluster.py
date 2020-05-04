@@ -27,14 +27,30 @@ class K8sClusterStatus(Enum):
 
 
 class K8sCluster():
-    """
-    """
+    """This class represents a K8s Cluster """
 
-    all_fields = [ 'id', 'name', 'description', 'k8s_version', 'created_by_user_id', 'created_by_user_name', 'created_time', 'status' ]
+    all_fields = [ 
+        'id', 
+        'name', 
+        'description', 
+        'k8s_version', 
+        'created_by_user_id', 
+        'created_by_user_name', 
+        'created_time',
+        'k8shosts_config',
+        'admin_kube_config',
+        'dashboard_token',
+        'api_endpoint_access',
+        'dashboard_endpoint_access',
+        'cert_data',
+        'status',
+        'status_message',
+        '_links'
+        ]
 
-    @staticmethod
-    def __class_dir__():
-        return K8sCluster.all_fields
+    def __init__(self, json):
+        self.json = json
+        self.columns = K8sCluster.all_fields
 
     def __repr__(self):
         return "<K8sCluster id:{} name:{} description:{} status:{}>".format( self.id, self.name, self.description, self.status)
@@ -43,13 +59,8 @@ class K8sCluster():
         return "K8sCluster(id={}, name={}, description={}, status={})".format(
                     self.id, self.name, self.description, self.status)
 
-    def __init__(self, json):
-        self.json = json
-        self.columns = K8sCluster.__class_dir__()
-    
     def __dir__(self):
         return self.columns
-        #return K8sCluster.__class_dir__()
 
     def __getitem__(self, item):
         return getattr(self, self.__dir__()[item])

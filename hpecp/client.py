@@ -28,6 +28,7 @@ else:
     string_types = basestring
 
 class ContainerPlatformClient(object):
+    """The ContainerPlatformClient object is the central object that users of this library work with."""
 
     def __init__(self, 
                  username   = None, 
