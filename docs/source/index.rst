@@ -34,3 +34,8 @@ Contents
    installation
    hpecp
    license
+
+GitHub
+======
+
+   `hpecp-python-library repository <https://github.com/hpe-container-platform-community/hpecp-python-library>`_

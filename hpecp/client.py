@@ -37,10 +37,11 @@ class ContainerPlatformClient(object):
                  use_ssl    = True,
                  verify_ssl = True
                  ):
-        """The ContainerPlatformClient object is the central object that users of this library work with.  Other
+        """The ContainerPlatformClient object is the central object that users of this library work with.
 
         Parameters:
             username : str
+                HPECP username
             password : str
                 HPECP password
             api_host : str
@@ -122,7 +123,19 @@ class ContainerPlatformClient(object):
         return self._log
 
     def create_session(self):
+        """Create a session with the HPE CP controller defined in the object :py:class:`ContainerPlatformClient`.
 
+        Returns:
+            ContainerPlatformClient: 
+                An instance of ContainerPlatformClient is returned.
+
+        Raises:
+            APIException
+                for connection error to the HPE CP controller
+            requests.exceptions.RequestException
+                for exceptions that are not a connection error
+        """
+        
         url = self.base_url + "/api/v1/login"
         auth = { "name": self.username, "password": self.password }
 
