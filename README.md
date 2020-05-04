@@ -39,7 +39,7 @@ client = ContainerPlatformClient(username='admin',
 
 client.create_session() # Login
 
-client.k8s_cluster.list().tabulate(columns=['description', 'id'])
+print(client.k8s_cluster.list().tabulate(columns=['description', 'id']))
 ```
 
 Displays:
