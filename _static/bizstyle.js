@@ -36,6 +36,6 @@ $(window).resize(function(){
         $("li.nav-item-0 a").text("Top");
     }
     else {
-        $("li.nav-item-0 a").text("HPE Container Platform  documentation");
+        $("li.nav-item-0 a").text("HPE Container Platform Python Library  documentation");
     }
 });
