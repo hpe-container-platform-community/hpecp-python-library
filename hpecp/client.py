@@ -61,7 +61,7 @@ class ContainerPlatformClient(object):
             initial connection would be made by calling the method :py:meth:`create_session`.
 
         """
-        self.log = Logger().get_logger(self.__class__.__name__)
+        self._log = Logger().get_logger(self.__class__.__name__)
         
         assert isinstance(username, string_types), "'username' parameter must be of type string"
         assert isinstance(password, string_types), "'password' parameter must be of type string"
@@ -85,7 +85,7 @@ class ContainerPlatformClient(object):
         self.base_url = "{}://{}:{}".format(scheme, self.api_host, self.api_port)
 
         # register endpoint modules
-        self.tenant = TenantController(self)
+        self._tenant = TenantController(self)
         self.config = ConfigController(self)
         self.epic_worker = EpicWorkerController(self)
         self.k8s_worker = K8sWorkerController(self)
@@ -109,7 +109,7 @@ class ContainerPlatformClient(object):
         This example calls the method :py:meth:`list() <.tenant.TenantController.list>` in :py:class:`.tenant.TenantController`.
         """
 
-        return self.tenant
+        return self._tenant
 
     @property
     def log(self):
@@ -119,7 +119,7 @@ class ContainerPlatformClient(object):
         Example:
         """
 
-        return self.tenant
+        return self._log
 
     def create_session(self):
 
