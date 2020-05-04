@@ -29,6 +29,9 @@ autodoc_default_options = {
     'member-order': 'bysource'
 }
 
+# Add toctree to sidebar.  See https://stackoverflow.com/a/19007358/1033422
+html_sidebars = { '**': ['globaltoc.html', 'relations.html', 'sourcelink.html', 'searchbox.html'] }
+
 
 # -- Project information -----------------------------------------------------
 
