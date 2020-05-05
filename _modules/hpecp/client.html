@@ -82,9 +82,16 @@
 <span class="kn">from</span> <span class="nn">.lock</span> <span class="kn">import</span> <span class="n">LockController</span>
 <span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">ContainerPlatformClientException</span><span class="p">,</span> <span class="n">APIException</span><span class="p">,</span> <span class="n">APIItemNotFoundException</span>
 
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">requests</span>
 <span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="c1"># Python 3x</span>
+    <span class="kn">import</span> <span class="nn">configparser</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="c1"># Python 2.7</span>
+    <span class="kn">import</span> <span class="nn">ConfigParser</span>
 
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="n">PY3</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span>
@@ -96,6 +103,65 @@
 
 <div class="viewcode-block" id="ContainerPlatformClient"><a class="viewcode-back" href="../../hpecp.client.html#hpecp.client.ContainerPlatformClient">[docs]</a><span class="k">class</span> <span class="nc">ContainerPlatformClient</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;The ContainerPlatformClient object is the central object that users of this library work with.&quot;&quot;&quot;</span>
+
+    <span class="n">USER_DEFAULT_CONFIG_FILE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">),</span> <span class="s1">&#39;.hpecp.conf&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ContainerPlatformClient.create_from_config_file"><a class="viewcode-back" href="../../hpecp.client.html#hpecp.client.ContainerPlatformClient.create_from_config_file">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">create_from_config_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">config_file</span><span class="o">=</span><span class="n">USER_DEFAULT_CONFIG_FILE</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">profile</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">profile</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">config_file</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">ContainerPlatformClientException</span><span class="p">(</span>
+                    <span class="s2">&quot;Could not found configuration file &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">config_file</span><span class="p">))</span>
+
+        <span class="n">config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">config_file</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="n">profile</span> <span class="ow">in</span> <span class="n">config</span><span class="p">,</span> <span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39; section not found in &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">config_file</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="s1">&#39;username&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="n">profile</span><span class="p">]</span>
+
+        <span class="k">assert</span> <span class="s1">&#39;username&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="n">profile</span><span class="p">]</span> <span class="ow">or</span> <span class="s1">&#39;username&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">],</span> <span class="s2">&quot;&#39;username&#39; not found in section &#39;</span><span class="si">{}</span><span class="s2">&#39; or in the default section&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="s1">&#39;password&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="n">profile</span><span class="p">]</span> <span class="ow">or</span> <span class="s1">&#39;password&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">],</span> <span class="s2">&quot;&#39;password&#39; not found in section &#39;</span><span class="si">{}</span><span class="s2">&#39; or in the default section&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="s1">&#39;api_host&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="n">profile</span><span class="p">]</span> <span class="ow">or</span> <span class="s1">&#39;api_host&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">],</span> <span class="s2">&quot;&#39;api_host&#39; not found in section &#39;</span><span class="si">{}</span><span class="s2">&#39; or in the default section&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="s1">&#39;api_port&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="n">profile</span><span class="p">]</span> <span class="ow">or</span> <span class="s1">&#39;api_port&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">],</span> <span class="s2">&quot;&#39;api_port&#39; not found in section &#39;</span><span class="si">{}</span><span class="s2">&#39; or in the default section&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="s1">&#39;use_ssl&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="n">profile</span><span class="p">]</span> <span class="ow">or</span> <span class="s1">&#39;use_ssl&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">],</span> <span class="s2">&quot;&#39;use_ssl&#39; not found in section &#39;</span><span class="si">{}</span><span class="s2">&#39; or in the default section&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="s1">&#39;verify_ssl&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="n">profile</span><span class="p">]</span> <span class="ow">or</span> <span class="s1">&#39;verify_ssl&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">],</span> <span class="s2">&quot;&#39;verify_ssl&#39; not found in section &#39;</span><span class="si">{}</span><span class="s2">&#39; or in the default section&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">get_config_value</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">profile</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="n">profile</span><span class="p">]:</span>
+                <span class="k">return</span> <span class="n">config</span><span class="p">[</span><span class="n">profile</span><span class="p">][</span><span class="n">key</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span>
+            
+        <span class="n">username</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">get_config_value</span><span class="p">(</span><span class="s1">&#39;username&#39;</span><span class="p">,</span> <span class="n">profile</span><span class="p">))</span>
+        <span class="n">password</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">get_config_value</span><span class="p">(</span><span class="s1">&#39;password&#39;</span><span class="p">,</span> <span class="n">profile</span><span class="p">))</span>
+        <span class="n">api_host</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">get_config_value</span><span class="p">(</span><span class="s1">&#39;api_host&#39;</span><span class="p">,</span> <span class="n">profile</span><span class="p">))</span>
+        <span class="n">api_port</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">get_config_value</span><span class="p">(</span><span class="s1">&#39;api_port&#39;</span><span class="p">,</span> <span class="n">profile</span><span class="p">))</span>
+        <span class="n">use_ssl</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">get_config_value</span><span class="p">(</span><span class="s1">&#39;use_ssl&#39;</span><span class="p">,</span> <span class="n">profile</span><span class="p">))</span>
+        <span class="n">verify_ssl</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">get_config_value</span><span class="p">(</span><span class="s1">&#39;verify_ssl&#39;</span><span class="p">,</span> <span class="n">profile</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">use_ssl</span> <span class="o">==</span> <span class="s1">&#39;False&#39;</span><span class="p">:</span>
+            <span class="n">use_ssl</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">use_ssl</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="n">verify_ssl</span> <span class="o">==</span> <span class="s1">&#39;False&#39;</span><span class="p">:</span>
+            <span class="n">verify_ssl</span> <span class="o">=</span> <span class="kc">False</span>
+        
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">api_port</span><span class="p">,</span> <span class="n">use_ssl</span><span class="p">,</span> <span class="n">verify_ssl</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ContainerPlatformClient.create_from_env"><a class="viewcode-back" href="../../hpecp.client.html#hpecp.client.ContainerPlatformClient.create_from_env">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">create_from_env</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="s1">&#39;HPECP_USERNAME&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">,</span> <span class="s2">&quot;&#39;HPECP_USERNAME&#39; environment variable not found&quot;</span>
+        <span class="k">assert</span> <span class="s1">&#39;HPECP_PASSWORD&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">,</span> <span class="s2">&quot;&#39;HPECP_PASSWORD&#39; environment variable not found&quot;</span>
+        <span class="k">assert</span> <span class="s1">&#39;HPECP_API_HOST&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">,</span> <span class="s2">&quot;&#39;HPECP_API_HOST&#39; environment variable not found&quot;</span>
+        <span class="k">assert</span> <span class="s1">&#39;HPECP_API_PORT&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">,</span> <span class="s2">&quot;&#39;HPECP_API_PORT&#39; environment variable not found&quot;</span>
+        <span class="k">assert</span> <span class="s1">&#39;HPECP_USE_SSL&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">,</span> <span class="s2">&quot;&#39;HPECP_USE_SSL&#39; environment variable not found&quot;</span>
+        <span class="k">assert</span> <span class="s1">&#39;HPECP_VERIFY_SSL&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">,</span> <span class="s2">&quot;&#39;HPECP_VERIFY_SSL&#39; environment variable not found&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">api_port</span><span class="p">,</span> <span class="n">use_ssl</span><span class="p">,</span> <span class="n">verify_ssl</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ContainerPlatformClient.__init__"><a class="viewcode-back" href="../../hpecp.client.html#hpecp.client.ContainerPlatformClient.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
                  <span class="n">username</span>   <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
@@ -131,6 +197,9 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_log</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+
+        <span class="c1"># TODO add other fields, except password</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;__init__ called with username[&#39;</span><span class="si">{}</span><span class="s2">&#39;]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">))</span>
         
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">string_types</span><span class="p">),</span> <span class="s2">&quot;&#39;username&#39; parameter must be of type string&quot;</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">password</span><span class="p">,</span> <span class="n">string_types</span><span class="p">),</span> <span class="s2">&quot;&#39;password&#39; parameter must be of type string&quot;</span>
