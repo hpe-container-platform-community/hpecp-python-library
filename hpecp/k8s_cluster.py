@@ -389,7 +389,7 @@ class K8sClusterController:
             APIException
         """
         assert isinstance(k8scluster_id, str),"'k8scluster_id' must be provided and must be a string"
-        assert re.match(r'\/api\/v2\/k8scluster\/[0-9]+', k8scluster_id), "'k8scluster_id' must have format '/api/v2/worker/k8scluster/[0-9]+'"
+        assert re.match(r'\/api\/v2\/k8scluster\/[0-9]+', k8scluster_id), "'k8scluster_id' must have format '/api/v2/k8scluster/[0-9]+'"
 
         if setup_log == True:
             params = '?setup_log'
