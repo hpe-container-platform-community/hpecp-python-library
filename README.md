@@ -74,7 +74,7 @@ See [Notebook](https://nbviewer.jupyter.org/github/hpe-container-platform-commun
 
 ## CLI
 
-See CLI prototype in [./bin/](./bin/)
+CLI is installed with pip ([as above](#installation))
 
 ```
 cat > ~/.hpecp.conf <<EOF
@@ -99,3 +99,5 @@ List k8s clusters example:
 ```
 hpecp k8s_cluster tabulate --columns=['id','description','status'] --profile=demosrv
 ```
+
+Source code for CLI is in the [./bin](./bin) folder.
