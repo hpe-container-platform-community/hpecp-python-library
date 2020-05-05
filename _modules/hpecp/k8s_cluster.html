@@ -456,7 +456,7 @@
 <span class="sd">            APIException</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">k8scluster_id</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span><span class="s2">&quot;&#39;k8scluster_id&#39; must be provided and must be a string&quot;</span>
-        <span class="k">assert</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\/api\/v2\/k8scluster\/[0-9]+&#39;</span><span class="p">,</span> <span class="n">k8scluster_id</span><span class="p">),</span> <span class="s2">&quot;&#39;k8scluster_id&#39; must have format &#39;/api/v2/worker/k8scluster/[0-9]+&#39;&quot;</span>
+        <span class="k">assert</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\/api\/v2\/k8scluster\/[0-9]+&#39;</span><span class="p">,</span> <span class="n">k8scluster_id</span><span class="p">),</span> <span class="s2">&quot;&#39;k8scluster_id&#39; must have format &#39;/api/v2/k8scluster/[0-9]+&#39;&quot;</span>
 
         <span class="k">if</span> <span class="n">setup_log</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
             <span class="n">params</span> <span class="o">=</span> <span class="s1">&#39;?setup_log&#39;</span>
