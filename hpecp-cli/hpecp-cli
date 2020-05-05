@@ -42,7 +42,7 @@ class K8sCluster(object):
       ./hpecp-cli/hpecp-cli k8s_cluster create myclus1 /api/v2/worker/k8shost/1:master --k8s_version=1.17.0
       """
 
-      host_config = [ K8sClusterHostConfig(h.split(':')[0], h.split(':')[1]) for h in k8shosts_config.split(',') ]
+      host_config = [ K8sClusterHostConfig.create_from_list(h.split(':')) for h in k8shosts_config.split(',') ]
 
       print(get_client().k8s_cluster.create(name=name, 
                 description=description, 

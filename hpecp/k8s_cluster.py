@@ -246,6 +246,13 @@ class K8sClusterList():
 class K8sClusterHostConfig():
     """[summary]
     """
+
+    @classmethod
+    def create_from_list(cls, noderole):
+        """Factory method to create K8sClusterHostConfig from a list with two values: [ node, role ]"""
+        assert len(noderole) == 2, "'noderole' list must have two values [  node, role ]"
+        return K8sClusterHostConfig(node=noderole[0], role=noderole[1])
+
     def __init__(self, node, role):
         """[summary]
 
