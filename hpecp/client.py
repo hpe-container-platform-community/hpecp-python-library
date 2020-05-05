@@ -15,9 +15,10 @@ from .license import LicenseController
 from .lock import LockController
 from .exceptions import ContainerPlatformClientException, APIException, APIItemNotFoundException
 
+import os
 import requests
 import json
-from datetime import datetime, timedelta
+import configparser
 
 import sys
 PY3 = sys.version_info[0] == 3
@@ -29,6 +30,65 @@ else:
 
 class ContainerPlatformClient(object):
     """The ContainerPlatformClient object is the central object that users of this library work with."""
+
+    USER_DEFAULT_CONFIG_FILE = os.path.join(os.path.expanduser("~"), '.hpecp.conf')
+
+    @classmethod
+    def create_from_config_file(cls, config_file=USER_DEFAULT_CONFIG_FILE, profile=None):
+
+        if profile is None:
+            profile = 'default'
+
+        if not os.path.exists(config_file):
+            raise ContainerPlatformClientException(
+                    "Could not found configuration file '{}'".format(config_file))
+
+        config = configparser.ConfigParser()
+        config.read(config_file)
+
+        assert profile in config, "'{}' section not found in '{}'".format(profile, config_file)
+
+        assert 'username' in config[profile]
+
+        assert 'username' in config[profile] or 'username' in config['default'], "'username' not found in section '{}' or in the default section".format(profile)
+        assert 'password' in config[profile] or 'password' in config['default'], "'password' not found in section '{}' or in the default section".format(profile)
+        assert 'api_host' in config[profile] or 'api_host' in config['default'], "'api_host' not found in section '{}' or in the default section".format(profile)
+        assert 'api_port' in config[profile] or 'api_port' in config['default'], "'api_port' not found in section '{}' or in the default section".format(profile)
+        assert 'use_ssl' in config[profile] or 'use_ssl' in config['default'], "'use_ssl' not found in section '{}' or in the default section".format(profile)
+        assert 'verify_ssl' in config[profile] or 'verify_ssl' in config['default'], "'verify_ssl' not found in section '{}' or in the default section".format(profile)
+
+        def get_config_value(key, profile):
+            if key in config[profile]:
+                return config[profile][key]
+            else:
+                return config['default'][key]
+            
+        username = str(get_config_value('username', profile))
+        password = str(get_config_value('password', profile))
+        api_host = str(get_config_value('api_host', profile))
+        api_port = int(get_config_value('api_port', profile))
+        use_ssl = str(get_config_value('use_ssl', profile))
+        verify_ssl = str(get_config_value('verify_ssl', profile))
+
+        if use_ssl == 'False':
+            use_ssl = False
+        else:
+            use_ssl = True
+
+        if verify_ssl == 'False':
+            verify_ssl = False
+        
+        return cls(username, password, api_host, api_port, use_ssl, verify_ssl)
+
+    @classmethod
+    def create_from_env(cls):
+        assert 'HPECP_USERNAME' in os.environ, "'HPECP_USERNAME' environment variable not found"
+        assert 'HPECP_PASSWORD' in os.environ, "'HPECP_PASSWORD' environment variable not found"
+        assert 'HPECP_API_HOST' in os.environ, "'HPECP_API_HOST' environment variable not found"
+        assert 'HPECP_API_PORT' in os.environ, "'HPECP_API_PORT' environment variable not found"
+        assert 'HPECP_USE_SSL' in os.environ, "'HPECP_USE_SSL' environment variable not found"
+        assert 'HPECP_VERIFY_SSL' in os.environ, "'HPECP_VERIFY_SSL' environment variable not found"
+        return cls(username, password, api_host, api_port, use_ssl, verify_ssl)
 
     def __init__(self, 
                  username   = None, 
@@ -64,6 +124,9 @@ class ContainerPlatformClient(object):
 
         """
         self._log = Logger().get_logger(self.__class__.__name__)
+
+        # TODO add other fields, except password
+        self._log.debug("__init__ called with username['{}']".format(username))
         
         assert isinstance(username, string_types), "'username' parameter must be of type string"
         assert isinstance(password, string_types), "'password' parameter must be of type string"
