@@ -76,6 +76,10 @@ See [Notebook](https://nbviewer.jupyter.org/github/hpe-container-platform-commun
 
 CLI is installed with pip ([as above](#installation))
 
+First you need to create a config file with your endpoint details.  
+
+Note that you can have multiple profiles:
+
 ```
 cat > ~/.hpecp.conf <<EOF
 [default]
