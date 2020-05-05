@@ -5,7 +5,7 @@ setup(
   description="HPE Container Platform client",
   author='Chris Snow',
   author_email='chsnow123@gmail.com',
-  url='https://github.com/hpe-container-platform-community/hpecp-client',
+  url='https://github.com/hpe-container-platform-community/hpecp-python-library',
   packages = ['hpecp'],
   scripts=['bin/hpecp'],
   keywords = '',
