@@ -1,26 +1,71 @@
 #!/usr/bin/env python3
 
+"""Example configuration file  (~/.hpecp.conf):
+
+[default]
+api_host = 127.0.0.1
+api_port = 8080
+use_ssl = True
+verify_ssl = False
+
+[demosrv]
+username = admin
+password = admin123
+"""
+
 import fire
 from hpecp import ContainerPlatformClient
+from hpecp.k8s_cluster import K8sClusterHostConfig
 
-def k8s_cluster_list():
-    """Example config:
+def get_client():
+  """Utility function to retrieve an authenticated client object"""
+  client = ContainerPlatformClient.create_from_config_file(profile='demosrv')
+  client.create_session()
+  return client
 
-    [default]
-    api_host = 127.0.0.1
-    api_port = 8080
-    use_ssl = True
-    verify_ssl = False
+class K8sCluster(object):
 
-    [demosrv]
-    username = admin
-    password = admin123
-    """
-    client = ContainerPlatformClient.create_from_config_file(profile='demosrv')
-    client.create_session()
+  def create(self, 
+                name,
+                k8shosts_config,
+                description=None, 
+                k8s_version=None,
+                pod_network_range='10.192.0.0/12', 
+                service_network_range='10.96.0.0/12',
+                pod_dns_domain='cluster.local',
+                persistent_storage_local=False,
+                persistent_storage_nimble_csi=False,
+                ):
+      """Create a K8s Cluster
 
-    print(client.k8s_cluster.list().tabulate(columns=['id','description']))
+      Example: 
+      ./hpecp-cli/hpecp-cli k8s_cluster create myclus1 /api/v2/worker/k8shost/1:master --k8s_version=1.17.0
+      """
+
+      host_config = [ K8sClusterHostConfig(h.split(':')[0], h.split(':')[1]) for h in k8shosts_config.split(',') ]
+
+      print(get_client().k8s_cluster.create(name=name, 
+                description=description, 
+                k8s_version=k8s_version,
+                pod_network_range=pod_network_range,
+                service_network_range=service_network_range,
+                pod_dns_domain=pod_dns_domain,
+                persistent_storage_local=persistent_storage_local,
+                persistent_storage_nimble_csi=persistent_storage_nimble_csi,
+                k8shosts_config = host_config))
+
+  def tabulate(self, all_columns=False, columns=['id', 'description']):
+    if all_columns:
+      print(get_client().k8s_cluster.list().tabulate())
+    else:
+      print(get_client().k8s_cluster.list().tabulate(columns=columns))
+      
+    
+class CLI(object):
+
+  def __init__(self):
+    self.k8s_cluster = K8sCluster()
 
 
 if __name__ == '__main__':
-  fire.Fire()
+  fire.Fire(CLI)
