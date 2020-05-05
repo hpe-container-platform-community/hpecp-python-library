@@ -67,3 +67,12 @@ Displays:
 See [./docs/scripts](./docs/scripts) for more examples.
 
 See [Notebook](https://nbviewer.jupyter.org/github/hpe-container-platform-community/hpecp-python-library/blob/master/docs/scripts/cluster_get_k8s_and_list_pods.ipynb) example creating a K8S cluster and listing pods.
+
+## CLI
+
+See CLI prototype in [./hpecp-cli](./hpecp-cli)
+
+Create cluster example:
+```
+hpecp-cli k8s_cluster create myclus1 /api/v2/worker/k8shost/1:master --k8s_version=1.17.0
+```
