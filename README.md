@@ -70,9 +70,9 @@ See [Notebook](https://nbviewer.jupyter.org/github/hpe-container-platform-commun
 
 ## CLI
 
-See CLI prototype in [./hpecp-cli](./hpecp-cli)
+See CLI prototype in [./bin/](./bin/)
 
 Create cluster example:
 ```
-hpecp-cli k8s_cluster create myclus1 /api/v2/worker/k8shost/1:master --k8s_version=1.17.0
+hpecp k8s_cluster create myclus1 /api/v2/worker/k8shost/1:master --k8s_version=1.17.0
 ```
