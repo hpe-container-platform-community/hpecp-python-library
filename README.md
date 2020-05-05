@@ -80,7 +80,7 @@ First you need to create a config file with your endpoint details.
 
 Note that you can have multiple profiles:
 
-```
+```ini
 cat > ~/.hpecp.conf <<EOF
 [default]
 api_host = 127.0.0.1
@@ -95,12 +95,12 @@ EOF
 ```
 
 Create k8s cluster example:
-```
+```sh
 hpecp k8s_cluster create myclus1 /api/v2/worker/k8shost/1:master --k8s_version=1.17.0 --profile=demosrv
 ```
 
 List k8s clusters example:
-```
+```sh
 hpecp k8s_cluster tabulate --columns=['id','description','status'] --profile=demosrv
 ```
 
