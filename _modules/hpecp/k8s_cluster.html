@@ -313,6 +313,13 @@
 <div class="viewcode-block" id="K8sClusterHostConfig"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterHostConfig">[docs]</a><span class="k">class</span> <span class="nc">K8sClusterHostConfig</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;[summary]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="K8sClusterHostConfig.create_from_list"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterHostConfig.create_from_list">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">create_from_list</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">noderole</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Factory method to create K8sClusterHostConfig from a list with two values: [ node, role ]&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">noderole</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;&#39;noderole&#39; list must have two values [  node, role ]&quot;</span>
+        <span class="k">return</span> <span class="n">K8sClusterHostConfig</span><span class="p">(</span><span class="n">node</span><span class="o">=</span><span class="n">noderole</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">role</span><span class="o">=</span><span class="n">noderole</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span></div>
+
 <div class="viewcode-block" id="K8sClusterHostConfig.__init__"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterHostConfig.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">role</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;[summary]</span>
 
