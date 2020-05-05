@@ -21,9 +21,9 @@ import fire
 from hpecp import ContainerPlatformClient
 from hpecp.k8s_cluster import K8sClusterHostConfig
 
-def get_client():
+def get_client(profile):
   """Utility function to retrieve an authenticated client object"""
-  client = ContainerPlatformClient.create_from_config_file(profile='demosrv')
+  client = ContainerPlatformClient.create_from_config_file(profile=profile)
   client.create_session()
   return client
 
@@ -39,6 +39,7 @@ class K8sCluster(object):
                 pod_dns_domain='cluster.local',
                 persistent_storage_local=False,
                 persistent_storage_nimble_csi=False,
+                profile='default'
                 ):
       """Create a K8s Cluster
 
@@ -48,7 +49,7 @@ class K8sCluster(object):
 
       host_config = [ K8sClusterHostConfig.create_from_list(h.split(':')) for h in k8shosts_config.split(',') ]
 
-      print(get_client().k8s_cluster.create(name=name, 
+      print(get_client(profile).k8s_cluster.create(name=name, 
                 description=description, 
                 k8s_version=k8s_version,
                 pod_network_range=pod_network_range,
@@ -58,11 +59,11 @@ class K8sCluster(object):
                 persistent_storage_nimble_csi=persistent_storage_nimble_csi,
                 k8shosts_config = host_config))
 
-  def tabulate(self, all_columns=False, columns=['id', 'description']):
+  def tabulate(self, all_columns=False, columns=['id', 'description'], profile='default'):
     if all_columns:
-      print(get_client().k8s_cluster.list().tabulate())
+      print(get_client(profile).k8s_cluster.list().tabulate())
     else:
-      print(get_client().k8s_cluster.list().tabulate(columns=columns))
+      print(get_client(profile).k8s_cluster.list().tabulate(columns=columns))
       
     
 class CLI(object):
