@@ -7,6 +7,7 @@ setup(
   author_email='chsnow123@gmail.com',
   url='https://github.com/hpe-container-platform-community/hpecp-client',
   packages = ['hpecp'],
+  scripts=['bin/hpecp'],
   keywords = '',
   install_requires=[ 'requests', 'tabulate', 'six', 'enum34; python_version == "2.7"', 'polling' ],
   test_suite='nose.collector',
