@@ -19,7 +19,8 @@ password = admin123
 
 import fire
 from hpecp import ContainerPlatformClient
-from hpecp.k8s_cluster import K8sClusterHostConfig
+from hpecp.k8s_cluster import K8sClusterHostConfig, K8sClusterStatus
+
 
 def get_client(profile):
   """Utility function to retrieve an authenticated client object"""
@@ -60,10 +61,29 @@ class K8sCluster(object):
                 k8shosts_config = host_config))
 
   def tabulate(self, all_columns=False, columns=['id', 'description'], profile='default'):
+    """Print a table of K8s Clusters
+
+    Example:
+    hpecp k8s_cluster tabulate --columns=['id','description','status'] --profile=demosrv
+    """
+    print(columns)
+
     if all_columns:
       print(get_client(profile).k8s_cluster.list().tabulate())
     else:
       print(get_client(profile).k8s_cluster.list().tabulate(columns=columns))
+
+  def get(self, k8scluster_id, profile='default'):
+    print(get_client(profile).k8s_cluster.get(k8scluster_id=k8scluster_id))
+
+  def wait_for_status(self, k8scluster_id, status=[], timeout_secs=60, profile='default'):
+    """Wait for K8s Cluster to have one or more statuses
+
+    Example: 
+    hpecp k8s_cluster wait_for_status /api/v2/k8scluster/61 --status=['warning'] --profile=demosrv
+    """
+    cluster_status = [ K8sClusterStatus[s] for s in status ]
+    get_client(profile).k8s_cluster.wait_for_status(k8scluster_id=k8scluster_id, status=cluster_status)
       
     
 class CLI(object):
