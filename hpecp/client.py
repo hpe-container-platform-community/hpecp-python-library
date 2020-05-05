@@ -18,7 +18,13 @@ from .exceptions import ContainerPlatformClientException, APIException, APIItemN
 import os
 import requests
 import json
-import configparser
+
+try:
+    # Python 3x
+    import configparser
+except:
+    # Python 2.7
+    import ConfigParser
 
 import sys
 PY3 = sys.version_info[0] == 3
