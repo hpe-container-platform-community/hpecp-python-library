@@ -14,7 +14,11 @@
 ## Installation
 
 ```shell
-pip install --upgrade git+https://github.com/hpe-container-platform-community/hpecp-client@master
+# ensure you have an up-to-date pip
+pip3 install -U pip
+
+# install hpecp directly from git
+pip3 install --upgrade git+https://github.com/hpe-container-platform-community/hpecp-client@master
 ```
 
 ## Basic Usage
@@ -72,7 +76,21 @@ See [Notebook](https://nbviewer.jupyter.org/github/hpe-container-platform-commun
 
 See CLI prototype in [./bin/](./bin/)
 
+```
+cat > ~/.hpecp.conf <<EOF
+[default]
+api_host = 127.0.0.1
+api_port = 8080
+use_ssl = True
+verify_ssl = False
+
+[demosrv]
+username = admin
+password = admin123
+EOF
+```
+
 Create cluster example:
 ```
-hpecp k8s_cluster create myclus1 /api/v2/worker/k8shost/1:master --k8s_version=1.17.0
+hpecp k8s_cluster create myclus1 /api/v2/worker/k8shost/1:master --k8s_version=1.17.0 --profile=demosrv
 ```
