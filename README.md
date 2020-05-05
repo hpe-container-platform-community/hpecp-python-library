@@ -90,7 +90,12 @@ password = admin123
 EOF
 ```
 
-Create cluster example:
+Create k8s cluster example:
 ```
 hpecp k8s_cluster create myclus1 /api/v2/worker/k8shost/1:master --k8s_version=1.17.0 --profile=demosrv
+```
+
+List k8s clusters example:
+```
+hpecp k8s_cluster tabulate --columns=['id','description','status'] --profile=demosrv
 ```
