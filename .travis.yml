@@ -14,8 +14,8 @@ script:
   - tox
   - coverage run --source hpecp setup.py test
   - coverage report -m
-  - python setup.py install
-  - python --version 2>&1 | grep '2.7' || echo q | ./bin/hpecp --help # check cli outputs help and doesn't return an error (ignore 2.7)
+  - python --version 2>&1 | grep '2.7' || python setup.py install (don't run on 2.7)
+  - python --version 2>&1 | grep '2.7' || echo q | ./bin/hpecp --help # check cli outputs help and doesn't return an error (don't run on 2.7)
 
 after_success:
   - coveralls
