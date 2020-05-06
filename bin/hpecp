@@ -68,7 +68,6 @@ class K8sCluster(object):
     Example:
     PROFILE=demosrv hpecp k8s_cluster tabulate --columns=['id','description','status']
     """
-    print(columns)
 
     if all_columns:
       print(get_client().k8s_cluster.list().tabulate())
