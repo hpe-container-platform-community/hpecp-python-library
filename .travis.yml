@@ -9,13 +9,13 @@ install:
   - pip install tox-travis
   - pip install python-coveralls
   - pip install coverage==4.5.4
-  - pip install fire
 
 script:
   - tox
   - coverage run --source hpecp setup.py test
   - coverage report -m
-  - echo q | ./bin/hpecp --help # check cli outputs help and doesn't return an error 
+  - python --version 2>&1 | grep '2.7' || python setup.py install # (don't run on 2.7)
+  - python --version 2>&1 | grep '2.7' || echo q | ./bin/hpecp --help # check cli outputs help and doesn't return an error (don't run on 2.7)
 
 after_success:
   - coveralls
