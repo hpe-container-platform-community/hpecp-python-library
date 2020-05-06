@@ -36,8 +36,6 @@ class ContainerPlatformClient(object):
     @classmethod
     def create_from_config_file(cls, config_file=USER_DEFAULT_CONFIG_FILE, profile=None):
 
-        print("********* {} *********".format(config_file))
-
         if profile is None:
             profile = 'default'
 
