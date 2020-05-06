@@ -9,7 +9,15 @@ setup(
   packages = ['hpecp'],
   scripts=['bin/hpecp'],
   keywords = '',
-  install_requires=[ 'requests', 'tabulate', 'six', 'enum34; python_version == "2.7"', 'polling', 'fire' ],
+  install_requires=[ 
+    'requests', 
+    'tabulate', 
+    'six', 
+    'enum34; python_version == "2.7"', 
+    'configparser; python_version == "2.7"', 
+    'polling', 
+    'fire' 
+  ],
   test_suite='nose.collector',
   tests_require=['nose'],
   classifiers=[

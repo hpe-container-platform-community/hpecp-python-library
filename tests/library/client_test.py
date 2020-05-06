@@ -1,6 +1,7 @@
 from unittest import TestCase
-from mock import Mock, patch
+from mock import Mock, patch, mock_open
 
+from textwrap import dedent
 import sys
 import tempfile
 import os
@@ -25,6 +26,32 @@ class MockResponse:
             return
     def json(self):
         return self.json_data
+
+class TestCreateFromProperties(TestCase):
+
+    def test_create_from_config_file_factory_method(self):
+        file_data = dedent("""[default]
+                              api_host = 127.0.0.1
+                              api_port = 8080
+                              use_ssl = True
+                              verify_ssl = False
+                              username = admin
+                              password = admin123""")
+
+        tmp = tempfile.NamedTemporaryFile(delete=True)
+        try:
+            tmp.write(file_data.encode('utf-8'))
+            tmp.flush()
+
+            client = ContainerPlatformClient.create_from_config_file(config_file=tmp.name)
+            self.assertEqual(client.username, 'admin')
+            self.assertEqual(client.password, 'admin123')
+            self.assertEqual(client.api_host, '127.0.0.1')
+            self.assertEqual(client.api_port, 8080)
+            self.assertEqual(client.use_ssl, True)
+            self.assertEqual(client.verify_ssl, False)
+        finally:
+            tmp.close()
 
 class TestAuth(TestCase):
 

@@ -18,13 +18,7 @@ from .exceptions import ContainerPlatformClientException, APIException, APIItemN
 import os
 import requests
 import json
-
-try:
-    # Python 3x
-    import configparser
-except:
-    # Python 2.7
-    import ConfigParser
+import configparser
 
 import sys
 PY3 = sys.version_info[0] == 3
@@ -42,6 +36,8 @@ class ContainerPlatformClient(object):
     @classmethod
     def create_from_config_file(cls, config_file=USER_DEFAULT_CONFIG_FILE, profile=None):
 
+        print("********* {} *********".format(config_file))
+
         if profile is None:
             profile = 'default'
 
@@ -53,9 +49,6 @@ class ContainerPlatformClient(object):
         config.read(config_file)
 
         assert profile in config, "'{}' section not found in '{}'".format(profile, config_file)
-
-        assert 'username' in config[profile]
-
         assert 'username' in config[profile] or 'username' in config['default'], "'username' not found in section '{}' or in the default section".format(profile)
         assert 'password' in config[profile] or 'password' in config['default'], "'password' not found in section '{}' or in the default section".format(profile)
         assert 'api_host' in config[profile] or 'api_host' in config['default'], "'api_host' not found in section '{}' or in the default section".format(profile)
