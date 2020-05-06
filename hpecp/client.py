@@ -74,10 +74,9 @@ class ContainerPlatformClient(object):
         else:
             use_ssl = True
 
+        # verify_ssl could be a path
         if verify_ssl == 'False':
             verify_ssl = False
-        else:
-            verify_ssl = True
 
         if ssl_warn == 'False':
             ssl_warn = False
