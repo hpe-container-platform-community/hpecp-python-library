@@ -22,7 +22,7 @@ import fire
 from hpecp import ContainerPlatformClient
 from hpecp.k8s_cluster import K8sClusterHostConfig, K8sClusterStatus
 
-PROFILE = os.getenv('PROFILE', 'gargbage')
+PROFILE = os.getenv('PROFILE', 'default')
 
 
 def get_client():
