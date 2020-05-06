@@ -141,10 +141,9 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">use_ssl</span> <span class="o">=</span> <span class="kc">True</span>
 
+        <span class="c1"># verify_ssl could be a path</span>
         <span class="k">if</span> <span class="n">verify_ssl</span> <span class="o">==</span> <span class="s1">&#39;False&#39;</span><span class="p">:</span>
             <span class="n">verify_ssl</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">verify_ssl</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="k">if</span> <span class="n">ssl_warn</span> <span class="o">==</span> <span class="s1">&#39;False&#39;</span><span class="p">:</span>
             <span class="n">ssl_warn</span> <span class="o">=</span> <span class="kc">False</span>
