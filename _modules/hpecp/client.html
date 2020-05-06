@@ -85,13 +85,7 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">requests</span>
 <span class="kn">import</span> <span class="nn">json</span>
-
-<span class="k">try</span><span class="p">:</span>
-    <span class="c1"># Python 3x</span>
-    <span class="kn">import</span> <span class="nn">configparser</span>
-<span class="k">except</span><span class="p">:</span>
-    <span class="c1"># Python 2.7</span>
-    <span class="kn">import</span> <span class="nn">ConfigParser</span>
+<span class="kn">import</span> <span class="nn">configparser</span>
 
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="n">PY3</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span>
@@ -109,6 +103,8 @@
 <div class="viewcode-block" id="ContainerPlatformClient.create_from_config_file"><a class="viewcode-back" href="../../hpecp.client.html#hpecp.client.ContainerPlatformClient.create_from_config_file">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">create_from_config_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">config_file</span><span class="o">=</span><span class="n">USER_DEFAULT_CONFIG_FILE</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;********* </span><span class="si">{}</span><span class="s2"> *********&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">config_file</span><span class="p">))</span>
+
         <span class="k">if</span> <span class="n">profile</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">profile</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span>
 
@@ -120,9 +116,6 @@
         <span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">config_file</span><span class="p">)</span>
 
         <span class="k">assert</span> <span class="n">profile</span> <span class="ow">in</span> <span class="n">config</span><span class="p">,</span> <span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39; section not found in &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">config_file</span><span class="p">)</span>
-
-        <span class="k">assert</span> <span class="s1">&#39;username&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="n">profile</span><span class="p">]</span>
-
         <span class="k">assert</span> <span class="s1">&#39;username&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="n">profile</span><span class="p">]</span> <span class="ow">or</span> <span class="s1">&#39;username&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">],</span> <span class="s2">&quot;&#39;username&#39; not found in section &#39;</span><span class="si">{}</span><span class="s2">&#39; or in the default section&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
         <span class="k">assert</span> <span class="s1">&#39;password&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="n">profile</span><span class="p">]</span> <span class="ow">or</span> <span class="s1">&#39;password&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">],</span> <span class="s2">&quot;&#39;password&#39; not found in section &#39;</span><span class="si">{}</span><span class="s2">&#39; or in the default section&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
         <span class="k">assert</span> <span class="s1">&#39;api_host&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="n">profile</span><span class="p">]</span> <span class="ow">or</span> <span class="s1">&#39;api_host&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">],</span> <span class="s2">&quot;&#39;api_host&#39; not found in section &#39;</span><span class="si">{}</span><span class="s2">&#39; or in the default section&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
