@@ -53,6 +53,7 @@ class ContainerPlatformClient(object):
         assert 'api_port' in config[profile] or 'api_port' in config['default'], "'api_port' not found in section '{}' or in the default section".format(profile)
         assert 'use_ssl' in config[profile] or 'use_ssl' in config['default'], "'use_ssl' not found in section '{}' or in the default section".format(profile)
         assert 'verify_ssl' in config[profile] or 'verify_ssl' in config['default'], "'verify_ssl' not found in section '{}' or in the default section".format(profile)
+        assert 'ssl_warn' in config[profile] or 'ssl_warn' in config['default'], "'ssl_warn' not found in section '{}' or in the default section".format(profile)
 
         def get_config_value(key, profile):
             if key in config[profile]:
@@ -66,6 +67,7 @@ class ContainerPlatformClient(object):
         api_port = int(get_config_value('api_port', profile))
         use_ssl = str(get_config_value('use_ssl', profile))
         verify_ssl = str(get_config_value('verify_ssl', profile))
+        ssl_warn = str(get_config_value('ssl_warn', profile))
 
         if use_ssl == 'False':
             use_ssl = False
@@ -74,18 +76,26 @@ class ContainerPlatformClient(object):
 
         if verify_ssl == 'False':
             verify_ssl = False
-        
-        return cls(username, password, api_host, api_port, use_ssl, verify_ssl)
+        else:
+            verify_ssl = True
 
-    @classmethod
-    def create_from_env(cls):
-        assert 'HPECP_USERNAME' in os.environ, "'HPECP_USERNAME' environment variable not found"
-        assert 'HPECP_PASSWORD' in os.environ, "'HPECP_PASSWORD' environment variable not found"
-        assert 'HPECP_API_HOST' in os.environ, "'HPECP_API_HOST' environment variable not found"
-        assert 'HPECP_API_PORT' in os.environ, "'HPECP_API_PORT' environment variable not found"
-        assert 'HPECP_USE_SSL' in os.environ, "'HPECP_USE_SSL' environment variable not found"
-        assert 'HPECP_VERIFY_SSL' in os.environ, "'HPECP_VERIFY_SSL' environment variable not found"
-        return cls(username, password, api_host, api_port, use_ssl, verify_ssl)
+        if ssl_warn == 'False':
+            ssl_warn = False
+        else:
+            ssl_warn = True
+        
+        return cls(username, password, api_host, api_port, use_ssl, verify_ssl, ssl_warn)
+
+    # @classmethod
+    # def create_from_env(cls):
+    #     assert 'HPECP_USERNAME' in os.environ, "'HPECP_USERNAME' environment variable not found"
+    #     assert 'HPECP_PASSWORD' in os.environ, "'HPECP_PASSWORD' environment variable not found"
+    #     assert 'HPECP_API_HOST' in os.environ, "'HPECP_API_HOST' environment variable not found"
+    #     assert 'HPECP_API_PORT' in os.environ, "'HPECP_API_PORT' environment variable not found"
+    #     assert 'HPECP_USE_SSL' in os.environ, "'HPECP_USE_SSL' environment variable not found"
+    #     assert 'HPECP_VERIFY_SSL' in os.environ, "'HPECP_VERIFY_SSL' environment variable not found"
+        
+    #     return cls(username, password, api_host, api_port, use_ssl, verify_ssl, ssl_warn)
 
     def __init__(self, 
                  username   = None, 
@@ -93,7 +103,8 @@ class ContainerPlatformClient(object):
                  api_host   = None,
                  api_port   = 8080,
                  use_ssl    = True,
-                 verify_ssl = True
+                 verify_ssl = True,
+                 ssl_warn = False
                  ):
         """The ContainerPlatformClient object is the central object that users of this library work with.
 
@@ -110,6 +121,8 @@ class ContainerPlatformClient(object):
                 Connect to HPECP using SSL: True|False 
             verify_ssl : bool|str
                 See https://requests.readthedocs.io/en/master/user/advanced/#ssl-cert-verification
+            ssl_warn : bool
+                Disable ssl warnings
             
         Returns:
             ContainerPlatformClient: 
@@ -130,7 +143,8 @@ class ContainerPlatformClient(object):
         assert isinstance(api_host, string_types), "'api_host' parameter must be of type string"
         assert isinstance(api_port, int), "'api_port' parameter must be of type int"
         assert isinstance(use_ssl, bool), "'use_ssl' parameter must be of type bool"
-        # TODO - assert verify_ssl
+        assert isinstance(verify_ssl, bool), "'verify_ssl' parameter must be of type bool"
+        assert isinstance(ssl_warn, bool), "'ssl_warn' parameter must be of type bool"
 
         self.username = username
         self.password = password
@@ -138,6 +152,7 @@ class ContainerPlatformClient(object):
         self.api_port = api_port  
         self.use_ssl  = use_ssl
         self.verify_ssl = verify_ssl
+        self.ssl_warn = ssl_warn
         
         if self.use_ssl:
             scheme = 'https'
@@ -145,6 +160,10 @@ class ContainerPlatformClient(object):
             scheme = 'http'
 
         self.base_url = "{}://{}:{}".format(scheme, self.api_host, self.api_port)
+
+        if self.ssl_warn:
+            import urllib3
+            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
         # register endpoint modules - see @property definitions at end of file for each module
         self._tenant = TenantController(self)

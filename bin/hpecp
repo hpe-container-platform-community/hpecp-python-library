@@ -11,6 +11,7 @@ api_host = 127.0.0.1
 api_port = 8080
 use_ssl = True
 verify_ssl = False
+ssl_warn = True
 
 [demosrv]
 username = admin
@@ -23,7 +24,6 @@ from hpecp import ContainerPlatformClient
 from hpecp.k8s_cluster import K8sClusterHostConfig, K8sClusterStatus
 
 PROFILE = os.getenv('PROFILE', 'default')
-
 
 def get_client():
   """Utility function to retrieve an authenticated client object"""
