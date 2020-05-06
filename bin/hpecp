@@ -17,14 +17,17 @@ username = admin
 password = admin123
 """
 
+import os
 import fire
 from hpecp import ContainerPlatformClient
 from hpecp.k8s_cluster import K8sClusterHostConfig, K8sClusterStatus
 
+PROFILE = os.getenv('PROFILE', 'gargbage')
 
-def get_client(profile):
+
+def get_client():
   """Utility function to retrieve an authenticated client object"""
-  client = ContainerPlatformClient.create_from_config_file(profile=profile)
+  client = ContainerPlatformClient.create_from_config_file(profile=PROFILE)
   client.create_session()
   return client
 
@@ -40,17 +43,16 @@ class K8sCluster(object):
                 pod_dns_domain='cluster.local',
                 persistent_storage_local=False,
                 persistent_storage_nimble_csi=False,
-                profile='default'
                 ):
       """Create a K8s Cluster
 
       Example: 
-      hpecp k8s_cluster create myclus1 /api/v2/worker/k8shost/1:master --k8s_version=1.17.0
+      PROFILE=demosrv hpecp k8s_cluster create myclus1 /api/v2/worker/k8shost/1:master --k8s_version=1.17.0
       """
 
       host_config = [ K8sClusterHostConfig.create_from_list(h.split(':')) for h in k8shosts_config.split(',') ]
 
-      print(get_client(profile).k8s_cluster.create(name=name, 
+      print(get_client().k8s_cluster.create(name=name, 
                 description=description, 
                 k8s_version=k8s_version,
                 pod_network_range=pod_network_range,
@@ -60,30 +62,30 @@ class K8sCluster(object):
                 persistent_storage_nimble_csi=persistent_storage_nimble_csi,
                 k8shosts_config = host_config))
 
-  def tabulate(self, all_columns=False, columns=['id', 'description'], profile='default'):
+  def tabulate(self, all_columns=False, columns=['id', 'description']):
     """Print a table of K8s Clusters
 
     Example:
-    hpecp k8s_cluster tabulate --columns=['id','description','status'] --profile=demosrv
+    PROFILE=demosrv hpecp k8s_cluster tabulate --columns=['id','description','status']
     """
     print(columns)
 
     if all_columns:
-      print(get_client(profile).k8s_cluster.list().tabulate())
+      print(get_client().k8s_cluster.list().tabulate())
     else:
-      print(get_client(profile).k8s_cluster.list().tabulate(columns=columns))
+      print(get_client().k8s_cluster.list().tabulate(columns=columns))
 
-  def get(self, k8scluster_id, profile='default'):
-    print(get_client(profile).k8s_cluster.get(k8scluster_id=k8scluster_id))
+  def get(self, k8scluster_id):
+    print(get_client().k8s_cluster.get(k8scluster_id=k8scluster_id))
 
-  def wait_for_status(self, k8scluster_id, status=[], timeout_secs=60, profile='default'):
+  def wait_for_status(self, k8scluster_id, status=[], timeout_secs=60):
     """Wait for K8s Cluster to have one or more statuses
 
     Example: 
-    hpecp k8s_cluster wait_for_status /api/v2/k8scluster/61 --status=['warning'] --profile=demosrv
+    PROFILE=demosrv hpecp k8s_cluster wait_for_status /api/v2/k8scluster/61 --status=['warning']
     """
     cluster_status = [ K8sClusterStatus[s] for s in status ]
-    get_client(profile).k8s_cluster.wait_for_status(k8scluster_id=k8scluster_id, status=cluster_status)
+    get_client().k8s_cluster.wait_for_status(k8scluster_id=k8scluster_id, status=cluster_status)
       
     
 class CLI(object):
