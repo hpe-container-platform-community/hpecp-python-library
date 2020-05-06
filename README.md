@@ -87,8 +87,6 @@ api_host = 127.0.0.1
 api_port = 8080
 use_ssl = True
 verify_ssl = False
-
-[demosrv]
 username = admin
 password = admin123
 EOF
@@ -96,12 +94,12 @@ EOF
 
 Create k8s cluster example:
 ```sh
-PROFILE=demosrv hpecp k8s_cluster create myclus1 /api/v2/worker/k8shost/1:master --k8s_version=1.17.0
+hpecp k8s_cluster create myclus1 /api/v2/worker/k8shost/1:master --k8s_version=1.17.0
 ```
 
 List k8s clusters example:
 ```sh
-PROFILE=demosrv hpecp k8s_cluster tabulate --columns=['id','description','status']
+hpecp k8s_cluster tabulate --columns=['id','description','status']
 ```
 
 Source code for CLI: [./bin/hpecp](./bin/hpecp).
