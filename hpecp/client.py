@@ -160,10 +160,6 @@ class ContainerPlatformClient(object):
 
         self.base_url = "{}://{}:{}".format(scheme, self.api_host, self.api_port)
 
-        if self.ssl_warn:
-            import urllib3
-            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
         # register endpoint modules - see @property definitions at end of file for each module
         self._tenant = TenantController(self)
         self._config = ConfigController(self)
@@ -189,6 +185,10 @@ class ContainerPlatformClient(object):
 
         url = self.base_url + "/api/v1/login"
         auth = { "name": self.username, "password": self.password }
+
+        if self.ssl_warn is False:
+            import urllib3
+            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
         response = None
         try:
@@ -233,6 +233,10 @@ class ContainerPlatformClient(object):
         all_headers.update(additional_headers)
 
         url = url = self.base_url + url
+
+        if self.ssl_warn is False:
+            import urllib3
+            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
         try:
             if http_method == 'get':
