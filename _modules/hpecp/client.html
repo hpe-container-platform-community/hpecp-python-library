@@ -227,10 +227,6 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">://</span><span class="si">{}</span><span class="s2">:</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">scheme</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_port</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ssl_warn</span><span class="p">:</span>
-            <span class="kn">import</span> <span class="nn">urllib3</span>
-            <span class="n">urllib3</span><span class="o">.</span><span class="n">disable_warnings</span><span class="p">(</span><span class="n">urllib3</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">InsecureRequestWarning</span><span class="p">)</span>
-
         <span class="c1"># register endpoint modules - see @property definitions at end of file for each module</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_tenant</span> <span class="o">=</span> <span class="n">TenantController</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="n">ConfigController</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -256,6 +252,10 @@
 
         <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/api/v1/login&quot;</span>
         <span class="n">auth</span> <span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="s2">&quot;password&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">password</span> <span class="p">}</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ssl_warn</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">urllib3</span>
+            <span class="n">urllib3</span><span class="o">.</span><span class="n">disable_warnings</span><span class="p">(</span><span class="n">urllib3</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">InsecureRequestWarning</span><span class="p">)</span>
 
         <span class="n">response</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">try</span><span class="p">:</span>
@@ -300,6 +300,10 @@
         <span class="n">all_headers</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">additional_headers</span><span class="p">)</span>
 
         <span class="n">url</span> <span class="o">=</span> <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="n">url</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ssl_warn</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">urllib3</span>
+            <span class="n">urllib3</span><span class="o">.</span><span class="n">disable_warnings</span><span class="p">(</span><span class="n">urllib3</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">InsecureRequestWarning</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">http_method</span> <span class="o">==</span> <span class="s1">&#39;get&#39;</span><span class="p">:</span>
