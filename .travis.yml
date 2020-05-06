@@ -14,7 +14,8 @@ script:
   - tox
   - coverage run --source hpecp setup.py test
   - coverage report -m
-  - pip install fire && echo q | ./bin/hpecp --help # check cli outputs help and doesn't return an error 
+  - pip install fire
+  - source virtualenv/bin/activate && echo q | ./bin/hpecp --help # check cli outputs help and doesn't return an error 
 
 after_success:
   - coveralls
