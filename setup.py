@@ -1,6 +1,10 @@
 from setuptools import setup, find_packages
-from sphinx.setup_command import BuildDoc
-cmdclass = {'build_sphinx': BuildDoc}
+
+try:
+    from sphinx.setup_command import BuildDoc
+    cmdclass['build_sphinx'] = BuildDoc
+except ImportError:
+    print('WARNING: sphinx not available, not building docs')
 
 requires=[ 
     'requests', 
