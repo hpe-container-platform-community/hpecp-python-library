@@ -1,25 +1,16 @@
 ### DEVELOPMENT ENVIRONMENT
 
-I use Theia for development. Startup:
+I use Theia IDE for development. 
+
+I use Theia because it is easy to provide all the dependencies out of the box.
+
+To startup Theia:
 
 ```
 ./run_ide.sh 
 ```
 
 Then open browser to http://localhost:3000
-
-Inside the Theia terminal:
-
-```
-# install python versions for tox
-sudo add-apt-repository ppa:deadsnakes/ppa
-sudo apt-get update
-sudo apt-get install python3.5 python3.6 python3.7 python3.8
-
-# install tox
-sudo apt install tox
-```
-
 
 ### COVERAGE
 
