@@ -32,9 +32,33 @@ class ContainerPlatformClient(object):
     """The ContainerPlatformClient object is the central object that users of this library work with."""
 
     USER_DEFAULT_CONFIG_FILE = os.path.join(os.path.expanduser("~"), '.hpecp.conf')
+    """This will point to ~/.hpecp.conf by default"""
 
     @classmethod
     def create_from_config_file(cls, config_file=USER_DEFAULT_CONFIG_FILE, profile=None):
+        """Create a ContainerPlatformClient object from a configuration file.
+
+        Parameters:
+            config_file : str
+                The configuration filename and path
+            profile : str
+                If the configuration file has multiple profile sections, you can select the profile to use.
+
+        Example config_file::
+
+            [default]
+            api_host = 127.0.0.1
+            api_port = 8080
+            use_ssl = True
+            verify_ssl = False
+            ssl_warn = False
+
+            [demoserver]
+            username = admin
+            password = admin123
+
+
+        """
 
         if profile is None:
             profile = 'default'

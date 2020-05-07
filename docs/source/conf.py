@@ -13,7 +13,7 @@
 
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../../'))
+sys.path.insert(0, os.path.abspath('../../')) 
 
 # don't skip __init__ class methods
 def skip(app, what, name, obj, would_skip, options):
@@ -28,6 +28,8 @@ def setup(app):
 autodoc_default_options = {
     'member-order': 'bysource'
 }
+
+master_doc = 'index'
 
 # Add toctree to sidebar.  See https://stackoverflow.com/a/19007358/1033422
 html_sidebars = { '**': ['globaltoc.html', 'relations.html', 'sourcelink.html', 'searchbox.html'] }
