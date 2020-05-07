@@ -42,6 +42,10 @@ class ContainerPlatformClient(object):
             profile : str
                 If the configuration file has multiple profile sections, you can select the profile to use.
 
+        Returns:
+            ContainerPlatformClient: 
+                An instance of ContainerPlatformClient is returned.
+
         Example config_file::
 
             [default]
@@ -54,8 +58,6 @@ class ContainerPlatformClient(object):
             [demoserver]
             username = admin
             password = admin123
-
-
         """
 
         if profile is None:
@@ -233,6 +235,8 @@ class ContainerPlatformClient(object):
 
         self.session_headers = response.headers
         self.session_id = response.headers['location']
+
+        return self
 
     def _request_headers(self):
 

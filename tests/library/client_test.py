@@ -68,7 +68,7 @@ class TestAuth(TestCase):
         raise RuntimeError("Unhandle POST request: " + args[0]) 
 
     @patch('requests.post', side_effect=mocked_requests_post)
-    def test_auth(self, mock_post):
+    def test_create_session(self, mock_post):
 
         client = ContainerPlatformClient(
                                 username='admin', 
@@ -76,7 +76,20 @@ class TestAuth(TestCase):
                                 api_host='127.0.0.1', 
                                 api_port=8080,
                                 use_ssl=False)
-        client.create_session()
+        
+        self.assertIsInstance(client.create_session(), ContainerPlatformClient)
+
+    @patch('requests.post', side_effect=mocked_requests_post)
+    def test_create_session_chained(self, mock_post):
+
+        client = ContainerPlatformClient(
+                                username='admin', 
+                                password='admin123', 
+                                api_host='127.0.0.1', 
+                                api_port=8080,
+                                use_ssl=False).create_session();
+        
+        self.assertIsInstance(client, ContainerPlatformClient)
 
     def mocked_requests_post_ssl(*args, **kwargs):
         if args[0] == 'https://127.0.0.1:8080/api/v1/login':
