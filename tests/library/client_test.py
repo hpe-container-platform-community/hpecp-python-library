@@ -57,6 +57,7 @@ class TestCreateFromProperties(TestCase):
 
 class TestAuth(TestCase):
 
+    # pylint: disable=no-method-argument 
     def mocked_requests_post(*args, **kwargs):
         if args[0] == 'http://127.0.0.1:8080/api/v1/login':
             return MockResponse (

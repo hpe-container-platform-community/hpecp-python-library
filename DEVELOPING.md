@@ -1,12 +1,33 @@
 ### DEVELOPMENT ENVIRONMENT
 
-I use Visual Studio Code for development.
+I use Theia for development. Startup:
+
+```
+./run_ide.sh 
+```
+
+Then open browser to http://localhost:3000
+
+Inside the Theia terminal:
+
+```
+# install python versions for tox
+sudo add-apt-repository ppa:deadsnakes/ppa
+sudo apt-get update
+sudo apt-get install python3.5 python3.6 python3.7 python3.8
+
+# install tox
+sudo apt install tox
+```
+
 
 ### COVERAGE
 
 Aim for 100% test coverage to ensure library will work with all specified python versions.
 
 ### FORMATTING
+
+Currently not used
 
 ```
 autopep8 --in-place --aggressive --recursive hpecp/
@@ -37,7 +58,8 @@ python setup.py sdist upload -r pypi
 Run all tests:
 
 ```
-tox -e py27
+python setup.py test
+python3 setup.py test
 ```
 
 Run all tests with coverage output:
@@ -46,20 +68,26 @@ Run all tests with coverage output:
 coverage erase && coverage run --source hpecp setup.py test && coverage report -m
 ```
 
-Run a single test.
+#### Using tox for testing
+
+Run all tests for all python versions in tox.ini
 
 ```
-pytest tests/doc/test_create_cluster.py
+tox
 ```
 
-Or, with tox:
-
 ```
-tox -e py27 -- tests/doc/test_list_orgs_and_spaces.py
+tox -e py27
 ```
 
-Or:
+Run all tests in a file:
 
 ```
-tox -e py27 -- tests/doc/test_list_orgs_and_spaces.py:DocExampleScripts_Test.test
+tox -e py27 -- tests/library/client_test.py
+```
+
+Run a single test
+
+```
+tox -e py27 -- tests/library/client_test.py:TestCreateFromProperties.test_create_from_config_file_factory_method
 ```

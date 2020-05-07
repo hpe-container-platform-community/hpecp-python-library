@@ -19,7 +19,7 @@ setup(
     'fire' 
   ],
   test_suite='nose.collector',
-  tests_require=['nose'],
+  tests_require=['nose', 'mock'],
   classifiers=[
     "License :: OSI Approved :: Apache Software License",
     "Programming Language :: Python",
