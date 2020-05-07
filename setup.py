@@ -1,8 +1,5 @@
 from setuptools import setup, find_packages
 
-with open('requirements.txt') as f:
-    requirements = f.read().splitlines()
-
 setup(
   name='hpecp',
   description="HPE Container Platform client",
@@ -12,7 +9,15 @@ setup(
   packages = ['hpecp'],
   scripts=['bin/hpecp'],
   keywords = '',
-  install_requires=requirements,
+  install_requires=[ 
+    'requests', 
+    'tabulate', 
+    'six', 
+    'enum34; python_version == "2.7"', 
+    'configparser; python_version == "2.7"', 
+    'polling', 
+    'fire' 
+  ],
   test_suite='nose.collector',
   tests_require=['nose','mock'],
   classifiers=[
