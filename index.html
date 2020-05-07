@@ -82,7 +82,7 @@
 <p>Python library for HPE Container Platform (HPECP).</p>
 <p>This library is pre-alpha. The API of this library may be unstable and
 subject to change until this library reaches beta.</p>
-<p>Example usage:</p>
+<p>Example basic usage with variables passed to client constructor:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">hpecp</span> <span class="kn">import</span> <span class="n">ContainerPlatformClient</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">ContainerPlatformClient</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span>
@@ -93,6 +93,26 @@ subject to change until this library reaches beta.</p>
                               <span class="n">verify_ssl</span><span class="o">=</span><span class="s1">&#39;/certs/hpecp-ca-cert.pem&#39;</span><span class="p">)</span>
 
 <span class="n">client</span><span class="o">.</span><span class="n">create_session</span><span class="p">()</span> <span class="c1"># Login</span>
+
+<span class="n">client</span><span class="o">.</span><span class="n">k8s_cluster</span><span class="o">.</span><span class="n">list</span><span class="p">()</span><span class="o">.</span><span class="n">tabulate</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Example basic usage with config file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cat &gt; ~/.hpecp.conf <span class="s">&lt;&lt;EOF</span>
+<span class="s">[default]</span>
+<span class="s">api_host = 127.0.0.1</span>
+<span class="s">api_port = 8080</span>
+<span class="s">use_ssl = True</span>
+<span class="s">verify_ssl = False</span>
+<span class="s">ssl_warn = False</span>
+<span class="s">username = admin</span>
+<span class="s">password = admin123</span>
+<span class="s">EOF</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">hpecp</span> <span class="kn">import</span> <span class="n">ContainerPlatformClient</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">ContainerPlatformClient</span><span class="o">.</span><span class="n">create_from_config_file</span><span class="p">()</span><span class="o">.</span><span class="n">create_session</span><span class="p">()</span>
 
 <span class="n">client</span><span class="o">.</span><span class="n">k8s_cluster</span><span class="o">.</span><span class="n">list</span><span class="p">()</span><span class="o">.</span><span class="n">tabulate</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="p">])</span>
 </pre></div>
