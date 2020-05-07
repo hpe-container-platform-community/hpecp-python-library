@@ -27,7 +27,9 @@ autopep8 --in-place --aggressive --recursive hpecp/
 #### BUILDING DOCS
 
 ```
-python setup.py build_sphinx
+pip3 install -r requirements.txt
+cd docs
+make clean && make html
 ```
 
 ### RELEASING
