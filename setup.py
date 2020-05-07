@@ -1,4 +1,6 @@
-from setuptools import setup, find_packages
+from setuptools import setup
+
+cmdclass={}
 
 try:
     from sphinx.setup_command import BuildDoc
