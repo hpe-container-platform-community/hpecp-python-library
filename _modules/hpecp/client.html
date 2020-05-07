@@ -86,14 +86,12 @@
 <span class="kn">import</span> <span class="nn">requests</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">configparser</span>
-
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="n">PY3</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span>
 
-<span class="k">if</span> <span class="n">PY3</span><span class="p">:</span>
-    <span class="n">string_types</span> <span class="o">=</span> <span class="nb">str</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="n">string_types</span> <span class="o">=</span> <span class="n">basestring</span>
+<span class="k">try</span><span class="p">:</span>
+  <span class="n">basestring</span>
+<span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>
+  <span class="n">basestring</span> <span class="o">=</span> <span class="nb">str</span>
 
 <div class="viewcode-block" id="ContainerPlatformClient"><a class="viewcode-back" href="../../hpecp.client.html#hpecp.client.ContainerPlatformClient">[docs]</a><span class="k">class</span> <span class="nc">ContainerPlatformClient</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;The ContainerPlatformClient object is the central object that users of this library work with.&quot;&quot;&quot;</span>
@@ -228,9 +226,9 @@
         <span class="c1"># TODO add other fields, except password</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;__init__ called with username[&#39;</span><span class="si">{}</span><span class="s2">&#39;]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">))</span>
         
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">string_types</span><span class="p">),</span> <span class="s2">&quot;&#39;username&#39; parameter must be of type string&quot;</span>
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">password</span><span class="p">,</span> <span class="n">string_types</span><span class="p">),</span> <span class="s2">&quot;&#39;password&#39; parameter must be of type string&quot;</span>
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">api_host</span><span class="p">,</span> <span class="n">string_types</span><span class="p">),</span> <span class="s2">&quot;&#39;api_host&#39; parameter must be of type string&quot;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">basestring</span><span class="p">),</span> <span class="s2">&quot;&#39;username&#39; parameter must be of type string&quot;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">password</span><span class="p">,</span> <span class="n">basestring</span><span class="p">),</span> <span class="s2">&quot;&#39;password&#39; parameter must be of type string&quot;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">api_host</span><span class="p">,</span> <span class="n">basestring</span><span class="p">),</span> <span class="s2">&quot;&#39;api_host&#39; parameter must be of type string&quot;</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">api_port</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span> <span class="s2">&quot;&#39;api_port&#39; parameter must be of type int&quot;</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">use_ssl</span><span class="p">,</span> <span class="nb">bool</span><span class="p">),</span> <span class="s2">&quot;&#39;use_ssl&#39; parameter must be of type bool&quot;</span>
         <span class="c1">#assert isinstance(verify_ssl, bool) o, &quot;&#39;verify_ssl&#39; parameter must be of type bool&quot;</span>
