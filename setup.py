@@ -1,22 +1,4 @@
-from setuptools import setup
-
-cmdclass={}
-
-try:
-    from sphinx.setup_command import BuildDoc
-    cmdclass['build_sphinx'] = BuildDoc
-except ImportError:
-    print('WARNING: sphinx not available, not building docs')
-
-requires=[ 
-    'requests', 
-    'tabulate', 
-    'six', 
-    'enum34; python_version == "2.7"', 
-    'configparser; python_version == "2.7"', 
-    'polling', 
-    'fire' 
-  ]
+from setuptools import setup, find_packages
 
 setup(
   name='hpecp',
@@ -27,20 +9,17 @@ setup(
   packages = ['hpecp'],
   scripts=['bin/hpecp'],
   keywords = '',
-  install_requires=requires,
+  install_requires=[ 
+    'requests', 
+    'tabulate', 
+    'six', 
+    'enum34; python_version == "2.7"', 
+    'configparser; python_version == "2.7"', 
+    'polling', 
+    'fire' 
+  ],
   test_suite='nose.collector',
-  tests_require=['nose', 'mock'],
-  setup_requires=requires,
-  cmdclass=cmdclass,
-  command_options={
-        'build_sphinx': {
-            'project': ('setup.py', 'HPE Container Platform client'),
-            'version': ('setup.py', 'pre-alpha'),
-            'release': ('setup.py', 'n/a'),
-            'source_dir': ('setup.py', 'docs/source'),
-            'build_dir': ('setup.py', 'docs/build'),
-            }
-        },
+  tests_require=['nose'],
   classifiers=[
     "License :: OSI Approved :: Apache Software License",
     "Programming Language :: Python",
