@@ -470,10 +470,12 @@
         <span class="sd">&quot;&quot;&quot;Wait for cluster status.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            k8scluster_id: (int) the K8S cluster ID</span>
-<span class="sd">            status: (list) of type K8sClusterStatus status(es) to wait for.  </span>
-<span class="sd">                    Use an empty array if you want to wait for a cluster&#39;s existence to cease.</span>
-<span class="sd">            timeout_secs: (int) how long to wait for the status(es)</span>
+<span class="sd">            k8scluster_id: int</span>
+<span class="sd">                the K8S cluster ID</span>
+<span class="sd">            status: list[K8sClusterStatus]</span>
+<span class="sd">                Status(es) to wait for.  Use an empty array if you want to wait for a cluster&#39;s existence to cease.</span>
+<span class="sd">            timeout_secs: int</span>
+<span class="sd">                How long to wait for the status(es) before raising an exception.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            bool: True if status was found before timeout, otherwise False</span>

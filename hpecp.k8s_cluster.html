@@ -408,13 +408,15 @@ setup_log: (bool) set to True to return the cluster setup log</p>
 <dt id="hpecp.k8s_cluster.K8sClusterController.wait_for_status">
 <code class="sig-name descname">wait_for_status</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">k8scluster_id</span></em>, <em class="sig-param"><span class="n">status</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">timeout_secs</span><span class="o">=</span><span class="default_value">60</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_cluster.html#K8sClusterController.wait_for_status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_cluster.K8sClusterController.wait_for_status" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wait for cluster status.</p>
-<dl>
-<dt>Args:</dt><dd><p>k8scluster_id: (int) the K8S cluster ID
-status: (list) of type K8sClusterStatus status(es) to wait for.</p>
-<blockquote>
-<div><p>Use an empty array if you want to wait for a cluster’s existence to cease.</p>
-</div></blockquote>
-<p>timeout_secs: (int) how long to wait for the status(es)</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>k8scluster_id: int</dt><dd><p>the K8S cluster ID</p>
+</dd>
+<dt>status: list[K8sClusterStatus]</dt><dd><p>Status(es) to wait for.  Use an empty array if you want to wait for a cluster’s existence to cease.</p>
+</dd>
+<dt>timeout_secs: int</dt><dd><p>How long to wait for the status(es) before raising an exception.</p>
+</dd>
+</dl>
 </dd>
 <dt>Returns:</dt><dd><p>bool: True if status was found before timeout, otherwise False</p>
 </dd>

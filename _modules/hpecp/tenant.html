@@ -75,12 +75,11 @@
 <span class="kn">import</span> <span class="nn">requests</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="n">PY3</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span>
 
-<span class="k">if</span> <span class="n">PY3</span><span class="p">:</span>
-    <span class="n">string_types</span> <span class="o">=</span> <span class="nb">str</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="n">string_types</span> <span class="o">=</span> <span class="n">basestring</span>
+<span class="k">try</span><span class="p">:</span>
+  <span class="n">basestring</span>
+<span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>
+  <span class="n">basestring</span> <span class="o">=</span> <span class="nb">str</span>
 
 <div class="viewcode-block" id="Tenant"><a class="viewcode-back" href="../../hpecp.tenant.html#hpecp.tenant.Tenant">[docs]</a><span class="k">class</span> <span class="nc">Tenant</span><span class="p">():</span>
 
@@ -188,8 +187,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;!!!! The method `tenant.create()` is experimental !!!!&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!&#39;</span><span class="p">)</span>
 
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">string_types</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span><span class="s2">&quot;&#39;name&#39; must be provided and must be a string&quot;</span>
-        <span class="k">assert</span> <span class="n">description</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">description</span><span class="p">,</span> <span class="n">string_types</span><span class="p">),</span> <span class="s2">&quot;&#39;description&#39; if provided, must be a string&quot;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">basestring</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span><span class="s2">&quot;&#39;name&#39; must be provided and must be a string&quot;</span>
+        <span class="k">assert</span> <span class="n">description</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">description</span><span class="p">,</span> <span class="n">basestring</span><span class="p">),</span> <span class="s2">&quot;&#39;description&#39; if provided, must be a string&quot;</span>
 
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="p">{</span> 
@@ -215,13 +214,16 @@
         
 
 <div class="viewcode-block" id="TenantController.auth_setup"><a class="viewcode-back" href="../../hpecp.tenant.html#hpecp.tenant.TenantController.auth_setup">[docs]</a>    <span class="k">def</span> <span class="nf">auth_setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tenant_id</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;[summary]</span>
+        <span class="sd">&quot;&quot;&quot;summary</span>
 
-<span class="sd">        Arguments:</span>
-<span class="sd">            tenant_id {[type]} -- [description]</span>
-<span class="sd">            data {[type]} -- [description]</span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            tenant_id : type</span>
+<span class="sd">                description</span>
+<span class="sd">            data : type</span>
+<span class="sd">                description</span>
 
-<span class="sd">        Example:</span>
+<span class="sd">        Example::</span>
+
 <span class="sd">            data =  {&quot;external_user_groups&quot;:[</span>
 <span class="sd">                {</span>
 <span class="sd">                    &quot;role&quot;:&quot;/api/v1/role/2&quot;, # 2 = Admins</span>
