@@ -27,7 +27,7 @@ setup(
   packages = ['hpecp'],
   scripts=['bin/hpecp'],
   keywords = '',
-  install_require=requires,
+  install_requires=requires,
   test_suite='nose.collector',
   tests_require=['nose', 'mock'],
   setup_requires=requires,
