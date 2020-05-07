@@ -403,10 +403,12 @@ class K8sClusterController:
         """Wait for cluster status.
 
         Args:
-            k8scluster_id: (int) the K8S cluster ID
-            status: (list) of type K8sClusterStatus status(es) to wait for.  
-                    Use an empty array if you want to wait for a cluster's existence to cease.
-            timeout_secs: (int) how long to wait for the status(es)
+            k8scluster_id: int
+                the K8S cluster ID
+            status: list[K8sClusterStatus]
+                Status(es) to wait for.  Use an empty array if you want to wait for a cluster's existence to cease.
+            timeout_secs: int
+                How long to wait for the status(es) before raising an exception.
 
         Returns:
             bool: True if status was found before timeout, otherwise False

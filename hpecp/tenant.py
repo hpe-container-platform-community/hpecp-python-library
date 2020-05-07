@@ -8,12 +8,11 @@ from tabulate import tabulate
 import requests
 import json
 import sys
-PY3 = sys.version_info[0] == 3
 
-if PY3:
-    string_types = str
-else:
-    string_types = basestring
+try:
+  basestring
+except NameError:
+  basestring = str
 
 class Tenant():
 
@@ -121,8 +120,8 @@ class TenantController:
         self.client.log.warning('!!!! The method `tenant.create()` is experimental !!!!')
         self.client.log.warning('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 
-        assert isinstance(name, string_types) and len(name) > 0,"'name' must be provided and must be a string"
-        assert description is None or isinstance(description, string_types), "'description' if provided, must be a string"
+        assert isinstance(name, basestring) and len(name) > 0,"'name' must be provided and must be a string"
+        assert description is None or isinstance(description, basestring), "'description' if provided, must be a string"
 
         data = {
             'label': { 
@@ -148,13 +147,16 @@ class TenantController:
         
 
     def auth_setup(self, tenant_id, data):
-        """[summary]
+        """summary
 
-        Arguments:
-            tenant_id {[type]} -- [description]
-            data {[type]} -- [description]
+        Parameters:
+            tenant_id : type
+                description
+            data : type
+                description
 
-        Example:
+        Example::
+
             data =  {"external_user_groups":[
                 {
                     "role":"/api/v1/role/2", # 2 = Admins
