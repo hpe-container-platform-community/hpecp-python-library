@@ -19,14 +19,12 @@ import os
 import requests
 import json
 import configparser
-
 import sys
-PY3 = sys.version_info[0] == 3
 
-if PY3:
-    string_types = str
-else:
-    string_types = basestring
+try:
+  basestring
+except NameError:
+  basestring = str
 
 class ContainerPlatformClient(object):
     """The ContainerPlatformClient object is the central object that users of this library work with."""
@@ -161,9 +159,9 @@ class ContainerPlatformClient(object):
         # TODO add other fields, except password
         self._log.debug("__init__ called with username['{}']".format(username))
         
-        assert isinstance(username, string_types), "'username' parameter must be of type string"
-        assert isinstance(password, string_types), "'password' parameter must be of type string"
-        assert isinstance(api_host, string_types), "'api_host' parameter must be of type string"
+        assert isinstance(username, basestring), "'username' parameter must be of type string"
+        assert isinstance(password, basestring), "'password' parameter must be of type string"
+        assert isinstance(api_host, basestring), "'api_host' parameter must be of type string"
         assert isinstance(api_port, int), "'api_port' parameter must be of type int"
         assert isinstance(use_ssl, bool), "'use_ssl' parameter must be of type bool"
         #assert isinstance(verify_ssl, bool) o, "'verify_ssl' parameter must be of type bool"
