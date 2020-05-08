@@ -40,7 +40,7 @@ client.create_session() # Login
 print(client.k8s_cluster.list().tabulate(columns=['description', 'id']))
 ```
 
-Displays:
+On my environment, this displays:
 ```
 +-------------+-----------------------+
 | description |          id           |
