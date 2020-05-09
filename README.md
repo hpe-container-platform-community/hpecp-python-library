@@ -34,8 +34,10 @@ client = ContainerPlatformClient(username='admin',
                                 api_port=8080,
                                 use_ssl=True,
                                 verify_ssl='/certs/hpecp-ca-cert.pem')
-
 client.create_session() # Login
+
+# Alternatively:
+# client = ContainerPlatformClient.create_from_config_file().create_session()
 
 print(client.k8s_cluster.list().tabulate(columns=['description', 'id']))
 ```
