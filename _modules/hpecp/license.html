@@ -77,8 +77,8 @@
 
 <div class="viewcode-block" id="LicenseController"><a class="viewcode-back" href="../../hpecp.license.html#hpecp.license.LicenseController">[docs]</a><span class="k">class</span> <span class="nc">LicenseController</span><span class="p">:</span>
 
-<div class="viewcode-block" id="LicenseController.__init__"><a class="viewcode-back" href="../../hpecp.license.html#hpecp.license.LicenseController.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">client</span></div>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">client</span>
 
 <div class="viewcode-block" id="LicenseController.get_platform_id"><a class="viewcode-back" href="../../hpecp.license.html#hpecp.license.LicenseController.get_platform_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_platform_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="s1">&#39;/api/v1/license&#39;</span><span class="p">,</span> <span class="n">http_method</span><span class="o">=</span><span class="s1">&#39;get&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;license/get_platform_id&#39;</span><span class="p">)</span>

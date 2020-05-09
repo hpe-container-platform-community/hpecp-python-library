@@ -94,13 +94,41 @@
   <span class="n">basestring</span> <span class="o">=</span> <span class="nb">str</span>
 
 <div class="viewcode-block" id="ContainerPlatformClient"><a class="viewcode-back" href="../../hpecp.client.html#hpecp.client.ContainerPlatformClient">[docs]</a><span class="k">class</span> <span class="nc">ContainerPlatformClient</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The ContainerPlatformClient object is the central object that users of this library work with.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;The ContainerPlatformClient object is the central object that users of this library work with.</span>
 
-    <span class="n">USER_DEFAULT_CONFIG_FILE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">),</span> <span class="s1">&#39;.hpecp.conf&#39;</span><span class="p">)</span>
-    <span class="sd">&quot;&quot;&quot;This will point to ~/.hpecp.conf by default&quot;&quot;&quot;</span>
+<span class="sd">    Parameters:</span>
+<span class="sd">        username : str</span>
+<span class="sd">            HPECP username</span>
+<span class="sd">        password : str</span>
+<span class="sd">            HPECP password</span>
+<span class="sd">        api_host : str</span>
+<span class="sd">            HPECP api_host </span>
+<span class="sd">        api_port : int</span>
+<span class="sd">            HPECP api_port </span>
+<span class="sd">        use_ssl : bool:</span>
+<span class="sd">            Connect to HPECP using SSL: True|False </span>
+<span class="sd">        verify_ssl : bool|str</span>
+<span class="sd">            See https://requests.readthedocs.io/en/master/user/advanced/#ssl-cert-verification</span>
+<span class="sd">        ssl_warn : bool</span>
+<span class="sd">            Disable ssl warnings</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ContainerPlatformClient: </span>
+<span class="sd">            An instance of ContainerPlatformClient</span>
+
+<span class="sd">    Notes:</span>
+<span class="sd">        Instantiating the ContainerPlatformClient does not make any connection to the HPE Container Platform API. The </span>
+<span class="sd">        initial connection would be made by calling the method :py:meth:`create_session`.</span>
+
+<span class="sd">    See also:</span>
+
+<span class="sd">        :py:meth:`create_from_config_file` for an alternative way to create a ContainerPlatformClient instance</span>
+
+<span class="sd">        :py:meth:`create_from_env` for an alternative way to create a ContainerPlatformClient instance</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ContainerPlatformClient.create_from_config_file"><a class="viewcode-back" href="../../hpecp.client.html#hpecp.client.ContainerPlatformClient.create_from_config_file">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">create_from_config_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">config_file</span><span class="o">=</span><span class="n">USER_DEFAULT_CONFIG_FILE</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">create_from_config_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">config_file</span><span class="o">=</span><span class="s2">&quot;~/.hpecp.conf&quot;</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create a ContainerPlatformClient object from a configuration file.</span>
 
 <span class="sd">        Parameters:</span>
@@ -129,6 +157,10 @@
 
         <span class="k">if</span> <span class="n">profile</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">profile</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span>
+
+        <span class="k">if</span> <span class="n">config_file</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;~&#39;</span><span class="p">):</span>
+            <span class="n">removed_tilde</span> <span class="o">=</span> <span class="n">config_file</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="n">config_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">),</span> <span class="n">removed_tilde</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">config_file</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">ContainerPlatformClientException</span><span class="p">(</span>
@@ -180,15 +212,17 @@
     <span class="k">def</span> <span class="nf">create_from_env</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create an instance of ContainerPlatformClient from environment variables:</span>
 
-<span class="sd">        &#39;HPECP_USERNAME&#39;</span>
-<span class="sd">        &#39;HPECP_PASSWORD&#39;</span>
-<span class="sd">        &#39;HPECP_API_HOST&#39;</span>
-<span class="sd">        &#39;HPECP_API_PORT&#39;</span>
-<span class="sd">        &#39;HPECP_USE_SSL&#39;</span>
-<span class="sd">        &#39;HPECP_VERIFY_SSL&#39;</span>
-<span class="sd">        &#39;HPECP_SSL_WARN&#39;</span>
+<span class="sd">        Variables::</span>
 
-<span class="sd">        See :py:meth:`__init__` for the paramaeter definitions.</span>
+<span class="sd">            HPECP_USERNAME</span>
+<span class="sd">            HPECP_PASSWORD</span>
+<span class="sd">            HPECP_API_HOST</span>
+<span class="sd">            HPECP_API_PORT</span>
+<span class="sd">            HPECP_USE_SSL</span>
+<span class="sd">            HPECP_VERIFY_SSL</span>
+<span class="sd">            HPECP_SSL_WARN</span>
+
+<span class="sd">        See ContainerPlatformClient :py:class:`constructor &lt;ContainerPlatformClient&gt;` for the paramaeter definitions.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="s1">&#39;HPECP_USERNAME&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
@@ -222,7 +256,7 @@
             <span class="n">ssl_warn</span><span class="o">=</span><span class="n">HPECP_SSL_WARN</span>
             <span class="p">)</span></div>
 
-<div class="viewcode-block" id="ContainerPlatformClient.__init__"><a class="viewcode-back" href="../../hpecp.client.html#hpecp.client.ContainerPlatformClient.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
                  <span class="n">username</span>   <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
                  <span class="n">password</span>   <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">api_host</span>   <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -231,33 +265,7 @@
                  <span class="n">verify_ssl</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
                  <span class="n">ssl_warn</span> <span class="o">=</span> <span class="kc">False</span>
                  <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;The ContainerPlatformClient object is the central object that users of this library work with.</span>
-
-<span class="sd">        Parameters:</span>
-<span class="sd">            username : str</span>
-<span class="sd">                HPECP username</span>
-<span class="sd">            password : str</span>
-<span class="sd">                HPECP password</span>
-<span class="sd">            api_host : str</span>
-<span class="sd">                HPECP api_host </span>
-<span class="sd">            api_port : int</span>
-<span class="sd">                HPECP api_port </span>
-<span class="sd">            use_ssl : bool:</span>
-<span class="sd">                Connect to HPECP using SSL: True|False </span>
-<span class="sd">            verify_ssl : bool|str</span>
-<span class="sd">                See https://requests.readthedocs.io/en/master/user/advanced/#ssl-cert-verification</span>
-<span class="sd">            ssl_warn : bool</span>
-<span class="sd">                Disable ssl warnings</span>
-<span class="sd">            </span>
-<span class="sd">        Returns:</span>
-<span class="sd">            ContainerPlatformClient: </span>
-<span class="sd">                An instance of ContainerPlatformClient</span>
-
-<span class="sd">        Notes:</span>
-<span class="sd">            Instantiating the ContainerPlatformClient does not make any connection to the HPE Container Platform API. The </span>
-<span class="sd">            initial connection would be made by calling the method :py:meth:`create_session`.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Doc string is defined at the top of the class&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_log</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
 
         <span class="c1"># TODO add other fields, except password</span>
@@ -293,7 +301,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">k8s_worker</span> <span class="o">=</span> <span class="n">K8sWorkerController</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_k8s_cluster</span> <span class="o">=</span> <span class="n">K8sClusterController</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">license</span> <span class="o">=</span> <span class="n">LicenseController</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">lock</span> <span class="o">=</span> <span class="n">LockController</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lock</span> <span class="o">=</span> <span class="n">LockController</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ContainerPlatformClient.create_session"><a class="viewcode-back" href="../../hpecp.client.html#hpecp.client.ContainerPlatformClient.create_session">[docs]</a>    <span class="k">def</span> <span class="nf">create_session</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create a session with the HPE CP controller defined in the object :py:class:`ContainerPlatformClient`.</span>
