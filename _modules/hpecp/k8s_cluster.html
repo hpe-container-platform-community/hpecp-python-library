@@ -75,13 +75,10 @@
 <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
 <span class="kn">import</span> <span class="nn">re</span>
 
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="n">PY3</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span>
-
-<span class="k">if</span> <span class="n">PY3</span><span class="p">:</span>
-    <span class="n">string_types</span> <span class="o">=</span> <span class="nb">str</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="n">string_types</span> <span class="o">=</span> <span class="n">basestring</span>
+<span class="k">try</span><span class="p">:</span>
+  <span class="n">basestring</span>
+<span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>
+  <span class="n">basestring</span> <span class="o">=</span> <span class="nb">str</span>
 
 <div class="viewcode-block" id="K8sClusterStatus"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterStatus">[docs]</a><span class="k">class</span> <span class="nc">K8sClusterStatus</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;The statuses for a K8S Cluster</span>
@@ -161,7 +158,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> 
-        <span class="sd">&quot;&quot;&quot;from json[&#39;_links&#39;][&#39;self&#39;][&#39;href&#39;]&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;from json[&#39;_links&#39;][&#39;self&#39;][&#39;href&#39;] - id format: &#39;/api/v2/k8scluster/[0-9]+&#39;&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;_links&#39;</span><span class="p">][</span><span class="s1">&#39;self&#39;</span><span class="p">][</span><span class="s1">&#39;href&#39;</span><span class="p">]</span>
 
     <span class="nd">@property</span>
@@ -327,7 +324,7 @@
 <span class="sd">            node {[type]} -- [description]</span>
 <span class="sd">            role {[type]} -- [description]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">string_types</span><span class="p">),</span> <span class="s2">&quot;&#39;node&#39; must be an string&quot;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">basestring</span><span class="p">),</span> <span class="s2">&quot;&#39;node&#39; must be an string&quot;</span>
         <span class="k">assert</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\/api\/v2\/worker\/k8shost\/[0-9]+&#39;</span><span class="p">,</span> <span class="n">node</span><span class="p">),</span> <span class="s2">&quot;&#39;node&#39; must have format &#39;/api/v2/worker/k8shost/[0-9]+&#39;&quot;</span>
         <span class="k">assert</span> <span class="n">role</span> <span class="ow">in</span> <span class="p">[</span> <span class="s1">&#39;master&#39;</span><span class="p">,</span> <span class="s1">&#39;worker&#39;</span> <span class="p">],</span> <span class="s2">&quot;&#39;role&#39; must one of [&#39;master, worker&#39;]&quot;</span>
 
@@ -398,12 +395,12 @@
         <span class="c1">#     int: The ID for the K8S Cluster with format &#39;/api/v2/k8scluster/[0-9]+&#39;</span>
         <span class="c1">#     APIException</span>
 
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">string_types</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span><span class="s2">&quot;&#39;name&#39; must be provided and must be a string&quot;</span>
-        <span class="k">assert</span> <span class="n">description</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">description</span><span class="p">,</span> <span class="n">string_types</span><span class="p">),</span> <span class="s2">&quot;&#39;description&#39; if provided, must be a string&quot;</span>
-        <span class="k">assert</span> <span class="n">k8s_version</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">k8s_version</span><span class="p">,</span> <span class="n">string_types</span><span class="p">),</span> <span class="s2">&quot;&#39;k8s_version&#39; if provided, must be a string&quot;</span>
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pod_network_range</span><span class="p">,</span> <span class="n">string_types</span><span class="p">),</span> <span class="s2">&quot;&#39;pod_network_range&#39; must be a string&quot;</span>
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">service_network_range</span><span class="p">,</span> <span class="n">string_types</span><span class="p">),</span> <span class="s2">&quot;&#39;service_network_range&#39; must be a string&quot;</span>
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pod_dns_domain</span><span class="p">,</span> <span class="n">string_types</span><span class="p">),</span> <span class="s2">&quot;&#39;pod_dns_domain&#39; must be a string&quot;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">basestring</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span><span class="s2">&quot;&#39;name&#39; must be provided and must be a string&quot;</span>
+        <span class="k">assert</span> <span class="n">description</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">description</span><span class="p">,</span> <span class="n">basestring</span><span class="p">),</span> <span class="s2">&quot;&#39;description&#39; if provided, must be a string&quot;</span>
+        <span class="k">assert</span> <span class="n">k8s_version</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">k8s_version</span><span class="p">,</span> <span class="n">basestring</span><span class="p">),</span> <span class="s2">&quot;&#39;k8s_version&#39; if provided, must be a string&quot;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pod_network_range</span><span class="p">,</span> <span class="n">basestring</span><span class="p">),</span> <span class="s2">&quot;&#39;pod_network_range&#39; must be a string&quot;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">service_network_range</span><span class="p">,</span> <span class="n">basestring</span><span class="p">),</span> <span class="s2">&quot;&#39;service_network_range&#39; must be a string&quot;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pod_dns_domain</span><span class="p">,</span> <span class="n">basestring</span><span class="p">),</span> <span class="s2">&quot;&#39;pod_dns_domain&#39; must be a string&quot;</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">persistent_storage_local</span><span class="p">,</span> <span class="nb">bool</span><span class="p">),</span> <span class="s2">&quot;&#39;persistent_storage_local&#39; must be True or False&quot;</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">persistent_storage_nimble_csi</span><span class="p">,</span> <span class="nb">bool</span><span class="p">),</span> <span class="s2">&quot;&#39;persistent_storage_nimble_csi&#39; must be True or False&quot;</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">k8shosts_config</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span> <span class="s2">&quot;&#39;k8shosts_config&#39; must be a list&quot;</span>
@@ -446,8 +443,10 @@
         <span class="sd">&quot;&quot;&quot;Retrieve a K8S Cluster details.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            k8scluster_id: (int) the K8S cluster ID</span>
-<span class="sd">            setup_log: (bool) set to True to return the cluster setup log</span>
+<span class="sd">            k8scluster_id: str</span>
+<span class="sd">                The K8S cluster ID - format: &#39;/api/v2/k8scluster/[0-9]+&#39;</span>
+<span class="sd">            setup_log: (bool) </span>
+<span class="sd">                Set to True to return the cluster setup log</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            K8sCluster: object representing K8S Cluster</span>
@@ -470,8 +469,8 @@
         <span class="sd">&quot;&quot;&quot;Wait for cluster status.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            k8scluster_id: int</span>
-<span class="sd">                the K8S cluster ID</span>
+<span class="sd">            k8scluster_id: str</span>
+<span class="sd">                The K8S cluster ID - format: &#39;/api/v2/k8scluster/[0-9]+&#39;</span>
 <span class="sd">            status: list[K8sClusterStatus]</span>
 <span class="sd">                Status(es) to wait for.  Use an empty array if you want to wait for a cluster&#39;s existence to cease.</span>
 <span class="sd">            timeout_secs: int</span>
@@ -485,7 +484,7 @@
 <span class="sd">            APIException: if a generic API exception occurred</span>
 <span class="sd">        &quot;&quot;&quot;</span>
    
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">k8scluster_id</span><span class="p">,</span> <span class="n">string_types</span><span class="p">),</span> <span class="s2">&quot;&#39;k8scluster_id&#39; must be a string&quot;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">k8scluster_id</span><span class="p">,</span> <span class="n">basestring</span><span class="p">),</span> <span class="s2">&quot;&#39;k8scluster_id&#39; must be a string&quot;</span>
         <span class="k">assert</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\/api\/v2\/k8scluster\/[0-9]+&#39;</span><span class="p">,</span> <span class="n">k8scluster_id</span><span class="p">),</span> <span class="s2">&quot;&#39;k8scluster_id&#39; must have format &#39;/api/v2/worker/k8scluster/[0-9]+&#39;&quot;</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span> <span class="s2">&quot;&#39;status&#39; must be a list&quot;</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">status</span><span class="p">):</span>
@@ -510,7 +509,8 @@
 <span class="sd">        You can use `watch_for_status()` to check for the cluster state/existence.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            k8scluster_id: (int) the K8S cluster ID</span>
+<span class="sd">            k8scluster_id: str</span>
+<span class="sd">                The K8S cluster ID - format: &#39;/api/v2/k8scluster/[0-9]+&#39;</span>
 <span class="sd">            </span>
 <span class="sd">        Raises:</span>
 <span class="sd">            APIException</span>

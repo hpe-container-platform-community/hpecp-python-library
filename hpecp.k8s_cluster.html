@@ -174,7 +174,7 @@
 <dl class="py method">
 <dt id="hpecp.k8s_cluster.K8sCluster.id">
 <em class="property">property </em><code class="sig-name descname">id</code><a class="headerlink" href="#hpecp.k8s_cluster.K8sCluster.id" title="Permalink to this definition">¶</a></dt>
-<dd><p>from json[‘_links’][‘self’][‘href’]</p>
+<dd><p>from json[‘_links’][‘self’][‘href’] - id format: ‘/api/v2/k8scluster/[0-9]+’</p>
 </dd></dl>
 
 <dl class="py method">
@@ -394,8 +394,12 @@ k8shosts_config {list} – [description] (default: {[]})</p>
 <code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">k8scluster_id</span></em>, <em class="sig-param"><span class="n">setup_log</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_cluster.html#K8sClusterController.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_cluster.K8sClusterController.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve a K8S Cluster details.</p>
 <dl class="simple">
-<dt>Args:</dt><dd><p>k8scluster_id: (int) the K8S cluster ID
-setup_log: (bool) set to True to return the cluster setup log</p>
+<dt>Args:</dt><dd><dl class="simple">
+<dt>k8scluster_id: str</dt><dd><p>The K8S cluster ID - format: ‘/api/v2/k8scluster/[0-9]+’</p>
+</dd>
+<dt>setup_log: (bool) </dt><dd><p>Set to True to return the cluster setup log</p>
+</dd>
+</dl>
 </dd>
 <dt>Returns:</dt><dd><p>K8sCluster: object representing K8S Cluster</p>
 </dd>
@@ -410,7 +414,7 @@ setup_log: (bool) set to True to return the cluster setup log</p>
 <dd><p>Wait for cluster status.</p>
 <dl class="simple">
 <dt>Args:</dt><dd><dl class="simple">
-<dt>k8scluster_id: int</dt><dd><p>the K8S cluster ID</p>
+<dt>k8scluster_id: str</dt><dd><p>The K8S cluster ID - format: ‘/api/v2/k8scluster/[0-9]+’</p>
 </dd>
 <dt>status: list[K8sClusterStatus]</dt><dd><p>Status(es) to wait for.  Use an empty array if you want to wait for a cluster’s existence to cease.</p>
 </dd>
@@ -432,7 +436,10 @@ APIException: if a generic API exception occurred</p>
 <dd><p>Delete a K8S Cluster.</p>
 <p>You can use <cite>watch_for_status()</cite> to check for the cluster state/existence.</p>
 <dl class="simple">
-<dt>Args:</dt><dd><p>k8scluster_id: (int) the K8S cluster ID</p>
+<dt>Args:</dt><dd><dl class="simple">
+<dt>k8scluster_id: str</dt><dd><p>The K8S cluster ID - format: ‘/api/v2/k8scluster/[0-9]+’</p>
+</dd>
+</dl>
 </dd>
 <dt>Raises:</dt><dd><p>APIException</p>
 </dd>

@@ -8,7 +8,7 @@ API Docs
 
    hpecp.client
    hpecp.config
-   hpecp.epic_worker
+   hpecp.gateway
    hpecp.exceptions
    hpecp.k8s_cluster
    hpecp.k8s_worker

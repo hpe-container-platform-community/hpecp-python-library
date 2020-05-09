@@ -5,7 +5,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>hpecp.epic_worker &#8212; HPE Container Platform Python Library  documentation</title>
+    <title>hpecp.gateway &#8212; HPE Container Platform Python Library  documentation</title>
     <link rel="stylesheet" href="../../_static/bizstyle.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     
@@ -64,7 +64,7 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <h1>Source code for hpecp.epic_worker</h1><div class="highlight"><pre>
+  <h1>Source code for hpecp.gateway</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
 <span class="kn">from</span> <span class="nn">.logger</span> <span class="kn">import</span> <span class="n">Logger</span>
 
@@ -73,39 +73,49 @@
 <span class="kn">import</span> <span class="nn">polling</span>
 
 
-<div class="viewcode-block" id="EpicWorkerController"><a class="viewcode-back" href="../../hpecp.epic_worker.html#hpecp.epic_worker.EpicWorkerController">[docs]</a><span class="k">class</span> <span class="nc">EpicWorkerController</span><span class="p">:</span>
+<div class="viewcode-block" id="GatewayController"><a class="viewcode-back" href="../../hpecp.gateway.html#hpecp.gateway.GatewayController">[docs]</a><span class="k">class</span> <span class="nc">GatewayController</span><span class="p">:</span>
 
-<div class="viewcode-block" id="EpicWorkerController.__init__"><a class="viewcode-back" href="../../hpecp.epic_worker.html#hpecp.epic_worker.EpicWorkerController.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
+<div class="viewcode-block" id="GatewayController.__init__"><a class="viewcode-back" href="../../hpecp.gateway.html#hpecp.gateway.GatewayController.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">client</span></div>
 
-    <span class="c1"># TODO return gateway object</span>
-<div class="viewcode-block" id="EpicWorkerController.add_gateway"><a class="viewcode-back" href="../../hpecp.epic_worker.html#hpecp.epic_worker.EpicWorkerController.add_gateway">[docs]</a>    <span class="k">def</span> <span class="nf">add_gateway</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Example:</span>
-<span class="sd">            data = {</span>
-<span class="sd">                &quot;ip&quot;:&quot;10.1.0.105&quot;,</span>
-<span class="sd">                &quot;credentials&quot;:{</span>
-<span class="sd">                    &quot;type&quot;:&quot;ssh_key_access&quot;,</span>
-<span class="sd">                    &quot;ssh_key_data&quot;:&quot;-----BEGIN RSA PRIVATE KEY-----...-----END RSA PRIVATE KEY-----\n&quot;</span>
-<span class="sd">                },</span>
-<span class="sd">                &quot;tags&quot;:[],</span>
-<span class="sd">                &quot;proxy_nodes_hostname&quot;:&quot;ip-10-1-0-19.eu-west-2.compute.internal&quot;,</span>
-<span class="sd">                &quot;purpose&quot;:&quot;proxy&quot;</span>
-<span class="sd">            },</span>
+<div class="viewcode-block" id="GatewayController.create_with_ssh_password"><a class="viewcode-back" href="../../hpecp.gateway.html#hpecp.gateway.GatewayController.create_with_ssh_password">[docs]</a>    <span class="k">def</span> <span class="nf">create_with_ssh_password</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Not Implemented yet&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="GatewayController.create_with_ssh_key"><a class="viewcode-back" href="../../hpecp.gateway.html#hpecp.gateway.GatewayController.create_with_ssh_key">[docs]</a>    <span class="k">def</span> <span class="nf">create_with_ssh_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="n">proxy_node_hostname</span><span class="p">,</span> <span class="n">ssh_key_data</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[]):</span>
+        <span class="sd">&#39;&#39;&#39;Create a gateway instance using SSH key credentials to access the host</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            ip : str</span>
+<span class="sd">                TODO</span>
+<span class="sd">            TODO : str</span>
+<span class="sd">                TODO ...</span>
 
 <span class="sd">            Returns: gateway ID</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="s1">&#39;/api/v1/workers/&#39;</span><span class="p">,</span> <span class="n">http_method</span><span class="o">=</span><span class="s1">&#39;post&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;worker/add_gateway&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="EpicWorkerController.get_gateways"><a class="viewcode-back" href="../../hpecp.epic_worker.html#hpecp.epic_worker.EpicWorkerController.get_gateways">[docs]</a>    <span class="k">def</span> <span class="nf">get_gateways</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;ip&quot;</span><span class="p">:</span> <span class="n">ip</span><span class="p">,</span>
+                <span class="s2">&quot;credentials&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;ssh_key_access&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;ssh_key_data&quot;</span><span class="p">:</span> <span class="n">ssh_key_data</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;tags&quot;</span><span class="p">:</span> <span class="n">tags</span><span class="p">,</span>
+                <span class="s2">&quot;proxy_nodes_hostname&quot;</span><span class="p">:</span> <span class="n">proxy_node_hostname</span><span class="p">,</span>
+                <span class="s2">&quot;purpose&quot;</span><span class="p">:</span> <span class="s2">&quot;proxy&quot;</span>
+            <span class="p">},</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="s1">&#39;/api/v1/workers/&#39;</span><span class="p">,</span> <span class="n">http_method</span><span class="o">=</span><span class="s1">&#39;post&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;worker/create_with_ssh_key&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="GatewayController.list"><a class="viewcode-back" href="../../hpecp.gateway.html#hpecp.gateway.GatewayController.list">[docs]</a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        See: https://&lt;&lt;controller_ip&gt;&gt;/apidocs/site-admin-api.html for the schema of the  response object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="s1">&#39;/api/v1/workers/&#39;</span><span class="p">,</span> <span class="n">http_method</span><span class="o">=</span><span class="s1">&#39;get&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;worker/get_gateways&#39;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="s1">&#39;/api/v1/workers/&#39;</span><span class="p">,</span> <span class="n">http_method</span><span class="o">=</span><span class="s1">&#39;get&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;worker/list&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span> <span class="n">worker</span> <span class="k">for</span> <span class="n">worker</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;_embedded&quot;</span><span class="p">][</span><span class="s2">&quot;workers&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">worker</span><span class="p">[</span><span class="s1">&#39;purpose&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;proxy&#39;</span> <span class="p">]</span></div>
 
-<div class="viewcode-block" id="EpicWorkerController.get_gateway"><a class="viewcode-back" href="../../hpecp.epic_worker.html#hpecp.epic_worker.EpicWorkerController.get_gateway">[docs]</a>    <span class="k">def</span> <span class="nf">get_gateway</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+<div class="viewcode-block" id="GatewayController.get"><a class="viewcode-back" href="../../hpecp.gateway.html#hpecp.gateway.GatewayController.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        See: https://&lt;&lt;controller_ip&gt;&gt;/apidocs/site-admin-api.html for the schema of the  response object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -115,7 +125,7 @@
 
     <span class="c1"># TODO use an enum like WorkerK8sStatus</span>
     <span class="c1"># TODO rename state parameter to states</span>
-<div class="viewcode-block" id="EpicWorkerController.wait_for_gateway_state"><a class="viewcode-back" href="../../hpecp.epic_worker.html#hpecp.epic_worker.EpicWorkerController.wait_for_gateway_state">[docs]</a>    <span class="k">def</span> <span class="nf">wait_for_gateway_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="p">[],</span> <span class="n">timeout_secs</span><span class="o">=</span><span class="mi">60</span><span class="p">):</span>
+<div class="viewcode-block" id="GatewayController.wait_for_state"><a class="viewcode-back" href="../../hpecp.gateway.html#hpecp.gateway.GatewayController.wait_for_state">[docs]</a>    <span class="k">def</span> <span class="nf">wait_for_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="p">[],</span> <span class="n">timeout_secs</span><span class="o">=</span><span class="mi">60</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Uses: https://github.com/justiniso/polling/blob/master/polling.py</span>
 
@@ -127,7 +137,7 @@
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">polling</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span>
-                <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_gateway</span><span class="p">(</span><span class="nb">id</span><span class="p">)[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">state</span><span class="p">,</span>
+                <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="p">)[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">state</span><span class="p">,</span>
                 <span class="n">step</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
                 <span class="n">poll_forever</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                 <span class="n">timeout</span><span class="o">=</span><span class="n">timeout_secs</span>
