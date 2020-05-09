@@ -59,21 +59,21 @@ On my environment, this displays:
 
 | Group        | Method                  | Code Status   | Docs Status | Bugs/Features        |
 | -------------|-------------------------| --------:| --------:|----------------------|
-| Client       | [Create with parameters](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.client.html#hpecp.client.ContainerPlatformClient.__init__)  | Complete | Complete | |
+| Client       | [Create with parameters](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.client.html#hpecp.client.ContainerPlatformClient)  | Complete | Complete | |
 |              | [Create from config file](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.client.html#hpecp.client.ContainerPlatformClient.create_from_config_file)  | Complete | Complete | |
-|              | Create from env  | Not Started | Not Started | |
+|              | [Create from env]()  | Complete | Complete | |
 | Session      | [Create Session](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.client.html#hpecp.client.ContainerPlatformClient.create_session) (login)  | Complete | Complete | Reconnect on session expiration [#2](https://github.com/hpe-container-platform-community/hpecp-python-library/issues/2) |
-| K8s Cluster  | [Create](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.create) | Complete | Started |                     |
-|              | [List](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.list)  | Complete | Started |                     |
-|              | [Get](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.get) | Complete | Started |                     |
-|              | [Delete](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.delete)  | Complete | Started |                     |
-|              | [Wait for status](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.wait_for_status) | Complete | Started |                     |
 | Gateway      | Create with SSH Key                |          |                      | |
 |              | Create with SSH Password           |          |                      | |
 |              | List            |          |                      | |
 |              | Get            |          |                      | |
 |              | Delete            |          |                      | |
 |              | Wait for status            |          |                      | |
+| K8s Cluster  | [Create](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.create) | Complete | Started |                     |
+|              | [List](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.list)  | Complete | Started |                     |
+|              | [Get](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.get) | Complete | Started |                     |
+|              | [Delete](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.delete)  | Complete | Started |                     |
+|              | [Wait for status](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.wait_for_status) | Complete | Started |                     |
 | Tenant       | ...                     |          |                      | |
 
 
