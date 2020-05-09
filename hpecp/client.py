@@ -27,13 +27,41 @@ except NameError:
   basestring = str
 
 class ContainerPlatformClient(object):
-    """The ContainerPlatformClient object is the central object that users of this library work with."""
+    """The ContainerPlatformClient object is the central object that users of this library work with.
 
-    USER_DEFAULT_CONFIG_FILE = os.path.join(os.path.expanduser("~"), '.hpecp.conf')
-    """This will point to ~/.hpecp.conf by default"""
+    Parameters:
+        username : str
+            HPECP username
+        password : str
+            HPECP password
+        api_host : str
+            HPECP api_host 
+        api_port : int
+            HPECP api_port 
+        use_ssl : bool:
+            Connect to HPECP using SSL: True|False 
+        verify_ssl : bool|str
+            See https://requests.readthedocs.io/en/master/user/advanced/#ssl-cert-verification
+        ssl_warn : bool
+            Disable ssl warnings
+
+    Returns:
+        ContainerPlatformClient: 
+            An instance of ContainerPlatformClient
+
+    Notes:
+        Instantiating the ContainerPlatformClient does not make any connection to the HPE Container Platform API. The 
+        initial connection would be made by calling the method :py:meth:`create_session`.
+
+    See also:
+
+        :py:meth:`create_from_config_file` for an alternative way to create a ContainerPlatformClient instance
+
+        :py:meth:`create_from_env` for an alternative way to create a ContainerPlatformClient instance
+    """
 
     @classmethod
-    def create_from_config_file(cls, config_file=USER_DEFAULT_CONFIG_FILE, profile=None):
+    def create_from_config_file(cls, config_file="~/.hpecp.conf", profile=None):
         """Create a ContainerPlatformClient object from a configuration file.
 
         Parameters:
@@ -62,6 +90,10 @@ class ContainerPlatformClient(object):
 
         if profile is None:
             profile = 'default'
+
+        if config_file.startswith('~'):
+            removed_tilde = config_file[1:]
+            config_file = os.path.join(os.path.expanduser("~"), removed_tilde)
 
         if not os.path.exists(config_file):
             raise ContainerPlatformClientException(
@@ -113,15 +145,17 @@ class ContainerPlatformClient(object):
     def create_from_env(cls):
         """Create an instance of ContainerPlatformClient from environment variables:
 
-        'HPECP_USERNAME'
-        'HPECP_PASSWORD'
-        'HPECP_API_HOST'
-        'HPECP_API_PORT'
-        'HPECP_USE_SSL'
-        'HPECP_VERIFY_SSL'
-        'HPECP_SSL_WARN'
+        Variables::
 
-        See :py:meth:`__init__` for the paramaeter definitions.
+            HPECP_USERNAME
+            HPECP_PASSWORD
+            HPECP_API_HOST
+            HPECP_API_PORT
+            HPECP_USE_SSL
+            HPECP_VERIFY_SSL
+            HPECP_SSL_WARN
+
+        See ContainerPlatformClient :py:class:`constructor <ContainerPlatformClient>` for the paramaeter definitions.
         """
 
         if 'HPECP_USERNAME' in os.environ:
@@ -164,33 +198,7 @@ class ContainerPlatformClient(object):
                  verify_ssl = True,
                  ssl_warn = False
                  ):
-        """The ContainerPlatformClient object is the central object that users of this library work with.
-
-        Parameters:
-            username : str
-                HPECP username
-            password : str
-                HPECP password
-            api_host : str
-                HPECP api_host 
-            api_port : int
-                HPECP api_port 
-            use_ssl : bool:
-                Connect to HPECP using SSL: True|False 
-            verify_ssl : bool|str
-                See https://requests.readthedocs.io/en/master/user/advanced/#ssl-cert-verification
-            ssl_warn : bool
-                Disable ssl warnings
-            
-        Returns:
-            ContainerPlatformClient: 
-                An instance of ContainerPlatformClient
-
-        Notes:
-            Instantiating the ContainerPlatformClient does not make any connection to the HPE Container Platform API. The 
-            initial connection would be made by calling the method :py:meth:`create_session`.
-
-        """
+        """Doc string is defined at the top of the class"""
         self._log = Logger().get_logger(self.__class__.__name__)
 
         # TODO add other fields, except password
