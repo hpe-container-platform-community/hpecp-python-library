@@ -28,11 +28,6 @@ class K8sClusterController:
     """
 
     def __init__(self, client):
-        """[summary]
-
-        Arguments:
-            client {[type]} -- [description]
-        """
         self.client = client
 
     def create(self, 
@@ -46,35 +41,40 @@ class K8sClusterController:
                 persistent_storage_nimble_csi=False,
                 k8shosts_config = [],
                 ):
-        """[summary]
+        """Send an API request to create a K8s Cluster.  The cluster creation will be asynchronous - use 
+        the :py:meth:`wait_for_status` method to wait for the cluster to be created.
 
-        Keyword Arguments:
-            name {[type]} -- [description] (default: {None})
-            description {[type]} -- [description] (default: {None})
-            k8s_version {[type]} -- [description] (default: {None})
-            pod_network_range {str} -- [description] (default: {'10.192.0.0/12'})
-            service_network_range {str} -- [description] (default: {'10.96.0.0/12'})
-            pod_dns_domain {str} -- [description] (default: {'cluster.local'})
-            persistent_storage_local {bool} -- [description] (default: {False})
-            persistent_storage_nimble_csi {bool} -- [description] (default: {False})
-            k8shosts_config {list} -- [description] (default: {[]})
+        For the lis of statuses see :py:class:`K8sClusterStatus`
+
+        Arguments:
+
+            name: str 
+                Cluster name - required parameter.  Name must be at least 1 characters
+            description: str
+                Cluster description - defaults to empty string if not provided
+            k8s_version: str
+                Kubernetes version to configure. If not specified defaults to the latest version as supported by the rpms.
+            pod_network_range: str
+                Network range to be used for kubernetes pods. Defaults to `10.192.0.0/12`
+            service_network_range: str
+                Network range to be used for kubernetes services that are exposed with Cluster IP. Defaults to `10.96.0.0/12`
+            pod_dns_domain: str
+                DNS Domain to be used for kubernetes pods. Defaults to `cluster.local`
+            persistent_storage_local: str
+                Enables local host storage to be available in the kubernetes cluster
+            persistent_storage_nimble_csi: bool
+                Set to True to installs the Nimble CSI plugin for Nimble storage to be available in the kubernetes cluster
+            k8shosts_config: list[K8sClusterHostConfig]
+                list of py:class:`K8sClusterHostConfig` objects determining which hosts to add and their role (master or worker)
 
         Returns:
-            [type] -- [description]
-        """
 
-        # Create a K8S Cluster.
-        #     name: required, at least 1 characters
-        #     description: defaults to empty string if not provided
-        #     k8s_version: Kubernetes version to configure. If not specified defaults to the latest version as supported by the rpms.
-        #     pod_network_range: Network range to be used for kubernetes pods. Defaults to 10.192.0.0/12
-        #     service_network_range: Network range to be used for kubernetes services that are exposed with Cluster IP. Defaults to 10.96.0.0/12
-        #     pod_dns_domain: DNS Domain to be used for kubernetes pods. Defaults to cluster.local
-        #     persistent_storage_local: Enables local host storage to be available in the kubernetes cluster
-        #     persistent_storage_nimble_csi: Installs the Nimble CSI plugin for Nimble storage to be available in the kubernetes cluster
-        #     k8shosts_config: list of K8sClusterHostConfig objects
-        #     int: The ID for the K8S Cluster with format '/api/v2/k8scluster/[0-9]+'
-        #     APIException
+            K8s Cluster ID with the format: '/api/v2/k8scluster/[0-9]+'
+
+        Raises:
+
+            APIException
+        """
 
         assert isinstance(name, basestring) and len(name) > 0,"'name' must be provided and must be a string"
         assert description is None or isinstance(description, basestring), "'description' if provided, must be a string"
