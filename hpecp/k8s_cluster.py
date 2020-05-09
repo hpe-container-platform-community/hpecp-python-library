@@ -203,6 +203,10 @@ class K8sClusterController:
 
         self.client._request(url=k8scluster_id, http_method='delete', description='k8s_cluster/delete')
 
+    def supported_k8s_versions(self):
+        """Not yet implemented - see https://github.com/hpe-container-platform-community/hpecp-python-library/issues/3"""
+        raise NotImplementedError()
+
 class K8sClusterStatus(Enum):
     """Bases: enum.Enum
     
