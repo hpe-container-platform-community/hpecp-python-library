@@ -65,7 +65,7 @@ class K8sClusterController:
             persistent_storage_nimble_csi: bool
                 Set to True to installs the Nimble CSI plugin for Nimble storage to be available in the kubernetes cluster
             k8shosts_config: list[K8sClusterHostConfig]
-                list of py:class:`K8sClusterHostConfig` objects determining which hosts to add and their role (master or worker)
+                list of :py:class:`K8sClusterHostConfig` objects determining which hosts to add and their role (master or worker)
 
         Returns:
 
@@ -112,16 +112,18 @@ class K8sClusterController:
         """Retrieve list of K8S Clusters.
 
         Returns:
-            K8sClusterList: List of K8s Clusters
+
+            :py:class:`K8sClusterList` List of K8s Clusters
             
         Raises:
+
             APIException
         """
         response = self.client._request(url='/api/v2/k8scluster', http_method='get', description='k8s_cluster/list')
         return K8sClusterList(response.json()['_embedded']['k8sclusters'])
 
     def get(self, k8scluster_id, setup_log=False):
-        """Retrieve a K8S Cluster details.
+        """Retrieve a K8S Cluster by ID.
 
         Args:
             k8scluster_id: str
@@ -152,7 +154,7 @@ class K8sClusterController:
         Args:
             k8scluster_id: str
                 The K8S cluster ID - format: '/api/v2/k8scluster/[0-9]+'
-            status: list[K8sClusterStatus]
+            status: list[:py:class:`K8sClusterStatus`]
                 Status(es) to wait for.  Use an empty array if you want to wait for a cluster's existence to cease.
             timeout_secs: int
                 How long to wait for the status(es) before raising an exception.
@@ -187,7 +189,7 @@ class K8sClusterController:
     def delete(self, k8scluster_id):
         """Delete a K8S Cluster.
 
-        You can use `watch_for_status()` to check for the cluster state/existence.
+        You can use py:meth:`wait_for_status` to check for the cluster state/existence.
 
         Args:
             k8scluster_id: str
@@ -202,11 +204,14 @@ class K8sClusterController:
         self.client._request(url=k8scluster_id, http_method='delete', description='k8s_cluster/delete')
 
 class K8sClusterStatus(Enum):
-    """The statuses for a K8S Cluster
+    """Bases: enum.Enum
+    
+    The statuses for a K8S Cluster
 
-    Bases: enum.Enum
-
-    Note: The integer values do not have a meaning outside of this library
+    **Note:** 
+    
+    The integer values do not have a meaning outside of this library.  
+    The API uses a string identifier with the status name rather than an integer value.
     """
 
     ready = 1
@@ -219,7 +224,18 @@ class K8sClusterStatus(Enum):
 
 
 class K8sCluster():
-    """This class represents a K8s Cluster"""
+    """Create an instance of K8sCluster from json data returned from the HPE Container Platform API.
+
+    Users of this library are not expected to create an instance of this class.
+
+    Parameters:
+        json : str
+            The json returned by the API representing a K8sCluster.
+
+    Returns:
+        K8sCluster: 
+            An instance of K8sCluster
+    """
 
     all_fields = [ 
         'id', 
@@ -242,16 +258,6 @@ class K8sCluster():
     """All of the fields of a K8s Cluster objects that are returned by the HPE Container Platform API"""
 
     def __init__(self, json):
-        """Create an instance of K8sCluster from json data returned from the HPE Container Platform API.
-
-        Parameters:
-            json : str
-                HPECP username
-
-        Returns:
-            K8sCluster: 
-                An instance of K8sCluster
-        """
         self.json = json
         self.columns = K8sCluster.all_fields
 
@@ -269,11 +275,13 @@ class K8sCluster():
         return getattr(self, self.__dir__()[item])
 
     def set_columns(self, columns):
-        """[summary]
+        """Set the columns this instance should have when the instance is used with :py:meth:`.K8sClusterList.tabulate`
 
         Parameters:
             columns : list[str]
-                Set the colums to return. For example, when using :py:meth:`.K8sClusterList.tabulate`
+                Set the list of colums to return
+
+        See :py:attr:`all_fields` for the complete list of field names.
         """
         self.columns = columns
 
