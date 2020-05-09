@@ -102,21 +102,40 @@ invoked using <cite>client.k8s_cluster.method()</cite>.  See the example below:<
 <dl class="py method">
 <dt id="hpecp.k8s_cluster.K8sClusterController.create">
 <code class="sig-name descname">create</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">description</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">k8s_version</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pod_network_range</span><span class="o">=</span><span class="default_value">'10.192.0.0/12'</span></em>, <em class="sig-param"><span class="n">service_network_range</span><span class="o">=</span><span class="default_value">'10.96.0.0/12'</span></em>, <em class="sig-param"><span class="n">pod_dns_domain</span><span class="o">=</span><span class="default_value">'cluster.local'</span></em>, <em class="sig-param"><span class="n">persistent_storage_local</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">persistent_storage_nimble_csi</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">k8shosts_config</span><span class="o">=</span><span class="default_value">[]</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_cluster.html#K8sClusterController.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_cluster.K8sClusterController.create" title="Permalink to this definition">¶</a></dt>
-<dd><p>[summary]</p>
-<dl class="simple">
-<dt>Keyword Arguments:</dt><dd><p>name {[type]} – [description] (default: {None})
-description {[type]} – [description] (default: {None})
-k8s_version {[type]} – [description] (default: {None})
-pod_network_range {str} – [description] (default: {‘10.192.0.0/12’})
-service_network_range {str} – [description] (default: {‘10.96.0.0/12’})
-pod_dns_domain {str} – [description] (default: {‘cluster.local’})
-persistent_storage_local {bool} – [description] (default: {False})
-persistent_storage_nimble_csi {bool} – [description] (default: {False})
-k8shosts_config {list} – [description] (default: {[]})</p>
+<dd><p>Send an API request to create a K8s Cluster.  The cluster creation will be asynchronous - use 
+the <a class="reference internal" href="#hpecp.k8s_cluster.K8sClusterController.wait_for_status" title="hpecp.k8s_cluster.K8sClusterController.wait_for_status"><code class="xref py py-meth docutils literal notranslate"><span class="pre">wait_for_status()</span></code></a> method to wait for the cluster to be created.</p>
+<p>For the lis of statuses see <a class="reference internal" href="#hpecp.k8s_cluster.K8sClusterStatus" title="hpecp.k8s_cluster.K8sClusterStatus"><code class="xref py py-class docutils literal notranslate"><span class="pre">K8sClusterStatus</span></code></a></p>
+<p>Arguments:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>name: str </dt><dd><p>Cluster name - required parameter.  Name must be at least 1 characters</p>
 </dd>
-<dt>Returns:</dt><dd><p>[type] – [description]</p>
+<dt>description: str</dt><dd><p>Cluster description - defaults to empty string if not provided</p>
+</dd>
+<dt>k8s_version: str</dt><dd><p>Kubernetes version to configure. If not specified defaults to the latest version as supported by the rpms.</p>
+</dd>
+<dt>pod_network_range: str</dt><dd><p>Network range to be used for kubernetes pods. Defaults to <cite>10.192.0.0/12</cite></p>
+</dd>
+<dt>service_network_range: str</dt><dd><p>Network range to be used for kubernetes services that are exposed with Cluster IP. Defaults to <cite>10.96.0.0/12</cite></p>
+</dd>
+<dt>pod_dns_domain: str</dt><dd><p>DNS Domain to be used for kubernetes pods. Defaults to <cite>cluster.local</cite></p>
+</dd>
+<dt>persistent_storage_local: str</dt><dd><p>Enables local host storage to be available in the kubernetes cluster</p>
+</dd>
+<dt>persistent_storage_nimble_csi: bool</dt><dd><p>Set to True to installs the Nimble CSI plugin for Nimble storage to be available in the kubernetes cluster</p>
+</dd>
+<dt>k8shosts_config: list[K8sClusterHostConfig]</dt><dd><p>list of py:class:<cite>K8sClusterHostConfig</cite> objects determining which hosts to add and their role (master or worker)</p>
 </dd>
 </dl>
+</div></blockquote>
+<p>Returns:</p>
+<blockquote>
+<div><p>K8s Cluster ID with the format: ‘/api/v2/k8scluster/[0-9]+’</p>
+</div></blockquote>
+<p>Raises:</p>
+<blockquote>
+<div><p>APIException</p>
+</div></blockquote>
 </dd></dl>
 
 <dl class="py method">

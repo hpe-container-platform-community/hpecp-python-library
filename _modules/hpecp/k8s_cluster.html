@@ -95,11 +95,6 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;[summary]</span>
-
-<span class="sd">        Arguments:</span>
-<span class="sd">            client {[type]} -- [description]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">client</span>
 
 <div class="viewcode-block" id="K8sClusterController.create"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
@@ -113,35 +108,40 @@
                 <span class="n">persistent_storage_nimble_csi</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                 <span class="n">k8shosts_config</span> <span class="o">=</span> <span class="p">[],</span>
                 <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;[summary]</span>
+        <span class="sd">&quot;&quot;&quot;Send an API request to create a K8s Cluster.  The cluster creation will be asynchronous - use </span>
+<span class="sd">        the :py:meth:`wait_for_status` method to wait for the cluster to be created.</span>
 
-<span class="sd">        Keyword Arguments:</span>
-<span class="sd">            name {[type]} -- [description] (default: {None})</span>
-<span class="sd">            description {[type]} -- [description] (default: {None})</span>
-<span class="sd">            k8s_version {[type]} -- [description] (default: {None})</span>
-<span class="sd">            pod_network_range {str} -- [description] (default: {&#39;10.192.0.0/12&#39;})</span>
-<span class="sd">            service_network_range {str} -- [description] (default: {&#39;10.96.0.0/12&#39;})</span>
-<span class="sd">            pod_dns_domain {str} -- [description] (default: {&#39;cluster.local&#39;})</span>
-<span class="sd">            persistent_storage_local {bool} -- [description] (default: {False})</span>
-<span class="sd">            persistent_storage_nimble_csi {bool} -- [description] (default: {False})</span>
-<span class="sd">            k8shosts_config {list} -- [description] (default: {[]})</span>
+<span class="sd">        For the lis of statuses see :py:class:`K8sClusterStatus`</span>
+
+<span class="sd">        Arguments:</span>
+
+<span class="sd">            name: str </span>
+<span class="sd">                Cluster name - required parameter.  Name must be at least 1 characters</span>
+<span class="sd">            description: str</span>
+<span class="sd">                Cluster description - defaults to empty string if not provided</span>
+<span class="sd">            k8s_version: str</span>
+<span class="sd">                Kubernetes version to configure. If not specified defaults to the latest version as supported by the rpms.</span>
+<span class="sd">            pod_network_range: str</span>
+<span class="sd">                Network range to be used for kubernetes pods. Defaults to `10.192.0.0/12`</span>
+<span class="sd">            service_network_range: str</span>
+<span class="sd">                Network range to be used for kubernetes services that are exposed with Cluster IP. Defaults to `10.96.0.0/12`</span>
+<span class="sd">            pod_dns_domain: str</span>
+<span class="sd">                DNS Domain to be used for kubernetes pods. Defaults to `cluster.local`</span>
+<span class="sd">            persistent_storage_local: str</span>
+<span class="sd">                Enables local host storage to be available in the kubernetes cluster</span>
+<span class="sd">            persistent_storage_nimble_csi: bool</span>
+<span class="sd">                Set to True to installs the Nimble CSI plugin for Nimble storage to be available in the kubernetes cluster</span>
+<span class="sd">            k8shosts_config: list[K8sClusterHostConfig]</span>
+<span class="sd">                list of py:class:`K8sClusterHostConfig` objects determining which hosts to add and their role (master or worker)</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            [type] -- [description]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="c1"># Create a K8S Cluster.</span>
-        <span class="c1">#     name: required, at least 1 characters</span>
-        <span class="c1">#     description: defaults to empty string if not provided</span>
-        <span class="c1">#     k8s_version: Kubernetes version to configure. If not specified defaults to the latest version as supported by the rpms.</span>
-        <span class="c1">#     pod_network_range: Network range to be used for kubernetes pods. Defaults to 10.192.0.0/12</span>
-        <span class="c1">#     service_network_range: Network range to be used for kubernetes services that are exposed with Cluster IP. Defaults to 10.96.0.0/12</span>
-        <span class="c1">#     pod_dns_domain: DNS Domain to be used for kubernetes pods. Defaults to cluster.local</span>
-        <span class="c1">#     persistent_storage_local: Enables local host storage to be available in the kubernetes cluster</span>
-        <span class="c1">#     persistent_storage_nimble_csi: Installs the Nimble CSI plugin for Nimble storage to be available in the kubernetes cluster</span>
-        <span class="c1">#     k8shosts_config: list of K8sClusterHostConfig objects</span>
-        <span class="c1">#     int: The ID for the K8S Cluster with format &#39;/api/v2/k8scluster/[0-9]+&#39;</span>
-        <span class="c1">#     APIException</span>
+<span class="sd">            K8s Cluster ID with the format: &#39;/api/v2/k8scluster/[0-9]+&#39;</span>
+
+<span class="sd">        Raises:</span>
+
+<span class="sd">            APIException</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">basestring</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span><span class="s2">&quot;&#39;name&#39; must be provided and must be a string&quot;</span>
         <span class="k">assert</span> <span class="n">description</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">description</span><span class="p">,</span> <span class="n">basestring</span><span class="p">),</span> <span class="s2">&quot;&#39;description&#39; if provided, must be a string&quot;</span>
