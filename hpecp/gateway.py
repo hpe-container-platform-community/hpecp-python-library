@@ -4,6 +4,7 @@ from .logger import Logger
 from operator import attrgetter
 from tabulate import tabulate
 import polling
+import re
 
 
 class GatewayController:
@@ -56,8 +57,24 @@ class GatewayController:
         workers = response.json()["_embedded"]["workers"]
         return [ worker for worker in workers if worker['purpose'] == 'proxy' and worker['_links']['self']['href'].split('/')[-1] == str(id) ][0]
 
-    # TODO use an enum like WorkerK8sStatus
-    # TODO rename state parameter to states
+    def delete(self, gateway_id):
+        """Delete a Gateway.
+
+        You can use :py:meth:`wait_for_status` to check for the gateway state/existence.
+
+        Args:
+            gateway_id: str
+                The Gateway ID - format: '/api/v1/workers/[0-9]+'
+            
+        Raises:
+            APIException
+        """
+        assert isinstance(gateway_id, str),"'gateway_id' must be provided and must be a string"
+        assert re.match(r'\/api\/v1\/workers\/[0-9]+', gateway_id), "'gateway_id' must have format '/api/v1/worker/[0-9]+'"
+
+        self.client._request(url=gateway_id, http_method='delete', description='gateway/delete')
+
+
     def wait_for_state(self, id, state=[], timeout_secs=60):
         """
         Uses: https://github.com/justiniso/polling/blob/master/polling.py
