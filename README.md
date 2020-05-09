@@ -116,6 +116,8 @@ hpecp k8s_cluster tabulate --columns=['id','description','status']
 
 #### Auto completion
 
+(this is currently broken - awaiting: https://github.com/google/python-fire/issues/255)
+
 The CLI supports auto completion, for bash use:
 
 ```sh
