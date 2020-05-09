@@ -13,270 +13,18 @@ try:
 except NameError:
   basestring = str
 
-class K8sClusterStatus(Enum):
-    """The statuses for a K8S Cluster
-
-    Bases: enum.Enum
-
-    Note: The integer values do not have a meaning outside of this library
-    """
-
-    ready = 1
-    creating = 2
-    updating = 3
-    upgrading = 4
-    deleting = 5
-    error = 6
-    warning = 7
-
-
-class K8sCluster():
-    """This class represents a K8s Cluster"""
-
-    all_fields = [ 
-        'id', 
-        'name', 
-        'description', 
-        'k8s_version', 
-        'created_by_user_id', 
-        'created_by_user_name', 
-        'created_time',
-        'k8shosts_config',
-        'admin_kube_config',
-        'dashboard_token',
-        'api_endpoint_access',
-        'dashboard_endpoint_access',
-        'cert_data',
-        'status',
-        'status_message',
-        '_links'
-        ]
-    """All of the fields of a K8s Cluster objects that are returned by the HPE Container Platform API"""
-
-    def __init__(self, json):
-        """Create an instance of K8sCluster from json data returned from the HPE Container Platform API.
-
-        Parameters:
-            json : str
-                HPECP username
-
-        Returns:
-            K8sCluster: 
-                An instance of K8sCluster
-        """
-        self.json = json
-        self.columns = K8sCluster.all_fields
-
-    def __repr__(self):
-        return "<K8sCluster id:{} name:{} description:{} status:{}>".format( self.id, self.name, self.description, self.status)
-
-    def __str__(self):
-        return "K8sCluster(id={}, name={}, description={}, status={})".format(
-                    self.id, self.name, self.description, self.status)
-
-    def __dir__(self):
-        return self.columns
-
-    def __getitem__(self, item):
-        return getattr(self, self.__dir__()[item])
-
-    def set_columns(self, columns):
-        """[summary]
-
-        Parameters:
-            columns : list[str]
-                Set the colums to return. For example, when using :py:meth:`.K8sClusterList.tabulate`
-        """
-        self.columns = columns
-
-    @property
-    def id(self): 
-        """from json['_links']['self']['href'] - id format: '/api/v2/k8scluster/[0-9]+'"""
-        return self.json['_links']['self']['href']
-
-    @property
-    def name(self): 
-        """from json['label']['name']"""
-        return self.json['label']['name']
-
-    @property
-    def description(self):
-        """from json['label']['description']"""
-        return self.json['label']['description']
-    
-    @property
-    def k8s_version(self):
-        """from json['k8s_version']"""
-        return self.json['k8s_version']
-    
-    @property
-    def created_by_user_id(self):
-        """from json['created_by_user_id']"""
-        return self.json['created_by_user_id']
-    
-    @property
-    def created_by_user_name(self):
-        """from json['created_by_user_name']"""
-        return self.json['created_by_user_name']
-    
-    @property
-    def created_time(self):
-        """from json['created_time']"""
-        return self.json['created_time']
-    
-    @property
-    def k8shosts_config(self):
-        """from json['k8shosts_config']"""
-        return self.json['k8shosts_config']
-    
-    @property
-    def admin_kube_config(self):
-        """from json['admin_kube_config']"""
-        return self.json['admin_kube_config']
-    
-    @property
-    def dashboard_token(self):
-        """from json['dashboard_token']"""
-        return self.json['dashboard_token']
-    
-    @property
-    def api_endpoint_access(self):
-        """from json['api_endpoint_access']"""
-        return self.json['api_endpoint_access']
-
-    @property
-    def dashboard_endpoint_access(self):
-        """from json['dashboard_endpoint_access']"""
-        return self.json['dashboard_endpoint_access']
-    
-    @property
-    def cert_data(self):
-        """from json['cert_data'] or None if cert_data not available"""
-        try:
-            return self.json['cert_data']
-        except KeyError:
-            return None
-
-    @property
-    def status(self):
-        """from json['status']"""
-        return self.json['status']
-
-    @property
-    def status_message(self):
-        """from json['status_message']"""
-        return self.json['status_message']
-
-    @property
-    def _links(self):
-        """from json['_links']"""
-        return self.json['_links']
-
-    def __len__(self):
-        return len(dir(self))
-
-class K8sClusterList():
-    """A list of :py:obj:`.K8sCluster` objects"""
-
-    def __init__(self, json):
-        """Create a list of :py:obj:`.K8sCluster` objects
-
-        Parameters:
-            json : str
-                json data returned from the HPE Container Platform API get request to /api/v2/k8scluster
-        """
-        self.json = json
-        self.clusters = sorted([K8sCluster(t) for t in json],  key=attrgetter('id'))
-        self.tenant_columns = K8sCluster.all_fields
-
-    def __getitem__(self, item):
-        return self.clusters[item]
-
-    # Python 2
-    def next(self):
-        if not self.clusters:
-           raise StopIteration
-        tenant = self.clusters.pop(0)
-        tenant.set_columns(self.tenant_columns)
-        return tenant
-
-    # Python 3
-    def __next__(self):
-        if not self.clusters:
-           raise StopIteration
-        tenant = self.clusters.pop(0)
-        tenant.set_columns(self.tenant_columns)
-        return tenant
-
-    def __iter__(self):
-        return self
-
-    def __len__(self):
-        return len(self.clusters)
-
-    def tabulate(self, columns=K8sCluster.all_fields):
-        """Provide a tabular represenation of the Cluster List
-
-        Parameters:
-            columns : list[str]
-                list of columns to return in the table - default :py:attr:`.K8sCluster.all_fields`
-
-        Returns:
-            str : table output
-
-        Example::
-
-            # Print the cluster list with all of the avaialble fields
-            print(hpeclient.cluster.list().tabulate())
-
-            # Print the cluster list with a subset of the fields
-            print(hpeclient.cluster.list().tabulate(columns=['id', 'name', 'description']))
-        """
-        if columns != K8sCluster.all_fields:
-            assert isinstance(columns, list), "'columns' parameter must be list"
-            for field in K8sCluster.all_fields:
-                assert field in K8sCluster.all_fields, "item '{}' is not a field in K8sCluster.all_fields".format(field)
-
-        self.tenant_columns = columns
-        return tabulate(self, headers=columns, tablefmt="pretty")
-
-class K8sClusterHostConfig():
-    """[summary]
-    """
-
-    @classmethod
-    def create_from_list(cls, noderole):
-        """Factory method to create K8sClusterHostConfig from a list with two values: [ node, role ]"""
-        assert len(noderole) == 2, "'noderole' list must have two values [  node, role ]"
-        return K8sClusterHostConfig(node=noderole[0], role=noderole[1])
-
-    def __init__(self, node, role):
-        """[summary]
-
-        Arguments:
-            node {[type]} -- [description]
-            role {[type]} -- [description]
-        """
-        assert isinstance(node, basestring), "'node' must be an string"
-        assert re.match(r'\/api\/v2\/worker\/k8shost\/[0-9]+', node), "'node' must have format '/api/v2/worker/k8shost/[0-9]+'"
-        assert role in [ 'master', 'worker' ], "'role' must one of ['master, worker']"
-
-        self.node = node
-        self.role = role
-
-    def to_dict(self):
-        """[summary]
-
-        Returns:
-            [type] -- [description]
-        """
-        return { 
-                'node': self.node, 
-                'role': self.role 
-            }
-        
 class K8sClusterController:
-    """[summary]
+    """This is the main class that users will interact with to work with K8S Clusters.
+
+    An instance of this class is available in the client.ContainerPlatformClient with the attribute name
+    :py:attr:`k8s_cluster <.client.ContainerPlatformClient.k8s_cluster>`.  The methods of this class can be 
+    invoked using `client.k8s_cluster.method()`.  See the example below:
+
+    Example::
+
+        client = ContainerPlatformClient(...).create_session()
+        client.k8s_cluster.list()
+
     """
 
     def __init__(self, client):
@@ -452,3 +200,264 @@ class K8sClusterController:
         assert re.match(r'\/api\/v2\/k8scluster\/[0-9]+', k8scluster_id), "'k8scluster_id' must have format '/api/v2/worker/k8scluster/[0-9]+'"
 
         self.client._request(url=k8scluster_id, http_method='delete', description='k8s_cluster/delete')
+
+class K8sClusterStatus(Enum):
+    """The statuses for a K8S Cluster
+
+    Bases: enum.Enum
+
+    Note: The integer values do not have a meaning outside of this library
+    """
+
+    ready = 1
+    creating = 2
+    updating = 3
+    upgrading = 4
+    deleting = 5
+    error = 6
+    warning = 7
+
+
+class K8sCluster():
+    """This class represents a K8s Cluster"""
+
+    all_fields = [ 
+        'id', 
+        'name', 
+        'description', 
+        'k8s_version', 
+        'created_by_user_id', 
+        'created_by_user_name', 
+        'created_time',
+        'k8shosts_config',
+        'admin_kube_config',
+        'dashboard_token',
+        'api_endpoint_access',
+        'dashboard_endpoint_access',
+        'cert_data',
+        'status',
+        'status_message',
+        '_links'
+        ]
+    """All of the fields of a K8s Cluster objects that are returned by the HPE Container Platform API"""
+
+    def __init__(self, json):
+        """Create an instance of K8sCluster from json data returned from the HPE Container Platform API.
+
+        Parameters:
+            json : str
+                HPECP username
+
+        Returns:
+            K8sCluster: 
+                An instance of K8sCluster
+        """
+        self.json = json
+        self.columns = K8sCluster.all_fields
+
+    def __repr__(self):
+        return "<K8sCluster id:{} name:{} description:{} status:{}>".format( self.id, self.name, self.description, self.status)
+
+    def __str__(self):
+        return "K8sCluster(id={}, name={}, description={}, status={})".format(
+                    self.id, self.name, self.description, self.status)
+
+    def __dir__(self):
+        return self.columns
+
+    def __getitem__(self, item):
+        return getattr(self, self.__dir__()[item])
+
+    def set_columns(self, columns):
+        """[summary]
+
+        Parameters:
+            columns : list[str]
+                Set the colums to return. For example, when using :py:meth:`.K8sClusterList.tabulate`
+        """
+        self.columns = columns
+
+    @property
+    def id(self): 
+        """from json['_links']['self']['href'] - id format: '/api/v2/k8scluster/[0-9]+'"""
+        return self.json['_links']['self']['href']
+
+    @property
+    def name(self): 
+        """from json['label']['name']"""
+        return self.json['label']['name']
+
+    @property
+    def description(self):
+        """from json['label']['description']"""
+        return self.json['label']['description']
+    
+    @property
+    def k8s_version(self):
+        """from json['k8s_version']"""
+        return self.json['k8s_version']
+    
+    @property
+    def created_by_user_id(self):
+        """from json['created_by_user_id']"""
+        return self.json['created_by_user_id']
+    
+    @property
+    def created_by_user_name(self):
+        """from json['created_by_user_name']"""
+        return self.json['created_by_user_name']
+    
+    @property
+    def created_time(self):
+        """from json['created_time']"""
+        return self.json['created_time']
+    
+    @property
+    def k8shosts_config(self):
+        """from json['k8shosts_config']"""
+        return self.json['k8shosts_config']
+    
+    @property
+    def admin_kube_config(self):
+        """from json['admin_kube_config']"""
+        return self.json['admin_kube_config']
+    
+    @property
+    def dashboard_token(self):
+        """from json['dashboard_token']"""
+        return self.json['dashboard_token']
+    
+    @property
+    def api_endpoint_access(self):
+        """from json['api_endpoint_access']"""
+        return self.json['api_endpoint_access']
+
+    @property
+    def dashboard_endpoint_access(self):
+        """from json['dashboard_endpoint_access']"""
+        return self.json['dashboard_endpoint_access']
+    
+    @property
+    def cert_data(self):
+        """from json['cert_data'] or None if cert_data not available"""
+        try:
+            return self.json['cert_data']
+        except KeyError:
+            return None
+
+    @property
+    def status(self):
+        """from json['status']"""
+        return self.json['status']
+
+    @property
+    def status_message(self):
+        """from json['status_message']"""
+        return self.json['status_message']
+
+    @property
+    def _links(self):
+        """from json['_links']"""
+        return self.json['_links']
+
+    def __len__(self):
+        return len(dir(self))
+
+class K8sClusterList():
+    """Create a list of :py:obj:`.K8sCluster` objects
+
+    Parameters:
+        json : str
+            json data returned from the HPE Container Platform API get request to /api/v2/k8scluster
+    """
+
+    def __init__(self, json):
+        self.json = json
+        self.clusters = sorted([K8sCluster(t) for t in json],  key=attrgetter('id'))
+        self.tenant_columns = K8sCluster.all_fields
+
+    def __getitem__(self, item):
+        return self.clusters[item]
+
+    # Python 2
+    def next(self):
+        if not self.clusters:
+           raise StopIteration
+        tenant = self.clusters.pop(0)
+        tenant.set_columns(self.tenant_columns)
+        return tenant
+
+    # Python 3
+    def __next__(self):
+        if not self.clusters:
+           raise StopIteration
+        tenant = self.clusters.pop(0)
+        tenant.set_columns(self.tenant_columns)
+        return tenant
+
+    def __iter__(self):
+        return self
+
+    def __len__(self):
+        return len(self.clusters)
+
+    def tabulate(self, columns=K8sCluster.all_fields):
+        """Provide a tabular represenation of the Cluster List
+
+        Parameters:
+            columns : list[str]
+                list of columns to return in the table - default :py:attr:`.K8sCluster.all_fields`
+
+        Returns:
+            str : table output
+
+        Example::
+
+            # Print the cluster list with all of the avaialble fields
+            print(hpeclient.cluster.list().tabulate())
+
+            # Print the cluster list with a subset of the fields
+            print(hpeclient.cluster.list().tabulate(columns=['id', 'name', 'description']))
+        """
+        if columns != K8sCluster.all_fields:
+            assert isinstance(columns, list), "'columns' parameter must be list"
+            for field in K8sCluster.all_fields:
+                assert field in K8sCluster.all_fields, "item '{}' is not a field in K8sCluster.all_fields".format(field)
+
+        self.tenant_columns = columns
+        return tabulate(self, headers=columns, tablefmt="pretty")
+
+class K8sClusterHostConfig():
+    """[summary]
+    """
+
+    @classmethod
+    def create_from_list(cls, noderole):
+        """Factory method to create K8sClusterHostConfig from a list with two values: [ node, role ]"""
+        assert len(noderole) == 2, "'noderole' list must have two values [  node, role ]"
+        return K8sClusterHostConfig(node=noderole[0], role=noderole[1])
+
+    def __init__(self, node, role):
+        """[summary]
+
+        Arguments:
+            node {[type]} -- [description]
+            role {[type]} -- [description]
+        """
+        assert isinstance(node, basestring), "'node' must be an string"
+        assert re.match(r'\/api\/v2\/worker\/k8shost\/[0-9]+', node), "'node' must have format '/api/v2/worker/k8shost/[0-9]+'"
+        assert role in [ 'master', 'worker' ], "'role' must one of ['master, worker']"
+
+        self.node = node
+        self.role = role
+
+    def to_dict(self):
+        """[summary]
+
+        Returns:
+            [type] -- [description]
+        """
+        return { 
+                'node': self.node, 
+                'role': self.role 
+            }
