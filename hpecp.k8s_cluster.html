@@ -388,7 +388,8 @@ The API uses a string identifier with the status name rather than an integer val
 <dl class="py class">
 <dt id="hpecp.k8s_cluster.K8sClusterList">
 <em class="property">class </em><code class="sig-prename descclassname">hpecp.k8s_cluster.</code><code class="sig-name descname">K8sClusterList</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">json</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_cluster.html#K8sClusterList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_cluster.K8sClusterList" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a list of <a class="reference internal" href="#hpecp.k8s_cluster.K8sCluster" title="hpecp.k8s_cluster.K8sCluster"><code class="xref py py-obj docutils literal notranslate"><span class="pre">K8sCluster</span></code></a> objects</p>
+<dd><p>List of <a class="reference internal" href="#hpecp.k8s_cluster.K8sCluster" title="hpecp.k8s_cluster.K8sCluster"><code class="xref py py-obj docutils literal notranslate"><span class="pre">K8sCluster</span></code></a> objects</p>
+<p>This class is not expected to be instantiated by users.</p>
 <dl class="simple">
 <dt>Parameters:</dt><dd><dl class="simple">
 <dt>json<span class="classifier">str</span></dt><dd><p>json data returned from the HPE Container Platform API get request to /api/v2/k8scluster</p>
@@ -399,12 +400,13 @@ The API uses a string identifier with the status name rather than an integer val
 <dl class="py method">
 <dt id="hpecp.k8s_cluster.K8sClusterList.next">
 <code class="sig-name descname">next</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_cluster.html#K8sClusterList.next"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_cluster.K8sClusterList.next" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Support iterator access on Python 2.7</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="hpecp.k8s_cluster.K8sClusterList.tabulate">
 <code class="sig-name descname">tabulate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">columns</span><span class="o">=</span><span class="default_value">['id', 'name', 'description', 'k8s_version', 'created_by_user_id', 'created_by_user_name', 'created_time', 'k8shosts_config', 'admin_kube_config', 'dashboard_token', 'api_endpoint_access', 'dashboard_endpoint_access', 'cert_data', 'status', 'status_message', '_links']</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_cluster.html#K8sClusterList.tabulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_cluster.K8sClusterList.tabulate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Provide a tabular represenation of the Cluster List</p>
+<dd><p>Provide a tabular represenation of the list of K8s Clusters</p>
 <dl class="simple">
 <dt>Parameters:</dt><dd><dl class="simple">
 <dt>columns<span class="classifier">list[str]</span></dt><dd><p>list of columns to return in the table - default <a class="reference internal" href="#hpecp.k8s_cluster.K8sCluster.all_fields" title="hpecp.k8s_cluster.K8sCluster.all_fields"><code class="xref py py-attr docutils literal notranslate"><span class="pre">K8sCluster.all_fields</span></code></a></p>
@@ -429,21 +431,45 @@ The API uses a string identifier with the status name rather than an integer val
 <dl class="py class">
 <dt id="hpecp.k8s_cluster.K8sClusterHostConfig">
 <em class="property">class </em><code class="sig-prename descclassname">hpecp.k8s_cluster.</code><code class="sig-name descname">K8sClusterHostConfig</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span></em>, <em class="sig-param"><span class="n">role</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_cluster.html#K8sClusterHostConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_cluster.K8sClusterHostConfig" title="Permalink to this definition">¶</a></dt>
-<dd><p>[summary]</p>
+<dd><p>Object to represent a pair of <cite>host node</cite> and the <cite>role</cite> of the host - <cite>master</cite> or <cite>worker</cite>.</p>
+<p>Arguments:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>node: str</dt><dd><p>The node ID. Must have. the format: ‘/api/v2/worker/k8shost/[0-9]+’</p>
+</dd>
+<dt>role: str</dt><dd><p>The role of the worker node - <cite>master</cite> or <cite>worker</cite></p>
+</dd>
+</dl>
+</div></blockquote>
 <dl class="py method">
 <dt id="hpecp.k8s_cluster.K8sClusterHostConfig.create_from_list">
 <em class="property">classmethod </em><code class="sig-name descname">create_from_list</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">noderole</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_cluster.html#K8sClusterHostConfig.create_from_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_cluster.K8sClusterHostConfig.create_from_list" title="Permalink to this definition">¶</a></dt>
-<dd><p>Factory method to create K8sClusterHostConfig from a list with two values: [ node, role ]</p>
+<dd><p>Factory method to create K8sClusterHostConfig from a list.</p>
+<dl class="simple">
+<dt>Arguments:</dt><dd><dl class="simple">
+<dt>noderole: list</dt><dd><p>the noderole must only have two values: [ node, role ]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>See <a class="reference internal" href="#hpecp.k8s_cluster.K8sClusterHostConfig" title="hpecp.k8s_cluster.K8sClusterHostConfig"><code class="xref py py-meth docutils literal notranslate"><span class="pre">K8sClusterHostConfig()</span></code></a> for the allowed node and role values.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="hpecp.k8s_cluster.K8sClusterHostConfig.to_dict">
 <code class="sig-name descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_cluster.html#K8sClusterHostConfig.to_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_cluster.K8sClusterHostConfig.to_dict" title="Permalink to this definition">¶</a></dt>
-<dd><p>[summary]</p>
+<dd><p>Returns a dict representation of the object.</p>
 <dl class="simple">
-<dt>Returns:</dt><dd><p>[type] – [description]</p>
+<dt>Returns:</dt><dd><p>dict</p>
 </dd>
 </dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> 
+    <span class="s1">&#39;node&#39;</span><span class="p">:</span> <span class="s1">&#39;/api/v2/worker/k8shost/12&#39;</span><span class="p">,</span> 
+    <span class="s1">&#39;role&#39;</span><span class="p">:</span> <span class="s1">&#39;master&#39;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>
