@@ -69,11 +69,11 @@ On my environment, this displays:
 |              | Get            |          |                      | |
 |              | Delete            |          |                      | |
 |              | Wait for status            |          |                      | |
-| K8s Cluster  | [Create](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.create) | Complete | Started |                     |
-|              | [List](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.list)  | Complete | Started |                     |
-|              | [Get](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.get) | Complete | Started |                     |
-|              | [Delete](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.delete)  | Complete | Started |                     |
-|              | [Wait for status](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.wait_for_status) | Complete | Started |                     |
+| K8s Cluster  | [Create](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.create) | Complete | Complete |                     |
+|              | [List](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.list)  | Complete | Complete |                     |
+|              | [Get](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.get) | Complete | Complete |                     |
+|              | [Delete](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.delete)  | Complete | Complete |                     |
+|              | [Wait for status](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.wait_for_status) | Complete | Complete |                     |
 | Tenant       | ...                     |          |                      | |
 
 
@@ -106,15 +106,17 @@ EOF
 
 Create k8s cluster example:
 ```sh
-hpecp k8s_cluster create myclus1 /api/v2/worker/k8shost/1:master --k8s_version=1.17.0
+hpecp k8scluster create myclus1 /api/v2/worker/k8shost/1:master --k8s_version=1.17.0
 ```
 
 List k8s clusters example:
 ```sh
-hpecp k8s_cluster tabulate --columns=['id','description','status']
+hpecp k8scluster tabulate --columns=['id','description','status']
 ```
 
 #### Auto completion
+
+(this is currently broken - awaiting: https://github.com/google/python-fire/issues/255)
 
 The CLI supports auto completion, for bash use:
 
