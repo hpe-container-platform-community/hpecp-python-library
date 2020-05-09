@@ -189,7 +189,7 @@ class K8sClusterController:
     def delete(self, k8scluster_id):
         """Delete a K8S Cluster.
 
-        You can use py:meth:`wait_for_status` to check for the cluster state/existence.
+        You can use :py:meth:`wait_for_status` to check for the cluster state/existence.
 
         Args:
             k8scluster_id: str
