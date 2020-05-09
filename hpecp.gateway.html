@@ -126,6 +126,22 @@
 </dd></dl>
 
 <dl class="py method">
+<dt id="hpecp.gateway.GatewayController.delete">
+<code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gateway_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayController.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.gateway.GatewayController.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete a Gateway.</p>
+<p>You can use <code class="xref py py-meth docutils literal notranslate"><span class="pre">wait_for_status()</span></code> to check for the gateway state/existence.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>gateway_id: str</dt><dd><p>The Gateway ID - format: ‘/api/v1/workers/[0-9]+’</p>
+</dd>
+</dl>
+</dd>
+<dt>Raises:</dt><dd><p>APIException</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt id="hpecp.gateway.GatewayController.wait_for_state">
 <code class="sig-name descname">wait_for_state</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">state</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">timeout_secs</span><span class="o">=</span><span class="default_value">60</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayController.wait_for_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.gateway.GatewayController.wait_for_state" title="Permalink to this definition">¶</a></dt>
 <dd><p>Uses: <a class="reference external" href="https://github.com/justiniso/polling/blob/master/polling.py">https://github.com/justiniso/polling/blob/master/polling.py</a></p>
