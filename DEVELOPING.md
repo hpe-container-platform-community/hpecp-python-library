@@ -12,6 +12,11 @@ To startup Theia:
 
 Then open browser to http://localhost:3000
 
+### REFERENCE IMPLEMENTATION
+
+See [code](https://github.com/hpe-container-platform-community/hpecp-python-library/blob/master/hpecp/k8s_cluster.py)
+See [tests](https://github.com/hpe-container-platform-community/hpecp-python-library/blob/master/tests/library/k8s_cluster_test.py)
+
 ### COVERAGE
 
 Aim for 100% test coverage to ensure library will work with all specified python versions.
@@ -63,7 +68,7 @@ coverage erase && coverage run --source hpecp setup.py test && coverage report -
 
 #### Using tox for testing
 
-Run all tests for all python versions in tox.ini
+Run all tests **for all python versions** declared in tox.ini
 
 ```
 tox
