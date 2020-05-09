@@ -59,6 +59,9 @@ On my environment, this displays:
 
 | Group        | Method                  | Code Status   | Docs Status | Bugs/Features        |
 | -------------|-------------------------| --------:| --------:|----------------------|
+| Client       | Create with parameters  | Complete | Complete | |
+|              | Create from config file  | Complete | Complete | |
+| Client       | Create from env  | Not Started | Not Started | |
 | Session      | [Create Session](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.client.html#hpecp.client.ContainerPlatformClient.create_session) (login)  | Complete | Complete | Reconnect on session expiration [#2](https://github.com/hpe-container-platform-community/hpecp-python-library/issues/2) |
 | K8s Cluster  | [Create](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.create) | Complete | Started |                     |
 |              | [List](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.list)  | Complete | Started |                     |
