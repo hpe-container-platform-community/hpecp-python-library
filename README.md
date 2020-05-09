@@ -64,16 +64,17 @@ On my environment, this displays:
 |              | [Create from env](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.client.html#hpecp.client.ContainerPlatformClient.create_from_env)  | Complete | Complete | |
 | Session      | [Create Session](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.client.html#hpecp.client.ContainerPlatformClient.create_session) (login)  | Complete | Complete | Reconnect on session expiration [#2](https://github.com/hpe-container-platform-community/hpecp-python-library/issues/2) |
 | Gateway      | [Create with SSH Key](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.gateway.html#hpecp.gateway.GatewayController.create_with_ssh_key) | Needs tests | Not Started | |
-|              | Create with SSH Password           | Not Started | Not Started| |
-|              | List            |          |                      | |
-|              | Get            |          |                      | |
-|              | Delete            |          |                      | |
-|              | Wait for status            |          |                      | |
+|              | [Create with SSH Password](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.gateway.html#hpecp.gateway.GatewayController.create_with_ssh_password) | Not Started | Not Started| |
+|              | [List](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.gateway.html#hpecp.gateway.GatewayController.list) | Started | Not Started | |
+|              | [Get](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.gateway.html#hpecp.gateway.GatewayController.get) | Started | Not Started | |
+|              | [Delete](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.gateway.html#hpecp.gateway.GatewayController.delete) | Started | Started | |
+|              | [Wait for State](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.gateway.html#hpecp.gateway.GatewayController.wait_for_state) | Started | Not Started | |
 | K8s Cluster  | [Create](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.create) | Complete | Complete |                     |
 |              | [List](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.list)  | Complete | Complete |                     |
 |              | [Get](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.get) | Complete | Complete |                     |
 |              | [Delete](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.delete)  | Complete | Complete |                     |
 |              | [Wait for status](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.wait_for_status) | Complete | Complete |                     |
+|              | Supported K8s Versions | Not Started | Not Started | See [#3](https://github.com/hpe-container-platform-community/hpecp-python-library/issues/3) |
 | Tenant       | ...                     |          |                      | |
 
 
