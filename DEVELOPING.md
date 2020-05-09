@@ -14,8 +14,8 @@ Then open browser to http://localhost:3000
 
 ### REFERENCE IMPLEMENTATION
 
-See [code](https://github.com/hpe-container-platform-community/hpecp-python-library/blob/master/hpecp/k8s_cluster.py)
-See [tests](https://github.com/hpe-container-platform-community/hpecp-python-library/blob/master/tests/library/k8s_cluster_test.py)
+ - [k8s_custer code](https://github.com/hpe-container-platform-community/hpecp-python-library/blob/master/hpecp/k8s_cluster.py)
+ - [k8s_custer tests](https://github.com/hpe-container-platform-community/hpecp-python-library/blob/master/tests/library/k8s_cluster_test.py)
 
 ### COVERAGE
 
