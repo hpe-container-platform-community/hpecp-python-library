@@ -63,8 +63,8 @@ On my environment, this displays:
 |              | [Create from config file](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.client.html#hpecp.client.ContainerPlatformClient.create_from_config_file)  | Complete | Complete | |
 |              | [Create from env](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.client.html#hpecp.client.ContainerPlatformClient.create_from_env)  | Complete | Complete | |
 | Session      | [Create Session](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.client.html#hpecp.client.ContainerPlatformClient.create_session) (login)  | Complete | Complete | Reconnect on session expiration [#2](https://github.com/hpe-container-platform-community/hpecp-python-library/issues/2) |
-| Gateway      | Create with SSH Key                |          |                      | |
-|              | Create with SSH Password           |          |                      | |
+| Gateway      | [Create with SSH Key](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.gateway.html#hpecp.gateway.GatewayController.create_with_ssh_key) | Complete | Not Started | |
+|              | Create with SSH Password           | Not Started | Not Started| |
 |              | List            |          |                      | |
 |              | Get            |          |                      | |
 |              | Delete            |          |                      | |
