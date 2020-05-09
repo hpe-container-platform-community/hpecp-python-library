@@ -13,23 +13,23 @@ class LicenseController:
     def __init__(self, client):
         self.client = client
 
-    def get_platform_id(self):
+    def platform_id(self):
         response = self.client._request(url='/api/v1/license', http_method='get', description='license/get_platform_id')
         return response.json()['uuid']
 
-    def get_license(self):
+    def get(self):
         response = self.client._request(url='/api/v2/hpelicense', http_method='get', description='license/get_license')
         return response.json()
 
-    def upload_license(self, base64enc_license):
+    def upload(self, base64enc_license):
         raise Exception("Not implemented yet!")  
 
-    def register_license(self, server_filename):
+    def register(self, server_filename):
         data = { "hpelicense_file": server_filename }
         response = self.client._request(url='/api/v2/hpelicense', http_method='post', data=data, description='license/register')
         return response
 
-    def delete_license(self, license_key):
+    def delete(self, license_key):
         try:
             lic = urllib.parse.quote(license_key)  # python 2
         except:
