@@ -109,16 +109,51 @@ class ContainerPlatformClient(object):
         
         return cls(username, password, api_host, api_port, use_ssl, verify_ssl, ssl_warn)
 
-    # @classmethod
-    # def create_from_env(cls):
-    #     assert 'HPECP_USERNAME' in os.environ, "'HPECP_USERNAME' environment variable not found"
-    #     assert 'HPECP_PASSWORD' in os.environ, "'HPECP_PASSWORD' environment variable not found"
-    #     assert 'HPECP_API_HOST' in os.environ, "'HPECP_API_HOST' environment variable not found"
-    #     assert 'HPECP_API_PORT' in os.environ, "'HPECP_API_PORT' environment variable not found"
-    #     assert 'HPECP_USE_SSL' in os.environ, "'HPECP_USE_SSL' environment variable not found"
-    #     assert 'HPECP_VERIFY_SSL' in os.environ, "'HPECP_VERIFY_SSL' environment variable not found"
+    @classmethod
+    def create_from_env(cls):
+        """Create an instance of ContainerPlatformClient from environment variables:
+
+        'HPECP_USERNAME'
+        'HPECP_PASSWORD'
+        'HPECP_API_HOST'
+        'HPECP_API_PORT'
+        'HPECP_USE_SSL'
+        'HPECP_VERIFY_SSL'
+        'HPECP_SSL_WARN'
+
+        See :py:meth:`__init__` for the paramaeter definitions.
+        """
+
+        if 'HPECP_USERNAME' in os.environ:
+            HPECP_USERNAME = os.environ[HPECP_USERNAME]
+
+        if 'HPECP_PASSWORD' in os.environ:
+            HPECP_PASSWORD = os.environ[HPECP_PASSWORD]
+
+        if 'HPECP_API_HOST' in os.environ:
+            HPECP_API_HOST = os.environ[HPECP_API_HOST]
+
+        if 'HPECP_API_PORT' in os.environ:
+            HPECP_API_PORT = os.environ[HPECP_API_PORT]
+
+        if 'HPECP_USE_SSL' in os.environ:
+            HPECP_USE_SSL = os.environ[HPECP_USE_SSL]
+
+        if 'HPECP_VERIFY_SSL' in os.environ:
+            HPECP_VERIFY_SSL = os.environ[HPECP_VERIFY_SSL]
+
+        if 'HPECP_SSL_WARN' in os.environ:
+            HPECP_SSL_WARN = os.environ[HPECP_SSL_WARN]
         
-    #     return cls(username, password, api_host, api_port, use_ssl, verify_ssl, ssl_warn)
+        return cls(
+            username=HPECP_USERNAME, 
+            password=HPECP_PASSWORD, 
+            api_host=HPECP_API_HOST,
+            api_port=HPECP_API_PORT,
+            use_ssl=HPECP_USE_SSL,
+            verify_ssl=HPECP_VERIFY_SSL,
+            ssl_warn=HPECP_SSL_WARN
+            )
 
     def __init__(self, 
                  username   = None, 
@@ -166,7 +201,7 @@ class ContainerPlatformClient(object):
         assert isinstance(api_host, basestring), "'api_host' parameter must be of type string"
         assert isinstance(api_port, int), "'api_port' parameter must be of type int"
         assert isinstance(use_ssl, bool), "'use_ssl' parameter must be of type bool"
-        #assert isinstance(verify_ssl, bool) o, "'verify_ssl' parameter must be of type bool"
+        assert isinstance(verify_ssl, bool), "'verify_ssl' parameter must be of type bool"
         assert isinstance(ssl_warn, bool), "'ssl_warn' parameter must be of type bool"
 
         self.username = username
