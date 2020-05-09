@@ -61,7 +61,7 @@ On my environment, this displays:
 | -------------|-------------------------| --------:| --------:|----------------------|
 | Client       | [Create with parameters](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.client.html#hpecp.client.ContainerPlatformClient)  | Complete | Complete | |
 |              | [Create from config file](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.client.html#hpecp.client.ContainerPlatformClient.create_from_config_file)  | Complete | Complete | |
-|              | [Create from env]()  | Complete | Complete | |
+|              | [Create from env](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.client.html#hpecp.client.ContainerPlatformClient.create_from_env)  | Complete | Complete | |
 | Session      | [Create Session](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.client.html#hpecp.client.ContainerPlatformClient.create_session) (login)  | Complete | Complete | Reconnect on session expiration [#2](https://github.com/hpe-container-platform-community/hpecp-python-library/issues/2) |
 | Gateway      | Create with SSH Key                |          |                      | |
 |              | Create with SSH Password           |          |                      | |
