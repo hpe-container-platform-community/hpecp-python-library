@@ -74,7 +74,12 @@ On my environment, this displays:
 |              | [Get](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.get) | Complete | Complete |                     |
 |              | [Delete](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.delete)  | Complete | Complete |                     |
 |              | [Wait for status](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.wait_for_status) | Complete | Complete |                     |
-|              | Supported K8s Versions | Not Started | Not Started | See [#3](https://github.com/hpe-container-platform-community/hpecp-python-library/issues/3) |
+|              | [Supported K8s Versions](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.supported_k8s_versions) | Not Started | Not Started | See [#3](https://github.com/hpe-container-platform-community/hpecp-python-library/issues/3) |
+| License       | Get Platform ID | Started | Not Started| |
+|               | Register  | Started | Not Started| |
+|               | List  | Started | Not Started| |
+|               | Upload  | Not Started | Not Started| |
+|               | Delete  | Started | Not Started| |
 | Tenant       | ...                     |          |                      | |
 
 
