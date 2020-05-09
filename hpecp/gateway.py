@@ -6,39 +6,49 @@ from tabulate import tabulate
 import polling
 
 
-class EpicWorkerController:
+class GatewayController:
 
     def __init__(self, client):
         self.client = client
 
-    # TODO return gateway object
-    def add_gateway(self, data):
-        '''
-        Example:
-            data = {
-                "ip":"10.1.0.105",
-                "credentials":{
-                    "type":"ssh_key_access",
-                    "ssh_key_data":"-----BEGIN RSA PRIVATE KEY-----...-----END RSA PRIVATE KEY-----\n"
-                },
-                "tags":[],
-                "proxy_nodes_hostname":"ip-10-1-0-19.eu-west-2.compute.internal",
-                "purpose":"proxy"
-            },
+    def create_with_ssh_password(self, username, password):
+        """Not Implemented yet"""
+        raise NotImplementedError()
+
+    def create_with_ssh_key(self, ip, proxy_node_hostname, ssh_key_data, tags=[]):
+        '''Create a gateway instance using SSH key credentials to access the host
+
+        Args:
+            ip : str
+                TODO
+            TODO : str
+                TODO ...
 
             Returns: gateway ID
         '''
-        response = self.client._request(url='/api/v1/workers/', http_method='post', data=data, description='worker/add_gateway')
-        return response.headers['location'].split('/')[-1]
 
-    def get_gateways(self):
+        data = {
+                "ip": ip,
+                "credentials": {
+                    "type": "ssh_key_access",
+                    "ssh_key_data": ssh_key_data
+                },
+                "tags": tags,
+                "proxy_nodes_hostname": proxy_node_hostname,
+                "purpose": "proxy"
+            },
+
+        response = self.client._request(url='/api/v1/workers/', http_method='post', data=data, description='worker/create_with_ssh_key')
+        return response.headers['location']
+
+    def list(self):
         """
         See: https://<<controller_ip>>/apidocs/site-admin-api.html for the schema of the  response object
         """
-        response = self.client._request(url='/api/v1/workers/', http_method='get', description='worker/get_gateways')
+        response = self.client._request(url='/api/v1/workers/', http_method='get', description='worker/list')
         return [ worker for worker in response.json()["_embedded"]["workers"] if worker['purpose'] == 'proxy' ]
 
-    def get_gateway(self, id):
+    def get(self, id):
         """
         See: https://<<controller_ip>>/apidocs/site-admin-api.html for the schema of the  response object
         """
@@ -48,7 +58,7 @@ class EpicWorkerController:
 
     # TODO use an enum like WorkerK8sStatus
     # TODO rename state parameter to states
-    def wait_for_gateway_state(self, id, state=[], timeout_secs=60):
+    def wait_for_state(self, id, state=[], timeout_secs=60):
         """
         Uses: https://github.com/justiniso/polling/blob/master/polling.py
 
@@ -60,7 +70,7 @@ class EpicWorkerController:
 
         try:
             polling.poll(
-                lambda: self.get_gateway(id)['state'] in state,
+                lambda: self.get(id)['state'] in state,
                 step=10,
                 poll_forever=False,
                 timeout=timeout_secs

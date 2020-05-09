@@ -8,13 +8,10 @@ import polling
 from enum import Enum
 import re
 
-import sys
-PY3 = sys.version_info[0] == 3
-
-if PY3:
-    string_types = str
-else:
-    string_types = basestring
+try:
+  basestring
+except NameError:
+  basestring = str
 
 class K8sClusterStatus(Enum):
     """The statuses for a K8S Cluster
@@ -94,7 +91,7 @@ class K8sCluster():
 
     @property
     def id(self): 
-        """from json['_links']['self']['href']"""
+        """from json['_links']['self']['href'] - id format: '/api/v2/k8scluster/[0-9]+'"""
         return self.json['_links']['self']['href']
 
     @property
@@ -260,7 +257,7 @@ class K8sClusterHostConfig():
             node {[type]} -- [description]
             role {[type]} -- [description]
         """
-        assert isinstance(node, string_types), "'node' must be an string"
+        assert isinstance(node, basestring), "'node' must be an string"
         assert re.match(r'\/api\/v2\/worker\/k8shost\/[0-9]+', node), "'node' must have format '/api/v2/worker/k8shost/[0-9]+'"
         assert role in [ 'master', 'worker' ], "'role' must one of ['master, worker']"
 
@@ -331,12 +328,12 @@ class K8sClusterController:
         #     int: The ID for the K8S Cluster with format '/api/v2/k8scluster/[0-9]+'
         #     APIException
 
-        assert isinstance(name, string_types) and len(name) > 0,"'name' must be provided and must be a string"
-        assert description is None or isinstance(description, string_types), "'description' if provided, must be a string"
-        assert k8s_version is None or isinstance(k8s_version, string_types), "'k8s_version' if provided, must be a string"
-        assert isinstance(pod_network_range, string_types), "'pod_network_range' must be a string"
-        assert isinstance(service_network_range, string_types), "'service_network_range' must be a string"
-        assert isinstance(pod_dns_domain, string_types), "'pod_dns_domain' must be a string"
+        assert isinstance(name, basestring) and len(name) > 0,"'name' must be provided and must be a string"
+        assert description is None or isinstance(description, basestring), "'description' if provided, must be a string"
+        assert k8s_version is None or isinstance(k8s_version, basestring), "'k8s_version' if provided, must be a string"
+        assert isinstance(pod_network_range, basestring), "'pod_network_range' must be a string"
+        assert isinstance(service_network_range, basestring), "'service_network_range' must be a string"
+        assert isinstance(pod_dns_domain, basestring), "'pod_dns_domain' must be a string"
         assert isinstance(persistent_storage_local, bool), "'persistent_storage_local' must be True or False"
         assert isinstance(persistent_storage_nimble_csi, bool), "'persistent_storage_nimble_csi' must be True or False"
         assert isinstance(k8shosts_config, list), "'k8shosts_config' must be a list"
@@ -379,8 +376,10 @@ class K8sClusterController:
         """Retrieve a K8S Cluster details.
 
         Args:
-            k8scluster_id: (int) the K8S cluster ID
-            setup_log: (bool) set to True to return the cluster setup log
+            k8scluster_id: str
+                The K8S cluster ID - format: '/api/v2/k8scluster/[0-9]+'
+            setup_log: (bool) 
+                Set to True to return the cluster setup log
 
         Returns:
             K8sCluster: object representing K8S Cluster
@@ -403,8 +402,8 @@ class K8sClusterController:
         """Wait for cluster status.
 
         Args:
-            k8scluster_id: int
-                the K8S cluster ID
+            k8scluster_id: str
+                The K8S cluster ID - format: '/api/v2/k8scluster/[0-9]+'
             status: list[K8sClusterStatus]
                 Status(es) to wait for.  Use an empty array if you want to wait for a cluster's existence to cease.
             timeout_secs: int
@@ -418,7 +417,7 @@ class K8sClusterController:
             APIException: if a generic API exception occurred
         """
    
-        assert isinstance(k8scluster_id, string_types), "'k8scluster_id' must be a string"
+        assert isinstance(k8scluster_id, basestring), "'k8scluster_id' must be a string"
         assert re.match(r'\/api\/v2\/k8scluster\/[0-9]+', k8scluster_id), "'k8scluster_id' must have format '/api/v2/worker/k8scluster/[0-9]+'"
         assert isinstance(status, list), "'status' must be a list"
         for i, s in enumerate(status):
@@ -443,7 +442,8 @@ class K8sClusterController:
         You can use `watch_for_status()` to check for the cluster state/existence.
 
         Args:
-            k8scluster_id: (int) the K8S cluster ID
+            k8scluster_id: str
+                The K8S cluster ID - format: '/api/v2/k8scluster/[0-9]+'
             
         Raises:
             APIException

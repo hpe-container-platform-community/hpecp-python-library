@@ -26,18 +26,7 @@ if gateway_host_ip is None:
 with open('/certs/controller.prv_key', 'r') as f:
     prvkey = f.read()
 
-gw_id = client.worker.add_gateway(
-            data ={
-                "ip":gateway_host_ip,
-                "credentials":{
-                    "type":"ssh_key_access",
-                    "ssh_key_data":prvkey
-                },
-                "tags":[],
-                "proxy_nodes_hostname":gateway_host_dns,
-                "purpose":"proxy"
-            }
-    )
+gw_id = client.gateway.create_with_ssh_key( ip=gateway_host_ip, ssh_key_data=prvkey, tags=[], proxy_nodes_hostname=gateway_host_dns )
 
 # wait 10 minutes for gateway to  have state of 'installed'
-client.worker.wait_for_gateway_state(id=gw_id, timeout_secs=600, state=['installed'])
+client.gateway.wait_for_state(id=gw_id, timeout_secs=600, state=['installed'])

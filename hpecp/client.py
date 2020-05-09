@@ -8,7 +8,7 @@ from six import raise_from
 from .logger import Logger
 from .tenant import TenantController
 from .config import ConfigController
-from .epic_worker import EpicWorkerController
+from .gateway import GatewayController
 from .k8s_worker import K8sWorkerController
 from .k8s_cluster import K8sClusterController
 from .license import LicenseController
@@ -187,7 +187,7 @@ class ContainerPlatformClient(object):
         # register endpoint modules - see @property definitions at end of file for each module
         self._tenant = TenantController(self)
         self._config = ConfigController(self)
-        self.epic_worker = EpicWorkerController(self)
+        self._gateway = GatewayController(self)
         self.k8s_worker = K8sWorkerController(self)
         self._k8s_cluster = K8sClusterController(self)
         self.license = LicenseController(self)

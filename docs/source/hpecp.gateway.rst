@@ -1,7 +1,7 @@
-hpecp.epic\_worker module
+hpecp.gateway module
 =========================
 
-.. automodule:: hpecp.epic_worker
+.. automodule:: hpecp.gateway
    :members:
    :undoc-members:
    :show-inheritance:
