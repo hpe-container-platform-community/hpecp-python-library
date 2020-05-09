@@ -17,7 +17,7 @@ class LicenseController:
         response = self.client._request(url='/api/v1/license', http_method='get', description='license/get_platform_id')
         return response.json()['uuid']
 
-    def get(self):
+    def list(self):
         response = self.client._request(url='/api/v2/hpelicense', http_method='get', description='license/get_license')
         return response.json()
 
