@@ -68,7 +68,7 @@ On my environment, this displays:
 |              | [List](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.gateway.html#hpecp.gateway.GatewayController.list) | Started | Not Started | |
 |              | [Get](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.gateway.html#hpecp.gateway.GatewayController.get) | Started | Not Started | |
 |              | [Delete](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.gateway.html#hpecp.gateway.GatewayController.delete) | Started | Started | |
-|              | {Wait for State](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.gateway.html#hpecp.gateway.GatewayController.wait_for_state) | Started | Not Started | |
+|              | [Wait for State](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.gateway.html#hpecp.gateway.GatewayController.wait_for_state) | Started | Not Started | |
 | K8s Cluster  | [Create](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.create) | Complete | Complete |                     |
 |              | [List](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.list)  | Complete | Complete |                     |
 |              | [Get](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.get) | Complete | Complete |                     |
