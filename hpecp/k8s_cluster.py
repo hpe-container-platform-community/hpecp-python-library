@@ -372,7 +372,9 @@ class K8sCluster():
         return len(dir(self))
 
 class K8sClusterList():
-    """Create a list of :py:obj:`.K8sCluster` objects
+    """List of :py:obj:`.K8sCluster` objects
+
+    This class is not expected to be instantiated by users.
 
     Parameters:
         json : str
@@ -389,6 +391,7 @@ class K8sClusterList():
 
     # Python 2
     def next(self):
+        """Support iterator access on Python 2.7"""
         if not self.clusters:
            raise StopIteration
         tenant = self.clusters.pop(0)
@@ -410,7 +413,7 @@ class K8sClusterList():
         return len(self.clusters)
 
     def tabulate(self, columns=K8sCluster.all_fields):
-        """Provide a tabular represenation of the Cluster List
+        """Provide a tabular represenation of the list of K8s Clusters
 
         Parameters:
             columns : list[str]
@@ -436,22 +439,31 @@ class K8sClusterList():
         return tabulate(self, headers=columns, tablefmt="pretty")
 
 class K8sClusterHostConfig():
-    """[summary]
+    """Object to represent a pair of `host node` and the `role` of the host - `master` or `worker`.
+
+    Arguments:
+
+        node: str
+            The node ID. Must have. the format: '/api/v2/worker/k8shost/[0-9]+'
+        role: str
+            The role of the worker node - `master` or `worker`
     """
 
     @classmethod
     def create_from_list(cls, noderole):
-        """Factory method to create K8sClusterHostConfig from a list with two values: [ node, role ]"""
+        """Factory method to create K8sClusterHostConfig from a list.
+        
+        Arguments:
+            noderole: list
+                the noderole must only have two values: [ node, role ]
+        
+        See :py:meth:`K8sClusterHostConfig` for the allowed node and role values.
+        """
+
         assert len(noderole) == 2, "'noderole' list must have two values [  node, role ]"
         return K8sClusterHostConfig(node=noderole[0], role=noderole[1])
 
     def __init__(self, node, role):
-        """[summary]
-
-        Arguments:
-            node {[type]} -- [description]
-            role {[type]} -- [description]
-        """
         assert isinstance(node, basestring), "'node' must be an string"
         assert re.match(r'\/api\/v2\/worker\/k8shost\/[0-9]+', node), "'node' must have format '/api/v2/worker/k8shost/[0-9]+'"
         assert role in [ 'master', 'worker' ], "'role' must one of ['master, worker']"
@@ -460,10 +472,17 @@ class K8sClusterHostConfig():
         self.role = role
 
     def to_dict(self):
-        """[summary]
+        """Returns a dict representation of the object.
 
         Returns:
-            [type] -- [description]
+            dict
+
+        Example::
+
+            { 
+                'node': '/api/v2/worker/k8shost/12', 
+                'role': 'master'
+            }
         """
         return { 
                 'node': self.node, 
