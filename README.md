@@ -75,11 +75,11 @@ On my environment, this displays:
 |              | [Delete](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.delete)  | Complete | Complete |                     |
 |              | [Wait for status](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.wait_for_status) | Complete | Complete |                     |
 |              | [Supported K8s Versions](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.supported_k8s_versions) | Not Started | Not Started | See [#3](https://github.com/hpe-container-platform-community/hpecp-python-library/issues/3) |
-| License       | Get Platform ID | Started | Not Started| |
-|               | Register  | Started | Not Started| |
+| License       | [Get Platform ID](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.license.html#hpecp.license.LicenseController.get_platform_id) | Started | Not Started| |
+|               | [Register](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.license.html#hpecp.license.LicenseController.register_license) | Started | Not Started| |
 |               | List  | Started | Not Started| |
-|               | Upload  | Not Started | Not Started| |
-|               | Delete  | Started | Not Started| |
+|               | [Upload](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.license.html#hpecp.license.LicenseController.upload_license)  | Not Started | Not Started| |
+|               | [Delete](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.license.html#hpecp.license.LicenseController.delete_license) | Started | Not Started| |
 | Tenant       | ...                     |          |                      | |
 
 
