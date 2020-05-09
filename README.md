@@ -74,6 +74,7 @@ On my environment, this displays:
 |              | [Get](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.get) | Complete | Complete |                     |
 |              | [Delete](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.delete)  | Complete | Complete |                     |
 |              | [Wait for status](https://hpe-container-platform-community.github.io/hpecp-python-library/hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.wait_for_status) | Complete | Complete |                     |
+|              | Supported K8s Versions | Not Started | Not Started | See [#3](https://github.com/hpe-container-platform-community/hpecp-python-library/issues/3) |
 | Tenant       | ...                     |          |                      | |
 
 
