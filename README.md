@@ -114,6 +114,19 @@ List k8s clusters example:
 hpecp k8s_cluster tabulate --columns=['id','description','status']
 ```
 
+#### Auto completion
+
+The CLI supports auto completion, for bash use:
+
+```sh
+hpecp -- --completion bash > ~/.hpecp_completion
+echo source ~/.hpecp_completion >> ~/.bashrc
+```
+
+For zsh, or fish, change the command type in the first command and add to the relevant startup script.
+
+#### Source code
+
 Source code for CLI: [./bin/hpecp](./bin/hpecp).
 
 ## Contributors

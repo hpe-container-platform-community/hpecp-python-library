@@ -44,15 +44,22 @@ class K8sCluster(object):
                 persistent_storage_local=False,
                 persistent_storage_nimble_csi=False,
                 ):
-      """Create a K8s Cluster
+        """Create a K8s Cluster
 
-      Example: 
-      PROFILE=demosrv hpecp k8s_cluster create myclus1 /api/v2/worker/k8shost/1:master --k8s_version=1.17.0
-      """
+        :param name: the cluster name
+        :param k8shosts_config: k8s host ids and roles 'id1:master|worker,id2:master|worker,...'
+        :param description: the cluster descripton
+        :param k8s_version: e.g. 1.17.0
+        :param pod_network_range: the pod network range, default='10.192.0.0/12'
+        :param service_network_range: the service network range, default='10.96.0.0/12'
+        :param pod_dns_domain: the pod dns domain, default='cluster.local'
+        :param persistent_storage_local: True/False
+        :param persistent_storage_nimble_csi: True/False
+        """
 
-      host_config = [ K8sClusterHostConfig.create_from_list(h.split(':')) for h in k8shosts_config.split(',') ]
+        host_config = [ K8sClusterHostConfig.create_from_list(h.split(':')) for h in k8shosts_config.split(',') ]
 
-      print(get_client().k8s_cluster.create(name=name, 
+        print(get_client().k8s_cluster.create(name=name, 
                 description=description, 
                 k8s_version=k8s_version,
                 pod_network_range=pod_network_range,
@@ -63,11 +70,11 @@ class K8sCluster(object):
                 k8shosts_config = host_config))
 
   def tabulate(self, all_columns=False, columns=['id', 'description']):
-    """Print a table of K8s Clusters
-
-    Example:
-    PROFILE=demosrv hpecp k8s_cluster tabulate --columns=['id','description','status']
-    """
+    '''
+    Print a table of K8s Clusters
+    :param all_columns: (True/False) set to True to return all columns
+    :param columns: (aaa) afadsfs
+    '''
 
     if all_columns:
       print(get_client().k8s_cluster.list().tabulate())
@@ -90,7 +97,7 @@ class K8sCluster(object):
 class CLI(object):
 
   def __init__(self):
-    self.k8s_cluster = K8sCluster()
+    self.k8scluster = K8sCluster()
 
 
 if __name__ == '__main__':
