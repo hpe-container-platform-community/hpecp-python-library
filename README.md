@@ -115,3 +115,7 @@ hpecp k8s_cluster tabulate --columns=['id','description','status']
 ```
 
 Source code for CLI: [./bin/hpecp](./bin/hpecp).
+
+## Contributors
+
+See [Developing README](./DEVELOPING.md)
