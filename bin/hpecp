@@ -31,6 +31,23 @@ def get_client():
   client.create_session()
   return client
 
+class K8sGateway(object):
+
+  def create_with_ssh_key(self):
+      raise NotImplementedError("Not yet implemented by CLI")
+
+  def create_with_ssh_password(self):
+      raise NotImplementedError("Not yet implemented by CLI")
+
+  def get(self):
+      raise NotImplementedError("Not yet implemented by CLI")
+
+  def list(self):
+      raise NotImplementedError("Not yet implemented by CLI")
+
+  def delete(self):
+      raise NotImplementedError("Not yet implemented by CLI")
+
 class K8sCluster(object):
 
   def create(self, 
@@ -98,6 +115,7 @@ class CLI(object):
 
   def __init__(self):
     self.k8scluster = K8sCluster()
+    self.gateway = K8sGateway()
 
 
 if __name__ == '__main__':
