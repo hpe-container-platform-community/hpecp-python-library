@@ -29,9 +29,13 @@ CONFIG_FILE = os.getenv('CONFIG_FILE', '~/.hpecp.conf')
 
 def get_client():
   """Utility function to retrieve an authenticated client object"""
-  client = ContainerPlatformClient.create_from_config_file(config_file=CONFIG_FILE, profile=PROFILE)
-  client.create_session()
-  return client
+  try:
+    client = ContainerPlatformClient.create_from_config_file(config_file=CONFIG_FILE, profile=PROFILE)
+    client.create_session()
+    return client
+  except APIException as e:
+    print(e.message)
+    sys.exit(1)
 
 class K8sGateway(object):
 
