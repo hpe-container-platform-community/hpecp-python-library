@@ -330,7 +330,7 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">json</span> <span class="o">=</span> <span class="n">json</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">K8sCluster</span><span class="o">.</span><span class="n">all_fields</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">display_columns</span> <span class="o">=</span> <span class="n">K8sCluster</span><span class="o">.</span><span class="n">all_fields</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;&lt;K8sCluster id:</span><span class="si">{}</span><span class="s2"> name:</span><span class="si">{}</span><span class="s2"> description:</span><span class="si">{}</span><span class="s2"> status:</span><span class="si">{}</span><span class="s2">&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>
@@ -340,12 +340,12 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__dir__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">columns</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">display_columns</span>
 
     <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__dir__</span><span class="p">()[</span><span class="n">item</span><span class="p">])</span>
 
-<div class="viewcode-block" id="K8sCluster.set_columns"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sCluster.set_columns">[docs]</a>    <span class="k">def</span> <span class="nf">set_columns</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">columns</span><span class="p">):</span>
+<div class="viewcode-block" id="K8sCluster.set_display_columns"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sCluster.set_display_columns">[docs]</a>    <span class="k">def</span> <span class="nf">set_display_columns</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">columns</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Set the columns this instance should have when the instance is used with :py:meth:`.K8sClusterList.tabulate`</span>
 
 <span class="sd">        Parameters:</span>
@@ -354,7 +354,7 @@
 
 <span class="sd">        See :py:attr:`all_fields` for the complete list of field names.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">display_columns</span> <span class="o">=</span> <span class="n">columns</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> 
@@ -461,20 +461,20 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">clusters</span><span class="p">[</span><span class="n">item</span><span class="p">]</span>
 
     <span class="c1"># Python 2</span>
-<div class="viewcode-block" id="K8sClusterList.next"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterList.next">[docs]</a>    <span class="k">def</span> <span class="nf">next</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">next</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Support iterator access on Python 2.7&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">clusters</span><span class="p">:</span>
            <span class="k">raise</span> <span class="ne">StopIteration</span>
         <span class="n">tenant</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">clusters</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">tenant</span><span class="o">.</span><span class="n">set_columns</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tenant_columns</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">tenant</span></div>
+        <span class="n">tenant</span><span class="o">.</span><span class="n">set_display_columns</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tenant_columns</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tenant</span>
 
     <span class="c1"># Python 3</span>
     <span class="k">def</span> <span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">clusters</span><span class="p">:</span>
            <span class="k">raise</span> <span class="ne">StopIteration</span>
         <span class="n">tenant</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">clusters</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">tenant</span><span class="o">.</span><span class="n">set_columns</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tenant_columns</span><span class="p">)</span>
+        <span class="n">tenant</span><span class="o">.</span><span class="n">set_display_columns</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tenant_columns</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">tenant</span>
 
     <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
