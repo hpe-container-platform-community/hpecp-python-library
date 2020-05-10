@@ -23,87 +23,101 @@ import os
 import fire
 import yaml
 import json
-from hpecp import ContainerPlatformClient, APIException, APIItemConflictException, APIItemNotFoundException
+from hpecp import (
+    ContainerPlatformClient,
+    APIException,
+    APIItemConflictException,
+    APIItemNotFoundException,
+)
 from hpecp.k8s_cluster import K8sClusterHostConfig, K8sClusterStatus
 
-PROFILE = os.getenv('PROFILE', 'default')
-CONFIG_FILE = os.getenv('CONFIG_FILE', '~/.hpecp.conf')
+PROFILE = os.getenv("PROFILE", "default")
+CONFIG_FILE = os.getenv("CONFIG_FILE", "~/.hpecp.conf")
+
 
 def get_client():
-  """Utility function to retrieve an authenticated client object"""
-  try:
-    client = ContainerPlatformClient.create_from_config_file(config_file=CONFIG_FILE, profile=PROFILE)
-    client.create_session()
-    return client
-  except APIException as e:
-    print(e.message)
-    sys.exit(1)
-
-class K8sGateway(object):
-
-  def create_with_ssh_key(self, ip, proxy_node_hostname, ssh_key=None, ssh_key_file=None, tags=[]):
-
-    if ssh_key is None and ssh_key_file is None:
-        print("Either ssh_key or ssh_key_file must be provided")
-        sys.exit(1)
-
-    if ssh_key is not None and ssh_key_file is not None:
-        print("Either ssh_key or ssh_key_file must be provided")
-        sys.exit(1)
-
-    if ssh_key_file is not None:
-          with open(ssh_key_file) as f:
-            ssh_key_data = f.read()
-
+    """Utility function to retrieve an authenticated client object"""
     try:
-        gateway_id = get_client().gateway.create_with_ssh_key(
-                                                    ip=ip,
-                                                    proxy_node_hostname=proxy_node_hostname,
-                                                    ssh_key_data=ssh_key_data,
-                                                    tags=tags
-                                                    )
-        print("gatway_id:" + gateway_id)
-    except APIItemConflictException:
-        print("Gateway already exists.")
-        sys.exit(1)
-
-  def create_with_ssh_password(self):
-    raise NotImplementedError("Not yet implemented by CLI")
-
-  def get(self, gateway_id, output='table'):
-    """Retrive a Gateway by Id
-
-    :param gateway_id: the id of the gateway with format: '/api/v1/workers/[0-9]+'
-    :param output: how to display the output ['table'|'json']
-    """
-    response = get_client().gateway.get(gateway_id)
-    if output == 'yaml':
-        print(yaml.dump(yaml.load(json.dumps(response), Loader=yaml.FullLoader)))
-
-
-  def list(self):
-    print(get_client().gateway.list())
-
-  def delete(self, gateway_id):
-    try:
-        get_client().gateway.delete(gateway_id)
+        client = ContainerPlatformClient.create_from_config_file(
+            config_file=CONFIG_FILE, profile=PROFILE
+        )
+        client.create_session()
+        return client
     except APIException as e:
         print(e.message)
         sys.exit(1)
 
-class K8sCluster(object):
 
-  def create(self, 
-                name,
-                k8shosts_config,
-                description=None, 
-                k8s_version=None,
-                pod_network_range='10.192.0.0/12', 
-                service_network_range='10.96.0.0/12',
-                pod_dns_domain='cluster.local',
-                persistent_storage_local=False,
-                persistent_storage_nimble_csi=False,
-                ):
+class K8sGateway(object):
+    def create_with_ssh_key(
+        self, ip, proxy_node_hostname, ssh_key=None, ssh_key_file=None, tags=[]
+    ):
+        """Request to create a Gateway using SSH key authentication
+
+        :param ip: the IP address
+        TODO complete this
+        """
+        if ssh_key is None and ssh_key_file is None:
+            print("Either ssh_key or ssh_key_file must be provided")
+            sys.exit(1)
+
+        if ssh_key is not None and ssh_key_file is not None:
+            print("Either ssh_key or ssh_key_file must be provided")
+            sys.exit(1)
+
+        if ssh_key_file is not None:
+            with open(ssh_key_file) as f:
+                ssh_key_data = f.read()
+
+        try:
+            gateway_id = get_client().gateway.create_with_ssh_key(
+                ip=ip,
+                proxy_node_hostname=proxy_node_hostname,
+                ssh_key_data=ssh_key_data,
+                tags=tags,
+            )
+            print("gatway_id:" + gateway_id)
+        except APIItemConflictException:
+            print("Gateway already exists.")
+            sys.exit(1)
+
+    def create_with_ssh_password(self):
+        raise NotImplementedError("Not yet implemented by CLI")
+
+    def get(self, gateway_id, output="table"):
+        """Retrive a Gateway by Id
+
+    :param gateway_id: the id of the gateway with format: '/api/v1/workers/[0-9]+'
+    :param output: how to display the output ['table'|'json']
+    """
+        response = get_client().gateway.get(gateway_id)
+        if output == "yaml":
+            print(yaml.dump(yaml.load(json.dumps(response), Loader=yaml.FullLoader)))
+
+    def list(self):
+        print(get_client().gateway.list())
+
+    def delete(self, gateway_id):
+        try:
+            get_client().gateway.delete(gateway_id)
+        except APIException as e:
+            print(e.message)
+            sys.exit(1)
+
+
+class K8sCluster(object):
+    def create(
+        self,
+        name,
+        k8shosts_config,
+        description=None,
+        k8s_version=None,
+        pod_network_range="10.192.0.0/12",
+        service_network_range="10.96.0.0/12",
+        pod_dns_domain="cluster.local",
+        persistent_storage_local=False,
+        persistent_storage_nimble_csi=False,
+    ):
         """Create a K8s Cluster
 
         :param name: the cluster name
@@ -117,51 +131,59 @@ class K8sCluster(object):
         :param persistent_storage_nimble_csi: True/False
         """
 
-        host_config = [ K8sClusterHostConfig.create_from_list(h.split(':')) for h in k8shosts_config.split(',') ]
+        host_config = [
+            K8sClusterHostConfig.create_from_list(h.split(":"))
+            for h in k8shosts_config.split(",")
+        ]
 
-        print(get_client().k8s_cluster.create(name=name, 
-                description=description, 
+        print(
+            get_client().k8s_cluster.create(
+                name=name,
+                description=description,
                 k8s_version=k8s_version,
                 pod_network_range=pod_network_range,
                 service_network_range=service_network_range,
                 pod_dns_domain=pod_dns_domain,
                 persistent_storage_local=persistent_storage_local,
                 persistent_storage_nimble_csi=persistent_storage_nimble_csi,
-                k8shosts_config = host_config))
+                k8shosts_config=host_config,
+            )
+        )
 
-  def tabulate(self, all_columns=False, columns=['id', 'description']):
-    '''
+    def tabulate(self, all_columns=False, columns=["id", "description"]):
+        """
     Print a table of K8s Clusters
     :param all_columns: (True/False) set to True to return all columns
     :param columns: (aaa) afadsfs
-    '''
-
-    if all_columns:
-      print(get_client().k8s_cluster.list().tabulate())
-    else:
-      print(get_client().k8s_cluster.list().tabulate(columns=columns))
-
-  def get(self, k8scluster_id):
-    print(get_client().k8s_cluster.get(k8scluster_id=k8scluster_id))
-
-  def wait_for_status(self, k8scluster_id, status=[], timeout_secs=60):
     """
+
+        if all_columns:
+            print(get_client().k8s_cluster.list().tabulate())
+        else:
+            print(get_client().k8s_cluster.list().tabulate(columns=columns))
+
+    def get(self, k8scluster_id):
+        print(get_client().k8s_cluster.get(k8scluster_id=k8scluster_id))
+
+    def wait_for_status(self, k8scluster_id, status=[], timeout_secs=60):
+        """
     Wait for K8s Cluster to have one or more statuses
     :param k8scluster_id: Cluster id with format: /api/v2/k8scluster/[0-9]+
     :param status: status(es) to wait for with format: ['status1', 'status2', 'statusn']
     :param timeout_secs: how many secs to wait before exiting
     :returns True/False if status was found within timeout_secs. May raise APIException.
     """
-    cluster_status = [ K8sClusterStatus[s] for s in status ]
-    get_client().k8s_cluster.wait_for_status(k8scluster_id=k8scluster_id, status=cluster_status)
-      
-    
+        cluster_status = [K8sClusterStatus[s] for s in status]
+        get_client().k8s_cluster.wait_for_status(
+            k8scluster_id=k8scluster_id, status=cluster_status
+        )
+
+
 class CLI(object):
+    def __init__(self):
+        self.k8scluster = K8sCluster()
+        self.gateway = K8sGateway()
 
-  def __init__(self):
-    self.k8scluster = K8sCluster()
-    self.gateway = K8sGateway()
 
-
-if __name__ == '__main__':
-  fire.Fire(CLI)
+if __name__ == "__main__":
+    fire.Fire(CLI)
