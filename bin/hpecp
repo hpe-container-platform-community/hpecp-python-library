@@ -21,6 +21,8 @@ password = admin123
 import sys
 import os
 import fire
+import yaml
+import json
 from hpecp import ContainerPlatformClient, APIException, APIItemConflictException, APIItemNotFoundException
 from hpecp.k8s_cluster import K8sClusterHostConfig, K8sClusterStatus
 
@@ -68,8 +70,16 @@ class K8sGateway(object):
   def create_with_ssh_password(self):
     raise NotImplementedError("Not yet implemented by CLI")
 
-  def get(self, gateway_id):
-    print(get_client().gateway.get(gateway_id))
+  def get(self, gateway_id, output='table'):
+    """Retrive a Gateway by Id
+
+    :param gateway_id: the id of the gateway with format: '/api/v1/workers/[0-9]+'
+    :param output: how to display the output ['table'|'json']
+    """
+    response = get_client().gateway.get(gateway_id)
+    if output == 'yaml':
+        print(yaml.dump(yaml.load(json.dumps(response), Loader=yaml.FullLoader)))
+
 
   def list(self):
     print(get_client().gateway.list())

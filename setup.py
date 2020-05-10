@@ -16,7 +16,8 @@ setup(
     'enum34; python_version == "2.7"', 
     'configparser; python_version == "2.7"', 
     'polling', 
-    'fire' 
+    'fire',
+    'pyyaml'
   ],
   test_suite='nose.collector',
   tests_require=['nose','mock'],
