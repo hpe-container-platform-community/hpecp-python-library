@@ -6,6 +6,10 @@ from tabulate import tabulate
 import polling
 import re
 
+try:
+  basestring
+except NameError:
+  basestring = str
 
 class GatewayController:
 
@@ -25,8 +29,12 @@ class GatewayController:
             TODO : str
                 TODO ...
 
-            Returns: gateway ID
+        Returns: gateway ID
         '''
+
+        assert isinstance(ip, basestring), "'ip' must be provided and must be a string"
+        assert isinstance(proxy_node_hostname, basestring), "'proxy_node_hostname' must be provided and must be a string"
+        assert isinstance(ssh_key_data, basestring), "'ssh_key_data' must be provided and must be a string"
 
         data = {
                 "ip": ip,
@@ -37,25 +45,36 @@ class GatewayController:
                 "tags": tags,
                 "proxy_nodes_hostname": proxy_node_hostname,
                 "purpose": "proxy"
-            },
+            }
 
-        response = self.client._request(url='/api/v1/workers/', http_method='post', data=data, description='worker/create_with_ssh_key')
+        response = self.client._request(url='/api/v1/workers/', http_method='post', data=data, description='gateway/create_with_ssh_key')
         return response.headers['location']
 
     def list(self):
         """
         See: https://<<controller_ip>>/apidocs/site-admin-api.html for the schema of the  response object
         """
-        response = self.client._request(url='/api/v1/workers/', http_method='get', description='worker/list')
+        response = self.client._request(url='/api/v1/workers/', http_method='get', description='gateway/list')
         return [ worker for worker in response.json()["_embedded"]["workers"] if worker['purpose'] == 'proxy' ]
 
-    def get(self, id):
+    def get(self, gateway_id):
+        """Retrieve a Gateway by ID.
+
+        Args:
+            gateway_id: str
+                The gateway ID - format: '/api/v1/workers/[0-9]+'
+
+        Returns:
+            Gateway: object representing Gateway
+            
+        Raises:
+            APIException
         """
-        See: https://<<controller_ip>>/apidocs/site-admin-api.html for the schema of the  response object
-        """
-        response = self.client._request(url='/api/v1/workers/', http_method='get', description='worker/get_gateways')
-        workers = response.json()["_embedded"]["workers"]
-        return [ worker for worker in workers if worker['purpose'] == 'proxy' and worker['_links']['self']['href'].split('/')[-1] == str(id) ][0]
+        assert isinstance(gateway_id, str),"'gateway_id' must be provided and must be a string"
+        assert re.match(r'\/api\/v1\/workers\/[0-9]+', gateway_id), "'gateway_id' must have format '/api/v1/workers/[0-9]+'"
+
+        response = self.client._request(url=gateway_id, http_method='get', description='gateway/get')
+        return Gateway(response.json())
 
     def delete(self, gateway_id):
         """Delete a Gateway.

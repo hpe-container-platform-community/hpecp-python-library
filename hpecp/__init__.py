@@ -11,4 +11,4 @@ from .logger import Logger
 
 from .client import ContainerPlatformClient
 
-from .exceptions import ContainerPlatformClientException, APIException, APIItemNotFoundException
+from .exceptions import ContainerPlatformClientException, APIException, APIItemNotFoundException, APIItemConflictException

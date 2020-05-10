@@ -15,6 +15,7 @@ from .license import LicenseController
 from .lock import LockController
 from .exceptions import ContainerPlatformClientException, APIException, APIItemNotFoundException
 
+import re
 import os
 import requests
 import json
@@ -92,12 +93,13 @@ class ContainerPlatformClient(object):
             profile = 'default'
 
         if config_file.startswith('~'):
-            removed_tilde = config_file[1:]
-            config_file = os.path.join(os.path.expanduser("~"), removed_tilde)
+            file_path = config_file[1:]
+            file_path = file_path.lstrip('/')
+            config_file = os.path.join(os.path.expanduser("~"), file_path)
 
         if not os.path.exists(config_file):
             raise ContainerPlatformClientException(
-                    "Could not found configuration file '{}'".format(config_file))
+                    "Could not find configuration file '{}'".format(config_file))
 
         config = configparser.ConfigParser()
         config.read(config_file)
@@ -334,6 +336,10 @@ class ContainerPlatformClient(object):
                 # This is expected for some method calls so do not log as an error
                 self.log.debug('{} : {} {} Request: {}'.format(description, http_method, url, json.dumps(data)))
                 raise APIItemNotFoundException(message=response_info, request_method=http_method, request_url=url, request_data=json.dumps(data))
+            if response.status_code == 409:
+                # This is expected for some method calls so do not log as an error
+                self.log.debug('{} : {} {} Request: {}'.format(description, http_method, url, json.dumps(data)))
+                raise APIItemConflictException(message=response_info, request_method=http_method, request_url=url, request_data=json.dumps(data))
             else:
                 self.log.exception('{} : {} {} Request: {}'.format(description, http_method, url, json.dumps(data)))
                 raise APIException(message=response_info, request_method=http_method, request_url=url, request_data=json.dumps(data))
@@ -414,6 +420,24 @@ class ContainerPlatformClient(object):
         """
 
         return self._k8s_cluster
+
+    @property
+    def gateway(self):
+        """
+        This attribute is a reference to an object of type `.gateway.GatewayController`.
+
+        See the class :py:class:`.gateway.GatewayController` for the methods available.
+
+        Example::
+
+            client = ContainerPlatformClient(...)
+            client.create_session()
+            client.gateway.list()
+        
+        This example calls the method :py:meth:`list() <.gateway.GatewayController.list>` in :py:class:`.gateway.GatewayController`.
+        """
+
+        return self._gateway
 
     @property
     def log(self):

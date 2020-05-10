@@ -23,16 +23,16 @@ class ConfigController:
         
             data = { 
                 "external_identity_server":  {
-                "bind_pwd":"5ambaPwd@",
-                "user_attribute":"sAMAccountName",
-                "bind_type":"search_bind",
-                "bind_dn":"cn=Administrator,CN=Users,DC=samdom,DC=example,DC=com",
-                "host":"10.1.0.77",
-                "security_protocol":"ldaps",
-                "base_dn":"CN=Users,DC=samdom,DC=example,DC=com",
-                "verify_peer": False,
-                "type":"Active Directory",
-                "port":636 
+                    "bind_pwd":"5ambaPwd@",
+                    "user_attribute":"sAMAccountName",
+                    "bind_type":"search_bind",
+                    "bind_dn":"cn=Administrator,CN=Users,DC=samdom,DC=example,DC=com",
+                    "host":"10.1.0.77",
+                    "security_protocol":"ldaps",
+                    "base_dn":"CN=Users,DC=samdom,DC=example,DC=com",
+                    "verify_peer": False,
+                    "type":"Active Directory",
+                    "port":636 
                 }
             }
         '''

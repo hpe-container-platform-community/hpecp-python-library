@@ -24,17 +24,28 @@ from hpecp import ContainerPlatformClient
 from hpecp.k8s_cluster import K8sClusterHostConfig, K8sClusterStatus
 
 PROFILE = os.getenv('PROFILE', 'default')
+CONFIG_FILE = os.getenv('CONFIG_FILE', '~/.hpecp.conf')
 
 def get_client():
   """Utility function to retrieve an authenticated client object"""
-  client = ContainerPlatformClient.create_from_config_file(profile=PROFILE)
+  client = ContainerPlatformClient.create_from_config_file(config_file=CONFIG_FILE, profile=PROFILE)
   client.create_session()
   return client
 
 class K8sGateway(object):
 
-  def create_with_ssh_key(self):
-      raise NotImplementedError("Not yet implemented by CLI")
+  def create_with_ssh_key(self, ip, proxy_node_hostname, ssh_key=None, ssh_key_file=None, tags=[]):
+
+    if ssh_key_file is not None:
+          with open(ssh_key_file) as f:
+            ssh_key_data = f.read()
+
+    # TODO catch exception and present useful info to user, e.g. 409 Conflict
+    print(get_client().gateway.create_with_ssh_key(
+                                        ip=ip,
+                                        proxy_node_hostname=proxy_node_hostname,
+                                        ssh_key_data=ssh_key_data,
+                                        tags=tags))
 
   def create_with_ssh_password(self):
       raise NotImplementedError("Not yet implemented by CLI")
