@@ -2,8 +2,10 @@ from __future__ import absolute_import
 from .logger import Logger
 from .exceptions import ContainerPlatformClientException, APIException, APIItemNotFoundException, APIItemConflictException
 
+import json
 from operator import attrgetter
 from tabulate import tabulate
+from enum import Enum
 import polling
 import re
 
@@ -60,7 +62,8 @@ class GatewayController:
         See: https://<<controller_ip>>/apidocs/site-admin-api.html for the schema of the  response object
         """
         response = self.client._request(url='/api/v1/workers/', http_method='get', description='gateway/list')
-        return [ worker for worker in response.json()["_embedded"]["workers"] if worker['purpose'] == 'proxy' ]
+        return GatewayList(response.json()['_embedded']['workers'])
+        
 
     def get(self, gateway_id):
         """Retrieve a Gateway by ID.
@@ -85,7 +88,7 @@ class GatewayController:
                 request_method='get',
                 request_url='gateway_id')
 
-        return response.json()
+        return Gateway(response.json())
 
     def delete(self, gateway_id):
         """Delete a Gateway.
@@ -132,27 +135,176 @@ class GatewayController:
 
         self.client.log.info("Gateway ID: {} was detected to have state {}".format(id, state))
 
+class GatewayStatus(Enum):
+    """Bases: enum.Enum
     
-    class Gateway():
-        pass
+    The statuses for a Gateway
+
+    **Note:** 
+    
+    The integer values do not have a meaning outside of this library.  
+    The API uses a string identifier with the status name rather than an integer value.
     """
-    {
-        'hacapable': True, 
-        'propinfo': 
-            {'bds_storage_apollo': 'false', 'bds_network_publicinterface': 'ens5'}, 
-        'approved_worker_pubkey': [], 
-        'schedule': False, 
-        'ip': '10.1.0.37', 
-        'proxy_nodes_hostname': 'ec2-35-165-137-87.us-west-2.compute.amazonaws.com', 
-        'hostname': 'ip-10-1-0-37.us-west-2.compute.internal', 
-        'state': 'installed', 
-        '_links': {'self': {'href': '/api/v1/workers/13'}}, 
-        'purpose': 'proxy', 
-        'status_info': '', 
-        'sysinfo': {'network': 
-            [{'info': {'IsVirtual': True, 'IpAddr': {}, 'Mt': 9001, 'State': 'up', 'Carrier': True, 'HwAddr': '7e:d0:19:00:a1:c0', 'Speed': '10000'}, 'name': 'bds-flood-6-r'}, {'info': {'IsVirtual': True, 'IpAddr': {}, 'Mt': 9001, 'State': 'up', 'Carrier': True, 'HwAddr': '52:c4:7b:93:f2:0a', 'Speed': '10000'}, 'name': 'bds-flood-2-r'}, {'info': {'IsVirtual': True, 'IpAddr': {}, 'Mt': 9001, 'State': 'up', 'Carrier': True, 'HwAddr': 'b2:e6:2b:c5:7a:d4', 'Speed': '10000'}, 'name': 'bds-flood-0-r'}, {'info': {'IsVirtual': True, 'IpAddr': {}, 'Mt': 9001, 'State': 'UNKNOWN', 'Carrier': 'UNKNOWN', 'HwAddr': 'c6:b3:cd:1b:7d:44', 'Speed': 'UNKNOWN'}, 'name': 'bds-flood'}, {'info': {'IsVirtual': True, 'IpAddr': {}, 'Mt': 9001, 'State': 'up', 'Carrier': True, 'HwAddr': '5a:16:20:0c:d7:f1', 'Speed': '10000'}, 'name': 'bds-flood-1-r'}, {'info': {'IsVirtual': True, 'IpAddr': {}, 'Mt': 9001, 'State': 'up', 'Carrier': True, 'HwAddr': 'c6:bf:e3:af:82:2f', 'Speed': '10000'}, 'name': 'bds-flood-1-l'}, {'info': {'IsVirtual': True, 'IpAddr': {}, 'Mt': 9001, 'State': 'up', 'Carrier': True, 'HwAddr': '0e:d9:23:62:96:94', 'Speed': '10000'}, 'name': 'bds-flood-0-l'}, {'info': {'IsVirtual': True, 'IpAddr': {}, 'Mt': 9001, 'State': 'up', 'Carrier': True, 'HwAddr': 'e2:86:7e:62:c0:3c', 'Speed': '10000'}, 'name': 'bds-flood-2-l'}, {'info': {'IsVirtual': True, 'IpAddr': {}, 'Mt': 9001, 'State': 'up', 'Carrier': True, 'HwAddr': '8e:92:dc:b9:b7:d7', 'Speed': '10000'}, 'name': 'bds-flood-6-l'}, {'info': {'IsVirtual': False, 'IpAddr': {'dynamic': '10.1.0.37/24'}, 'Mt': 9001, 'State': 'up', 'Carrier': True, 'HwAddr': '02:72:98:8e:3b:86', 'Speed': 'UNKNOWN'}, 'name': 'ens5'}, {'info': {'IsVirtual': True, 'IpAddr': {}, 'Mt': 9001, 'State': 'up', 'Carrier': True, 'HwAddr': '2a:4a:c9:c6:d0:28', 'Speed': '10000'}, 'name': 'bds-flood-4-r'}, {'info': {'IsVirtual': True, 'IpAddr': {}, 'Mt': 9001, 'State': 'up', 'Carrier': True, 'HwAddr': '7a:22:39:fc:11:7e', 'Speed': '10000'}, 'name': 'bds-flood-5-r'}, {'info': {'IsVirtual': True, 'IpAddr': {}, 'Mt': 9001, 'State': 'up', 'Carrier': True, 'HwAddr': '9a:2f:6c:e6:74:30', 'Speed': '10000'}, 'name': 'bds-flood-3-l'}, {'info': {'IsVirtual': True, 'IpAddr': {}, 'Mt': 9001, 'State': 'up', 'Carrier': True, 'HwAddr': '7e:ff:e4:5b:56:0d', 'Speed': '10000'}, 'name': 'bds-flood-7-r'}, {'info': {'IsVirtual': True, 'IpAddr': {}, 'Mt': 9001, 'State': 'up', 'Carrier': True, 'HwAddr': '4a:f7:7e:95:14:2d', 'Speed': '10000'}, 'name': 'bds-flood-7-l'}, {'info': {'IsVirtual': True, 'IpAddr': {}, 'Mt': 9001, 'State': 'up', 'Carrier': True, 'HwAddr': '36:5f:82:61:bf:5c', 'Speed': '10000'}, 'name': 'bds-flood-3-r'}, {'info': {'IsVirtual': True, 'IpAddr': {}, 'Mt': 9001, 'State': 'up', 'Carrier': True, 'HwAddr': '6e:86:7d:52:94:5d', 'Speed': '10000'}, 'name': 'bds-flood-5-l'}, {'info': {'IsVirtual': True, 'IpAddr': {}, 'Mt': 9001, 'State': 'up', 'Carrier': True, 'HwAddr': 'e6:24:0f:54:99:a9', 'Speed': '10000'}, 'name': 'bds-flood-4-l'}], 'keys': {'reported_worker_public_key': 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDKonffu4vtTSINNpBwvLd367941fhPyEuVfh7KrohdIUSVEh/pX8FDAO9fi9pH979AzdDVWeUclTmktm63vQ39TVIJQ+rqdoZUhtH8rSYFoTFzxUQxONviNJJGTiYYMo4kJsLO1Hk/b9Lz8sxUJWD+e5r2UTM5cDSYT3wBHUCDr/MXAxNC9FAgkpuME5utC1dd1aHj2zgLUP61REjnhy1zVVJnbh/T/y3p8Z5z0ubAQy7pYaMTuWgdVMH6kA/RWzOB2JRj8vFKYp9fysFe7L/nj+C2LkDr4dmMLNL9ffTvpnMOj5qPgAO8bay5hAgVykUaRInLjuL7p5/nFATm9uI4A2a28m4HO9csywNXpm5TBDWPDxW7Wh7Sdkx0xHwZenXXy/em+4Q4Fk4Oc6YwYcKOJVsst0qGeCFkhLjzvFHu2ceYf5Q1gg5FlBiX+LsWngjArsd0sdh+3piH/xFuHdubqHfOFpOlZsQsMX5V/LUA71Wqv/cxMsoD5jybQOUS8o34JjkCZlavuJcIeU4hWlWEliZU5SmppuNkHdosXup20/TyBgg0qYlzc+FKZ/8vlQSjT5WgCNffPgXR94KPF1817RW1YSbR+1oiNg6FXgQrKM/1DiqyQ5D8DjhZWgg33hJ7K/fKCL3qPyWCJEMQ64iLQ4QtSeU46l+aO490A89u6w== server\n'}, 'storage': 
-            [{'info': {'IsLogicalVolume': False, 'IsDisk': False, 'Name': '/dev/nvme0n1p1', 'SizeBytes': '429495664128', 'IsReadOnly': False, 'ParentName': '/dev/nvme0n1', 'IsRemovable': False, 'IsRotational': False, 'ParentDeviceType': 'disk', 'IsPartition': True, 'DeviceType': 'part', 'HasFilesystem': True, 'Mountpoint': '/'}, 'name': '/dev/nvme0n1p1'}], 'swap': {'swap_total': 0}, 'memory': {'mem_total': 65842458624}, 'gp': {'gpu_count': 0}, 'cp': {'cpu_logical_cores': 16, 'cpu_count': 8, 'cpu_physical_cores': 8, 'cpu_sockets': 1}, 'mountpoint': []
-            }, 
-        'tags': []
-        }
+
+    bundle = 1
+    installing = 2
+    installed = 3
+    ready = 4
+    unlicensed = 5
+    configuring = 6
+    configured = 7
+    error = 8
+    sysinfo = 9
+    unconfiguring = 10
+    deleting = 11
+    storage_pending = 12
+    storage_configuring = 13
+    storage_error = 14
+
+
+class Gateway():
+    """Create an instance of Gateway from json data returned from the HPE Container Platform API.
+
+    Users of this library are not expected to create an instance of this class.
+
+    Parameters:
+        json : str
+            The json returned by the API representing a Gateway.
+
+    Returns:
+        Gateway: 
+            An instance of Gateway
     """
+
+    all_fields = [ 
+        'id',
+        'state'
+    ]
+    """
+        'hacapable',
+        'propinfo',
+        'approved_worker_pubkey',
+        'schedule',
+        'ip',
+        'proxy_nodes_hostname',
+        'hostname',
+        'state',
+        'status_info',
+        'purpose',
+        'sysinfo',
+        'tags'
+        ]
+        """
+    """All of the fields of Gateway objects that are returned by the HPE Container Platform API"""
+
+    def __init__(self, json):
+        self.json = json
+        self.display_columns = Gateway.all_fields
+
+    def __repr__(self):
+        return "<Gateway id:{} state:{}>".format( self.id, self.state)
+
+    def __str__(self):
+        return "K8sCluster(id={}, state={})".format(self.id, self.state)
+
+    def __dir__(self):
+        return self.display_columns
+
+    def __getitem__(self, item):
+        return getattr(self, self.__dir__()[item])
+
+    def set_display_columns(self, columns):
+        """Set the columns this instance should have when the instance is used with :py:meth:`.GatewayList.tabulate`
+
+        Parameters:
+            columns : list[str]
+                Set the list of colums to return
+
+        See :py:attr:`all_fields` for the complete list of field names.
+        """
+        self.display_columns = columns
+
+    @property
+    def id(self): 
+        """@Field: from json['_links']['self']['href'] - id format: '/api/v1/workers/[0-9]+'"""
+        return self.json['_links']['self']['href']
+
+    @property
+    def state(self): 
+        """@Field: from json['state']"""
+        return self.json['state']
+
+    @property
+    def _links(self):
+        """@Field: from json['_links']"""
+        return self.json['_links']
+
+    def __len__(self):
+        return len(dir(self))
+
+class GatewayList():
+    """List of :py:obj:`.Gateway` objects
+
+    This class is not expected to be instantiated by users.
+
+    Parameters:
+        json : str
+            json data returned from the HPE Container Platform API get request to /api/v1/Gateway
+    """
+
+    def __init__(self, json):
+        self.json = [ g for g in json if g['purpose'] == 'proxy']
+        self.gateways = sorted([Gateway(g) for g in json if g['purpose'] == 'proxy'], key=attrgetter('id'))
+        self.display_columns = Gateway.all_fields
+
+    def __getitem__(self, item):
+        return self.gateways[item]
+
+    # Python 2
+    def next(self):
+        """Support iterator access on Python 2.7"""
+        if not self.gateways:
+           raise StopIteration
+        tenant = self.gateways.pop(0)
+        tenant.set_display_columns(self.display_columns)
+        return tenant
+
+    # Python 3
+    def __next__(self):
+        if not self.gateways:
+           raise StopIteration
+        tenant = self.gateways.pop(0)
+        tenant.set_display_columns(self.display_columns)
+        return tenant
+
+    def __iter__(self):
+        return self
+
+    def __len__(self):
+        return len(self.gateways)
+
+    def tabulate(self, columns=Gateway.all_fields):
+        """Provide a tabular represenation of the list of Gateways
+
+        Parameters:
+            columns : list[str]
+                list of columns to return in the table - default :py:attr:`.Gateway.all_fields`
+
+        Returns:
+            str : table output
+
+        Example::
+
+            # Print the cluster list with all of the avaialble fields
+            print(hpeclient.cluster.list().tabulate())
+
+            # Print the cluster list with a subset of the fields
+            print(hpeclient.cluster.list().tabulate(columns=['id', 'name', 'description']))
+        """
+        if columns != Gateway.all_fields:
+            assert isinstance(columns, list), "'columns' parameter must be list"
+            for field in Gateway.all_fields:
+                assert field in Gateway.all_fields, "item '{}' is not a field in K8sCluster.all_fields".format(field)
+
+        self.display_columns = columns
+        return tabulate(self, headers=columns, tablefmt="pretty")

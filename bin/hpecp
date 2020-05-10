@@ -100,8 +100,10 @@ class K8sGateway(object):
 
         :param output: how to display the output ['table'|'json']
         """
-        print("output='table' not yet supported - returning json")
-        print(get_client().gateway.list())
+        if output == 'table':
+            print(get_client().gateway.list().tabulate())
+        else:
+            print(get_client().gateway.list().json)
 
     def delete(self, gateway_id):
         """Retrieve a Gateway by Id

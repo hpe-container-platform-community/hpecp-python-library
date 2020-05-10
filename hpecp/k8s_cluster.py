@@ -291,67 +291,67 @@ class K8sCluster():
 
     @property
     def id(self): 
-        """from json['_links']['self']['href'] - id format: '/api/v2/k8scluster/[0-9]+'"""
+        """@Field: from json['_links']['self']['href'] - id format: '/api/v2/k8scluster/[0-9]+'"""
         return self.json['_links']['self']['href']
 
     @property
     def name(self): 
-        """from json['label']['name']"""
+        """@Field: from json['label']['name']"""
         return self.json['label']['name']
 
     @property
     def description(self):
-        """from json['label']['description']"""
+        """@Field: from json['label']['description']"""
         return self.json['label']['description']
     
     @property
     def k8s_version(self):
-        """from json['k8s_version']"""
+        """@Field: from json['k8s_version']"""
         return self.json['k8s_version']
     
     @property
     def created_by_user_id(self):
-        """from json['created_by_user_id']"""
+        """@Field: from json['created_by_user_id']"""
         return self.json['created_by_user_id']
     
     @property
     def created_by_user_name(self):
-        """from json['created_by_user_name']"""
+        """@Field: from json['created_by_user_name']"""
         return self.json['created_by_user_name']
     
     @property
     def created_time(self):
-        """from json['created_time']"""
+        """@Field: from json['created_time']"""
         return self.json['created_time']
     
     @property
     def k8shosts_config(self):
-        """from json['k8shosts_config']"""
+        """@Field: from json['k8shosts_config']"""
         return self.json['k8shosts_config']
     
     @property
     def admin_kube_config(self):
-        """from json['admin_kube_config']"""
+        """@Field: from json['admin_kube_config']"""
         return self.json['admin_kube_config']
     
     @property
     def dashboard_token(self):
-        """from json['dashboard_token']"""
+        """@Field: from json['dashboard_token']"""
         return self.json['dashboard_token']
     
     @property
     def api_endpoint_access(self):
-        """from json['api_endpoint_access']"""
+        """@Field: from json['api_endpoint_access']"""
         return self.json['api_endpoint_access']
 
     @property
     def dashboard_endpoint_access(self):
-        """from json['dashboard_endpoint_access']"""
+        """@Field: from json['dashboard_endpoint_access']"""
         return self.json['dashboard_endpoint_access']
     
     @property
     def cert_data(self):
-        """from json['cert_data'] or None if cert_data not available"""
+        """@Field: from json['cert_data'] or None if cert_data not available"""
         try:
             return self.json['cert_data']
         except KeyError:
@@ -359,17 +359,17 @@ class K8sCluster():
 
     @property
     def status(self):
-        """from json['status']"""
+        """@Field: from json['status']"""
         return self.json['status']
 
     @property
     def status_message(self):
-        """from json['status_message']"""
+        """@Field: from json['status_message']"""
         return self.json['status_message']
 
     @property
     def _links(self):
-        """from json['_links']"""
+        """@Field: from json['_links']"""
         return self.json['_links']
 
     def __len__(self):
