@@ -245,28 +245,35 @@
 
     <span class="n">all_fields</span> <span class="o">=</span> <span class="p">[</span> 
         <span class="s1">&#39;id&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;state&#39;</span>
-    <span class="p">]</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        &#39;hacapable&#39;,</span>
-<span class="sd">        &#39;propinfo&#39;,</span>
-<span class="sd">        &#39;approved_worker_pubkey&#39;,</span>
-<span class="sd">        &#39;schedule&#39;,</span>
-<span class="sd">        &#39;ip&#39;,</span>
-<span class="sd">        &#39;proxy_nodes_hostname&#39;,</span>
-<span class="sd">        &#39;hostname&#39;,</span>
-<span class="sd">        &#39;state&#39;,</span>
-<span class="sd">        &#39;status_info&#39;,</span>
-<span class="sd">        &#39;purpose&#39;,</span>
-<span class="sd">        &#39;sysinfo&#39;,</span>
-<span class="sd">        &#39;tags&#39;</span>
-<span class="sd">        ]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="s1">&#39;hacapable&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;propinfo&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;approved_worker_pubkey&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;schedule&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;ip&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;proxy_nodes_hostname&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;hostname&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;state&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;status_info&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;purpose&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;sysinfo&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;tags&#39;</span>
+        <span class="p">]</span>
     <span class="sd">&quot;&quot;&quot;All of the fields of Gateway objects that are returned by the HPE Container Platform API&quot;&quot;&quot;</span>
+
+    <span class="n">default_display_fields</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s1">&#39;id&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;ip&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;proxy_nodes_hostname&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;hostname&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;state&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;status_info&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;purpose&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;tags&#39;</span>
+    <span class="p">]</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">json</span> <span class="o">=</span> <span class="n">json</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">display_columns</span> <span class="o">=</span> <span class="n">Gateway</span><span class="o">.</span><span class="n">all_fields</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">display_columns</span> <span class="o">=</span> <span class="n">Gateway</span><span class="o">.</span><span class="n">default_display_fields</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;&lt;Gateway id:</span><span class="si">{}</span><span class="s2"> state:</span><span class="si">{}</span><span class="s2">&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">)</span>
@@ -278,7 +285,10 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">display_columns</span>
 
     <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__dir__</span><span class="p">()[</span><span class="n">item</span><span class="p">])</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">display_columns</span><span class="p">[</span><span class="n">item</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="nb">dir</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
 
 <div class="viewcode-block" id="Gateway.set_display_columns"><a class="viewcode-back" href="../../hpecp.gateway.html#hpecp.gateway.Gateway.set_display_columns">[docs]</a>    <span class="k">def</span> <span class="nf">set_display_columns</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">columns</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Set the columns this instance should have when the instance is used with :py:meth:`.GatewayList.tabulate`</span>
@@ -302,12 +312,64 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span>
 
     <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">hacapable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> 
+        <span class="sd">&quot;&quot;&quot;@Field: from json[&#39;hacapable&#39;]&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;hacapable&#39;</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">propinfo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> 
+        <span class="sd">&quot;&quot;&quot;@Field: from json[&#39;propinfo&#39;]&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;propinfo&#39;</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">approved_worker_pubkey</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> 
+        <span class="sd">&quot;&quot;&quot;@Field: from json[&#39;approved_worker_pubkey&#39;]&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;approved_worker_pubkey&#39;</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">schedule</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> 
+        <span class="sd">&quot;&quot;&quot;@Field: from json[&#39;schedule&#39;]&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;schedule&#39;</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">ip</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> 
+        <span class="sd">&quot;&quot;&quot;@Field: from json[&#39;ip&#39;]&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;ip&#39;</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">proxy_nodes_hostname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> 
+        <span class="sd">&quot;&quot;&quot;@Field: from json[&#39;proxy_nodes_hostname&#39;]&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;proxy_nodes_hostname&#39;</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">hostname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> 
+        <span class="sd">&quot;&quot;&quot;@Field: from json[&#39;hostname&#39;]&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;hostname&#39;</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">purpose</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> 
+        <span class="sd">&quot;&quot;&quot;@Field: from json[&#39;purpose&#39;]&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;purpose&#39;</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">status_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> 
+        <span class="sd">&quot;&quot;&quot;@Field: from json[&#39;status_info&#39;]&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;status_info&#39;</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sysinfo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> 
+        <span class="sd">&quot;&quot;&quot;@Field: from json[&#39;sysinfo&#39;]&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;sysinfo&#39;</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> 
+        <span class="sd">&quot;&quot;&quot;@Field: from json[&#39;tags&#39;]&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;tags&#39;</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">_links</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;@Field: from json[&#39;_links&#39;]&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;_links&#39;</span><span class="p">]</span>
-
-    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="nb">dir</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;_links&#39;</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="GatewayList"><a class="viewcode-back" href="../../hpecp.gateway.html#hpecp.gateway.GatewayList">[docs]</a><span class="k">class</span> <span class="nc">GatewayList</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;List of :py:obj:`.Gateway` objects</span>
@@ -322,7 +384,7 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">json</span> <span class="o">=</span> <span class="p">[</span> <span class="n">g</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">json</span> <span class="k">if</span> <span class="n">g</span><span class="p">[</span><span class="s1">&#39;purpose&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;proxy&#39;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gateways</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">Gateway</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">json</span> <span class="k">if</span> <span class="n">g</span><span class="p">[</span><span class="s1">&#39;purpose&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;proxy&#39;</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="n">attrgetter</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">display_columns</span> <span class="o">=</span> <span class="n">Gateway</span><span class="o">.</span><span class="n">all_fields</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">display_columns</span> <span class="o">=</span> <span class="n">Gateway</span><span class="o">.</span><span class="n">default_display_fields</span>
 
     <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">gateways</span><span class="p">[</span><span class="n">item</span><span class="p">]</span>
@@ -332,17 +394,17 @@
         <span class="sd">&quot;&quot;&quot;Support iterator access on Python 2.7&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">gateways</span><span class="p">:</span>
            <span class="k">raise</span> <span class="ne">StopIteration</span>
-        <span class="n">tenant</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gateways</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">tenant</span><span class="o">.</span><span class="n">set_display_columns</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">display_columns</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">tenant</span>
+        <span class="n">gateway</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gateways</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">gateway</span><span class="o">.</span><span class="n">set_display_columns</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">display_columns</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">gateway</span>
 
     <span class="c1"># Python 3</span>
     <span class="k">def</span> <span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">gateways</span><span class="p">:</span>
            <span class="k">raise</span> <span class="ne">StopIteration</span>
-        <span class="n">tenant</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gateways</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">tenant</span><span class="o">.</span><span class="n">set_display_columns</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">display_columns</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">tenant</span>
+        <span class="n">gateway</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gateways</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">gateway</span><span class="o">.</span><span class="n">set_display_columns</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">display_columns</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">gateway</span>
 
     <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span>
@@ -350,31 +412,33 @@
     <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gateways</span><span class="p">)</span>
 
-<div class="viewcode-block" id="GatewayList.tabulate"><a class="viewcode-back" href="../../hpecp.gateway.html#hpecp.gateway.GatewayList.tabulate">[docs]</a>    <span class="k">def</span> <span class="nf">tabulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">Gateway</span><span class="o">.</span><span class="n">all_fields</span><span class="p">):</span>
+<div class="viewcode-block" id="GatewayList.tabulate"><a class="viewcode-back" href="../../hpecp.gateway.html#hpecp.gateway.GatewayList.tabulate">[docs]</a>    <span class="k">def</span> <span class="nf">tabulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">Gateway</span><span class="o">.</span><span class="n">default_display_fields</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Provide a tabular represenation of the list of Gateways</span>
 
 <span class="sd">        Parameters:</span>
 <span class="sd">            columns : list[str]</span>
-<span class="sd">                list of columns to return in the table - default :py:attr:`.Gateway.all_fields`</span>
+<span class="sd">                list of columns to return in the table - default :py:attr:`.Gateway.default_display_fields`</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            str : table output</span>
 
 <span class="sd">        Example::</span>
 
-<span class="sd">            # Print the cluster list with all of the avaialble fields</span>
-<span class="sd">            print(hpeclient.cluster.list().tabulate())</span>
+<span class="sd">            # Print the gateway list with all of the avaialble fields</span>
+<span class="sd">            print(hpeclient.gateway.list().tabulate())</span>
 
 <span class="sd">            # Print the cluster list with a subset of the fields</span>
-<span class="sd">            print(hpeclient.cluster.list().tabulate(columns=[&#39;id&#39;, &#39;name&#39;, &#39;description&#39;]))</span>
+<span class="sd">            print(hpeclient.gateway.list().tabulate(columns=[&#39;id&#39;, &#39;state&#39;]))</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">columns</span> <span class="o">!=</span> <span class="n">Gateway</span><span class="o">.</span><span class="n">all_fields</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">columns</span> <span class="o">!=</span> <span class="n">Gateway</span><span class="o">.</span><span class="n">default_display_fields</span><span class="p">:</span>
             <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">columns</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span> <span class="s2">&quot;&#39;columns&#39; parameter must be list&quot;</span>
-            <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">Gateway</span><span class="o">.</span><span class="n">all_fields</span><span class="p">:</span>
-                <span class="k">assert</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">Gateway</span><span class="o">.</span><span class="n">all_fields</span><span class="p">,</span> <span class="s2">&quot;item &#39;</span><span class="si">{}</span><span class="s2">&#39; is not a field in K8sCluster.all_fields&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">Gateway</span><span class="o">.</span><span class="n">all_fields</span><span class="p">,</span> <span class="s2">&quot;item &#39;</span><span class="si">{}</span><span class="s2">&#39; is not a field in Gateway.all_fields&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">column</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">display_columns</span> <span class="o">=</span> <span class="n">columns</span>
-        <span class="k">return</span> <span class="n">tabulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span> <span class="n">tablefmt</span><span class="o">=</span><span class="s2">&quot;pretty&quot;</span><span class="p">)</span></div></div>
+
+        <span class="c1"># FIXME - how to return the table in the user provided column order?</span>
+        <span class="k">return</span> <span class="n">tabulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="nb">sorted</span><span class="p">(</span><span class="n">columns</span><span class="p">),</span> <span class="n">tablefmt</span><span class="o">=</span><span class="s2">&quot;pretty&quot;</span><span class="p">)</span></div></div>
 </pre></div>
 
           </div>

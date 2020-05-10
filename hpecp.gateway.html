@@ -267,21 +267,14 @@ The API uses a string identifier with the status name rather than an integer val
 </dl>
 <dl class="py attribute">
 <dt id="hpecp.gateway.Gateway.all_fields">
-<code class="sig-name descname">all_fields</code><em class="property"> = ['id', 'state']</em><a class="headerlink" href="#hpecp.gateway.Gateway.all_fields" title="Permalink to this definition">¶</a></dt>
-<dd><p>‘hacapable’,
-‘propinfo’,
-‘approved_worker_pubkey’,
-‘schedule’,
-‘ip’,
-‘proxy_nodes_hostname’,
-‘hostname’,
-‘state’,
-‘status_info’,
-‘purpose’,
-‘sysinfo’,
-‘tags’
-]</p>
+<code class="sig-name descname">all_fields</code><em class="property"> = ['id', 'hacapable', 'propinfo', 'approved_worker_pubkey', 'schedule', 'ip', 'proxy_nodes_hostname', 'hostname', 'state', 'status_info', 'purpose', 'sysinfo', 'tags']</em><a class="headerlink" href="#hpecp.gateway.Gateway.all_fields" title="Permalink to this definition">¶</a></dt>
+<dd><p>All of the fields of Gateway objects that are returned by the HPE Container Platform API</p>
 </dd></dl>
+
+<dl class="py attribute">
+<dt id="hpecp.gateway.Gateway.default_display_fields">
+<code class="sig-name descname">default_display_fields</code><em class="property"> = ['id', 'ip', 'proxy_nodes_hostname', 'hostname', 'state', 'status_info', 'purpose', 'tags']</em><a class="headerlink" href="#hpecp.gateway.Gateway.default_display_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt id="hpecp.gateway.Gateway.set_display_columns">
@@ -309,6 +302,72 @@ The API uses a string identifier with the status name rather than an integer val
 <dd><p>&#64;Field: from json[‘state’]</p>
 </dd></dl>
 
+<dl class="py method">
+<dt id="hpecp.gateway.Gateway.hacapable">
+<em class="property">property </em><code class="sig-name descname">hacapable</code><a class="headerlink" href="#hpecp.gateway.Gateway.hacapable" title="Permalink to this definition">¶</a></dt>
+<dd><p>&#64;Field: from json[‘hacapable’]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="hpecp.gateway.Gateway.propinfo">
+<em class="property">property </em><code class="sig-name descname">propinfo</code><a class="headerlink" href="#hpecp.gateway.Gateway.propinfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>&#64;Field: from json[‘propinfo’]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="hpecp.gateway.Gateway.approved_worker_pubkey">
+<em class="property">property </em><code class="sig-name descname">approved_worker_pubkey</code><a class="headerlink" href="#hpecp.gateway.Gateway.approved_worker_pubkey" title="Permalink to this definition">¶</a></dt>
+<dd><p>&#64;Field: from json[‘approved_worker_pubkey’]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="hpecp.gateway.Gateway.schedule">
+<em class="property">property </em><code class="sig-name descname">schedule</code><a class="headerlink" href="#hpecp.gateway.Gateway.schedule" title="Permalink to this definition">¶</a></dt>
+<dd><p>&#64;Field: from json[‘schedule’]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="hpecp.gateway.Gateway.ip">
+<em class="property">property </em><code class="sig-name descname">ip</code><a class="headerlink" href="#hpecp.gateway.Gateway.ip" title="Permalink to this definition">¶</a></dt>
+<dd><p>&#64;Field: from json[‘ip’]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="hpecp.gateway.Gateway.proxy_nodes_hostname">
+<em class="property">property </em><code class="sig-name descname">proxy_nodes_hostname</code><a class="headerlink" href="#hpecp.gateway.Gateway.proxy_nodes_hostname" title="Permalink to this definition">¶</a></dt>
+<dd><p>&#64;Field: from json[‘proxy_nodes_hostname’]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="hpecp.gateway.Gateway.hostname">
+<em class="property">property </em><code class="sig-name descname">hostname</code><a class="headerlink" href="#hpecp.gateway.Gateway.hostname" title="Permalink to this definition">¶</a></dt>
+<dd><p>&#64;Field: from json[‘hostname’]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="hpecp.gateway.Gateway.purpose">
+<em class="property">property </em><code class="sig-name descname">purpose</code><a class="headerlink" href="#hpecp.gateway.Gateway.purpose" title="Permalink to this definition">¶</a></dt>
+<dd><p>&#64;Field: from json[‘purpose’]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="hpecp.gateway.Gateway.status_info">
+<em class="property">property </em><code class="sig-name descname">status_info</code><a class="headerlink" href="#hpecp.gateway.Gateway.status_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>&#64;Field: from json[‘status_info’]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="hpecp.gateway.Gateway.sysinfo">
+<em class="property">property </em><code class="sig-name descname">sysinfo</code><a class="headerlink" href="#hpecp.gateway.Gateway.sysinfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>&#64;Field: from json[‘sysinfo’]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="hpecp.gateway.Gateway.tags">
+<em class="property">property </em><code class="sig-name descname">tags</code><a class="headerlink" href="#hpecp.gateway.Gateway.tags" title="Permalink to this definition">¶</a></dt>
+<dd><p>&#64;Field: from json[‘tags’]</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -326,11 +385,11 @@ The API uses a string identifier with the status name rather than an integer val
 </dl>
 <dl class="py method">
 <dt id="hpecp.gateway.GatewayList.tabulate">
-<code class="sig-name descname">tabulate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">columns</span><span class="o">=</span><span class="default_value">['id', 'state']</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayList.tabulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.gateway.GatewayList.tabulate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">tabulate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">columns</span><span class="o">=</span><span class="default_value">['id', 'ip', 'proxy_nodes_hostname', 'hostname', 'state', 'status_info', 'purpose', 'tags']</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayList.tabulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.gateway.GatewayList.tabulate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Provide a tabular represenation of the list of Gateways</p>
 <dl class="simple">
 <dt>Parameters:</dt><dd><dl class="simple">
-<dt>columns<span class="classifier">list[str]</span></dt><dd><p>list of columns to return in the table - default <a class="reference internal" href="#hpecp.gateway.Gateway.all_fields" title="hpecp.gateway.Gateway.all_fields"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Gateway.all_fields</span></code></a></p>
+<dt>columns<span class="classifier">list[str]</span></dt><dd><p>list of columns to return in the table - default <a class="reference internal" href="#hpecp.gateway.Gateway.default_display_fields" title="hpecp.gateway.Gateway.default_display_fields"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Gateway.default_display_fields</span></code></a></p>
 </dd>
 </dl>
 </dd>
@@ -338,11 +397,11 @@ The API uses a string identifier with the status name rather than an integer val
 </dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Print the cluster list with all of the avaialble fields</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">hpeclient</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">list</span><span class="p">()</span><span class="o">.</span><span class="n">tabulate</span><span class="p">())</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Print the gateway list with all of the avaialble fields</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">hpeclient</span><span class="o">.</span><span class="n">gateway</span><span class="o">.</span><span class="n">list</span><span class="p">()</span><span class="o">.</span><span class="n">tabulate</span><span class="p">())</span>
 
 <span class="c1"># Print the cluster list with a subset of the fields</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">hpeclient</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">list</span><span class="p">()</span><span class="o">.</span><span class="n">tabulate</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;description&#39;</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">hpeclient</span><span class="o">.</span><span class="n">gateway</span><span class="o">.</span><span class="n">list</span><span class="p">()</span><span class="o">.</span><span class="n">tabulate</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;state&#39;</span><span class="p">]))</span>
 </pre></div>
 </div>
 </dd></dl>
