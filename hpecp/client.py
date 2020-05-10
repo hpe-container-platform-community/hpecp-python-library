@@ -13,7 +13,7 @@ from .k8s_worker import K8sWorkerController
 from .k8s_cluster import K8sClusterController
 from .license import LicenseController
 from .lock import LockController
-from .exceptions import ContainerPlatformClientException, APIException, APIItemNotFoundException
+from .exceptions import ContainerPlatformClientException, APIException, APIItemNotFoundException, APIItemConflictException
 
 import re
 import os

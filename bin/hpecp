@@ -48,16 +48,16 @@ class K8sGateway(object):
                                         tags=tags))
 
   def create_with_ssh_password(self):
-      raise NotImplementedError("Not yet implemented by CLI")
+    raise NotImplementedError("Not yet implemented by CLI")
 
-  def get(self):
-      raise NotImplementedError("Not yet implemented by CLI")
+  def get(self, gateway_id):
+    print(get_client().gateway.get(gateway_id))
 
   def list(self):
-      raise NotImplementedError("Not yet implemented by CLI")
+    print(get_client().gateway.list())
 
-  def delete(self):
-      raise NotImplementedError("Not yet implemented by CLI")
+  def delete(self, gateway_id):
+    get_client().gateway.delete(gateway_id)
 
 class K8sCluster(object):
 
