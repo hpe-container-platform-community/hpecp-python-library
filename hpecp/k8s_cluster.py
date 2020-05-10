@@ -263,7 +263,7 @@ class K8sCluster():
 
     def __init__(self, json):
         self.json = json
-        self.columns = K8sCluster.all_fields
+        self.display_columns = K8sCluster.all_fields
 
     def __repr__(self):
         return "<K8sCluster id:{} name:{} description:{} status:{}>".format( self.id, self.name, self.description, self.status)
@@ -273,12 +273,12 @@ class K8sCluster():
                     self.id, self.name, self.description, self.status)
 
     def __dir__(self):
-        return self.columns
+        return self.display_columns
 
     def __getitem__(self, item):
         return getattr(self, self.__dir__()[item])
 
-    def set_columns(self, columns):
+    def set_display_columns(self, columns):
         """Set the columns this instance should have when the instance is used with :py:meth:`.K8sClusterList.tabulate`
 
         Parameters:
@@ -287,7 +287,7 @@ class K8sCluster():
 
         See :py:attr:`all_fields` for the complete list of field names.
         """
-        self.columns = columns
+        self.display_columns = columns
 
     @property
     def id(self): 
@@ -399,7 +399,7 @@ class K8sClusterList():
         if not self.clusters:
            raise StopIteration
         tenant = self.clusters.pop(0)
-        tenant.set_columns(self.tenant_columns)
+        tenant.set_display_columns(self.tenant_columns)
         return tenant
 
     # Python 3
@@ -407,7 +407,7 @@ class K8sClusterList():
         if not self.clusters:
            raise StopIteration
         tenant = self.clusters.pop(0)
-        tenant.set_columns(self.tenant_columns)
+        tenant.set_display_columns(self.tenant_columns)
         return tenant
 
     def __iter__(self):
