@@ -5,3 +5,4 @@ hpecp.gateway module
    :members:
    :undoc-members:
    :show-inheritance:
+   :exclude-members: next

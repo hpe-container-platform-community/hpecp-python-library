@@ -69,8 +69,10 @@
 <span class="kn">from</span> <span class="nn">.logger</span> <span class="kn">import</span> <span class="n">Logger</span>
 <span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">ContainerPlatformClientException</span><span class="p">,</span> <span class="n">APIException</span><span class="p">,</span> <span class="n">APIItemNotFoundException</span><span class="p">,</span> <span class="n">APIItemConflictException</span>
 
+<span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">attrgetter</span>
 <span class="kn">from</span> <span class="nn">tabulate</span> <span class="kn">import</span> <span class="n">tabulate</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
 <span class="kn">import</span> <span class="nn">polling</span>
 <span class="kn">import</span> <span class="nn">re</span>
 
@@ -127,7 +129,8 @@
 <span class="sd">        See: https://&lt;&lt;controller_ip&gt;&gt;/apidocs/site-admin-api.html for the schema of the  response object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="s1">&#39;/api/v1/workers/&#39;</span><span class="p">,</span> <span class="n">http_method</span><span class="o">=</span><span class="s1">&#39;get&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;gateway/list&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="p">[</span> <span class="n">worker</span> <span class="k">for</span> <span class="n">worker</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;_embedded&quot;</span><span class="p">][</span><span class="s2">&quot;workers&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">worker</span><span class="p">[</span><span class="s1">&#39;purpose&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;proxy&#39;</span> <span class="p">]</span></div>
+        <span class="k">return</span> <span class="n">GatewayList</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;_embedded&#39;</span><span class="p">][</span><span class="s1">&#39;workers&#39;</span><span class="p">])</span></div>
+        
 
 <div class="viewcode-block" id="GatewayController.get"><a class="viewcode-back" href="../../hpecp.gateway.html#hpecp.gateway.GatewayController.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gateway_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Retrieve a Gateway by ID.</span>
@@ -152,7 +155,7 @@
                 <span class="n">request_method</span><span class="o">=</span><span class="s1">&#39;get&#39;</span><span class="p">,</span>
                 <span class="n">request_url</span><span class="o">=</span><span class="s1">&#39;gateway_id&#39;</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></div>
+        <span class="k">return</span> <span class="n">Gateway</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">())</span></div>
 
 <div class="viewcode-block" id="GatewayController.delete"><a class="viewcode-back" href="../../hpecp.gateway.html#hpecp.gateway.GatewayController.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gateway_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Delete a Gateway.</span>
@@ -197,32 +200,181 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Gateway ID: </span><span class="si">{}</span><span class="s2"> was detected to have state </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">state</span><span class="p">))</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Gateway ID: </span><span class="si">{}</span><span class="s2"> was detected to have state </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">state</span><span class="p">))</span></div></div>
 
-    
-<div class="viewcode-block" id="GatewayController.Gateway"><a class="viewcode-back" href="../../hpecp.gateway.html#hpecp.gateway.GatewayController.Gateway">[docs]</a>    <span class="k">class</span> <span class="nc">Gateway</span><span class="p">():</span>
-        <span class="k">pass</span></div>
+<div class="viewcode-block" id="GatewayStatus"><a class="viewcode-back" href="../../hpecp.gateway.html#hpecp.gateway.GatewayStatus">[docs]</a><span class="k">class</span> <span class="nc">GatewayStatus</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Bases: enum.Enum</span>
+<span class="sd">    </span>
+<span class="sd">    The statuses for a Gateway</span>
+
+<span class="sd">    **Note:** </span>
+<span class="sd">    </span>
+<span class="sd">    The integer values do not have a meaning outside of this library.  </span>
+<span class="sd">    The API uses a string identifier with the status name rather than an integer value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">bundle</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">installing</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">installed</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">ready</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">unlicensed</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">configuring</span> <span class="o">=</span> <span class="mi">6</span>
+    <span class="n">configured</span> <span class="o">=</span> <span class="mi">7</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">sysinfo</span> <span class="o">=</span> <span class="mi">9</span>
+    <span class="n">unconfiguring</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">deleting</span> <span class="o">=</span> <span class="mi">11</span>
+    <span class="n">storage_pending</span> <span class="o">=</span> <span class="mi">12</span>
+    <span class="n">storage_configuring</span> <span class="o">=</span> <span class="mi">13</span>
+    <span class="n">storage_error</span> <span class="o">=</span> <span class="mi">14</span></div>
+
+
+<div class="viewcode-block" id="Gateway"><a class="viewcode-back" href="../../hpecp.gateway.html#hpecp.gateway.Gateway">[docs]</a><span class="k">class</span> <span class="nc">Gateway</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Create an instance of Gateway from json data returned from the HPE Container Platform API.</span>
+
+<span class="sd">    Users of this library are not expected to create an instance of this class.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        json : str</span>
+<span class="sd">            The json returned by the API representing a Gateway.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Gateway: </span>
+<span class="sd">            An instance of Gateway</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">all_fields</span> <span class="o">=</span> <span class="p">[</span> 
+        <span class="s1">&#39;id&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;state&#39;</span>
+    <span class="p">]</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    {</span>
-<span class="sd">        &#39;hacapable&#39;: True, </span>
-<span class="sd">        &#39;propinfo&#39;: </span>
-<span class="sd">            {&#39;bds_storage_apollo&#39;: &#39;false&#39;, &#39;bds_network_publicinterface&#39;: &#39;ens5&#39;}, </span>
-<span class="sd">        &#39;approved_worker_pubkey&#39;: [], </span>
-<span class="sd">        &#39;schedule&#39;: False, </span>
-<span class="sd">        &#39;ip&#39;: &#39;10.1.0.37&#39;, </span>
-<span class="sd">        &#39;proxy_nodes_hostname&#39;: &#39;ec2-35-165-137-87.us-west-2.compute.amazonaws.com&#39;, </span>
-<span class="sd">        &#39;hostname&#39;: &#39;ip-10-1-0-37.us-west-2.compute.internal&#39;, </span>
-<span class="sd">        &#39;state&#39;: &#39;installed&#39;, </span>
-<span class="sd">        &#39;_links&#39;: {&#39;self&#39;: {&#39;href&#39;: &#39;/api/v1/workers/13&#39;}}, </span>
-<span class="sd">        &#39;purpose&#39;: &#39;proxy&#39;, </span>
-<span class="sd">        &#39;status_info&#39;: &#39;&#39;, </span>
-<span class="sd">        &#39;sysinfo&#39;: {&#39;network&#39;: </span>
-<span class="sd">            [{&#39;info&#39;: {&#39;IsVirtual&#39;: True, &#39;IpAddr&#39;: {}, &#39;Mt&#39;: 9001, &#39;State&#39;: &#39;up&#39;, &#39;Carrier&#39;: True, &#39;HwAddr&#39;: &#39;7e:d0:19:00:a1:c0&#39;, &#39;Speed&#39;: &#39;10000&#39;}, &#39;name&#39;: &#39;bds-flood-6-r&#39;}, {&#39;info&#39;: {&#39;IsVirtual&#39;: True, &#39;IpAddr&#39;: {}, &#39;Mt&#39;: 9001, &#39;State&#39;: &#39;up&#39;, &#39;Carrier&#39;: True, &#39;HwAddr&#39;: &#39;52:c4:7b:93:f2:0a&#39;, &#39;Speed&#39;: &#39;10000&#39;}, &#39;name&#39;: &#39;bds-flood-2-r&#39;}, {&#39;info&#39;: {&#39;IsVirtual&#39;: True, &#39;IpAddr&#39;: {}, &#39;Mt&#39;: 9001, &#39;State&#39;: &#39;up&#39;, &#39;Carrier&#39;: True, &#39;HwAddr&#39;: &#39;b2:e6:2b:c5:7a:d4&#39;, &#39;Speed&#39;: &#39;10000&#39;}, &#39;name&#39;: &#39;bds-flood-0-r&#39;}, {&#39;info&#39;: {&#39;IsVirtual&#39;: True, &#39;IpAddr&#39;: {}, &#39;Mt&#39;: 9001, &#39;State&#39;: &#39;UNKNOWN&#39;, &#39;Carrier&#39;: &#39;UNKNOWN&#39;, &#39;HwAddr&#39;: &#39;c6:b3:cd:1b:7d:44&#39;, &#39;Speed&#39;: &#39;UNKNOWN&#39;}, &#39;name&#39;: &#39;bds-flood&#39;}, {&#39;info&#39;: {&#39;IsVirtual&#39;: True, &#39;IpAddr&#39;: {}, &#39;Mt&#39;: 9001, &#39;State&#39;: &#39;up&#39;, &#39;Carrier&#39;: True, &#39;HwAddr&#39;: &#39;5a:16:20:0c:d7:f1&#39;, &#39;Speed&#39;: &#39;10000&#39;}, &#39;name&#39;: &#39;bds-flood-1-r&#39;}, {&#39;info&#39;: {&#39;IsVirtual&#39;: True, &#39;IpAddr&#39;: {}, &#39;Mt&#39;: 9001, &#39;State&#39;: &#39;up&#39;, &#39;Carrier&#39;: True, &#39;HwAddr&#39;: &#39;c6:bf:e3:af:82:2f&#39;, &#39;Speed&#39;: &#39;10000&#39;}, &#39;name&#39;: &#39;bds-flood-1-l&#39;}, {&#39;info&#39;: {&#39;IsVirtual&#39;: True, &#39;IpAddr&#39;: {}, &#39;Mt&#39;: 9001, &#39;State&#39;: &#39;up&#39;, &#39;Carrier&#39;: True, &#39;HwAddr&#39;: &#39;0e:d9:23:62:96:94&#39;, &#39;Speed&#39;: &#39;10000&#39;}, &#39;name&#39;: &#39;bds-flood-0-l&#39;}, {&#39;info&#39;: {&#39;IsVirtual&#39;: True, &#39;IpAddr&#39;: {}, &#39;Mt&#39;: 9001, &#39;State&#39;: &#39;up&#39;, &#39;Carrier&#39;: True, &#39;HwAddr&#39;: &#39;e2:86:7e:62:c0:3c&#39;, &#39;Speed&#39;: &#39;10000&#39;}, &#39;name&#39;: &#39;bds-flood-2-l&#39;}, {&#39;info&#39;: {&#39;IsVirtual&#39;: True, &#39;IpAddr&#39;: {}, &#39;Mt&#39;: 9001, &#39;State&#39;: &#39;up&#39;, &#39;Carrier&#39;: True, &#39;HwAddr&#39;: &#39;8e:92:dc:b9:b7:d7&#39;, &#39;Speed&#39;: &#39;10000&#39;}, &#39;name&#39;: &#39;bds-flood-6-l&#39;}, {&#39;info&#39;: {&#39;IsVirtual&#39;: False, &#39;IpAddr&#39;: {&#39;dynamic&#39;: &#39;10.1.0.37/24&#39;}, &#39;Mt&#39;: 9001, &#39;State&#39;: &#39;up&#39;, &#39;Carrier&#39;: True, &#39;HwAddr&#39;: &#39;02:72:98:8e:3b:86&#39;, &#39;Speed&#39;: &#39;UNKNOWN&#39;}, &#39;name&#39;: &#39;ens5&#39;}, {&#39;info&#39;: {&#39;IsVirtual&#39;: True, &#39;IpAddr&#39;: {}, &#39;Mt&#39;: 9001, &#39;State&#39;: &#39;up&#39;, &#39;Carrier&#39;: True, &#39;HwAddr&#39;: &#39;2a:4a:c9:c6:d0:28&#39;, &#39;Speed&#39;: &#39;10000&#39;}, &#39;name&#39;: &#39;bds-flood-4-r&#39;}, {&#39;info&#39;: {&#39;IsVirtual&#39;: True, &#39;IpAddr&#39;: {}, &#39;Mt&#39;: 9001, &#39;State&#39;: &#39;up&#39;, &#39;Carrier&#39;: True, &#39;HwAddr&#39;: &#39;7a:22:39:fc:11:7e&#39;, &#39;Speed&#39;: &#39;10000&#39;}, &#39;name&#39;: &#39;bds-flood-5-r&#39;}, {&#39;info&#39;: {&#39;IsVirtual&#39;: True, &#39;IpAddr&#39;: {}, &#39;Mt&#39;: 9001, &#39;State&#39;: &#39;up&#39;, &#39;Carrier&#39;: True, &#39;HwAddr&#39;: &#39;9a:2f:6c:e6:74:30&#39;, &#39;Speed&#39;: &#39;10000&#39;}, &#39;name&#39;: &#39;bds-flood-3-l&#39;}, {&#39;info&#39;: {&#39;IsVirtual&#39;: True, &#39;IpAddr&#39;: {}, &#39;Mt&#39;: 9001, &#39;State&#39;: &#39;up&#39;, &#39;Carrier&#39;: True, &#39;HwAddr&#39;: &#39;7e:ff:e4:5b:56:0d&#39;, &#39;Speed&#39;: &#39;10000&#39;}, &#39;name&#39;: &#39;bds-flood-7-r&#39;}, {&#39;info&#39;: {&#39;IsVirtual&#39;: True, &#39;IpAddr&#39;: {}, &#39;Mt&#39;: 9001, &#39;State&#39;: &#39;up&#39;, &#39;Carrier&#39;: True, &#39;HwAddr&#39;: &#39;4a:f7:7e:95:14:2d&#39;, &#39;Speed&#39;: &#39;10000&#39;}, &#39;name&#39;: &#39;bds-flood-7-l&#39;}, {&#39;info&#39;: {&#39;IsVirtual&#39;: True, &#39;IpAddr&#39;: {}, &#39;Mt&#39;: 9001, &#39;State&#39;: &#39;up&#39;, &#39;Carrier&#39;: True, &#39;HwAddr&#39;: &#39;36:5f:82:61:bf:5c&#39;, &#39;Speed&#39;: &#39;10000&#39;}, &#39;name&#39;: &#39;bds-flood-3-r&#39;}, {&#39;info&#39;: {&#39;IsVirtual&#39;: True, &#39;IpAddr&#39;: {}, &#39;Mt&#39;: 9001, &#39;State&#39;: &#39;up&#39;, &#39;Carrier&#39;: True, &#39;HwAddr&#39;: &#39;6e:86:7d:52:94:5d&#39;, &#39;Speed&#39;: &#39;10000&#39;}, &#39;name&#39;: &#39;bds-flood-5-l&#39;}, {&#39;info&#39;: {&#39;IsVirtual&#39;: True, &#39;IpAddr&#39;: {}, &#39;Mt&#39;: 9001, &#39;State&#39;: &#39;up&#39;, &#39;Carrier&#39;: True, &#39;HwAddr&#39;: &#39;e6:24:0f:54:99:a9&#39;, &#39;Speed&#39;: &#39;10000&#39;}, &#39;name&#39;: &#39;bds-flood-4-l&#39;}], &#39;keys&#39;: {&#39;reported_worker_public_key&#39;: &#39;ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDKonffu4vtTSINNpBwvLd367941fhPyEuVfh7KrohdIUSVEh/pX8FDAO9fi9pH979AzdDVWeUclTmktm63vQ39TVIJQ+rqdoZUhtH8rSYFoTFzxUQxONviNJJGTiYYMo4kJsLO1Hk/b9Lz8sxUJWD+e5r2UTM5cDSYT3wBHUCDr/MXAxNC9FAgkpuME5utC1dd1aHj2zgLUP61REjnhy1zVVJnbh/T/y3p8Z5z0ubAQy7pYaMTuWgdVMH6kA/RWzOB2JRj8vFKYp9fysFe7L/nj+C2LkDr4dmMLNL9ffTvpnMOj5qPgAO8bay5hAgVykUaRInLjuL7p5/nFATm9uI4A2a28m4HO9csywNXpm5TBDWPDxW7Wh7Sdkx0xHwZenXXy/em+4Q4Fk4Oc6YwYcKOJVsst0qGeCFkhLjzvFHu2ceYf5Q1gg5FlBiX+LsWngjArsd0sdh+3piH/xFuHdubqHfOFpOlZsQsMX5V/LUA71Wqv/cxMsoD5jybQOUS8o34JjkCZlavuJcIeU4hWlWEliZU5SmppuNkHdosXup20/TyBgg0qYlzc+FKZ/8vlQSjT5WgCNffPgXR94KPF1817RW1YSbR+1oiNg6FXgQrKM/1DiqyQ5D8DjhZWgg33hJ7K/fKCL3qPyWCJEMQ64iLQ4QtSeU46l+aO490A89u6w== server\n&#39;}, &#39;storage&#39;: </span>
-<span class="sd">            [{&#39;info&#39;: {&#39;IsLogicalVolume&#39;: False, &#39;IsDisk&#39;: False, &#39;Name&#39;: &#39;/dev/nvme0n1p1&#39;, &#39;SizeBytes&#39;: &#39;429495664128&#39;, &#39;IsReadOnly&#39;: False, &#39;ParentName&#39;: &#39;/dev/nvme0n1&#39;, &#39;IsRemovable&#39;: False, &#39;IsRotational&#39;: False, &#39;ParentDeviceType&#39;: &#39;disk&#39;, &#39;IsPartition&#39;: True, &#39;DeviceType&#39;: &#39;part&#39;, &#39;HasFilesystem&#39;: True, &#39;Mountpoint&#39;: &#39;/&#39;}, &#39;name&#39;: &#39;/dev/nvme0n1p1&#39;}], &#39;swap&#39;: {&#39;swap_total&#39;: 0}, &#39;memory&#39;: {&#39;mem_total&#39;: 65842458624}, &#39;gp&#39;: {&#39;gpu_count&#39;: 0}, &#39;cp&#39;: {&#39;cpu_logical_cores&#39;: 16, &#39;cpu_count&#39;: 8, &#39;cpu_physical_cores&#39;: 8, &#39;cpu_sockets&#39;: 1}, &#39;mountpoint&#39;: []</span>
-<span class="sd">            }, </span>
-<span class="sd">        &#39;tags&#39;: []</span>
-<span class="sd">        }</span>
-<span class="sd">    &quot;&quot;&quot;</span></div>
+<span class="sd">        &#39;hacapable&#39;,</span>
+<span class="sd">        &#39;propinfo&#39;,</span>
+<span class="sd">        &#39;approved_worker_pubkey&#39;,</span>
+<span class="sd">        &#39;schedule&#39;,</span>
+<span class="sd">        &#39;ip&#39;,</span>
+<span class="sd">        &#39;proxy_nodes_hostname&#39;,</span>
+<span class="sd">        &#39;hostname&#39;,</span>
+<span class="sd">        &#39;state&#39;,</span>
+<span class="sd">        &#39;status_info&#39;,</span>
+<span class="sd">        &#39;purpose&#39;,</span>
+<span class="sd">        &#39;sysinfo&#39;,</span>
+<span class="sd">        &#39;tags&#39;</span>
+<span class="sd">        ]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;All of the fields of Gateway objects that are returned by the HPE Container Platform API&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">json</span> <span class="o">=</span> <span class="n">json</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">display_columns</span> <span class="o">=</span> <span class="n">Gateway</span><span class="o">.</span><span class="n">all_fields</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;&lt;Gateway id:</span><span class="si">{}</span><span class="s2"> state:</span><span class="si">{}</span><span class="s2">&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;K8sCluster(id=</span><span class="si">{}</span><span class="s2">, state=</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__dir__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">display_columns</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__dir__</span><span class="p">()[</span><span class="n">item</span><span class="p">])</span>
+
+<div class="viewcode-block" id="Gateway.set_display_columns"><a class="viewcode-back" href="../../hpecp.gateway.html#hpecp.gateway.Gateway.set_display_columns">[docs]</a>    <span class="k">def</span> <span class="nf">set_display_columns</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">columns</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set the columns this instance should have when the instance is used with :py:meth:`.GatewayList.tabulate`</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            columns : list[str]</span>
+<span class="sd">                Set the list of colums to return</span>
+
+<span class="sd">        See :py:attr:`all_fields` for the complete list of field names.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">display_columns</span> <span class="o">=</span> <span class="n">columns</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> 
+        <span class="sd">&quot;&quot;&quot;@Field: from json[&#39;_links&#39;][&#39;self&#39;][&#39;href&#39;] - id format: &#39;/api/v1/workers/[0-9]+&#39;&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;_links&#39;</span><span class="p">][</span><span class="s1">&#39;self&#39;</span><span class="p">][</span><span class="s1">&#39;href&#39;</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> 
+        <span class="sd">&quot;&quot;&quot;@Field: from json[&#39;state&#39;]&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_links</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;@Field: from json[&#39;_links&#39;]&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;_links&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="nb">dir</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="GatewayList"><a class="viewcode-back" href="../../hpecp.gateway.html#hpecp.gateway.GatewayList">[docs]</a><span class="k">class</span> <span class="nc">GatewayList</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;List of :py:obj:`.Gateway` objects</span>
+
+<span class="sd">    This class is not expected to be instantiated by users.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        json : str</span>
+<span class="sd">            json data returned from the HPE Container Platform API get request to /api/v1/Gateway</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">json</span> <span class="o">=</span> <span class="p">[</span> <span class="n">g</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">json</span> <span class="k">if</span> <span class="n">g</span><span class="p">[</span><span class="s1">&#39;purpose&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;proxy&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gateways</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">Gateway</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">json</span> <span class="k">if</span> <span class="n">g</span><span class="p">[</span><span class="s1">&#39;purpose&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;proxy&#39;</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="n">attrgetter</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">display_columns</span> <span class="o">=</span> <span class="n">Gateway</span><span class="o">.</span><span class="n">all_fields</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">gateways</span><span class="p">[</span><span class="n">item</span><span class="p">]</span>
+
+    <span class="c1"># Python 2</span>
+    <span class="k">def</span> <span class="nf">next</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Support iterator access on Python 2.7&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">gateways</span><span class="p">:</span>
+           <span class="k">raise</span> <span class="ne">StopIteration</span>
+        <span class="n">tenant</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gateways</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">tenant</span><span class="o">.</span><span class="n">set_display_columns</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">display_columns</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tenant</span>
+
+    <span class="c1"># Python 3</span>
+    <span class="k">def</span> <span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">gateways</span><span class="p">:</span>
+           <span class="k">raise</span> <span class="ne">StopIteration</span>
+        <span class="n">tenant</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gateways</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">tenant</span><span class="o">.</span><span class="n">set_display_columns</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">display_columns</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tenant</span>
+
+    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gateways</span><span class="p">)</span>
+
+<div class="viewcode-block" id="GatewayList.tabulate"><a class="viewcode-back" href="../../hpecp.gateway.html#hpecp.gateway.GatewayList.tabulate">[docs]</a>    <span class="k">def</span> <span class="nf">tabulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">Gateway</span><span class="o">.</span><span class="n">all_fields</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Provide a tabular represenation of the list of Gateways</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            columns : list[str]</span>
+<span class="sd">                list of columns to return in the table - default :py:attr:`.Gateway.all_fields`</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str : table output</span>
+
+<span class="sd">        Example::</span>
+
+<span class="sd">            # Print the cluster list with all of the avaialble fields</span>
+<span class="sd">            print(hpeclient.cluster.list().tabulate())</span>
+
+<span class="sd">            # Print the cluster list with a subset of the fields</span>
+<span class="sd">            print(hpeclient.cluster.list().tabulate(columns=[&#39;id&#39;, &#39;name&#39;, &#39;description&#39;]))</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">columns</span> <span class="o">!=</span> <span class="n">Gateway</span><span class="o">.</span><span class="n">all_fields</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">columns</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span> <span class="s2">&quot;&#39;columns&#39; parameter must be list&quot;</span>
+            <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">Gateway</span><span class="o">.</span><span class="n">all_fields</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">Gateway</span><span class="o">.</span><span class="n">all_fields</span><span class="p">,</span> <span class="s2">&quot;item &#39;</span><span class="si">{}</span><span class="s2">&#39; is not a field in K8sCluster.all_fields&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">display_columns</span> <span class="o">=</span> <span class="n">columns</span>
+        <span class="k">return</span> <span class="n">tabulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span> <span class="n">tablefmt</span><span class="o">=</span><span class="s2">&quot;pretty&quot;</span><span class="p">)</span></div></div>
 </pre></div>
 
           </div>

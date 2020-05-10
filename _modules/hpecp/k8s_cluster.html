@@ -358,67 +358,67 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> 
-        <span class="sd">&quot;&quot;&quot;from json[&#39;_links&#39;][&#39;self&#39;][&#39;href&#39;] - id format: &#39;/api/v2/k8scluster/[0-9]+&#39;&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;@Field: from json[&#39;_links&#39;][&#39;self&#39;][&#39;href&#39;] - id format: &#39;/api/v2/k8scluster/[0-9]+&#39;&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;_links&#39;</span><span class="p">][</span><span class="s1">&#39;self&#39;</span><span class="p">][</span><span class="s1">&#39;href&#39;</span><span class="p">]</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> 
-        <span class="sd">&quot;&quot;&quot;from json[&#39;label&#39;][&#39;name&#39;]&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;@Field: from json[&#39;label&#39;][&#39;name&#39;]&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">description</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;from json[&#39;label&#39;][&#39;description&#39;]&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;@Field: from json[&#39;label&#39;][&#39;description&#39;]&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">][</span><span class="s1">&#39;description&#39;</span><span class="p">]</span>
     
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">k8s_version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;from json[&#39;k8s_version&#39;]&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;@Field: from json[&#39;k8s_version&#39;]&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;k8s_version&#39;</span><span class="p">]</span>
     
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">created_by_user_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;from json[&#39;created_by_user_id&#39;]&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;@Field: from json[&#39;created_by_user_id&#39;]&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;created_by_user_id&#39;</span><span class="p">]</span>
     
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">created_by_user_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;from json[&#39;created_by_user_name&#39;]&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;@Field: from json[&#39;created_by_user_name&#39;]&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;created_by_user_name&#39;</span><span class="p">]</span>
     
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">created_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;from json[&#39;created_time&#39;]&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;@Field: from json[&#39;created_time&#39;]&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;created_time&#39;</span><span class="p">]</span>
     
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">k8shosts_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;from json[&#39;k8shosts_config&#39;]&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;@Field: from json[&#39;k8shosts_config&#39;]&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;k8shosts_config&#39;</span><span class="p">]</span>
     
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">admin_kube_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;from json[&#39;admin_kube_config&#39;]&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;@Field: from json[&#39;admin_kube_config&#39;]&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;admin_kube_config&#39;</span><span class="p">]</span>
     
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">dashboard_token</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;from json[&#39;dashboard_token&#39;]&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;@Field: from json[&#39;dashboard_token&#39;]&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;dashboard_token&#39;</span><span class="p">]</span>
     
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">api_endpoint_access</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;from json[&#39;api_endpoint_access&#39;]&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;@Field: from json[&#39;api_endpoint_access&#39;]&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;api_endpoint_access&#39;</span><span class="p">]</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">dashboard_endpoint_access</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;from json[&#39;dashboard_endpoint_access&#39;]&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;@Field: from json[&#39;dashboard_endpoint_access&#39;]&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;dashboard_endpoint_access&#39;</span><span class="p">]</span>
     
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">cert_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;from json[&#39;cert_data&#39;] or None if cert_data not available&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;@Field: from json[&#39;cert_data&#39;] or None if cert_data not available&quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;cert_data&#39;</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
@@ -426,17 +426,17 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;from json[&#39;status&#39;]&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;@Field: from json[&#39;status&#39;]&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">status_message</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;from json[&#39;status_message&#39;]&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;@Field: from json[&#39;status_message&#39;]&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;status_message&#39;</span><span class="p">]</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">_links</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;from json[&#39;_links&#39;]&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;@Field: from json[&#39;_links&#39;]&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;_links&#39;</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
