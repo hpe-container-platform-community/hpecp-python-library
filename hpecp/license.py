@@ -22,6 +22,7 @@ class LicenseController:
         return response.json()
 
     def upload(self, base64enc_license):
+        """Not implemented yet!"""
         raise Exception("Not implemented yet!")  
 
     def register(self, server_filename):
