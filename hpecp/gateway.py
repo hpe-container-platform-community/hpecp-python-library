@@ -25,10 +25,14 @@ class GatewayController:
         '''Create a gateway instance using SSH key credentials to access the host
 
         Args:
-            ip : str
+            ip: str
                 TODO
-            TODO : str
-                TODO ...
+            proxy_node_hostname: str
+                TODO
+            ssh_key_data: str
+                TODO
+            tags: list[str]
+                TODO
 
         Returns: gateway ID
         '''

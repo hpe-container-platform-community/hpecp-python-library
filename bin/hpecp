@@ -52,10 +52,10 @@ class K8sGateway(object):
     def create_with_ssh_key(
         self, ip, proxy_node_hostname, ssh_key=None, ssh_key_file=None, tags=[]
     ):
-        """Request to create a Gateway using SSH key authentication
+        """Create a Gateway using SSH key authentication
 
         :param ip: the IP address
-        TODO complete this
+        :param proxy_node_hostname: the 
         """
         if ssh_key is None and ssh_key_file is None:
             print("Either ssh_key or ssh_key_file must be provided")
@@ -82,10 +82,11 @@ class K8sGateway(object):
             sys.exit(1)
 
     def create_with_ssh_password(self):
-        raise NotImplementedError("Not yet implemented by CLI")
+        """Not yet implemented"""
+        raise NotImplementedError("Not yet implemented")
 
     def get(self, gateway_id, output="table"):
-        """Retrive a Gateway by Id
+        """Retrieve a Gateway by Id
 
         :param gateway_id: the id of the gateway with format: '/api/v1/workers/[0-9]+'
         :param output: how to display the output ['table'|'json']
@@ -94,10 +95,18 @@ class K8sGateway(object):
         if output == "yaml":
             print(yaml.dump(yaml.load(json.dumps(response), Loader=yaml.FullLoader)))
 
-    def list(self):
+    def list(self, output='table'):
+        """Retrieve the list of Gateways
+
+        :param output: how to display the output ['table'|'json']
+        """
         print(get_client().gateway.list())
 
     def delete(self, gateway_id):
+        """Retrieve a Gateway by Id
+
+        :param gateway_id: the id of the gateway with format: '/api/v1/workers/[0-9]+'
+        """
         try:
             get_client().gateway.delete(gateway_id)
         except APIException as e:
