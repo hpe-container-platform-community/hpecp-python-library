@@ -48,7 +48,7 @@ def get_client():
         sys.exit(1)
 
 
-class K8sGateway(object):
+class Gateway(object):
     def create_with_ssh_key(
         self, ip, proxy_node_hostname, ssh_key=None, ssh_key_file=None, tags=[]
     ):
@@ -85,15 +85,18 @@ class K8sGateway(object):
         """Not yet implemented"""
         raise NotImplementedError("Not yet implemented")
 
-    def get(self, gateway_id, output="table"):
+    def get(self, gateway_id, output="yaml"):
         """Retrieve a Gateway by Id
 
         :param gateway_id: the id of the gateway with format: '/api/v1/workers/[0-9]+'
-        :param output: how to display the output ['table'|'json']
+        :param output: how to display the output ['yaml'|'json']
         """
         response = get_client().gateway.get(gateway_id)
         if output == "yaml":
-            print(yaml.dump(yaml.load(json.dumps(response), Loader=yaml.FullLoader)))
+            print(yaml.dump(yaml.load(json.dumps(response.json), Loader=yaml.FullLoader)))
+        else:
+            print(response.json)
+
 
     def list(self, output='table'):
         """Retrieve the list of Gateways
@@ -194,7 +197,7 @@ class K8sCluster(object):
 class CLI(object):
     def __init__(self):
         self.k8scluster = K8sCluster()
-        self.gateway = K8sGateway()
+        self.gateway = Gateway()
 
 
 if __name__ == "__main__":
