@@ -101,16 +101,16 @@
 <dt id="hpecp.gateway.GatewayController.create_with_ssh_key">
 <code class="sig-name descname">create_with_ssh_key</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ip</span></em>, <em class="sig-param"><span class="n">proxy_node_hostname</span></em>, <em class="sig-param"><span class="n">ssh_key_data</span></em>, <em class="sig-param"><span class="n">tags</span><span class="o">=</span><span class="default_value">[]</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayController.create_with_ssh_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.gateway.GatewayController.create_with_ssh_key" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a gateway instance using SSH key credentials to access the host</p>
-<dl>
+<dl class="simple">
 <dt>Args:</dt><dd><dl class="simple">
 <dt>ip<span class="classifier">str</span></dt><dd><p>TODO</p>
 </dd>
 <dt>TODO<span class="classifier">str</span></dt><dd><p>TODO …</p>
 </dd>
 </dl>
-<p>Returns: gateway ID</p>
 </dd>
 </dl>
+<p>Returns: gateway ID</p>
 </dd></dl>
 
 <dl class="py method">
@@ -121,8 +121,19 @@
 
 <dl class="py method">
 <dt id="hpecp.gateway.GatewayController.get">
-<code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayController.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.gateway.GatewayController.get" title="Permalink to this definition">¶</a></dt>
-<dd><p>See: <a class="reference external" href="https:/">https:/</a>/&lt;&lt;controller_ip&gt;&gt;/apidocs/site-admin-api.html for the schema of the  response object</p>
+<code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gateway_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayController.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.gateway.GatewayController.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve a Gateway by ID.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>gateway_id: str</dt><dd><p>The gateway ID - format: ‘/api/v1/workers/[0-9]+’</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>Gateway: object representing Gateway</p>
+</dd>
+<dt>Raises:</dt><dd><p>APIException</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
