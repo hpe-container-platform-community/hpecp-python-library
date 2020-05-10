@@ -178,9 +178,6 @@ class Gateway():
 
     all_fields = [ 
         'id',
-        'state'
-    ]
-    """
         'hacapable',
         'propinfo',
         'approved_worker_pubkey',
@@ -194,12 +191,22 @@ class Gateway():
         'sysinfo',
         'tags'
         ]
-        """
     """All of the fields of Gateway objects that are returned by the HPE Container Platform API"""
+
+    default_display_fields = [
+        'id',
+        'ip',
+        'proxy_nodes_hostname',
+        'hostname',
+        'state',
+        'status_info',
+        'purpose',
+        'tags'
+    ]
 
     def __init__(self, json):
         self.json = json
-        self.display_columns = Gateway.all_fields
+        self.display_columns = Gateway.default_display_fields
 
     def __repr__(self):
         return "<Gateway id:{} state:{}>".format( self.id, self.state)
@@ -211,7 +218,10 @@ class Gateway():
         return self.display_columns
 
     def __getitem__(self, item):
-        return getattr(self, self.__dir__()[item])
+        return getattr(self, self.display_columns[item])
+
+    def __len__(self):
+        return len(dir(self))
 
     def set_display_columns(self, columns):
         """Set the columns this instance should have when the instance is used with :py:meth:`.GatewayList.tabulate`
@@ -235,12 +245,64 @@ class Gateway():
         return self.json['state']
 
     @property
+    def hacapable(self): 
+        """@Field: from json['hacapable']"""
+        return self.json['hacapable']
+
+    @property
+    def propinfo(self): 
+        """@Field: from json['propinfo']"""
+        return self.json['propinfo']
+
+    @property
+    def approved_worker_pubkey(self): 
+        """@Field: from json['approved_worker_pubkey']"""
+        return self.json['approved_worker_pubkey']
+
+    @property
+    def schedule(self): 
+        """@Field: from json['schedule']"""
+        return self.json['schedule']
+
+    @property
+    def ip(self): 
+        """@Field: from json['ip']"""
+        return self.json['ip']
+
+    @property
+    def proxy_nodes_hostname(self): 
+        """@Field: from json['proxy_nodes_hostname']"""
+        return self.json['proxy_nodes_hostname']
+
+    @property
+    def hostname(self): 
+        """@Field: from json['hostname']"""
+        return self.json['hostname']
+
+    @property
+    def purpose(self): 
+        """@Field: from json['purpose']"""
+        return self.json['purpose']
+
+    @property
+    def status_info(self): 
+        """@Field: from json['status_info']"""
+        return self.json['status_info']
+
+    @property
+    def sysinfo(self): 
+        """@Field: from json['sysinfo']"""
+        return self.json['sysinfo']
+
+    @property
+    def tags(self): 
+        """@Field: from json['tags']"""
+        return self.json['tags']
+
+    @property
     def _links(self):
         """@Field: from json['_links']"""
         return self.json['_links']
-
-    def __len__(self):
-        return len(dir(self))
 
 class GatewayList():
     """List of :py:obj:`.Gateway` objects
@@ -255,7 +317,7 @@ class GatewayList():
     def __init__(self, json):
         self.json = [ g for g in json if g['purpose'] == 'proxy']
         self.gateways = sorted([Gateway(g) for g in json if g['purpose'] == 'proxy'], key=attrgetter('id'))
-        self.display_columns = Gateway.all_fields
+        self.display_columns = Gateway.default_display_fields
 
     def __getitem__(self, item):
         return self.gateways[item]
@@ -265,17 +327,17 @@ class GatewayList():
         """Support iterator access on Python 2.7"""
         if not self.gateways:
            raise StopIteration
-        tenant = self.gateways.pop(0)
-        tenant.set_display_columns(self.display_columns)
-        return tenant
+        gateway = self.gateways.pop(0)
+        gateway.set_display_columns(self.display_columns)
+        return gateway
 
     # Python 3
     def __next__(self):
         if not self.gateways:
            raise StopIteration
-        tenant = self.gateways.pop(0)
-        tenant.set_display_columns(self.display_columns)
-        return tenant
+        gateway = self.gateways.pop(0)
+        gateway.set_display_columns(self.display_columns)
+        return gateway
 
     def __iter__(self):
         return self
@@ -283,28 +345,30 @@ class GatewayList():
     def __len__(self):
         return len(self.gateways)
 
-    def tabulate(self, columns=Gateway.all_fields):
+    def tabulate(self, columns=Gateway.default_display_fields):
         """Provide a tabular represenation of the list of Gateways
 
         Parameters:
             columns : list[str]
-                list of columns to return in the table - default :py:attr:`.Gateway.all_fields`
+                list of columns to return in the table - default :py:attr:`.Gateway.default_display_fields`
 
         Returns:
             str : table output
 
         Example::
 
-            # Print the cluster list with all of the avaialble fields
-            print(hpeclient.cluster.list().tabulate())
+            # Print the gateway list with all of the avaialble fields
+            print(hpeclient.gateway.list().tabulate())
 
             # Print the cluster list with a subset of the fields
-            print(hpeclient.cluster.list().tabulate(columns=['id', 'name', 'description']))
+            print(hpeclient.gateway.list().tabulate(columns=['id', 'state']))
         """
-        if columns != Gateway.all_fields:
+        if columns != Gateway.default_display_fields:
             assert isinstance(columns, list), "'columns' parameter must be list"
-            for field in Gateway.all_fields:
-                assert field in Gateway.all_fields, "item '{}' is not a field in K8sCluster.all_fields".format(field)
+            for column in columns:
+                assert column in Gateway.all_fields, "item '{}' is not a field in Gateway.all_fields".format(column)
 
         self.display_columns = columns
-        return tabulate(self, headers=columns, tablefmt="pretty")
+
+        # FIXME - how to return the table in the user provided column order?
+        return tabulate(self, headers=sorted(columns), tablefmt="pretty")

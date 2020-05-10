@@ -30,6 +30,7 @@ from hpecp import (
     APIItemNotFoundException,
 )
 from hpecp.k8s_cluster import K8sClusterHostConfig, K8sClusterStatus
+from hpecp.gateway import Gateway
 
 PROFILE = os.getenv("PROFILE", "default")
 CONFIG_FILE = os.getenv("CONFIG_FILE", "~/.hpecp.conf")
@@ -93,18 +94,19 @@ class Gateway(object):
         """
         response = get_client().gateway.get(gateway_id)
         if output == "yaml":
-            print(yaml.dump(yaml.load(json.dumps(response.json), Loader=yaml.FullLoader)))
+            print(
+                yaml.dump(yaml.load(json.dumps(response.json), Loader=yaml.FullLoader))
+            )
         else:
             print(response.json)
 
-
-    def list(self, output='table'):
+    def list(self, output="table", columns=Gateway.default_display_fields):
         """Retrieve the list of Gateways
 
         :param output: how to display the output ['table'|'json']
         """
-        if output == 'table':
-            print(get_client().gateway.list().tabulate())
+        if output == "table":
+            print(get_client().gateway.list().tabulate(columns=columns))
         else:
             print(get_client().gateway.list().json)
 
