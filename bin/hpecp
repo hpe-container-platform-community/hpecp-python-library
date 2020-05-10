@@ -18,9 +18,10 @@ username = admin
 password = admin123
 """
 
+import sys
 import os
 import fire
-from hpecp import ContainerPlatformClient
+from hpecp import ContainerPlatformClient, APIException, APIItemConflictException, APIItemNotFoundException
 from hpecp.k8s_cluster import K8sClusterHostConfig, K8sClusterStatus
 
 PROFILE = os.getenv('PROFILE', 'default')
@@ -36,16 +37,29 @@ class K8sGateway(object):
 
   def create_with_ssh_key(self, ip, proxy_node_hostname, ssh_key=None, ssh_key_file=None, tags=[]):
 
+    if ssh_key is None and ssh_key_file is None:
+        print("Either ssh_key or ssh_key_file must be provided")
+        sys.exit(1)
+
+    if ssh_key is not None and ssh_key_file is not None:
+        print("Either ssh_key or ssh_key_file must be provided")
+        sys.exit(1)
+
     if ssh_key_file is not None:
           with open(ssh_key_file) as f:
             ssh_key_data = f.read()
 
-    # TODO catch exception and present useful info to user, e.g. 409 Conflict
-    print(get_client().gateway.create_with_ssh_key(
-                                        ip=ip,
-                                        proxy_node_hostname=proxy_node_hostname,
-                                        ssh_key_data=ssh_key_data,
-                                        tags=tags))
+    try:
+        gateway_id = get_client().gateway.create_with_ssh_key(
+                                                    ip=ip,
+                                                    proxy_node_hostname=proxy_node_hostname,
+                                                    ssh_key_data=ssh_key_data,
+                                                    tags=tags
+                                                    )
+        print("gatway_id:" + gateway_id)
+    except APIItemConflictException:
+        print("Gateway already exists.")
+        sys.exit(1)
 
   def create_with_ssh_password(self):
     raise NotImplementedError("Not yet implemented by CLI")
@@ -57,7 +71,11 @@ class K8sGateway(object):
     print(get_client().gateway.list())
 
   def delete(self, gateway_id):
-    get_client().gateway.delete(gateway_id)
+    try:
+        get_client().gateway.delete(gateway_id)
+    except APIException as e:
+        print(e.message)
+        sys.exit(1)
 
 class K8sCluster(object):
 
