@@ -87,9 +87,9 @@ class K8sGateway(object):
     def get(self, gateway_id, output="table"):
         """Retrive a Gateway by Id
 
-    :param gateway_id: the id of the gateway with format: '/api/v1/workers/[0-9]+'
-    :param output: how to display the output ['table'|'json']
-    """
+        :param gateway_id: the id of the gateway with format: '/api/v1/workers/[0-9]+'
+        :param output: how to display the output ['table'|'json']
+        """
         response = get_client().gateway.get(gateway_id)
         if output == "yaml":
             print(yaml.dump(yaml.load(json.dumps(response), Loader=yaml.FullLoader)))
@@ -152,10 +152,10 @@ class K8sCluster(object):
 
     def tabulate(self, all_columns=False, columns=["id", "description"]):
         """
-    Print a table of K8s Clusters
-    :param all_columns: (True/False) set to True to return all columns
-    :param columns: (aaa) afadsfs
-    """
+        Print a table of K8s Clusters
+        :param all_columns: (True/False) set to True to return all columns
+        :param columns: (aaa) afadsfs
+        """
 
         if all_columns:
             print(get_client().k8s_cluster.list().tabulate())
@@ -167,12 +167,12 @@ class K8sCluster(object):
 
     def wait_for_status(self, k8scluster_id, status=[], timeout_secs=60):
         """
-    Wait for K8s Cluster to have one or more statuses
-    :param k8scluster_id: Cluster id with format: /api/v2/k8scluster/[0-9]+
-    :param status: status(es) to wait for with format: ['status1', 'status2', 'statusn']
-    :param timeout_secs: how many secs to wait before exiting
-    :returns True/False if status was found within timeout_secs. May raise APIException.
-    """
+        Wait for K8s Cluster to have one or more statuses
+        :param k8scluster_id: Cluster id with format: /api/v2/k8scluster/[0-9]+
+        :param status: status(es) to wait for with format: ['status1', 'status2', 'statusn']
+        :param timeout_secs: how many secs to wait before exiting
+        :returns True/False if status was found within timeout_secs. May raise APIException.
+        """
         cluster_status = [K8sClusterStatus[s] for s in status]
         get_client().k8s_cluster.wait_for_status(
             k8scluster_id=k8scluster_id, status=cluster_status
