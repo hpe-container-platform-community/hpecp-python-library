@@ -111,29 +111,42 @@ class GatewayController:
         self.client._request(url=gateway_id, http_method='delete', description='gateway/delete')
 
 
-    def wait_for_state(self, id, state=[], timeout_secs=60):
-        """
-        Uses: https://github.com/justiniso/polling/blob/master/polling.py
+    def wait_for_state(self, gateway_id, state=[], timeout_secs=60):
+        """Wait for gateway state.
 
-        status: WorkerK8sStatus value, e.g. WorkerK8sStatus.configured
+        Args:
+            gateway_id: str
+                The gateway ID - format: '/api/v1/workers/[0-9]+'
+            status: list[:py:class:`GatewayStatus`]
+                Status(es) to wait for.  Use an empty array if you want to wait for a cluster's existence to cease.
+            timeout_secs: int
+                How long to wait for the status(es) before raising an exception.
 
-        raises: Exception
+        Returns:
+            bool: True if status was found before timeout, otherwise False
+            
+        Raises:
+            APIItemNotFoundException: if the item is not found
+            APIException: if a generic API exception occurred
         """
+        assert isinstance(gateway_id, basestring), "'gateway_id' must be a string"
+        assert re.match(r'\/api\/v1\/workers\/[0-9]+', gateway_id), "'gateway_id' must have format '/api/v1/workers/[0-9]+'"
+        assert isinstance(state, list), "'state' must be a list"
+        for i, s in enumerate(state):
+            assert isinstance(s, GatewayStatus), "'state' item '{}' is not of type GatewayStatus".format(i)
+        assert isinstance(timeout_secs, int), "'timeout_secs' must be an int"   
         assert timeout_secs >= 0, "'timeout_secs' must be >= 0"
 
         try:
             polling.poll(
-                lambda: self.get(id)['state'] in state,
+                lambda: self.get(gateway_id).state in [ s.name for s in state ],
                 step=10,
                 poll_forever=False,
                 timeout=timeout_secs
             )
+            return True
         except polling.TimeoutException:
-            message = "Timed out waiting for status: '{}' on Gateway ID: {}".format(state, id)
-            self.client.log.error(message)
-            raise Exception(message)
-
-        self.client.log.info("Gateway ID: {} was detected to have state {}".format(id, state))
+            return False
 
 class GatewayStatus(Enum):
     """Bases: enum.Enum
