@@ -370,5 +370,5 @@ class GatewayList():
 
         self.display_columns = columns
 
-        # FIXME - how to return the table in the user provided column order?
+        # FIXME https://github.com/hpe-container-platform-community/hpecp-python-library/issues/5
         return tabulate(self, headers=sorted(columns), tablefmt="pretty")
