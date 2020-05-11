@@ -218,12 +218,38 @@ class K8sCluster(object):
         """Return a list of valid statuses"""
         print([ s.name for s in K8sClusterStatus ] )
 
+class Lock(object):
+    def get(self, output="yaml"):
+        """Get the system and user locks
+        :param output: how to display the output ['yaml'|'json']
+        """
+        response = get_client().lock.get()
 
+        if output == "yaml":
+            print(
+                yaml.dump(yaml.load(json.dumps(response), Loader=yaml.FullLoader))
+            )
+        else:
+            print(response)
+
+    def create(self, reason):
+        """Create a lock"""
+        get_client().lock.create(reason)
+        print('Done')
+
+    def delete(self, lock_id):
+        """Delete a user lock"""
+        print(get_client().lock.delete(lock_id))
+
+    def delete_all(self, timeout_secs=300):
+        """Delete all locks"""
+        print(get_client().lock.delete_all(timeout_secs=300))
 
 class CLI(object):
     def __init__(self):
         self.k8scluster = K8sCluster()
         self.gateway = Gateway()
+        self.lock = Lock()
 
 
 if __name__ == "__main__":
