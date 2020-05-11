@@ -86,7 +86,7 @@ class GatewayController:
             raise APIItemNotFoundException(
                 message='gateway not found with id: ' + gateway_id,
                 request_method='get',
-                request_url='gateway_id')
+                request_url=gateway_id)
 
         return Gateway(response.json())
 
