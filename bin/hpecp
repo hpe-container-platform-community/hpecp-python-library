@@ -30,7 +30,7 @@ from hpecp import (
     APIItemNotFoundException,
 )
 from hpecp.k8s_cluster import K8sClusterHostConfig, K8sClusterStatus
-from hpecp.gateway import Gateway
+from hpecp.gateway import Gateway, GatewayStatus
 
 PROFILE = os.getenv("PROFILE", "default")
 CONFIG_FILE = os.getenv("CONFIG_FILE", "~/.hpecp.conf")
@@ -121,6 +121,25 @@ class Gateway(object):
             print(e.message)
             sys.exit(1)
 
+    def wait_for_state(self, gateway_id, states=[], timeout_secs=60):
+        """
+        Wait for Gateway to have one or more statuses
+        :param gateway_id: Cluster id with format: /api/v1/workers/[0-9]+
+        :param status: status(es) to wait for with format: ['status1', 'status2', 'statusn']
+        :param timeout_secs: how many secs to wait before exiting
+        :returns True/False if status was found within timeout_secs. May raise APIException.
+
+        See also: `hpecp gateway states`
+        """
+        gateway_states = [GatewayStatus[s] for s in states]
+        get_client().gateway.wait_for_state(
+            gateway_id=gateway_id, state=gateway_states
+        )
+
+    def states(self):
+        """Return a list of valid states"""
+        print([ s.name for s in GatewayStatus ] )
+
 
 class K8sCluster(object):
     def create(
@@ -194,6 +213,11 @@ class K8sCluster(object):
         get_client().k8s_cluster.wait_for_status(
             k8scluster_id=k8scluster_id, status=cluster_status
         )
+
+    def statuses(self):
+        """Return a list of valid statuses"""
+        print([ s.name for s in K8sClusterStatus ] )
+
 
 
 class CLI(object):
