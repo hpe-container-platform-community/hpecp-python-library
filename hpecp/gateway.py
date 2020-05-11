@@ -103,7 +103,7 @@ class GatewayController:
             APIException
         """
         assert isinstance(gateway_id, str),"'gateway_id' must be provided and must be a string"
-        assert re.match(r'\/api\/v1\/workers\/[0-9]+', gateway_id), "'gateway_id' must have format '/api/v1/worker/[0-9]+'"
+        assert re.match(r'\/api\/v1\/workers\/[0-9]+', gateway_id), "'gateway_id' must have format '/api/v1/workers/[0-9]+'"
 
         # check if host is actually a gateway - raises APIItemNotFoundException() if gateway not found
         self.get(gateway_id)

@@ -258,3 +258,70 @@ class TestWaitForGatewayStatus(TestCase):
         with self.assertRaises(APIItemNotFoundException):
             get_client().gateway.wait_for_state(
                 gateway_id='/api/v1/workers/999', timeout_secs=1, state=[])
+
+
+
+class TestDeleteGateway(TestCase):
+
+    # pylint: disable=no-method-argument 
+    def mocked_requests_get(*args, **kwargs ):
+        if args[0] == 'https://127.0.0.1:8080/api/v1/workers/123':
+            return MockResponse  (
+                json_data = {
+                        '_links': {'self': {'href': '/api/v1/workers/123'}}, 
+                        'purpose': 'proxy', 
+                        },
+                status_code = 200,
+                headers = { }
+            )
+        if args[0] == 'https://127.0.0.1:8080/api/v1/workers/999':
+            return MockResponse  (
+                text_data = 'Not found.',
+                json_data = { },
+                status_code = 404,
+                raise_for_status_flag = True,
+                headers = { },
+            )
+        raise RuntimeError("Unhandle GET request: " + args[0]) 
+
+    # pylint: disable=no-method-argument 
+    def mocked_requests_delete(*args, **kwargs ):
+        if args[0] == 'https://127.0.0.1:8080/api/v1/workers/999':
+            return MockResponse  (
+                text_data = 'Not found.',
+                json_data = { },
+                status_code = 404,
+                raise_for_status_flag = True,
+                headers = { },
+            )
+        if args[0] == 'https://127.0.0.1:8080/api/v1/workers/123':
+            return MockResponse  (
+                json_data = { },
+                status_code = 200,
+                headers = { },
+            )
+        raise RuntimeError("Unhandle GET request: " + args[0]) 
+
+    def mocked_requests_post(*args, **kwargs):
+        if args[0] == 'https://127.0.0.1:8080/api/v1/login':
+            return MockResponse (
+                json_data = { }, 
+                status_code = 200,
+                headers = { "location": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71" }
+                )
+        raise RuntimeError("Unhandle POST request: " + args[0]) 
+
+    # delete() does a get() request to check the worker has 'purpose':'proxy'
+    @patch('requests.get', side_effect=mocked_requests_get)
+    @patch('requests.delete', side_effect=mocked_requests_delete)
+    @patch('requests.post', side_effect=mocked_requests_post)
+    def test_delete_gateway(self, mock_get, mock_post, mock_delete):
+
+        # pylint: disable=anomalous-backslash-in-string 
+        with self.assertRaisesRegexp(AssertionError, "'gateway_id' must have format '\/api\/v1\/workers\/\[0-9\]\+'"):
+            get_client().gateway.delete(gateway_id='garbage')
+
+        with self.assertRaises(APIItemNotFoundException):
+            get_client().gateway.delete(gateway_id='/api/v1/workers/999')
+
+        get_client().gateway.delete(gateway_id='/api/v1/workers/123')
