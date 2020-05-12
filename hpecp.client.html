@@ -52,14 +52,13 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">hpecp.client module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hpecp.gateway.html">hpecp.gateway module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hpecp.k8s_cluster.html">hpecp.k8s_cluster module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hpecp.exceptions.html">hpecp.exceptions module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hpecp.k8s_worker.html">hpecp.k8s_worker module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hpecp.license.html">hpecp.license module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hpecp.lock.html">hpecp.lock module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hpecp.logger.html">hpecp.logger module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hpecp.config.html">hpecp.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hpecp.tag.html">hpecp.tag module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hpecp.tenant.html">hpecp.tenant module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hpecp.exceptions.html">hpecp.exceptions module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hpecp.html#logging">Logging</a></li>
 </ul>
 </li>
@@ -282,7 +281,7 @@ initial connection would be made by calling the method <a class="reference inter
 <dl class="py method">
 <dt id="hpecp.client.ContainerPlatformClient.log">
 <em class="property">property </em><code class="sig-name descname">log</code><a class="headerlink" href="#hpecp.client.ContainerPlatformClient.log" title="Permalink to this definition">¶</a></dt>
-<dd><p>This attribute is a reference to <a class="reference internal" href="hpecp.logger.html#hpecp.logger.Logger" title="hpecp.logger.Logger"><code class="xref py py-class docutils literal notranslate"><span class="pre">logger.Logger</span></code></a>.  The log function can be called from controller objects
+<dd><p>This attribute is a reference to <code class="xref py py-class docutils literal notranslate"><span class="pre">logger.Logger</span></code>.  The log function can be called from controller objects
 via the <cite>client</cite> parameter passed in during instantiation of the controller.</p>
 <p>Example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">K8sClusterController</span><span class="p">:</span>
