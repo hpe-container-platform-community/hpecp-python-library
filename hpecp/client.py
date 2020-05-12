@@ -204,7 +204,7 @@ class ContainerPlatformClient(object):
         self._log = Logger().get_logger(self.__class__.__name__)
 
         # TODO add other fields, except password
-        self._log.debug("__init__ called with username['{}']".format(username))
+        self._log.debug("ContainerPlatformClient() created with username['{}']".format(username))
         
         assert isinstance(username, basestring), "'username' parameter must be of type string"
         assert isinstance(password, basestring), "'password' parameter must be of type string"
@@ -311,16 +311,16 @@ class ContainerPlatformClient(object):
 
         try:
             if http_method == 'get':
-                self.log.debug('{} : {} {}'.format(description, http_method, url))
+                self.log.debug('REQ: {} : {} {}'.format(description, http_method, url))
                 response = requests.get(url, headers=all_headers, verify=self.verify_ssl)
             elif http_method == 'put':
-                self.log.debug('{} : {} {} {}'.format(description, http_method, url, data))
+                self.log.debug('REQ: {} : {} {} {}'.format(description, http_method, url, data))
                 response = requests.put(url, headers=all_headers, data=json.dumps(data), verify=self.verify_ssl)
             elif http_method == 'post':
-                self.log.debug('{} : {} {} {}'.format(description, http_method, url, data))
+                self.log.debug('REQ: {} : {} {} {}'.format(description, http_method, url, data))
                 response = requests.post(url, headers=all_headers, data=json.dumps(data), verify=self.verify_ssl)
             elif http_method == 'delete':
-                self.log.debug('{} : {} {}'.format(description, http_method, url))
+                self.log.debug('REQ: {} : {} {}'.format(description, http_method, url))
                 response = requests.delete(url, headers=all_headers, verify=self.verify_ssl)
 
             response.raise_for_status()
@@ -334,20 +334,20 @@ class ContainerPlatformClient(object):
 
             if response.status_code == 404:
                 # This is expected for some method calls so do not log as an error
-                self.log.debug('{} : {} {} Request: {}'.format(description, http_method, url, json.dumps(data)))
+                self.log.debug('{} : {} {} REQ: {}'.format(description, http_method, url, json.dumps(data)))
                 raise APIItemNotFoundException(message=response_info, request_method=http_method, request_url=url, request_data=json.dumps(data))
             if response.status_code == 409:
                 # This is expected for some method calls so do not log as an error
-                self.log.debug('{} : {} {} Request: {}'.format(description, http_method, url, json.dumps(data)))
+                self.log.debug('{} : {} {} REQ: {}'.format(description, http_method, url, json.dumps(data)))
                 raise APIItemConflictException(message=response_info, request_method=http_method, request_url=url, request_data=json.dumps(data))
             else:
-                self.log.exception('{} : {} {} Request: {}'.format(description, http_method, url, json.dumps(data)))
+                self.log.exception('{} : {} {} REQ: {}'.format(description, http_method, url, json.dumps(data)))
                 raise APIException(message=response_info, request_method=http_method, request_url=url, request_data=json.dumps(data))
 
         try:
-            self.log.debug('{} : {} {} : {} {}'.format(description, http_method, url, response.status_code, json.dumps(response.json())))
+            self.log.debug('RES: {} : {} {} : {} {}'.format(description, http_method, url, response.status_code, json.dumps(response.json())))
         except ValueError:
-            self.log.debug('{} : {} {} : {} {}'.format(description, http_method, url, response.status_code, response.text))
+            self.log.debug('RES: {} : {} {} : {} {}'.format(description, http_method, url, response.status_code, response.text))
 
         return response
 
