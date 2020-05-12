@@ -80,7 +80,7 @@ class Gateway(object):
                 ssh_key_data=ssh_key_data,
                 tags=tags,
             )
-            print("gatway_id:" + gateway_id)
+            print(gateway_id)
         except APIItemConflictException:
             print("Gateway already exists.")
             sys.exit(1)

@@ -136,7 +136,8 @@ Returns::
 Example
 -------
 
-Coming soon ...
+.. image:: _static/cli_example.gif
+  :alt: CLI Example
 
 Autocompletion
 --------------
