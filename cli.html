@@ -51,6 +51,8 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">CLI Docs</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#setup">Setup</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#logging-level">Logging Level</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cli-help">CLI Help</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#locks">Locks</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="github.html">Source Repository</a></li>
@@ -134,6 +136,81 @@ hpecp license platform-id
 </pre></div>
 </div>
 <p>See <a class="reference external" href="https://docs.python.org/3.7/howto/logging.html">https://docs.python.org/3.7/howto/logging.html</a> for much more info on logging.</p>
+</div>
+<div class="section" id="cli-help">
+<h2>CLI Help<a class="headerlink" href="#cli-help" title="Permalink to this headline">¶</a></h2>
+<p>Run <cite>hpecp</cite> without any arguments to retrieve a list of command groups:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">hpecp</span>
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">NAME</span>
+    <span class="n">hpecp</span>
+
+<span class="n">SYNOPSIS</span>
+    <span class="n">hpecp</span> <span class="n">GROUP</span>
+
+<span class="n">GROUPS</span>
+    <span class="n">GROUP</span> <span class="ow">is</span> <span class="n">one</span> <span class="n">of</span> <span class="n">the</span> <span class="n">following</span><span class="p">:</span>
+
+    <span class="n">gateway</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>Similary to see a list of subcommands (e.g. for the gateway command):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">hpecp</span> <span class="n">gateway</span> <span class="o">--</span><span class="n">help</span>
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">NAME</span>
+    <span class="n">hpecp</span> <span class="n">gateway</span>
+
+<span class="n">SYNOPSIS</span>
+    <span class="n">hpecp</span> <span class="n">gateway</span> <span class="n">COMMAND</span>
+
+<span class="n">COMMANDS</span>
+    <span class="n">COMMAND</span> <span class="ow">is</span> <span class="n">one</span> <span class="n">of</span> <span class="n">the</span> <span class="n">following</span><span class="p">:</span>
+
+    <span class="n">create_with_ssh_key</span>
+    <span class="n">Create</span> <span class="n">a</span> <span class="n">Gateway</span> <span class="n">using</span> <span class="n">SSH</span> <span class="n">key</span> <span class="n">authentication</span>
+
+    <span class="n">create_with_ssh_password</span>
+    <span class="n">Not</span> <span class="n">yet</span> <span class="n">implemented</span>
+
+    <span class="n">delete</span>
+    <span class="n">Retrieve</span> <span class="n">a</span> <span class="n">Gateway</span> <span class="n">by</span> <span class="n">Id</span>
+
+    <span class="n">get</span>
+    <span class="n">Retrieve</span> <span class="n">a</span> <span class="n">Gateway</span> <span class="n">by</span> <span class="n">Id</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>And to see a subcommand’s (e.g. get) arguments:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">hpecp</span> <span class="n">gateway</span> <span class="n">get</span> <span class="o">--</span><span class="n">help</span>
+</pre></div>
+</div>
+<p>Returns:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">NAME</span>
+    <span class="n">hpecp</span> <span class="n">gateway</span> <span class="n">get</span> <span class="o">-</span> <span class="n">Retrieve</span> <span class="n">a</span> <span class="n">Gateway</span> <span class="n">by</span> <span class="n">Id</span>
+
+<span class="n">SYNOPSIS</span>
+    <span class="n">hpecp</span> <span class="n">gateway</span> <span class="n">get</span> <span class="n">GATEWAY_ID</span> <span class="o">&lt;</span><span class="n">flags</span><span class="o">&gt;</span>
+
+<span class="n">DESCRIPTION</span>
+    <span class="n">Retrieve</span> <span class="n">a</span> <span class="n">Gateway</span> <span class="n">by</span> <span class="n">Id</span>
+
+<span class="n">POSITIONAL</span> <span class="n">ARGUMENTS</span>
+    <span class="n">GATEWAY_ID</span>
+        <span class="n">the</span> <span class="nb">id</span> <span class="n">of</span> <span class="n">the</span> <span class="n">gateway</span> <span class="k">with</span> <span class="nb">format</span><span class="p">:</span> <span class="s1">&#39;/api/v1/workers/[0-9]+&#39;</span>
+
+<span class="n">FLAGS</span>
+    <span class="o">--</span><span class="n">output</span><span class="o">=</span><span class="n">OUTPUT</span>
+        <span class="n">how</span> <span class="n">to</span> <span class="n">display</span> <span class="n">the</span> <span class="n">output</span> <span class="p">[</span><span class="s1">&#39;yaml&#39;</span><span class="o">|</span><span class="s1">&#39;json&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="locks">
+<h2>Locks<a class="headerlink" href="#locks" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 

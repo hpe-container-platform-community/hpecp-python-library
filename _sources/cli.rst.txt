@@ -58,6 +58,84 @@ Typical valid values are `ERROR`, `WARNING`, `INFO`, `DEBUG` - the default value
 
 See https://docs.python.org/3.7/howto/logging.html for much more info on logging.
 
+CLI Help
+--------
+
+Run `hpecp` without any arguments to retrieve a list of command groups::
+
+    hpecp
+
+Returns::
+
+    NAME
+        hpecp
+
+    SYNOPSIS
+        hpecp GROUP
+
+    GROUPS
+        GROUP is one of the following:
+
+        gateway
+        ...
+
+Similary to see a list of subcommands (e.g. for the gateway command)::
+
+    hpecp gateway --help
+
+Returns::
+
+    NAME
+        hpecp gateway
+
+    SYNOPSIS
+        hpecp gateway COMMAND
+
+    COMMANDS
+        COMMAND is one of the following:
+
+        create_with_ssh_key
+        Create a Gateway using SSH key authentication
+
+        create_with_ssh_password
+        Not yet implemented
+
+        delete
+        Retrieve a Gateway by Id
+
+        get
+        Retrieve a Gateway by Id
+        ...
+
+And to see a subcommand's (e.g. get) arguments::
+
+    hpecp gateway get --help
+
+Returns::
+
+    NAME
+        hpecp gateway get - Retrieve a Gateway by Id
+
+    SYNOPSIS
+        hpecp gateway get GATEWAY_ID <flags>
+
+    DESCRIPTION
+        Retrieve a Gateway by Id
+
+    POSITIONAL ARGUMENTS
+        GATEWAY_ID
+            the id of the gateway with format: '/api/v1/workers/[0-9]+'
+
+    FLAGS
+        --output=OUTPUT
+            how to display the output ['yaml'|'json']
+
+Locks
+-----
+
+
+
+
 
 
 
