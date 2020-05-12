@@ -55,8 +55,11 @@ class Gateway(object):
     ):
         """Create a Gateway using SSH key authentication
 
-        :param ip: the IP address
-        :param proxy_node_hostname: the 
+        :param ip: The IP address of the proxy host.  Used for internal communication.
+        :param proxy_node_hostname: Clients will access cluster services will be accessed using this name.
+        :param ssh_key: The ssh key data as a string.  Alternatively, use the ssh_key_file parameter.
+        :param ssh_key_file: The file path to the ssh key.  Alternatively, use the ssh_key parameter.
+        :param tags: Tags to use, e.g. "{ 'tag1': 'foo', 'tag2', 'bar' }".
         """
         if ssh_key is None and ssh_key_file is None:
             print("Either ssh_key or ssh_key_file must be provided")
