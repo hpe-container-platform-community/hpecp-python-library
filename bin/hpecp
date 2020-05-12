@@ -245,11 +245,18 @@ class Lock(object):
         """Delete all locks"""
         print(get_client().lock.delete_all(timeout_secs=300))
 
+class License(object):
+    def platform_id(self):
+        """Get the platform ID
+        """
+        print(get_client().license.platform_id())
+
 class CLI(object):
     def __init__(self):
         self.k8scluster = K8sCluster()
         self.gateway = Gateway()
         self.lock = Lock()
+        self.license = License()
 
 
 if __name__ == "__main__":
