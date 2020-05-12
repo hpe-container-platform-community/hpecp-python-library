@@ -10,6 +10,11 @@ import urllib
 import polling
 import re
 
+try:
+  basestring
+except NameError:
+  basestring = str
+
 class LockController:
 
     def __init__(self, client):
@@ -24,7 +29,7 @@ class LockController:
 
     def delete(self, lock_id):
 
-        assert isinstance(lock_id, str),"'lock_id' must be provided and must be a string"
+        assert isinstance(lock_id, basestring),"'lock_id' must be provided and must be a string"
         assert re.match(r'\/api\/v1\/lock\/[0-9]+', lock_id), "'lock_id' must have format '/api/v1/lock/[0-9]+'"
 
         return self.client._request(url=lock_id, http_method='delete', description='lock/delete_lock')
