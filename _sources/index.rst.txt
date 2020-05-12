@@ -77,6 +77,11 @@ Now :ref:`install <Installation>` the CLI.  After installing, the CLI will be av
 
     >>> aa8716be-bc74-4ffa-b838-d92e6934d224
 
+To find out what capabilities are available, enter:
+
+.. code-block:: bash
+
+    hpecp help
 
 Contents
 ========
