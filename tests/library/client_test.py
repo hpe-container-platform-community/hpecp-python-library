@@ -35,7 +35,7 @@ class TestCreateFromProperties(TestCase):
                               api_port = 8080
                               use_ssl = True
                               verify_ssl = False
-                              ssl_warn = True
+                              warn_ssl = True
                               username = admin
                               password = admin123""")
 
@@ -51,7 +51,7 @@ class TestCreateFromProperties(TestCase):
             self.assertEqual(client.api_port, 8080)
             self.assertEqual(client.use_ssl, True)
             self.assertEqual(client.verify_ssl, False)
-            self.assertEqual(client.ssl_warn, True)
+            self.assertEqual(client.warn_ssl, True)
         finally:
             tmp.close()
 
