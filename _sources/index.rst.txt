@@ -52,11 +52,10 @@ Contents
 ========
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 0
 
    installation
    hpecp
-   logging
    cli
    github
    license

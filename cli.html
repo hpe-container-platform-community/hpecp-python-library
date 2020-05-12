@@ -18,7 +18,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Source Repository" href="github.html" />
-    <link rel="prev" title="Logging" href="logging.html" />
+    <link rel="prev" title="hpecp.tenant module" href="hpecp.tenant.html" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <!--[if lt IE 9]>
     <script src="_static/css3-mediaqueries.js"></script>
@@ -37,7 +37,7 @@
           <a href="github.html" title="Source Repository"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="logging.html" title="Logging"
+          <a href="hpecp.tenant.html" title="hpecp.tenant module"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">HPE Container Platform Python Library  documentation</a> &#187;</li> 
       </ul>
@@ -48,15 +48,18 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hpecp.html">API Docs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="logging.html">Logging</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">CLI Docs</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">CLI Docs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#logging-level">Logging Level</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="github.html">Source Repository</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">Apache License</a></li>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="logging.html"
-                        title="previous chapter">Logging</a></p>
+  <p class="topless"><a href="hpecp.tenant.html"
+                        title="previous chapter">hpecp.tenant module</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="github.html"
                         title="next chapter">Source Repository</a></p>
@@ -86,7 +89,7 @@
           <div class="body" role="main">
             
   <div class="section" id="cli-docs">
-<span id="clidocs"></span><h1>CLI Docs<a class="headerlink" href="#cli-docs" title="Permalink to this headline">¶</a></h1>
+<h1>CLI Docs<a class="headerlink" href="#cli-docs" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="setup">
 <h2>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h2>
 <p>Install the library:</p>
@@ -108,19 +111,29 @@
 </div>
 <p>Test your connectivity:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>hpecp license platform-id
-&gt;&gt;&gt; returns-your-unique-platform-id
+
+&gt;&gt;&gt; aa8716be-bc74-4ffa-b838-d92e6934d224
 </pre></div>
 </div>
 </div>
 <div class="section" id="logging-level">
 <h2>Logging Level<a class="headerlink" href="#logging-level" title="Permalink to this headline">¶</a></h2>
-<p>Log level is controlled with the environment variable LOG_LEVEL.</p>
-<p>Typical valid values are ERROR, WARNING, INFO, DEBUG. Default is DEBUG.</p>
+<p>Log level is controlled with the environment variable <cite>LOG_LEVEL</cite>.</p>
+<p>Typical valid values are <cite>ERROR</cite>, <cite>WARNING</cite>, <cite>INFO</cite>, <cite>DEBUG</cite> - the default value is <cite>INFO</cite>.</p>
+<ul class="simple">
+<li><p><cite>INFO</cite> = Significant Events</p></li>
+<li><p><cite>DEBUG</cite> = API Requests</p></li>
+</ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">LOG_LEVEL</span><span class="o">=</span>DEBUG
 hpecp license platform-id
-&gt;&gt;&gt; returns-your-unique-platform-id
+
+&gt;&gt;&gt; <span class="m">2020</span>-05-12 <span class="m">12</span>:58:00,251 - ContainerPlatformClient - DEBUG - ContainerPlatformClient<span class="o">()</span> created with username<span class="o">[</span><span class="s1">&#39;admin&#39;</span><span class="o">]</span>
+&gt;&gt;&gt; <span class="m">2020</span>-05-12 <span class="m">12</span>:58:00,923 - ContainerPlatformClient - DEBUG - REQ: license/get_platform_id : get https://35.163.22.120:8080/api/v1/license
+&gt;&gt;&gt; <span class="m">2020</span>-05-12 <span class="m">12</span>:58:01,571 - ContainerPlatformClient - DEBUG - RES: license/get_platform_id : get https://35.163.22.120:8080/api/v1/license : <span class="m">200</span> <span class="o">{</span><span class="s2">&quot;state&quot;</span>: <span class="s2">&quot;unlicensed&quot;</span>, <span class="s2">&quot;_links&quot;</span>: <span class="o">{</span><span class="s2">&quot;self&quot;</span>: <span class="o">{</span><span class="s2">&quot;href&quot;</span>: <span class="s2">&quot;/api/v1/license&quot;</span><span class="o">}}</span>, <span class="s2">&quot;uuid&quot;</span>: <span class="s2">&quot;aa8716be-bc74-4ffa-b838-d92e6934d224&quot;</span><span class="o">}</span>
+&gt;&gt;&gt; aa8716be-bc74-4ffa-b838-d92e6934d224
 </pre></div>
 </div>
+<p>See <a class="reference external" href="https://docs.python.org/3.7/howto/logging.html">https://docs.python.org/3.7/howto/logging.html</a> for much more info on logging.</p>
 </div>
 </div>
 
@@ -143,7 +156,7 @@ hpecp license platform-id
           <a href="github.html" title="Source Repository"
              >next</a> |</li>
         <li class="right" >
-          <a href="logging.html" title="Logging"
+          <a href="hpecp.tenant.html" title="hpecp.tenant module"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">HPE Container Platform Python Library  documentation</a> &#187;</li> 
       </ul>
