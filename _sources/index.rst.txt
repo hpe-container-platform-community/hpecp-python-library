@@ -1,11 +1,13 @@
 Overview
 =========
 
-Python library for HPE Container Platform (HPECP).
+Python library and Command Line Interface (CLI) for HPE Container Platform (HPECP).
 
 This library is pre-alpha. The API of this library may be unstable and 
 subject to change until this library reaches beta.
 
+Library Example
+---------------
 
 Example basic usage with variables passed to client constructor:
 
@@ -46,6 +48,15 @@ Example basic usage with config file:
    client = ContainerPlatformClient.create_from_config_file().create_session()
 
    client.k8s_cluster.list().tabulate(columns=['description', 'id'])
+
+CLI Example
+-----------
+
+.. code-block:: bash
+
+    hpecp license platform-id
+
+    >>> aa8716be-bc74-4ffa-b838-d92e6934d224
 
 
 Contents

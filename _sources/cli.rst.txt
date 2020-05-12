@@ -130,8 +130,10 @@ Returns::
         --output=OUTPUT
             how to display the output ['yaml'|'json']
 
-Locks
------
+Example
+-------
+
+
 
 
 
