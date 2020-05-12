@@ -15,14 +15,13 @@ API Docs
    :maxdepth: 4
    :caption: Work-in-progress APIs
 
-   hpecp.exceptions
    hpecp.k8s_worker
    hpecp.license
    hpecp.lock
-   hpecp.logger
    hpecp.config
    hpecp.tag
    hpecp.tenant
+   hpecp.exceptions
 
 
 Logging
