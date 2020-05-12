@@ -11,6 +11,8 @@ Library Example
 
 Example basic usage with variables passed to client constructor:
 
+First :ref:`install <Installation>` the library - then from your python environment ...
+
 .. code-block:: python
 
    from hpecp import ContainerPlatformClient
@@ -51,6 +53,23 @@ Example basic usage with config file:
 
 CLI Example
 -----------
+
+First create a configuration file.
+
+.. code-block:: bash
+
+    cat > ~/.hpecp.conf <<EOF
+    [default]
+    api_host = 127.0.0.1
+    api_port = 8080
+    use_ssl = True
+    verify_ssl = False
+    ssl_warn = False
+    username = admin
+    password = admin123
+    EOF
+
+Now :ref:`install <Installation>` the CLI.  After installing, the CLI will be available as `hpecp`:
 
 .. code-block:: bash
 

@@ -85,6 +85,7 @@ subject to change until this library reaches beta.</p>
 <div class="section" id="library-example">
 <h2>Library Example<a class="headerlink" href="#library-example" title="Permalink to this headline">¶</a></h2>
 <p>Example basic usage with variables passed to client constructor:</p>
+<p>First <a class="reference internal" href="installation.html#installation"><span class="std std-ref">install</span></a> the library - then from your python environment …</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">hpecp</span> <span class="kn">import</span> <span class="n">ContainerPlatformClient</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">ContainerPlatformClient</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s1">&#39;admin&#39;</span><span class="p">,</span>
@@ -122,6 +123,20 @@ subject to change until this library reaches beta.</p>
 </div>
 <div class="section" id="cli-example">
 <h2>CLI Example<a class="headerlink" href="#cli-example" title="Permalink to this headline">¶</a></h2>
+<p>First create a configuration file.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cat &gt; ~/.hpecp.conf <span class="s">&lt;&lt;EOF</span>
+<span class="s">[default]</span>
+<span class="s">api_host = 127.0.0.1</span>
+<span class="s">api_port = 8080</span>
+<span class="s">use_ssl = True</span>
+<span class="s">verify_ssl = False</span>
+<span class="s">ssl_warn = False</span>
+<span class="s">username = admin</span>
+<span class="s">password = admin123</span>
+<span class="s">EOF</span>
+</pre></div>
+</div>
+<p>Now <a class="reference internal" href="installation.html#installation"><span class="std std-ref">install</span></a> the CLI.  After installing, the CLI will be available as <cite>hpecp</cite>:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>hpecp license platform-id
 
 &gt;&gt;&gt; aa8716be-bc74-4ffa-b838-d92e6934d224
