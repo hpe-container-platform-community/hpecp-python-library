@@ -110,7 +110,7 @@
 <span class="sd">            Connect to HPECP using SSL: True|False </span>
 <span class="sd">        verify_ssl : bool|str</span>
 <span class="sd">            See https://requests.readthedocs.io/en/master/user/advanced/#ssl-cert-verification</span>
-<span class="sd">        ssl_warn : bool</span>
+<span class="sd">        warn_ssl : bool</span>
 <span class="sd">            Disable ssl warnings</span>
 
 <span class="sd">    Returns:</span>
@@ -149,7 +149,7 @@
 <span class="sd">            api_port = 8080</span>
 <span class="sd">            use_ssl = True</span>
 <span class="sd">            verify_ssl = False</span>
-<span class="sd">            ssl_warn = False</span>
+<span class="sd">            warn_ssl = False</span>
 
 <span class="sd">            [demoserver]</span>
 <span class="sd">            username = admin</span>
@@ -178,7 +178,7 @@
         <span class="k">assert</span> <span class="s1">&#39;api_port&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="n">profile</span><span class="p">]</span> <span class="ow">or</span> <span class="s1">&#39;api_port&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">],</span> <span class="s2">&quot;&#39;api_port&#39; not found in section &#39;</span><span class="si">{}</span><span class="s2">&#39; or in the default section&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
         <span class="k">assert</span> <span class="s1">&#39;use_ssl&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="n">profile</span><span class="p">]</span> <span class="ow">or</span> <span class="s1">&#39;use_ssl&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">],</span> <span class="s2">&quot;&#39;use_ssl&#39; not found in section &#39;</span><span class="si">{}</span><span class="s2">&#39; or in the default section&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
         <span class="k">assert</span> <span class="s1">&#39;verify_ssl&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="n">profile</span><span class="p">]</span> <span class="ow">or</span> <span class="s1">&#39;verify_ssl&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">],</span> <span class="s2">&quot;&#39;verify_ssl&#39; not found in section &#39;</span><span class="si">{}</span><span class="s2">&#39; or in the default section&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="s1">&#39;ssl_warn&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="n">profile</span><span class="p">]</span> <span class="ow">or</span> <span class="s1">&#39;ssl_warn&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">],</span> <span class="s2">&quot;&#39;ssl_warn&#39; not found in section &#39;</span><span class="si">{}</span><span class="s2">&#39; or in the default section&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="s1">&#39;warn_ssl&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="n">profile</span><span class="p">]</span> <span class="ow">or</span> <span class="s1">&#39;warn_ssl&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">],</span> <span class="s2">&quot;&#39;warn_ssl&#39; not found in section &#39;</span><span class="si">{}</span><span class="s2">&#39; or in the default section&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">get_config_value</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">profile</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="n">profile</span><span class="p">]:</span>
@@ -192,7 +192,7 @@
         <span class="n">api_port</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">get_config_value</span><span class="p">(</span><span class="s1">&#39;api_port&#39;</span><span class="p">,</span> <span class="n">profile</span><span class="p">))</span>
         <span class="n">use_ssl</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">get_config_value</span><span class="p">(</span><span class="s1">&#39;use_ssl&#39;</span><span class="p">,</span> <span class="n">profile</span><span class="p">))</span>
         <span class="n">verify_ssl</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">get_config_value</span><span class="p">(</span><span class="s1">&#39;verify_ssl&#39;</span><span class="p">,</span> <span class="n">profile</span><span class="p">))</span>
-        <span class="n">ssl_warn</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">get_config_value</span><span class="p">(</span><span class="s1">&#39;ssl_warn&#39;</span><span class="p">,</span> <span class="n">profile</span><span class="p">))</span>
+        <span class="n">warn_ssl</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">get_config_value</span><span class="p">(</span><span class="s1">&#39;warn_ssl&#39;</span><span class="p">,</span> <span class="n">profile</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="n">use_ssl</span> <span class="o">==</span> <span class="s1">&#39;False&#39;</span><span class="p">:</span>
             <span class="n">use_ssl</span> <span class="o">=</span> <span class="kc">False</span>
@@ -203,12 +203,12 @@
         <span class="k">if</span> <span class="n">verify_ssl</span> <span class="o">==</span> <span class="s1">&#39;False&#39;</span><span class="p">:</span>
             <span class="n">verify_ssl</span> <span class="o">=</span> <span class="kc">False</span>
 
-        <span class="k">if</span> <span class="n">ssl_warn</span> <span class="o">==</span> <span class="s1">&#39;False&#39;</span><span class="p">:</span>
-            <span class="n">ssl_warn</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">warn_ssl</span> <span class="o">==</span> <span class="s1">&#39;False&#39;</span><span class="p">:</span>
+            <span class="n">warn_ssl</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">ssl_warn</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">warn_ssl</span> <span class="o">=</span> <span class="kc">True</span>
         
-        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">api_port</span><span class="p">,</span> <span class="n">use_ssl</span><span class="p">,</span> <span class="n">verify_ssl</span><span class="p">,</span> <span class="n">ssl_warn</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">api_port</span><span class="p">,</span> <span class="n">use_ssl</span><span class="p">,</span> <span class="n">verify_ssl</span><span class="p">,</span> <span class="n">warn_ssl</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ContainerPlatformClient.create_from_env"><a class="viewcode-back" href="../../hpecp.client.html#hpecp.client.ContainerPlatformClient.create_from_env">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">create_from_env</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
@@ -222,7 +222,7 @@
 <span class="sd">            HPECP_API_PORT</span>
 <span class="sd">            HPECP_USE_SSL</span>
 <span class="sd">            HPECP_VERIFY_SSL</span>
-<span class="sd">            HPECP_SSL_WARN</span>
+<span class="sd">            HPECP_warn_ssl</span>
 
 <span class="sd">        See ContainerPlatformClient :py:class:`constructor &lt;ContainerPlatformClient&gt;` for the paramaeter definitions.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -245,8 +245,8 @@
         <span class="k">if</span> <span class="s1">&#39;HPECP_VERIFY_SSL&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
             <span class="n">HPECP_VERIFY_SSL</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="n">HPECP_VERIFY_SSL</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="s1">&#39;HPECP_SSL_WARN&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
-            <span class="n">HPECP_SSL_WARN</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="n">HPECP_SSL_WARN</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s1">&#39;HPECP_warn_ssl&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+            <span class="n">HPECP_warn_ssl</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="n">HPECP_warn_ssl</span><span class="p">]</span>
         
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
             <span class="n">username</span><span class="o">=</span><span class="n">HPECP_USERNAME</span><span class="p">,</span> 
@@ -255,7 +255,7 @@
             <span class="n">api_port</span><span class="o">=</span><span class="n">HPECP_API_PORT</span><span class="p">,</span>
             <span class="n">use_ssl</span><span class="o">=</span><span class="n">HPECP_USE_SSL</span><span class="p">,</span>
             <span class="n">verify_ssl</span><span class="o">=</span><span class="n">HPECP_VERIFY_SSL</span><span class="p">,</span>
-            <span class="n">ssl_warn</span><span class="o">=</span><span class="n">HPECP_SSL_WARN</span>
+            <span class="n">warn_ssl</span><span class="o">=</span><span class="n">HPECP_warn_ssl</span>
             <span class="p">)</span></div>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
@@ -265,7 +265,7 @@
                  <span class="n">api_port</span>   <span class="o">=</span> <span class="mi">8080</span><span class="p">,</span>
                  <span class="n">use_ssl</span>    <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
                  <span class="n">verify_ssl</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-                 <span class="n">ssl_warn</span> <span class="o">=</span> <span class="kc">False</span>
+                 <span class="n">warn_ssl</span> <span class="o">=</span> <span class="kc">False</span>
                  <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Doc string is defined at the top of the class&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_log</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
@@ -279,7 +279,7 @@
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">api_port</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span> <span class="s2">&quot;&#39;api_port&#39; parameter must be of type int&quot;</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">use_ssl</span><span class="p">,</span> <span class="nb">bool</span><span class="p">),</span> <span class="s2">&quot;&#39;use_ssl&#39; parameter must be of type bool&quot;</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">verify_ssl</span><span class="p">,</span> <span class="nb">bool</span><span class="p">),</span> <span class="s2">&quot;&#39;verify_ssl&#39; parameter must be of type bool&quot;</span>
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ssl_warn</span><span class="p">,</span> <span class="nb">bool</span><span class="p">),</span> <span class="s2">&quot;&#39;ssl_warn&#39; parameter must be of type bool&quot;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">warn_ssl</span><span class="p">,</span> <span class="nb">bool</span><span class="p">),</span> <span class="s2">&quot;&#39;warn_ssl&#39; parameter must be of type bool&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="n">username</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="n">password</span>
@@ -287,7 +287,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">api_port</span> <span class="o">=</span> <span class="n">api_port</span>  
         <span class="bp">self</span><span class="o">.</span><span class="n">use_ssl</span>  <span class="o">=</span> <span class="n">use_ssl</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">verify_ssl</span> <span class="o">=</span> <span class="n">verify_ssl</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ssl_warn</span> <span class="o">=</span> <span class="n">ssl_warn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">warn_ssl</span> <span class="o">=</span> <span class="n">warn_ssl</span>
         
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_ssl</span><span class="p">:</span>
             <span class="n">scheme</span> <span class="o">=</span> <span class="s1">&#39;https&#39;</span>
@@ -322,7 +322,7 @@
         <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/api/v1/login&quot;</span>
         <span class="n">auth</span> <span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="s2">&quot;password&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">password</span> <span class="p">}</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ssl_warn</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">warn_ssl</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
             <span class="kn">import</span> <span class="nn">urllib3</span>
             <span class="n">urllib3</span><span class="o">.</span><span class="n">disable_warnings</span><span class="p">(</span><span class="n">urllib3</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">InsecureRequestWarning</span><span class="p">)</span>
 
@@ -372,7 +372,7 @@
 
         <span class="n">url</span> <span class="o">=</span> <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="n">url</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ssl_warn</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">warn_ssl</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
             <span class="kn">import</span> <span class="nn">urllib3</span>
             <span class="n">urllib3</span><span class="o">.</span><span class="n">disable_warnings</span><span class="p">(</span><span class="n">urllib3</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">InsecureRequestWarning</span><span class="p">)</span>
 

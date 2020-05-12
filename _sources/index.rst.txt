@@ -38,7 +38,7 @@ Example basic usage with config file:
     api_port = 8080
     use_ssl = True
     verify_ssl = False
-    ssl_warn = False
+    warn_ssl = False
     username = admin
     password = admin123
     EOF
@@ -64,7 +64,7 @@ First create a configuration file.
     api_port = 8080
     use_ssl = True
     verify_ssl = False
-    ssl_warn = False
+    warn_ssl = False
     username = admin
     password = admin123
     EOF
