@@ -300,10 +300,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_tenant</span> <span class="o">=</span> <span class="n">TenantController</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="n">ConfigController</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_gateway</span> <span class="o">=</span> <span class="n">GatewayController</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">k8s_worker</span> <span class="o">=</span> <span class="n">K8sWorkerController</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_k8s_worker</span> <span class="o">=</span> <span class="n">K8sWorkerController</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_k8s_cluster</span> <span class="o">=</span> <span class="n">K8sClusterController</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">license</span> <span class="o">=</span> <span class="n">LicenseController</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">lock</span> <span class="o">=</span> <span class="n">LockController</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_license</span> <span class="o">=</span> <span class="n">LicenseController</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span> <span class="o">=</span> <span class="n">LockController</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ContainerPlatformClient.create_session"><a class="viewcode-back" href="../../hpecp.client.html#hpecp.client.ContainerPlatformClient.create_session">[docs]</a>    <span class="k">def</span> <span class="nf">create_session</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create a session with the HPE CP controller defined in the object :py:class:`ContainerPlatformClient`.</span>
@@ -489,6 +489,24 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_k8s_cluster</span>
 
     <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">k8s_worker</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This attribute is a reference to an object of type `.k8s_worker.K8sWorkerController`.</span>
+
+<span class="sd">        See the class :py:class:`.k8s_worker.K8sWorkerController` for the methods available.</span>
+
+<span class="sd">        Example::</span>
+
+<span class="sd">            client = ContainerPlatformClient(...)</span>
+<span class="sd">            client.create_session()</span>
+<span class="sd">            client.k8s_worker.list()</span>
+<span class="sd">        </span>
+<span class="sd">        This example calls the method :py:meth:`list() &lt;.k8s_worker.K8sWorkerController.list&gt;` in :py:class:`.k8s_worker.K8sWorkerController`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_k8s_worker</span>
+
+    <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">gateway</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This attribute is a reference to an object of type `.gateway.GatewayController`.</span>
@@ -505,6 +523,43 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gateway</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">license</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This attribute is a reference to an object of type `.license.LicenseController`.</span>
+
+<span class="sd">        See the class :py:class:`.license.LicenseController` for the methods available.</span>
+
+<span class="sd">        Example::</span>
+
+<span class="sd">            client = ContainerPlatformClient(...)</span>
+<span class="sd">            client.create_session()</span>
+<span class="sd">            client.license.list()</span>
+<span class="sd">        </span>
+<span class="sd">        This example calls the method :py:meth:`list() &lt;.license.LicenseController.list&gt;` in :py:class:`.license.LicenseController`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_license</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">lock</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This attribute is a reference to an object of type `.lock.LockController`.</span>
+
+<span class="sd">        See the class :py:class:`.lock.LockController` for the methods available.</span>
+
+<span class="sd">        Example::</span>
+
+<span class="sd">            client = ContainerPlatformClient(...)</span>
+<span class="sd">            client.create_session()</span>
+<span class="sd">            client.lock.get()</span>
+<span class="sd">        </span>
+<span class="sd">        This example calls the method :py:meth:`get() &lt;.lock.LockController.list&gt;` in :py:class:`.lock.LockController`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span>
+
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

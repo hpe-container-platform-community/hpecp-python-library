@@ -265,6 +265,20 @@ initial connection would be made by calling the method <a class="reference inter
 </dd></dl>
 
 <dl class="py method">
+<dt id="hpecp.client.ContainerPlatformClient.k8s_worker">
+<em class="property">property </em><code class="sig-name descname">k8s_worker</code><a class="headerlink" href="#hpecp.client.ContainerPlatformClient.k8s_worker" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute is a reference to an object of type <cite>.k8s_worker.K8sWorkerController</cite>.</p>
+<p>See the class <a class="reference internal" href="hpecp.k8s_worker.html#hpecp.k8s_worker.K8sWorkerController" title="hpecp.k8s_worker.K8sWorkerController"><code class="xref py py-class docutils literal notranslate"><span class="pre">k8s_worker.K8sWorkerController</span></code></a> for the methods available.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">client</span> <span class="o">=</span> <span class="n">ContainerPlatformClient</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="n">client</span><span class="o">.</span><span class="n">create_session</span><span class="p">()</span>
+<span class="n">client</span><span class="o">.</span><span class="n">k8s_worker</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This example calls the method <code class="xref py py-meth docutils literal notranslate"><span class="pre">list()</span></code> in <a class="reference internal" href="hpecp.k8s_worker.html#hpecp.k8s_worker.K8sWorkerController" title="hpecp.k8s_worker.K8sWorkerController"><code class="xref py py-class docutils literal notranslate"><span class="pre">k8s_worker.K8sWorkerController</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="hpecp.client.ContainerPlatformClient.gateway">
 <em class="property">property </em><code class="sig-name descname">gateway</code><a class="headerlink" href="#hpecp.client.ContainerPlatformClient.gateway" title="Permalink to this definition">¶</a></dt>
 <dd><p>This attribute is a reference to an object of type <cite>.gateway.GatewayController</cite>.</p>
@@ -276,6 +290,34 @@ initial connection would be made by calling the method <a class="reference inter
 </pre></div>
 </div>
 <p>This example calls the method <a class="reference internal" href="hpecp.gateway.html#hpecp.gateway.GatewayController.list" title="hpecp.gateway.GatewayController.list"><code class="xref py py-meth docutils literal notranslate"><span class="pre">list()</span></code></a> in <a class="reference internal" href="hpecp.gateway.html#hpecp.gateway.GatewayController" title="hpecp.gateway.GatewayController"><code class="xref py py-class docutils literal notranslate"><span class="pre">gateway.GatewayController</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="hpecp.client.ContainerPlatformClient.license">
+<em class="property">property </em><code class="sig-name descname">license</code><a class="headerlink" href="#hpecp.client.ContainerPlatformClient.license" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute is a reference to an object of type <cite>.license.LicenseController</cite>.</p>
+<p>See the class <a class="reference internal" href="hpecp.license.html#hpecp.license.LicenseController" title="hpecp.license.LicenseController"><code class="xref py py-class docutils literal notranslate"><span class="pre">license.LicenseController</span></code></a> for the methods available.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">client</span> <span class="o">=</span> <span class="n">ContainerPlatformClient</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="n">client</span><span class="o">.</span><span class="n">create_session</span><span class="p">()</span>
+<span class="n">client</span><span class="o">.</span><span class="n">license</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This example calls the method <a class="reference internal" href="hpecp.license.html#hpecp.license.LicenseController.list" title="hpecp.license.LicenseController.list"><code class="xref py py-meth docutils literal notranslate"><span class="pre">list()</span></code></a> in <a class="reference internal" href="hpecp.license.html#hpecp.license.LicenseController" title="hpecp.license.LicenseController"><code class="xref py py-class docutils literal notranslate"><span class="pre">license.LicenseController</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="hpecp.client.ContainerPlatformClient.lock">
+<em class="property">property </em><code class="sig-name descname">lock</code><a class="headerlink" href="#hpecp.client.ContainerPlatformClient.lock" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute is a reference to an object of type <cite>.lock.LockController</cite>.</p>
+<p>See the class <a class="reference internal" href="hpecp.lock.html#hpecp.lock.LockController" title="hpecp.lock.LockController"><code class="xref py py-class docutils literal notranslate"><span class="pre">lock.LockController</span></code></a> for the methods available.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">client</span> <span class="o">=</span> <span class="n">ContainerPlatformClient</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="n">client</span><span class="o">.</span><span class="n">create_session</span><span class="p">()</span>
+<span class="n">client</span><span class="o">.</span><span class="n">lock</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This example calls the method <code class="xref py py-meth docutils literal notranslate"><span class="pre">get()</span></code> in <a class="reference internal" href="hpecp.lock.html#hpecp.lock.LockController" title="hpecp.lock.LockController"><code class="xref py py-class docutils literal notranslate"><span class="pre">lock.LockController</span></code></a>.</p>
 </dd></dl>
 
 <dl class="py method">
