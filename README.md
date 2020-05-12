@@ -90,4 +90,4 @@ hpecp k8scluster tabulate --columns=['id','description','status']
 
 ## Contributors
 
-See [Developing README](./DEVELOPING.md)
+See [README](./DEVELOPING.md)
