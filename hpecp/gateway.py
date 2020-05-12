@@ -15,6 +15,18 @@ except NameError:
   basestring = str
 
 class GatewayController:
+    """This is the main class that users will interact with to work with Gateways.
+
+    An instance of this class is available in the client.ContainerPlatformClient with the attribute name
+    :py:attr:`gateway <.client.ContainerPlatformClient.gateway>`.  The methods of this class can be 
+    invoked using `client.gateway.method()`.  See the example below:
+
+    Example::
+
+        client = ContainerPlatformClient(...).create_session()
+        client.gateway.list()
+
+    """
 
     def __init__(self, client):
         self.client = client
@@ -28,13 +40,15 @@ class GatewayController:
 
         Args:
             ip: str
-                TODO
+                The IP address of the proxy host.  Used for internal communication.
             proxy_node_hostname: str
-                TODO
-            ssh_key_data: str
-                TODO
-            tags: list[str]
-                TODO
+                Clients will access cluster services will be accessed using this name.
+            ssh_key: str
+                The ssh key data as a string.  Alternatively, use the ssh_key_file parameter.
+            ssh_key_file: str
+                The file path to the ssh key.  Alternatively, use the ssh_key parameter.
+            tags: list
+                Tags to use, e.g. "{ 'tag1': 'foo', 'tag2', 'bar' }".
 
         Returns: gateway ID
         '''
@@ -58,8 +72,13 @@ class GatewayController:
         return response.headers['location']
 
     def list(self):
-        """
-        See: https://<<controller_ip>>/apidocs/site-admin-api.html for the schema of the  response object
+        """Retrieve a list of Gateways
+
+        Returns:
+            GatewayList: list of Gateways
+
+        Raises:
+            APIException
         """
         response = self.client._request(url='/api/v1/workers/', http_method='get', description='gateway/list')
         return GatewayList(response.json()['_embedded']['workers'])
@@ -204,7 +223,7 @@ class Gateway():
         'sysinfo',
         'tags'
         ]
-    """All of the fields of Gateway objects that are returned by the HPE Container Platform API"""
+    """All of the fields of Gateway objects as returned by the HPE Container Platform API"""
 
     default_display_fields = [
         'id',
@@ -216,6 +235,7 @@ class Gateway():
         'purpose',
         'tags'
     ]
+    """These fields are displayed by default, e.g. in tabulate()"""
 
     def __init__(self, json):
         self.json = json
