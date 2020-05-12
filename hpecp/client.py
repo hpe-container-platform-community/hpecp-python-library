@@ -233,10 +233,10 @@ class ContainerPlatformClient(object):
         self._tenant = TenantController(self)
         self._config = ConfigController(self)
         self._gateway = GatewayController(self)
-        self.k8s_worker = K8sWorkerController(self)
+        self._k8s_worker = K8sWorkerController(self)
         self._k8s_cluster = K8sClusterController(self)
-        self.license = LicenseController(self)
-        self.lock = LockController(self)
+        self._license = LicenseController(self)
+        self._lock = LockController(self)
 
     def create_session(self):
         """Create a session with the HPE CP controller defined in the object :py:class:`ContainerPlatformClient`.
@@ -422,6 +422,24 @@ class ContainerPlatformClient(object):
         return self._k8s_cluster
 
     @property
+    def k8s_worker(self):
+        """
+        This attribute is a reference to an object of type `.k8s_worker.K8sWorkerController`.
+
+        See the class :py:class:`.k8s_worker.K8sWorkerController` for the methods available.
+
+        Example::
+
+            client = ContainerPlatformClient(...)
+            client.create_session()
+            client.k8s_worker.list()
+        
+        This example calls the method :py:meth:`list() <.k8s_worker.K8sWorkerController.list>` in :py:class:`.k8s_worker.K8sWorkerController`.
+        """
+
+        return self._k8s_worker
+
+    @property
     def gateway(self):
         """
         This attribute is a reference to an object of type `.gateway.GatewayController`.
@@ -438,6 +456,43 @@ class ContainerPlatformClient(object):
         """
 
         return self._gateway
+
+    @property
+    def license(self):
+        """
+        This attribute is a reference to an object of type `.license.LicenseController`.
+
+        See the class :py:class:`.license.LicenseController` for the methods available.
+
+        Example::
+
+            client = ContainerPlatformClient(...)
+            client.create_session()
+            client.license.list()
+        
+        This example calls the method :py:meth:`list() <.license.LicenseController.list>` in :py:class:`.license.LicenseController`.
+        """
+
+        return self._license
+
+    @property
+    def lock(self):
+        """
+        This attribute is a reference to an object of type `.lock.LockController`.
+
+        See the class :py:class:`.lock.LockController` for the methods available.
+
+        Example::
+
+            client = ContainerPlatformClient(...)
+            client.create_session()
+            client.lock.get()
+        
+        This example calls the method :py:meth:`get() <.lock.LockController.list>` in :py:class:`.lock.LockController`.
+        """
+
+        return self._lock
+
 
     @property
     def log(self):
