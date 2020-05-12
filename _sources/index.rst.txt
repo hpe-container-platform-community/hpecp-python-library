@@ -57,6 +57,8 @@ Contents
    installation
    hpecp
    logging
+   cli
    github
    license
+
 

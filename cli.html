@@ -5,7 +5,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Source Repository &#8212; HPE Container Platform Python Library  documentation</title>
+    <title>CLI Docs &#8212; HPE Container Platform Python Library  documentation</title>
     <link rel="stylesheet" href="_static/bizstyle.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
@@ -17,8 +17,8 @@
     <script src="_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Apache License" href="license.html" />
-    <link rel="prev" title="CLI Docs" href="cli.html" />
+    <link rel="next" title="Source Repository" href="github.html" />
+    <link rel="prev" title="Logging" href="logging.html" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <!--[if lt IE 9]>
     <script src="_static/css3-mediaqueries.js"></script>
@@ -34,10 +34,10 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="license.html" title="Apache License"
+          <a href="github.html" title="Source Repository"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="cli.html" title="CLI Docs"
+          <a href="logging.html" title="Logging"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">HPE Container Platform Python Library  documentation</a> &#187;</li> 
       </ul>
@@ -49,21 +49,21 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hpecp.html">API Docs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="logging.html">Logging</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cli.html">CLI Docs</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Source Repository</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">CLI Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="github.html">Source Repository</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">Apache License</a></li>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="cli.html"
-                        title="previous chapter">CLI Docs</a></p>
+  <p class="topless"><a href="logging.html"
+                        title="previous chapter">Logging</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="license.html"
-                        title="next chapter">Apache License</a></p>
+  <p class="topless"><a href="github.html"
+                        title="next chapter">Source Repository</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/github.rst.txt"
+      <li><a href="_sources/cli.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -85,9 +85,43 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="source-repository">
-<h1>Source Repository<a class="headerlink" href="#source-repository" title="Permalink to this headline">¶</a></h1>
-<p>The source code for the python libary can be found at <a class="reference external" href="https://github.com/hpe-container-platform-community/hpecp-python-library">Github</a></p>
+  <div class="section" id="cli-docs">
+<span id="clidocs"></span><h1>CLI Docs<a class="headerlink" href="#cli-docs" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h2>
+<p>Install the library:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip3 install --upgrade git+https://github.com/hpe-container-platform-community/hpecp-client@master
+</pre></div>
+</div>
+<p>Create a configuration file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cat &gt; ~/.hpecp.conf <span class="s">&lt;&lt;EOF</span>
+<span class="s">[default]</span>
+<span class="s">api_host = 127.0.0.1</span>
+<span class="s">api_port = 8080</span>
+<span class="s">use_ssl = True</span>
+<span class="s">verify_ssl = False</span>
+<span class="s">ssl_warn = False</span>
+<span class="s">username = admin</span>
+<span class="s">password = admin123</span>
+<span class="s">EOF</span>
+</pre></div>
+</div>
+<p>Test your connectivity:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>hpecp license platform-id
+&gt;&gt;&gt; returns-your-unique-platform-id
+</pre></div>
+</div>
+</div>
+<div class="section" id="logging-level">
+<h2>Logging Level<a class="headerlink" href="#logging-level" title="Permalink to this headline">¶</a></h2>
+<p>Log level is controlled with the environment variable LOG_LEVEL.</p>
+<p>Typical valid values are ERROR, WARNING, INFO, DEBUG. Default is DEBUG.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">LOG_LEVEL</span><span class="o">=</span>DEBUG
+hpecp license platform-id
+&gt;&gt;&gt; returns-your-unique-platform-id
+</pre></div>
+</div>
+</div>
 </div>
 
 
@@ -106,10 +140,10 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="license.html" title="Apache License"
+          <a href="github.html" title="Source Repository"
              >next</a> |</li>
         <li class="right" >
-          <a href="cli.html" title="CLI Docs"
+          <a href="logging.html" title="Logging"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">HPE Container Platform Python Library  documentation</a> &#187;</li> 
       </ul>
