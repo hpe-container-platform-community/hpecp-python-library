@@ -105,6 +105,15 @@
 <dt id="hpecp.gateway.GatewayController">
 <em class="property">class </em><code class="sig-prename descclassname">hpecp.gateway.</code><code class="sig-name descname">GatewayController</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">client</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayController"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.gateway.GatewayController" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This is the main class that users will interact with to work with Gateways.</p>
+<p>An instance of this class is available in the client.ContainerPlatformClient with the attribute name
+<a class="reference internal" href="hpecp.client.html#hpecp.client.ContainerPlatformClient.gateway" title="hpecp.client.ContainerPlatformClient.gateway"><code class="xref py py-attr docutils literal notranslate"><span class="pre">gateway</span></code></a>.  The methods of this class can be 
+invoked using <cite>client.gateway.method()</cite>.  See the example below:</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">client</span> <span class="o">=</span> <span class="n">ContainerPlatformClient</span><span class="p">(</span><span class="o">...</span><span class="p">)</span><span class="o">.</span><span class="n">create_session</span><span class="p">()</span>
+<span class="n">client</span><span class="o">.</span><span class="n">gateway</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+</pre></div>
+</div>
 <dl class="py method">
 <dt id="hpecp.gateway.GatewayController.create_with_ssh_password">
 <code class="sig-name descname">create_with_ssh_password</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">username</span></em>, <em class="sig-param"><span class="n">password</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayController.create_with_ssh_password"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.gateway.GatewayController.create_with_ssh_password" title="Permalink to this definition">¶</a></dt>
@@ -117,13 +126,15 @@
 <dd><p>Create a gateway instance using SSH key credentials to access the host</p>
 <dl class="simple">
 <dt>Args:</dt><dd><dl class="simple">
-<dt>ip: str</dt><dd><p>TODO</p>
+<dt>ip: str</dt><dd><p>The IP address of the proxy host.  Used for internal communication.</p>
 </dd>
-<dt>proxy_node_hostname: str</dt><dd><p>TODO</p>
+<dt>proxy_node_hostname: str</dt><dd><p>Clients will access cluster services will be accessed using this name.</p>
 </dd>
-<dt>ssh_key_data: str</dt><dd><p>TODO</p>
+<dt>ssh_key: str</dt><dd><p>The ssh key data as a string.  Alternatively, use the ssh_key_file parameter.</p>
 </dd>
-<dt>tags: list[str]</dt><dd><p>TODO</p>
+<dt>ssh_key_file: str</dt><dd><p>The file path to the ssh key.  Alternatively, use the ssh_key parameter.</p>
+</dd>
+<dt>tags: list</dt><dd><p>Tags to use, e.g. “{ ‘tag1’: ‘foo’, ‘tag2’, ‘bar’ }”.</p>
 </dd>
 </dl>
 </dd>
@@ -134,7 +145,13 @@
 <dl class="py method">
 <dt id="hpecp.gateway.GatewayController.list">
 <code class="sig-name descname">list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayController.list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.gateway.GatewayController.list" title="Permalink to this definition">¶</a></dt>
-<dd><p>See: <a class="reference external" href="https:/">https:/</a>/&lt;&lt;controller_ip&gt;&gt;/apidocs/site-admin-api.html for the schema of the  response object</p>
+<dd><p>Retrieve a list of Gateways</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>GatewayList: list of Gateways</p>
+</dd>
+<dt>Raises:</dt><dd><p>APIException</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -296,13 +313,14 @@ The API uses a string identifier with the status name rather than an integer val
 <dl class="py attribute">
 <dt id="hpecp.gateway.Gateway.all_fields">
 <code class="sig-name descname">all_fields</code><em class="property"> = ['id', 'hacapable', 'propinfo', 'approved_worker_pubkey', 'schedule', 'ip', 'proxy_nodes_hostname', 'hostname', 'state', 'status_info', 'purpose', 'sysinfo', 'tags']</em><a class="headerlink" href="#hpecp.gateway.Gateway.all_fields" title="Permalink to this definition">¶</a></dt>
-<dd><p>All of the fields of Gateway objects that are returned by the HPE Container Platform API</p>
+<dd><p>All of the fields of Gateway objects as returned by the HPE Container Platform API</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt id="hpecp.gateway.Gateway.default_display_fields">
 <code class="sig-name descname">default_display_fields</code><em class="property"> = ['id', 'ip', 'proxy_nodes_hostname', 'hostname', 'state', 'status_info', 'purpose', 'tags']</em><a class="headerlink" href="#hpecp.gateway.Gateway.default_display_fields" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>These fields are displayed by default, e.g. in tabulate()</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="hpecp.gateway.Gateway.set_display_columns">

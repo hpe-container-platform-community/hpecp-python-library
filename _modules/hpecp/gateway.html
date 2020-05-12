@@ -82,6 +82,18 @@
   <span class="n">basestring</span> <span class="o">=</span> <span class="nb">str</span>
 
 <div class="viewcode-block" id="GatewayController"><a class="viewcode-back" href="../../hpecp.gateway.html#hpecp.gateway.GatewayController">[docs]</a><span class="k">class</span> <span class="nc">GatewayController</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;This is the main class that users will interact with to work with Gateways.</span>
+
+<span class="sd">    An instance of this class is available in the client.ContainerPlatformClient with the attribute name</span>
+<span class="sd">    :py:attr:`gateway &lt;.client.ContainerPlatformClient.gateway&gt;`.  The methods of this class can be </span>
+<span class="sd">    invoked using `client.gateway.method()`.  See the example below:</span>
+
+<span class="sd">    Example::</span>
+
+<span class="sd">        client = ContainerPlatformClient(...).create_session()</span>
+<span class="sd">        client.gateway.list()</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">client</span>
@@ -95,13 +107,15 @@
 
 <span class="sd">        Args:</span>
 <span class="sd">            ip: str</span>
-<span class="sd">                TODO</span>
+<span class="sd">                The IP address of the proxy host.  Used for internal communication.</span>
 <span class="sd">            proxy_node_hostname: str</span>
-<span class="sd">                TODO</span>
-<span class="sd">            ssh_key_data: str</span>
-<span class="sd">                TODO</span>
-<span class="sd">            tags: list[str]</span>
-<span class="sd">                TODO</span>
+<span class="sd">                Clients will access cluster services will be accessed using this name.</span>
+<span class="sd">            ssh_key: str</span>
+<span class="sd">                The ssh key data as a string.  Alternatively, use the ssh_key_file parameter.</span>
+<span class="sd">            ssh_key_file: str</span>
+<span class="sd">                The file path to the ssh key.  Alternatively, use the ssh_key parameter.</span>
+<span class="sd">            tags: list</span>
+<span class="sd">                Tags to use, e.g. &quot;{ &#39;tag1&#39;: &#39;foo&#39;, &#39;tag2&#39;, &#39;bar&#39; }&quot;.</span>
 
 <span class="sd">        Returns: gateway ID</span>
 <span class="sd">        &#39;&#39;&#39;</span>
@@ -125,8 +139,13 @@
         <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="GatewayController.list"><a class="viewcode-back" href="../../hpecp.gateway.html#hpecp.gateway.GatewayController.list">[docs]</a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        See: https://&lt;&lt;controller_ip&gt;&gt;/apidocs/site-admin-api.html for the schema of the  response object</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve a list of Gateways</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            GatewayList: list of Gateways</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            APIException</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="s1">&#39;/api/v1/workers/&#39;</span><span class="p">,</span> <span class="n">http_method</span><span class="o">=</span><span class="s1">&#39;get&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;gateway/list&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">GatewayList</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;_embedded&#39;</span><span class="p">][</span><span class="s1">&#39;workers&#39;</span><span class="p">])</span></div>
@@ -271,7 +290,7 @@
         <span class="s1">&#39;sysinfo&#39;</span><span class="p">,</span>
         <span class="s1">&#39;tags&#39;</span>
         <span class="p">]</span>
-    <span class="sd">&quot;&quot;&quot;All of the fields of Gateway objects that are returned by the HPE Container Platform API&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;All of the fields of Gateway objects as returned by the HPE Container Platform API&quot;&quot;&quot;</span>
 
     <span class="n">default_display_fields</span> <span class="o">=</span> <span class="p">[</span>
         <span class="s1">&#39;id&#39;</span><span class="p">,</span>
@@ -283,6 +302,7 @@
         <span class="s1">&#39;purpose&#39;</span><span class="p">,</span>
         <span class="s1">&#39;tags&#39;</span>
     <span class="p">]</span>
+    <span class="sd">&quot;&quot;&quot;These fields are displayed by default, e.g. in tabulate()&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">json</span> <span class="o">=</span> <span class="n">json</span>
