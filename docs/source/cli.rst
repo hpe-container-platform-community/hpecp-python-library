@@ -136,6 +136,24 @@ Returns::
 Example
 -------
 
+Coming soon ...
+
+Autocompletion
+--------------
+
+
+(this is currently broken - awaiting: https://github.com/google/python-fire/issues/255)	
+
+The CLI supports auto completion, for bash use:
+
+.. code-block:: bash
+
+    hpecp -- --completion bash > ~/.hpecp_completion	
+    echo source ~/.hpecp_completion >> ~/.bashrc	
+
+
+For zsh, or fish, change the command type in the first command and add to the relevant startup script.	
+
 
 
 
