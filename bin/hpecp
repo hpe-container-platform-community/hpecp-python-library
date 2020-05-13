@@ -139,13 +139,10 @@ class Gateway(object):
         try:
             success = get_client().gateway.wait_for_state(
                             gateway_id=gateway_id, state=gateway_states)
-            if success:
-                sys.exit(0)
         except:
             success = False
         
         if not success:
-            print(success)
             print("Failed to reach state(s) {} in {}".format(str(states), str(timeout_secs)))
             sys.exit(1)
 
