@@ -33,14 +33,14 @@ from hpecp.k8s_cluster import K8sClusterHostConfig, K8sClusterStatus
 from hpecp.gateway import Gateway, GatewayStatus
 
 PROFILE = os.getenv("PROFILE", "default")
-CONFIG_FILE = os.getenv("CONFIG_FILE", "~/.hpecp.conf")
+HPECP_CONFIG_FILE = os.getenv("HPECP_CONFIG_FILE", "~/.hpecp.conf")
 
 
 def get_client():
     """Utility function to retrieve an authenticated client object"""
     try:
         client = ContainerPlatformClient.create_from_config_file(
-            config_file=CONFIG_FILE, profile=PROFILE
+            config_file=HPECP_CONFIG_FILE, profile=PROFILE
         )
         client.create_session()
         return client
