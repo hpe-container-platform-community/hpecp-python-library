@@ -107,28 +107,61 @@
 <dl class="py method">
 <dt id="hpecp.license.LicenseController.platform_id">
 <code class="sig-name descname">platform_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/license.html#LicenseController.platform_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.license.LicenseController.platform_id" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Retrieve the Platform ID</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="hpecp.license.LicenseController.list">
 <code class="sig-name descname">list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/license.html#LicenseController.list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.license.LicenseController.list" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Retrieve the list of licenses</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="hpecp.license.LicenseController.upload">
-<code class="sig-name descname">upload</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">base64enc_license</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/license.html#LicenseController.upload"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.license.LicenseController.upload" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">upload</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">base64enc_license</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/license.html#LicenseController.upload"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.license.LicenseController.upload" title="Permalink to this definition">¶</a></dt>
 <dd><p>Not implemented yet!</p>
+<dl class="simple">
+<dt>Workaround: </dt><dd><ul class="simple">
+<li><p>scp your license to ‘/srv/bluedata/license/’ on the controller</p></li>
+<li><p>run client.license.register(server_filename) to register the license</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt id="hpecp.license.LicenseController.register">
 <code class="sig-name descname">register</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">server_filename</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/license.html#LicenseController.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.license.LicenseController.register" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Register a license that has been uploaded to ‘/srv/bluedata/license/’ on the controller.</p>
+<p>Arguments:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>server_filename: str</dt><dd><p>Filepath to the license on the server, e.g. ‘/srv/bluedata/license/LICENSE-1.txt’</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>Raises:</p>
+<blockquote>
+<div><p>APIException</p>
+</div></blockquote>
+</dd></dl>
 
 <dl class="py method">
 <dt id="hpecp.license.LicenseController.delete">
 <code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">license_key</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/license.html#LicenseController.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.license.LicenseController.delete" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Delete a license by LicenseKey</p>
+<p>Arguments:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>license_key: str</dt><dd><p>The license key, e.g. ‘1234 1234 … 1234 “SOMETEXT”’</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>Raises:</p>
+<blockquote>
+<div><p>APIException</p>
+</div></blockquote>
+</dd></dl>
 
 </dd></dl>
 
