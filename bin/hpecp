@@ -135,9 +135,19 @@ class Gateway(object):
         See also: `hpecp gateway states`
         """
         gateway_states = [GatewayStatus[s] for s in states]
-        get_client().gateway.wait_for_state(
-            gateway_id=gateway_id, state=gateway_states
-        )
+
+        success = False
+        try:
+            success = get_client().gateway.wait_for_state(
+                            gateway_id=gateway_id, state=gateway_states)
+            if success:
+                sys.exit(0)
+        except:
+            pass
+        
+        if not success:
+            print("Failed to reach state(s) {} in {}".format(str(states), str(timeout_secs)))
+            sys.exit(1)
 
     def states(self):
         """Return a list of valid states"""
