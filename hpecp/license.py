@@ -14,28 +14,57 @@ class LicenseController:
         self.client = client
 
     def platform_id(self):
+        """Retrieve the Platform ID"""
         response = self.client._request(url='/api/v1/license', http_method='get', description='license/get_platform_id')
         return response.json()['uuid']
 
     def list(self):
+        """Retrieve the list of licenses
+        """
         response = self.client._request(url='/api/v2/hpelicense', http_method='get', description='license/get_license')
         return response.json()
 
-    def upload(self, base64enc_license):
-        """Not implemented yet!"""
-        raise Exception("Not implemented yet!")  
+    def upload(self, base64enc_license=''):
+        """Not implemented yet! 
+
+        Workaround: 
+         - scp your license to '/srv/bluedata/license/' on the controller
+         - run client.license.register(server_filename) to register the license
+        """
+        raise Exception("Not implemented yet! Workaround: scp your license to '/srv/bluedata/license/'")  
 
     def register(self, server_filename):
+        """Register a license that has been uploaded to '/srv/bluedata/license/' on the controller.
+
+        Arguments:
+
+            server_filename: str
+                Filepath to the license on the server, e.g. '/srv/bluedata/license/LICENSE-1.txt'
+
+        Raises:
+
+            APIException
+        """
         data = { "hpelicense_file": server_filename }
-        response = self.client._request(url='/api/v2/hpelicense', http_method='post', data=data, description='license/register')
-        return response
+        return self.client._request(url='/api/v2/hpelicense', http_method='post', data=data, description='license/register')
 
     def delete(self, license_key):
+        """Delete a license by LicenseKey
+        
+        Arguments:
+
+            license_key: str
+                The license key, e.g. '1234 1234 ... 1234 "SOMETEXT"'
+
+        Raises:
+
+            APIException
+        """
+
         try:
             lic = urllib.parse.quote(license_key)  # python 2
         except:
             lic = urllib.pathname2url(license_key) # python 3
 
-        response = self.client._request(url='/api/v2/hpelicense/{}/'.format(lic), http_method='delete', description='license/delete')
-        return response
+        return self.client._request(url='/api/v2/hpelicense/{}/'.format(lic), http_method='delete', description='license/delete')
 

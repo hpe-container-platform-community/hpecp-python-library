@@ -254,6 +254,41 @@ class License(object):
         """
         print(get_client().license.platform_id())
 
+    def list(self, output="yaml", license_key_only=False):
+        """Retrieve the list of licenses
+
+        :param output: how to display the output ['yaml'|'json']
+        """
+        response = get_client().license.list()
+        if license_key_only:
+            response = [ str(unicode(l['LicenseKey'])) for l in response['Licenses'] ]
+            print(response)
+        else:
+            if output == "yaml":
+                print(
+                    yaml.dump(yaml.load(json.dumps(response), Loader=yaml.FullLoader))
+                )
+            else:
+                print(json.dumps(response))
+
+    def register(self, server_filename):
+        """Register a license
+
+        :param server_filename: Filepath to the license on the server, e.g. '/srv/bluedata/license/LICENSE-1.txt'
+        """
+        get_client().license.register(server_filename=server_filename)
+        print("Done.")
+
+    def delete(self, license_key):
+        """Delete a license by LicenseKey
+        
+        :param license_key: The license key, e.g. '1234 1234 ... 1234 "SOMETEXT"'
+
+        TIP: use `hpecp license list --license_key_only True` to get the license key
+        """
+        get_client().license.delete(license_key=license_key)
+        print('Delete submitted - verify with: `hpecp license list`')
+
 class CLI(object):
     def __init__(self):
         self.k8scluster = K8sCluster()
