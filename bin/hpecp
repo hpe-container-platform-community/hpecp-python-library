@@ -235,6 +235,12 @@ class Lock(object):
         else:
             print(response)
 
+    def list(self, output="yaml"):
+        """Get the system and user locks
+        :param output: how to display the output ['yaml'|'json']
+        """
+        self.get(output=output)
+
     def create(self, reason):
         """Create a lock"""
         get_client().lock.create(reason)
