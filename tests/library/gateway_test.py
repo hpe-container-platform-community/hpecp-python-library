@@ -255,9 +255,9 @@ class TestWaitForGatewayStatus(TestCase):
                 gateway_id='/api/v1/workers/999', timeout_secs=1, state=[ GatewayStatus.installed ])
 
         # Get the status of a Cluster ID that doesn't exist - without providing a status
-        with self.assertRaises(APIItemNotFoundException):
+        self.assertTrue(
             get_client().gateway.wait_for_state(
-                gateway_id='/api/v1/workers/999', timeout_secs=1, state=[])
+                gateway_id='/api/v1/workers/999', timeout_secs=1, state=[]))
 
 
 

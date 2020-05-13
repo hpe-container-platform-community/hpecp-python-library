@@ -128,7 +128,7 @@ class Gateway(object):
         """
         Wait for Gateway to have one or more statuses
         :param gateway_id: Cluster id with format: /api/v1/workers/[0-9]+
-        :param status: status(es) to wait for with format: ['status1', 'status2', 'statusn']
+        :param status: status(es) to wait for with format: ['status1', 'status2', 'statusn'] - set to [] to wait for item to be deleted
         :param timeout_secs: how many secs to wait before exiting
         :returns True/False if status was found within timeout_secs. May raise APIException.
 
@@ -136,14 +136,13 @@ class Gateway(object):
         """
         gateway_states = [GatewayStatus[s] for s in states]
 
-        success = False
         try:
             success = get_client().gateway.wait_for_state(
                             gateway_id=gateway_id, state=gateway_states)
             if success:
                 sys.exit(0)
         except:
-            pass
+            success = False
         
         if not success:
             print("Failed to reach state(s) {} in {}".format(str(states), str(timeout_secs)))

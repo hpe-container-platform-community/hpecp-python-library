@@ -8,6 +8,8 @@ from tabulate import tabulate
 from enum import Enum
 import polling
 import re
+import six
+import sys
 
 try:
   basestring
@@ -145,7 +147,7 @@ class GatewayController:
             bool: True if status was found before timeout, otherwise False
             
         Raises:
-            APIItemNotFoundException: if the item is not found
+            APIItemNotFoundException: if the item is not found and state is not empty
             APIException: if a generic API exception occurred
         """
         assert isinstance(gateway_id, basestring), "'gateway_id' must be a string"
@@ -164,6 +166,11 @@ class GatewayController:
                 timeout=timeout_secs
             )
             return True
+        except APIItemNotFoundException:
+            if len(state) == 0:
+                return True
+            else:
+                six.reraise(*sys.exc_info())
         except polling.TimeoutException:
             return False
 
