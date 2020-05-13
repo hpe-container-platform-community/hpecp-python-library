@@ -124,7 +124,7 @@ class Gateway(object):
             print(e.message)
             sys.exit(1)
 
-    def wait_for_state(self, gateway_id, states=[], timeout_secs=60):
+    def wait_for_state(self, gateway_id, states=[], timeout_secs=1200):
         """
         Wait for Gateway to have one or more statuses
         :param gateway_id: Cluster id with format: /api/v1/workers/[0-9]+

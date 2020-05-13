@@ -132,7 +132,7 @@ class GatewayController:
         self.client._request(url=gateway_id, http_method='delete', description='gateway/delete')
 
 
-    def wait_for_state(self, gateway_id, state=[], timeout_secs=60):
+    def wait_for_state(self, gateway_id, state=[], timeout_secs=1200):
         """Wait for gateway state.
 
         Args:
