@@ -302,12 +302,66 @@ class License(object):
         get_client().license.delete(license_key=license_key)
         print('Delete submitted - verify with: `hpecp license list`')
 
+class HttpClient(object):
+
+    def get(self, url):
+        """Make HTTP GET request
+
+        Example:
+
+            hpecp httpclient get /api/v1/workers
+        """
+        response = get_client()._request(url, http_method='get', description='CLI HTTP GET')
+        print(response.text)
+
+    def delete(self, url):
+        """Make HTTP DELETE request
+
+        Example:
+
+            hpecp httpclient delete /api/v1/workers/1
+        """
+        response = get_client()._request(url, http_method='delete', description='CLI HTTP DELETE')
+        print(response.text)
+
+    def post(self, url, json_file=''):
+        """Make HTTP POST request
+
+        Example:
+
+            cat > my.json <<-EOF
+            { 
+                "external_identity_server":  {
+                    "bind_pwd":"5ambaPwd@",
+                    "user_attribute":"sAMAccountName",
+                    "bind_type":"search_bind",
+                    "bind_dn":"cn=Administrator,CN=Users,DC=samdom,DC=example,DC=com",
+                    "host":"10.1.0.77",
+                    "security_protocol":"ldaps",
+                    "base_dn":"CN=Users,DC=samdom,DC=example,DC=com",
+                    "verify_peer": false,
+                    "type":"Active Directory",
+                    "port":636 
+                }
+            }
+            EOF
+
+            hpecp httpclient post /api/v2/config/auth --json-file my.json
+        """
+        with open(json_file, 'r') as f:
+            data = json.load(f)
+
+        response = get_client()._request(url, http_method='post', data=data, description='CLI HTTP POST')
+        print(response.text)
+
+
 class CLI(object):
     def __init__(self):
         self.k8scluster = K8sCluster()
         self.gateway = Gateway()
         self.lock = Lock()
         self.license = License()
+        self.httpclient = HttpClient()
 
 
 if __name__ == "__main__":
