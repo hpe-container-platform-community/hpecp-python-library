@@ -7,8 +7,10 @@
 ----
 
 ```diff
-- This project is a prototype - not much to see here yet!
-- APIs are very likely to change between commits and could break your code.
+- This project is under active development.
+- Method APIs may change between commits.
+- Not all HPE CP APIs have been implemented. 
+- Help Wanted - please consider contributing! 
 ```
 
 ## Installation
