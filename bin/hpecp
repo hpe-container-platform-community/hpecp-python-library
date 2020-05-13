@@ -145,6 +145,7 @@ class Gateway(object):
             success = False
         
         if not success:
+            print(success)
             print("Failed to reach state(s) {} in {}".format(str(states), str(timeout_secs)))
             sys.exit(1)
 

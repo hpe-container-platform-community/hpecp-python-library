@@ -158,21 +158,38 @@ class GatewayController:
         assert isinstance(timeout_secs, int), "'timeout_secs' must be an int"   
         assert timeout_secs >= 0, "'timeout_secs' must be >= 0"
 
-        try:
-            polling.poll(
-                lambda: self.get(gateway_id).state in [ s.name for s in state ],
-                step=10,
-                poll_forever=False,
-                timeout=timeout_secs
-            )
-            return True
-        except APIItemNotFoundException:
-            if len(state) == 0:
+        # if state is empty return success when gateway_id not found
+        if len(state) == 0:
+            def item_not_exists():
+                try:
+                    self.get(gateway_id)
+                    return False
+                except APIItemNotFoundException:
+                    return True
+
+            try:
+                polling.poll(
+                    lambda: item_not_exists(),
+                    step=10,
+                    poll_forever=False,
+                    timeout=timeout_secs
+                )
                 return True
-            else:
-                six.reraise(*sys.exc_info())
-        except polling.TimeoutException:
-            return False
+            except polling.TimeoutException:
+                return False
+
+        # if state is not empty return success when gateway current state is in desired state
+        else:
+            try:
+                polling.poll(
+                    lambda: self.get(gateway_id).state in [ s.name for s in state ],
+                    step=10,
+                    poll_forever=False,
+                    timeout=timeout_secs
+                )
+                return True
+            except polling.TimeoutException:
+                return False
 
 class GatewayStatus(Enum):
     """Bases: enum.Enum
