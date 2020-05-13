@@ -7,17 +7,18 @@ API Docs
    :maxdepth: 4
    :caption: Completed APIs
 
+   hpecp.license
    hpecp.client
    hpecp.gateway
    hpecp.k8s_cluster
+   hpecp.lock
 
 .. toctree::
    :maxdepth: 4
    :caption: Work-in-progress APIs
 
    hpecp.k8s_worker
-   hpecp.license
-   hpecp.lock
+   
    hpecp.config
    hpecp.tag
    hpecp.tenant

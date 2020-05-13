@@ -17,8 +17,8 @@
     <script src="_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="hpecp.config module" href="hpecp.config.html" />
-    <link rel="prev" title="hpecp.license module" href="hpecp.license.html" />
+    <link rel="next" title="hpecp.k8s_worker module" href="hpecp.k8s_worker.html" />
+    <link rel="prev" title="hpecp.k8s_cluster module" href="hpecp.k8s_cluster.html" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <!--[if lt IE 9]>
     <script src="_static/css3-mediaqueries.js"></script>
@@ -34,10 +34,10 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="hpecp.config.html" title="hpecp.config module"
+          <a href="hpecp.k8s_worker.html" title="hpecp.k8s_worker module"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="hpecp.license.html" title="hpecp.license module"
+          <a href="hpecp.k8s_cluster.html" title="hpecp.k8s_cluster module"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">HPE Container Platform Python Library  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="hpecp.html" accesskey="U">API Docs</a> &#187;</li> 
@@ -49,12 +49,12 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="hpecp.html">API Docs</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="hpecp.license.html">hpecp.license module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hpecp.client.html">hpecp.client module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hpecp.gateway.html">hpecp.gateway module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hpecp.k8s_cluster.html">hpecp.k8s_cluster module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hpecp.k8s_worker.html">hpecp.k8s_worker module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hpecp.license.html">hpecp.license module</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">hpecp.lock module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hpecp.k8s_worker.html">hpecp.k8s_worker module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hpecp.config.html">hpecp.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hpecp.tag.html">hpecp.tag module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hpecp.tenant.html">hpecp.tenant module</a></li>
@@ -68,11 +68,11 @@
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="hpecp.license.html"
-                        title="previous chapter">hpecp.license module</a></p>
+  <p class="topless"><a href="hpecp.k8s_cluster.html"
+                        title="previous chapter">hpecp.k8s_cluster module</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="hpecp.config.html"
-                        title="next chapter">hpecp.config module</a></p>
+  <p class="topless"><a href="hpecp.k8s_worker.html"
+                        title="next chapter">hpecp.k8s_worker module</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -107,22 +107,65 @@
 <dl class="py method">
 <dt id="hpecp.lock.LockController.get">
 <code class="sig-name descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/lock.html#LockController.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.lock.LockController.get" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Retrieve the locks</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="hpecp.lock.LockController.list">
+<code class="sig-name descname">list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/lock.html#LockController.list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.lock.LockController.list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve the locks</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="hpecp.lock.LockController.create">
 <code class="sig-name descname">create</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">reason</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/lock.html#LockController.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.lock.LockController.create" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Create a new lock</p>
+<p>Arguments:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>reason: str</dt><dd><p>Provide a reason for the lock</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>Raises:</p>
+<blockquote>
+<div><p>APIException</p>
+</div></blockquote>
+</dd></dl>
 
 <dl class="py method">
 <dt id="hpecp.lock.LockController.delete">
 <code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lock_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/lock.html#LockController.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.lock.LockController.delete" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Delete a lock</p>
+<p>Arguments:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>lock_id: str</dt><dd><p>The lock id as retrieved with <cite>get()</cite>  Format: ‘/api/v1/lock/[0-9]+’</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>Raises:</p>
+<blockquote>
+<div><p>APIException</p>
+</div></blockquote>
+</dd></dl>
 
 <dl class="py method">
 <dt id="hpecp.lock.LockController.delete_all">
 <code class="sig-name descname">delete_all</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">timeout_secs</span><span class="o">=</span><span class="default_value">300</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/lock.html#LockController.delete_all"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.lock.LockController.delete_all" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Delete all locks</p>
+<p>Arguments:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>timeout_secs: int</dt><dd><p>How long to wait for internal locks (note these need to be cleared before external locks can be deleted)</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>Raises:</p>
+<blockquote>
+<div><p>APIException</p>
+</div></blockquote>
+</dd></dl>
 
 </dd></dl>
 
@@ -144,10 +187,10 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="hpecp.config.html" title="hpecp.config module"
+          <a href="hpecp.k8s_worker.html" title="hpecp.k8s_worker module"
              >next</a> |</li>
         <li class="right" >
-          <a href="hpecp.license.html" title="hpecp.license module"
+          <a href="hpecp.k8s_cluster.html" title="hpecp.k8s_cluster module"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">HPE Container Platform Python Library  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="hpecp.html" >API Docs</a> &#187;</li> 
