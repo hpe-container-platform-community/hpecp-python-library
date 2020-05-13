@@ -115,6 +115,7 @@ pip3 install --upgrade git+https://github.com/hpe-container-platform-community/h
 <span class="s">EOF</span>
 </pre></div>
 </div>
+<p><strong>NOTE:</strong> you can specify a different config file location with the environment variables <cite>HPECP_CONFIG_FILE</cite>.</p>
 <p>Test your connectivity:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>hpecp license platform-id
 
@@ -222,10 +223,11 @@ hpecp license platform-id
 <p>(this is currently broken - awaiting: <a class="reference external" href="https://github.com/google/python-fire/issues/255">https://github.com/google/python-fire/issues/255</a>)</p>
 <p>The CLI supports auto completion, for bash use:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>hpecp -- --completion bash &gt; ~/.hpecp_completion
-<span class="nb">echo</span> <span class="nb">source</span> ~/.hpecp_completion &gt;&gt; ~/.bashrc
+<span class="nb">echo</span> <span class="nb">source</span> ~/.hpecp_completion &gt;&gt; ~/.bash_profile
 </pre></div>
 </div>
-<p>For zsh, or fish, change the command type in the first command and add to the relevant startup script.</p>
+<p>For zsh, or fish, change the command from <cite>bash</cite> to <cite>zsh</cite> or <cite>fish</cite> in the first command and
+add the completion script to your shell init script, <cite>~/.zshrc</cite> or <cite>~/.config/fish/config.fish</cite>.</p>
 </div>
 </div>
 

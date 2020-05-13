@@ -30,6 +30,8 @@ Create a configuration file:
     password = admin123
     EOF
 
+**NOTE:** you can specify a different config file location with the environment variables `HPECP_CONFIG_FILE`.
+
 Test your connectivity:
 
 .. code-block:: bash
@@ -150,10 +152,11 @@ The CLI supports auto completion, for bash use:
 .. code-block:: bash
 
     hpecp -- --completion bash > ~/.hpecp_completion	
-    echo source ~/.hpecp_completion >> ~/.bashrc	
+    echo source ~/.hpecp_completion >> ~/.bash_profile	
 
 
-For zsh, or fish, change the command type in the first command and add to the relevant startup script.	
+For zsh, or fish, change the command from `bash` to `zsh` or `fish` in the first command and 
+add the completion script to your shell init script, `~/.zshrc` or `~/.config/fish/config.fish`.
 
 
 
