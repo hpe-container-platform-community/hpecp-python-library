@@ -469,12 +469,14 @@
     <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gateways</span><span class="p">)</span>
 
-<div class="viewcode-block" id="GatewayList.tabulate"><a class="viewcode-back" href="../../hpecp.gateway.html#hpecp.gateway.GatewayList.tabulate">[docs]</a>    <span class="k">def</span> <span class="nf">tabulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">Gateway</span><span class="o">.</span><span class="n">default_display_fields</span><span class="p">):</span>
+<div class="viewcode-block" id="GatewayList.tabulate"><a class="viewcode-back" href="../../hpecp.gateway.html#hpecp.gateway.GatewayList.tabulate">[docs]</a>    <span class="k">def</span> <span class="nf">tabulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">Gateway</span><span class="o">.</span><span class="n">default_display_fields</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;pretty&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Provide a tabular represenation of the list of Gateways</span>
 
 <span class="sd">        Parameters:</span>
 <span class="sd">            columns : list[str]</span>
 <span class="sd">                list of columns to return in the table - default :py:attr:`.Gateway.default_display_fields`</span>
+<span class="sd">            style: str</span>
+<span class="sd">                See: https://github.com/astanin/python-tabulate#table-format</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            str : table output</span>

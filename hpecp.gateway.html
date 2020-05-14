@@ -430,11 +430,13 @@ The API uses a string identifier with the status name rather than an integer val
 </dl>
 <dl class="py method">
 <dt id="hpecp.gateway.GatewayList.tabulate">
-<code class="sig-name descname">tabulate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">columns</span><span class="o">=</span><span class="default_value">['id', 'ip', 'proxy_nodes_hostname', 'hostname', 'state', 'status_info', 'purpose', 'tags']</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayList.tabulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.gateway.GatewayList.tabulate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">tabulate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">columns</span><span class="o">=</span><span class="default_value">['id', 'ip', 'proxy_nodes_hostname', 'hostname', 'state', 'status_info', 'purpose', 'tags']</span></em>, <em class="sig-param"><span class="n">style</span><span class="o">=</span><span class="default_value">'pretty'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayList.tabulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.gateway.GatewayList.tabulate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Provide a tabular represenation of the list of Gateways</p>
 <dl class="simple">
 <dt>Parameters:</dt><dd><dl class="simple">
 <dt>columns<span class="classifier">list[str]</span></dt><dd><p>list of columns to return in the table - default <a class="reference internal" href="#hpecp.gateway.Gateway.default_display_fields" title="hpecp.gateway.Gateway.default_display_fields"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Gateway.default_display_fields</span></code></a></p>
+</dd>
+<dt>style: str</dt><dd><p>See: <a class="reference external" href="https://github.com/astanin/python-tabulate#table-format">https://github.com/astanin/python-tabulate#table-format</a></p>
 </dd>
 </dl>
 </dd>
