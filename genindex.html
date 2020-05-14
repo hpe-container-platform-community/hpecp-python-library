@@ -91,8 +91,6 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="hpecp.k8s_worker.html#hpecp.k8s_worker.K8sWorkerController.add_k8shost">add_k8shost() (hpecp.k8s_worker.K8sWorkerController method)</a>
-</li>
       <li><a href="hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sCluster.admin_kube_config">admin_kube_config() (hpecp.k8s_cluster.K8sCluster property)</a>
 </li>
       <li><a href="hpecp.gateway.html#hpecp.gateway.Gateway.all_fields">all_fields (hpecp.gateway.Gateway attribute)</a>
@@ -103,10 +101,10 @@
       </ul></li>
       <li><a href="hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sCluster.api_endpoint_access">api_endpoint_access() (hpecp.k8s_cluster.K8sCluster property)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="hpecp.exceptions.html#hpecp.exceptions.APIException">APIException</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="hpecp.exceptions.html#hpecp.exceptions.APIItemConflictException">APIItemConflictException</a>
 </li>
       <li><a href="hpecp.exceptions.html#hpecp.exceptions.APIItemNotFoundException">APIItemNotFoundException</a>
@@ -176,9 +174,17 @@
       <li><a href="hpecp.client.html#hpecp.client.ContainerPlatformClient.create_session">create_session() (hpecp.client.ContainerPlatformClient method)</a>
 </li>
       <li><a href="hpecp.gateway.html#hpecp.gateway.GatewayController.create_with_ssh_key">create_with_ssh_key() (hpecp.gateway.GatewayController method)</a>
+
+      <ul>
+        <li><a href="hpecp.k8s_worker.html#hpecp.k8s_worker.K8sWorkerController.create_with_ssh_key">(hpecp.k8s_worker.K8sWorkerController method)</a>
 </li>
+      </ul></li>
       <li><a href="hpecp.gateway.html#hpecp.gateway.GatewayController.create_with_ssh_password">create_with_ssh_password() (hpecp.gateway.GatewayController method)</a>
+
+      <ul>
+        <li><a href="hpecp.k8s_worker.html#hpecp.k8s_worker.K8sWorkerController.create_with_ssh_password">(hpecp.k8s_worker.K8sWorkerController method)</a>
 </li>
+      </ul></li>
       <li><a href="hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sCluster.created_by_user_id">created_by_user_id() (hpecp.k8s_cluster.K8sCluster property)</a>
 </li>
       <li><a href="hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sCluster.created_by_user_name">created_by_user_name() (hpecp.k8s_cluster.K8sCluster property)</a>
@@ -264,15 +270,13 @@
       <ul>
         <li><a href="hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.get">(hpecp.k8s_cluster.K8sClusterController method)</a>
 </li>
+        <li><a href="hpecp.k8s_worker.html#hpecp.k8s_worker.K8sWorkerController.get">(hpecp.k8s_worker.K8sWorkerController method)</a>
+</li>
         <li><a href="hpecp.lock.html#hpecp.lock.LockController.get">(hpecp.lock.LockController method)</a>
 </li>
         <li><a href="hpecp.tenant.html#hpecp.tenant.TenantController.get">(hpecp.tenant.TenantController method)</a>
 </li>
       </ul></li>
-      <li><a href="hpecp.k8s_worker.html#hpecp.k8s_worker.K8sWorkerController.get_k8shost">get_k8shost() (hpecp.k8s_worker.K8sWorkerController method)</a>
-</li>
-      <li><a href="hpecp.k8s_worker.html#hpecp.k8s_worker.K8sWorkerController.get_k8shosts">get_k8shosts() (hpecp.k8s_worker.K8sWorkerController method)</a>
-</li>
   </ul></td>
 </tr></table>
 
@@ -436,6 +440,8 @@
       <ul>
         <li><a href="hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.list">(hpecp.k8s_cluster.K8sClusterController method)</a>
 </li>
+        <li><a href="hpecp.k8s_worker.html#hpecp.k8s_worker.K8sWorkerController.list">(hpecp.k8s_worker.K8sWorkerController method)</a>
+</li>
         <li><a href="hpecp.license.html#hpecp.license.LicenseController.list">(hpecp.license.LicenseController method)</a>
 </li>
         <li><a href="hpecp.lock.html#hpecp.lock.LockController.list">(hpecp.lock.LockController method)</a>
@@ -550,7 +556,7 @@
         <li><a href="hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sCluster.set_display_columns">(hpecp.k8s_cluster.K8sCluster method)</a>
 </li>
       </ul></li>
-      <li><a href="hpecp.k8s_worker.html#hpecp.k8s_worker.K8sWorkerController.set_storage_k8shost">set_storage_k8shost() (hpecp.k8s_worker.K8sWorkerController method)</a>
+      <li><a href="hpecp.k8s_worker.html#hpecp.k8s_worker.K8sWorkerController.set_storage">set_storage() (hpecp.k8s_worker.K8sWorkerController method)</a>
 </li>
       <li><a href="hpecp.gateway.html#hpecp.gateway.Gateway.state">state() (hpecp.gateway.Gateway property)</a>
 </li>
@@ -666,12 +672,14 @@
 <h2 id="W">W</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="hpecp.k8s_worker.html#hpecp.k8s_worker.K8sWorkerController.wait_for_k8shost_status">wait_for_k8shost_status() (hpecp.k8s_worker.K8sWorkerController method)</a>
-</li>
       <li><a href="hpecp.gateway.html#hpecp.gateway.GatewayController.wait_for_state">wait_for_state() (hpecp.gateway.GatewayController method)</a>
 </li>
       <li><a href="hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.wait_for_status">wait_for_status() (hpecp.k8s_cluster.K8sClusterController method)</a>
+
+      <ul>
+        <li><a href="hpecp.k8s_worker.html#hpecp.k8s_worker.K8sWorkerController.wait_for_status">(hpecp.k8s_worker.K8sWorkerController method)</a>
 </li>
+      </ul></li>
       <li><a href="hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterStatus.warning">warning (hpecp.k8s_cluster.K8sClusterStatus attribute)</a>
 </li>
   </ul></td>
