@@ -115,7 +115,7 @@ class Gateway(object):
         if output == "table":
             print(get_client().gateway.list().tabulate(columns=columns))
         elif output == "text":
-            print(get_client().gateway.list().tabulate(columns=columns, style='plain'))
+            print(get_client().gateway.list().tabulate(columns=columns, style='plain', display_headers=False))
         else:
             print(get_client().gateway.list().json)
 

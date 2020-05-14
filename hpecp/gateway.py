@@ -402,7 +402,7 @@ class GatewayList():
     def __len__(self):
         return len(self.gateways)
 
-    def tabulate(self, columns=Gateway.default_display_fields, style='pretty'):
+    def tabulate(self, columns=Gateway.default_display_fields, style='pretty', display_headers=True):
         """Provide a tabular represenation of the list of Gateways
 
         Parameters:
@@ -430,4 +430,7 @@ class GatewayList():
         self.display_columns = columns
 
         # FIXME https://github.com/hpe-container-platform-community/hpecp-python-library/issues/5
-        return tabulate(self, headers=columns, tablefmt=style)
+        if display_headers:
+            return tabulate(self, headers=columns, tablefmt=style)
+        else:
+            return tabulate(self, tablefmt=style)
