@@ -402,12 +402,14 @@ class GatewayList():
     def __len__(self):
         return len(self.gateways)
 
-    def tabulate(self, columns=Gateway.default_display_fields):
+    def tabulate(self, columns=Gateway.default_display_fields, style='pretty'):
         """Provide a tabular represenation of the list of Gateways
 
         Parameters:
             columns : list[str]
                 list of columns to return in the table - default :py:attr:`.Gateway.default_display_fields`
+            style: str
+                See: https://github.com/astanin/python-tabulate#table-format
 
         Returns:
             str : table output

@@ -110,10 +110,12 @@ class Gateway(object):
     def list(self, output="table", columns=Gateway.default_display_fields):
         """Retrieve the list of Gateways
 
-        :param output: how to display the output ['table'|'json']
+        :param output: how to display the output [text|table|json]
         """
         if output == "table":
             print(get_client().gateway.list().tabulate(columns=columns))
+        elif output == "text":
+            print(get_client().gateway.list().tabulate(columns=columns, style='plain'))
         else:
             print(get_client().gateway.list().json)
 
