@@ -306,6 +306,12 @@ class License(object):
         get_client().license.delete(license_key=license_key)
         print('Delete submitted - verify with: `hpecp license list`')
 
+    def delete_all(self):
+        """Delete all licenses"""
+        for licence_key in self.list(license_key_only=True):
+            get_client().license.delete(license_key=licence_key)
+        print('Delete submitted - verify with: `hpecp license list`')
+
 class HttpClient(object):
 
     def get(self, url):
