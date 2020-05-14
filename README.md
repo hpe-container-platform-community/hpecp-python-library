@@ -93,7 +93,7 @@ source ./scripts/variables.sh
 
 pip3 install --quiet --upgrade git+https://github.com/hpe-container-platform-community/hpecp-client@master
 
-# Save the configuration file
+# Save the configuration file for the hpecp cli
 export HPECP_CONFIG_FILE="./generated/hpecp.conf"
 cat >$HPECP_CONFIG_FILE<<EOF
 [default]
@@ -126,9 +126,13 @@ hpecp lock create "Install Gateway"
 
 set -x
 
+# Remove existing gateways
 EXISTING_GATEWAY_IDS=$(hpecp gateway list --columns "['id']" --output text)
 for GW in ${EXISTING_GATEWAY_IDS}; do
    hpecp gateway delete ${GW}
+done
+# Wait for the Gateway to cease existence
+for GW in ${EXISTING_GATEWAY_IDS}; do
    hpecp gateway wait-for-state ${GW} --states "[]" --timeout-secs 1200
 done
 
