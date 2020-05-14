@@ -308,7 +308,9 @@ class License(object):
 
     def delete_all(self):
         """Delete all licenses"""
-        for licence_key in self.list(license_key_only=True):
+        response = get_client().license.list()
+        all_license_keys = [ str(unicode(l['LicenseKey'])) for l in response['Licenses'] ]
+        for licence_key in all_license_keys:
             get_client().license.delete(license_key=licence_key)
         print('Delete submitted - verify with: `hpecp license list`')
 
