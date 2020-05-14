@@ -156,6 +156,44 @@ class Gateway(object):
         """Return a list of valid states"""
         print([ s.name for s in GatewayStatus ] )
 
+class K8sWorker(object):
+    def create_with_ssh_key(
+        self, ip, ssh_key=None, ssh_key_file=None, tags=[]
+    ):
+        """Create a K8s Worker using SSH key authentication
+
+        :param ip: The IP address of the host.  Used for internal communication.
+        :param proxy_node_hostname: Clients will access cluster services will be accessed using this name.
+        :param ssh_key: The ssh key data as a string.  Alternatively, use the ssh_key_file parameter.
+        :param ssh_key_file: The file path to the ssh key.  Alternatively, use the ssh_key parameter.
+        :param tags: Tags to use, e.g. "{ 'tag1': 'foo', 'tag2', 'bar' }".
+        """
+        if ssh_key is None and ssh_key_file is None:
+            print("Either ssh_key or ssh_key_file must be provided")
+            sys.exit(1)
+
+        if ssh_key is not None and ssh_key_file is not None:
+            print("Either ssh_key or ssh_key_file must be provided")
+            sys.exit(1)
+
+        if ssh_key_file is not None:
+            with open(ssh_key_file) as f:
+                ssh_key_data = f.read()
+
+        try:
+            worker_id = get_client().k8sworker.create_with_ssh_key(
+                ip=ip,
+                ssh_key_data=ssh_key_data,
+                tags=tags,
+            )
+            print(worker_id)
+        except APIItemConflictException:
+            print("Worker already exists.")
+            sys.exit(1)
+
+    def create_with_ssh_password(self):
+        """Not yet implemented"""
+        raise NotImplementedError("Not yet implemented")
 
 class K8sCluster(object):
     def create(
@@ -371,6 +409,7 @@ class HttpClient(object):
 
 class CLI(object):
     def __init__(self):
+        self.k8sworker = K8sWorker()
         self.k8scluster = K8sCluster()
         self.gateway = Gateway()
         self.lock = Lock()

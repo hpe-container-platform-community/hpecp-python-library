@@ -45,10 +45,8 @@ class GatewayController:
                 The IP address of the proxy host.  Used for internal communication.
             proxy_node_hostname: str
                 Clients will access cluster services will be accessed using this name.
-            ssh_key: str
-                The ssh key data as a string.  Alternatively, use the ssh_key_file parameter.
-            ssh_key_file: str
-                The file path to the ssh key.  Alternatively, use the ssh_key parameter.
+            ssh_key_data: str
+                The ssh key data as a string.
             tags: list
                 Tags to use, e.g. "{ 'tag1': 'foo', 'tag2', 'bar' }".
 

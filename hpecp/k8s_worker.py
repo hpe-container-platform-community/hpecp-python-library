@@ -6,6 +6,11 @@ from tabulate import tabulate
 import polling
 from enum import Enum
 
+try:
+  basestring
+except NameError:
+  basestring = str
+
 class WorkerK8sStatus(Enum):
     bundle = 1
     installing = 2
@@ -105,7 +110,41 @@ class K8sWorkerController:
     def __init__(self, client):
         self.client = client
 
-    def get_k8shosts(self):
+
+    def create_with_ssh_password(self, username, password):
+        """Not Implemented yet"""
+        raise NotImplementedError()
+
+    def create_with_ssh_key(self, ip, ssh_key_data, tags=[]):
+        '''Create a gateway instance using SSH key credentials to access the host
+
+        Args:
+            ip: str
+                The IP address of the proxy host.  Used for internal communication.
+            ssh_key_data: str
+                The ssh key data as a string. 
+            tags: list
+                Tags to use, e.g. "{ 'tag1': 'foo', 'tag2', 'bar' }".
+
+        Returns: Worker ID
+        '''
+
+        assert isinstance(ip, basestring), "'ip' must be provided and must be a string"
+        assert isinstance(ssh_key_data, basestring), "'ssh_key_data' must be provided and must be a string"
+
+        data = {
+                "ipaddr": ip,
+                "credentials": {
+                    "type": "ssh_key_access",
+                    "ssh_key_data": ssh_key_data
+                },
+                "tags": tags,
+            }
+             
+        response = self.client._request(url='/api/v2/worker/k8shost/', http_method='post', data=data, description='worker/create_with_ssh_key')
+        return response.headers['location']
+
+    def list(self):
         """
         See: https://<<controller_ip>>/apidocs/site-admin-api.html for the schema of the  response object
         """
@@ -113,7 +152,7 @@ class K8sWorkerController:
         hosts = WorkerK8sList(response.json()['_embedded']['k8shosts'])
         return hosts
 
-    def get_k8shost(self, worker_id):
+    def get(self, worker_id):
         """
         See: https://<<controller_ip>>/apidocs/site-admin-api.html for the schema of the  response object
         """
@@ -122,7 +161,7 @@ class K8sWorkerController:
         return host
 
     # TODO rename status parameter to statuses
-    def wait_for_k8shost_status(self, worker_id, status=[], timeout_secs=60):
+    def wait_for_status(self, worker_id, status=[], timeout_secs=60):
         """
         Uses: https://github.com/justiniso/polling/blob/master/polling.py
 
@@ -152,23 +191,9 @@ class K8sWorkerController:
                     "Timed out waiting for status(es): {} on K8S Worker: {}".format(
                         status_names, worker_id))
 
-    def add_k8shost(self, data):
-        '''
-        Example:
-        
-            data = {
-                "ipaddr":"10.1.0.105",
-                "credentials":{
-                    "type":"ssh_key_access",
-                    "ssh_key_data":"-----BEGIN RSA PRIVATE KEY-----...-----END RSA PRIVATE KEY-----\n"
-                },
-                "tags":[]
-            },
-        '''
-        response = self.client._request(url='/api/v2/worker/k8shost/', http_method='post', data=data, description='worker/add_k8shost')
-        return response.headers['location'].split('/')[-1]
 
-    def set_storage_k8shost(self, worker_id, data):
+
+    def set_storage(self, worker_id, data):
         """
         Example:
         {"op_spec": {"persistent_disks": ["/dev/nvme2n1"], "ephemeral_disks": ["/dev/nvme1n1"]}, "op": "storage"}

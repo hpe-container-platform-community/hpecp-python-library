@@ -97,10 +97,10 @@ class TestWorkers(TestCase):
         client.create_session()
 
         # Makes GET Request: https://127.0.0.1:8080/api/v2/worker/k8shost/
-        workers = client.k8s_worker.get_k8shosts()
+        workers = client.k8s_worker.list()
 
         # Test that json response is saved in each WorkerK8s object
-        assert client.k8s_worker.get_k8shosts()[0].json is not None
+        assert client.k8s_worker.list()[0].json is not None
 
         # Test WorkerK8sList subscriptable access and property setters
         assert workers[0].worker_id == 4
@@ -110,7 +110,7 @@ class TestWorkers(TestCase):
         assert workers[0].href == '/api/v2/worker/k8shost/4'
 
         # Test WorkerK8sList iterators
-        assert [ worker.worker_id for worker in client.k8s_worker.get_k8shosts() ] == [ 4, 5 ]
+        assert [ worker.worker_id for worker in client.k8s_worker.list() ] == [ 4, 5 ]
 
  
 
