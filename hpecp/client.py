@@ -270,7 +270,7 @@ class ContainerPlatformClient(object):
         except requests.exceptions.ConnectionError as e:
             self.log.debug('RES: {} : {} {} {}'.format('Login', 'post', url, str(e)))
             raise_from(APIException(
-                        message='Could not connect to controller', 
+                        message='Could not connect to controller - set LOG_LEVEL=DEBUG to see more detail.', 
                         request_method='post', 
                         request_url=url
                         ), None)

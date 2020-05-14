@@ -23,6 +23,10 @@ import os
 import fire
 import yaml
 import json
+import sys
+if sys.version_info[0] >= 3:
+    unicode = str
+
 from hpecp import (
     ContainerPlatformClient,
     APIException,
