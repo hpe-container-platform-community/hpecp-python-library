@@ -111,7 +111,7 @@ echo "Checking for LICENSE locally"
 if [[ ! -f generated/LICENSE ]]; then
     echo "ERROR: File './generated/LICENSE' not found - please add it - platform ID: $(hpecp license platform-id)"
     echo "       After adding the file, run this script again"
-    exit 
+    exit 1
 fi
 
 echo "Uploading LICENSE to Controller"
@@ -123,8 +123,6 @@ hpecp license list
 echo "Deleting and creating lock"
 hpecp lock delete-all
 hpecp lock create "Install Gateway"
-
-set -x
 
 # Remove existing gateways
 EXISTING_GATEWAY_IDS=$(hpecp gateway list --columns "['id']" --output text)
