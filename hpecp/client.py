@@ -263,10 +263,12 @@ class ContainerPlatformClient(object):
 
         response = None
         try:
+            self.log.debug('REQ: {} : {} {}'.format('Login', 'post', url))
             response = requests.post(url, json=auth, verify=self.verify_ssl)
             response.raise_for_status()
 
         except requests.exceptions.ConnectionError as e:
+            self.log.debug('RES: {} : {} {} {}'.format('Login', 'post', url, str(e)))
             raise_from(APIException(
                         message='Could not connect to controller', 
                         request_method='post', 
