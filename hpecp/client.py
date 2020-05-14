@@ -211,7 +211,9 @@ class ContainerPlatformClient(object):
         assert isinstance(api_host, basestring), "'api_host' parameter must be of type string"
         assert isinstance(api_port, int), "'api_port' parameter must be of type int"
         assert isinstance(use_ssl, bool), "'use_ssl' parameter must be of type bool"
-        assert isinstance(verify_ssl, bool), "'verify_ssl' parameter must be of type bool"
+        assert isinstance(verify_ssl, bool) or \
+            (isinstance(verify_ssl, basestring) and 
+            os.access(verify_ssl, os.R_OK)), "'verify_ssl' parameter must be of type bool or point to a file"
         assert isinstance(warn_ssl, bool), "'warn_ssl' parameter must be of type bool"
 
         self.username = username
