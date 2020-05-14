@@ -430,4 +430,4 @@ class GatewayList():
         self.display_columns = columns
 
         # FIXME https://github.com/hpe-container-platform-community/hpecp-python-library/issues/5
-        return tabulate(self, headers=columns, tablefmt="pretty")
+        return tabulate(self, headers=columns, tablefmt=style)
