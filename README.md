@@ -88,7 +88,11 @@ hpecp k8scluster tabulate --columns=['id','description','status']
 ## CLI example 2
 
 ```sh
-# Get variables for controller and AD server
+# Retrieve variables with host details:
+# - CTRL_PUB_IP controller AWS host public IP
+# - GATW_PRV_IP gateway AWS host private IP
+# - GATW_PRV_DNS gateway AWS host private DNS
+# - AD_PRV_IP Active Directory AWS host private IP
 source ./scripts/variables.sh
 
 pip3 install --quiet --upgrade git+https://github.com/hpe-container-platform-community/hpecp-client@master
