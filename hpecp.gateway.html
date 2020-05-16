@@ -185,6 +185,23 @@ invoked using <cite>client.gateway.method()</cite>.  See the example below:</p>
 </dd></dl>
 
 <dl class="py method">
+<dt id="hpecp.gateway.GatewayController.wait_for_delete">
+<code class="sig-name descname">wait_for_delete</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gateway_id</span></em>, <em class="sig-param"><span class="n">timeout_secs</span><span class="o">=</span><span class="default_value">1200</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayController.wait_for_delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.gateway.GatewayController.wait_for_delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wait for gateway to be deleted.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>gateway_id: str</dt><dd><p>The gateway ID - format: ‘/api/v1/workers/[0-9]+’</p>
+</dd>
+<dt>timeout_secs: int</dt><dd><p>How long to wait for the status(es) before raising an exception.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>bool: True if gateway was deleted before timeout, otherwise False</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt id="hpecp.gateway.GatewayController.wait_for_state">
 <code class="sig-name descname">wait_for_state</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gateway_id</span></em>, <em class="sig-param"><span class="n">state</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">timeout_secs</span><span class="o">=</span><span class="default_value">1200</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayController.wait_for_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.gateway.GatewayController.wait_for_state" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wait for gateway state.</p>

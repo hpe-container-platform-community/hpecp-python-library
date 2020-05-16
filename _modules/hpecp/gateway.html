@@ -196,6 +196,18 @@
             
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">gateway_id</span><span class="p">,</span> <span class="n">http_method</span><span class="o">=</span><span class="s1">&#39;delete&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;gateway/delete&#39;</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="GatewayController.wait_for_delete"><a class="viewcode-back" href="../../hpecp.gateway.html#hpecp.gateway.GatewayController.wait_for_delete">[docs]</a>    <span class="k">def</span> <span class="nf">wait_for_delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gateway_id</span><span class="p">,</span> <span class="n">timeout_secs</span><span class="o">=</span><span class="mi">1200</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Wait for gateway to be deleted.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            gateway_id: str</span>
+<span class="sd">                The gateway ID - format: &#39;/api/v1/workers/[0-9]+&#39;</span>
+<span class="sd">            timeout_secs: int</span>
+<span class="sd">                How long to wait for the status(es) before raising an exception.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if gateway was deleted before timeout, otherwise False</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
 
 <div class="viewcode-block" id="GatewayController.wait_for_state"><a class="viewcode-back" href="../../hpecp.gateway.html#hpecp.gateway.GatewayController.wait_for_state">[docs]</a>    <span class="k">def</span> <span class="nf">wait_for_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gateway_id</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="p">[],</span> <span class="n">timeout_secs</span><span class="o">=</span><span class="mi">1200</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Wait for gateway state.</span>
