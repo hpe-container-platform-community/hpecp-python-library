@@ -119,16 +119,31 @@ class Gateway(object):
         else:
             print(get_client().gateway.list().json)
 
-    def delete(self, gateway_id):
+    def delete(self, gateway_id, wait_for_delete_secs=0):
         """Retrieve a Gateway by Id
 
         :param gateway_id: the id of the gateway with format: '/api/v1/workers/[0-9]+'
+        :param wait_for_delete_secs: if 0 return immediately after calling delete
+
+        wait_for_delete_secs > 0 `calls wait_for_delete()`
         """
         try:
             get_client().gateway.delete(gateway_id)
         except APIException as e:
             print(e.message)
             sys.exit(1)
+
+        if wait_for_delete_secs > 0:
+            self.wait_for_delete(gateway_id=gateway_id, timeout_secs=wait_for_delete_secs)
+
+    def wait_for_delete(self, gateway_id, timeout_secs=1200):
+        """
+        Wait for Gateway to be deleted
+        :param gateway_id: Cluster id with format: /api/v1/workers/[0-9]+
+        :param timeout_secs: how many secs to wait before exiting
+        :returns True if gateway was deleted within timeout_secs.
+        """
+        self.wait_for_state(gateway_id=gateway_id, timeout_secs=timeout_secs)
 
     def wait_for_state(self, gateway_id, states=[], timeout_secs=1200):
         """

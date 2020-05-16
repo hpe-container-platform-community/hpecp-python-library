@@ -129,6 +129,18 @@ class GatewayController:
             
         self.client._request(url=gateway_id, http_method='delete', description='gateway/delete')
 
+    def wait_for_delete(self, gateway_id, timeout_secs=1200):
+        """Wait for gateway to be deleted.
+
+        Args:
+            gateway_id: str
+                The gateway ID - format: '/api/v1/workers/[0-9]+'
+            timeout_secs: int
+                How long to wait for the status(es) before raising an exception.
+
+        Returns:
+            bool: True if gateway was deleted before timeout, otherwise False
+        """
 
     def wait_for_state(self, gateway_id, state=[], timeout_secs=1200):
         """Wait for gateway state.
