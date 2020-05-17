@@ -1,12 +1,5 @@
 tasks:
   - init: pip3 install -r ./requirements.txt
-  - init: pip3 install -U pytest --user
-  - init: pip3 install -U pylint --user
-  - init: pyenv install 3.6.10
-  - init: pyenv install 3.5.9
-  - init: pyenv install 3.7.7
-  - init: pyenv install 3.8.2
-  - init: pyenv install 3.9-dev
 image:
   file: .gitpod.Dockerfile
 vscode:
