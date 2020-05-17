@@ -1,0 +1,8 @@
+requests
+tabulate
+six
+enum34; python_version == "2.7"
+configparser; python_version == "2.7"
+polling
+fire
+pyyaml
