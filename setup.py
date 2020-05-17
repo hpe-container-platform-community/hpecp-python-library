@@ -1,6 +1,9 @@
 from setuptools import setup, find_packages
+import os
 
-with open('requirements.txt') as f:
+REQ_PATH=os.getenv("TRAVIS_BUILD_DIR", "./")
+
+with open(REQ_PATH + 'requirements.txt') as f:
     requirements = f.read().splitlines()
 
 setup(
