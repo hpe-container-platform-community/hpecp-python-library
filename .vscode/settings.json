@@ -4,7 +4,10 @@
         "**/.classpath": true,
         "**/.project": true,
         "**/.settings": true,
-        "**/.factorypath": true
+        "**/.factorypath": true,
+        ".tox": true,
+        ".git": true,
+        "hpecp.egg-info": true
     },
     "python.testing.nosetestArgs": [
         "tests/library"
