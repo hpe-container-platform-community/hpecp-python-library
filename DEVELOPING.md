@@ -4,6 +4,23 @@ I use Theia IDE for development.
 
 I use Theia because it is easy to provide all the dependencies out of the box.
 
+Set environment variables on your client machine (I set these in `~/.bash_profile`):
+
+```
+export GIT_USER=yourgituserid
+export GIT_PASS=yourgitpass
+export GIT_AUTHOR_NAME=yourname
+export GIT_COMMITTER_NAME=yourname
+export GIT_AUTHOR_EMAIL=youremail
+export GIT_COMMITTER_EMAIL=youremail
+```
+
+Clone the repo.  Ensure you use `https://...` and not `git@github.com:...` to use git from Theia.
+
+```
+git clone https://github.com/hpe-container-platform-community/hpecp-python-library.git
+``
+
 To startup Theia:
 
 ```
