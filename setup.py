@@ -8,11 +8,6 @@ elif 'TOX_BUILD_DIR' in os.environ:
 else:
     REQ_PATH='.'
 
-print("*"*80)
-print(REQ_PATH)
-print("*"*80)
-
-
 with open(REQ_PATH + '/requirements.txt') as f:
     requirements = f.read().splitlines()
 
