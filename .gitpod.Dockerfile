@@ -15,10 +15,6 @@ RUN sudo apt-get update \
     && sudo apt-get update \
     && sudo apt-get install -y python3.5 python3.6 python3.7 python3.8 python3.9 tox python3-sphinx python3-pip
 
-RUN pip install -U pylint pytest mock nose \
-    && pip3 install -U pylint pytest mock nose \
-    && pip install -r /tmp/requirements.txt \
-    && pip3 install -r /tmp/requirements.txt 
-
+ENV PYTHONPATH=/workspace/hpecp-python-library:$PYTHONPATH
 #
 # More information: https://www.gitpod.io/docs/config-docker/
