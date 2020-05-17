@@ -1,7 +1,17 @@
 from setuptools import setup, find_packages
 import os
 
-REQ_PATH=os.getenv("TRAVIS_BUILD_DIR", ".")
+if 'TRAVIS_BUILD_DIR' in os.environ:
+    REQ_PATH=os.getenv('TRAVIS_BUILD_DIR')
+elif 'TOX_BUILD_DIR' in os.environ:
+    REQ_PATH=os.getenv("TOX_BUILD_DIR")
+else:
+    REQ_PATH='.'
+
+print("*"*80)
+print(REQ_PATH)
+print("*"*80)
+
 
 with open(REQ_PATH + '/requirements.txt') as f:
     requirements = f.read().splitlines()
