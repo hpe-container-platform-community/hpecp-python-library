@@ -19,7 +19,7 @@ Clone the repo.  Ensure you use `https://...` and not `git@github.com:...` to us
 
 ```
 git clone https://github.com/hpe-container-platform-community/hpecp-python-library.git
-``
+```
 
 To startup Theia:
 
