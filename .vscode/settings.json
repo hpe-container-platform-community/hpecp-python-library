@@ -1,6 +1,10 @@
 {
     "files.exclude": {
-        "/**/*.pyc": true
+        "/**/*.pyc": true,
+        "**/.classpath": true,
+        "**/.project": true,
+        "**/.settings": true,
+        "**/.factorypath": true
     },
     "python.testing.nosetestArgs": [
         "tests/library"
