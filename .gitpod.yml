@@ -1,6 +1,6 @@
 tasks:
   - init: pip3 install -r ./requirements.txt && /usr/bin/python3 -m pip install -U pytest --user
-  - command: gp env PYTHONPATH=/workspace/hpecp-python-library/:$PYTHONPATH
+  - command: gp env PYTHONPATH=.
 image:
   file: .gitpod.Dockerfile
 vscode:
