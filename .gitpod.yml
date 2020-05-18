@@ -1,5 +1,5 @@
 tasks:
-  - init: pip3 install -r ./requirements.txt && /usr/bin/python3 -m pip install -U pytest --user
+  - init: /usr/bin/python3 -m pip install -U pytest mock pylint -r ./requirements.txt --user
   - command: gp env PYTHONPATH=.
 image:
   file: .gitpod.Dockerfile
