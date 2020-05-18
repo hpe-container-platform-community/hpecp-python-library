@@ -1,5 +1,6 @@
 tasks:
   - init: /usr/bin/python3 -m pip install -U pytest mock pylint -r ./requirements.txt --user
+  - init: pyenv shell 2.7.17 && pip install -U pytest mock pylint -r ./requirements.txt --user
 image:
   file: .gitpod.Dockerfile
 vscode:
