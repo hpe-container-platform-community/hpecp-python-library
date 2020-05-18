@@ -1,5 +1,6 @@
 from setuptools import setup, find_packages
 import os
+import shutil
 
 if 'TRAVIS_BUILD_DIR' in os.environ:
     REQ_PATH=os.getenv('TRAVIS_BUILD_DIR')
@@ -10,6 +11,8 @@ else:
 
 with open(REQ_PATH + '/requirements.txt') as f:
     requirements = f.read().splitlines()
+
+shutil.copyfile('bin/cli.py', 'bin/hpecp')
 
 setup(
   name='hpecp',

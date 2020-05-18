@@ -1,8 +1,0 @@
-{
-    "files.exclude": {
-        "/**/*.pyc": true
-    },
-    "files.associations": {
-        "hpecp-cli": "python"
-    }
-}
