@@ -12,7 +12,7 @@ else:
 with open(REQ_PATH + '/requirements.txt') as f:
     requirements = f.read().splitlines()
 
-shutil.copyfile('bin/cli.py', 'bin/hpecp')
+shutil.copyfile('./bin/cli.py', './bin/hpecp')
 
 setup(
   name='hpecp',
