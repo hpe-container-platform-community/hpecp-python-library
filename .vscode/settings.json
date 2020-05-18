@@ -8,7 +8,8 @@
         ".tox": true,
         ".git": true,
         "hpecp.egg-info": true,
-        ".pytest_cache": true
+        ".pytest_cache": true,
+        ".eggs": true
     },
     "python.testing.nosetestArgs": [
         "tests/library"

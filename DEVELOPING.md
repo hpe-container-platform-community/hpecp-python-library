@@ -4,6 +4,8 @@ You can use gitpod - click on the gitpod ready to code badge.
 
 #### BUILDING DOCS
 
+In the Gitpod Terminal:
+
 ```
 cd docs/
 make clean && make html
