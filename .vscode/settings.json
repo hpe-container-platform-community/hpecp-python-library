@@ -18,5 +18,6 @@
     "python.testing.nosetestsEnabled": false,
     "python.linting.pylintEnabled": true,
     "python.linting.enabled": true,
-    "python.pythonPath": "/usr/bin/python3"
+    "python.pythonPath": "/usr/bin/python3",
+    "python.envFile": "${workspaceFolder}/gitpod.env" 
 }
