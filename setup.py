@@ -17,6 +17,9 @@ shutil.copyfile(
   REQ_PATH + '/bin/hpecp'
   )
 
+# make executable
+os.chmod(REQ_PATH + '/bin/hpecp', 509)
+
 setup(
   name='hpecp',
   description="HPE Container Platform client",
