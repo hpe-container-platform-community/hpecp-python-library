@@ -1,6 +1,7 @@
 {
     "files.exclude": {
         "/**/*.pyc": true,
+        "/**/__pycache__": true,
         "**/.classpath": true,
         "**/.project": true,
         "**/.settings": true,
