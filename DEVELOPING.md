@@ -1,6 +1,6 @@
 ### DEVELOPMENT ENVIRONMENT
 
-You can use gitpod - click on the gitpod ready to code badge.
+You can use gitpod - click [here](https://gitpod.io/#https://github.com/hpe-container-platform-community/hpecp-python-library/blob/master/DEVELOPING.md) to launch.
 
 #### BUILDING DOCS
 
