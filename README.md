@@ -174,6 +174,6 @@ hpecp httpclient post /api/v2/config/auth --json-file ${JSON_FILE}
 [See here](https://hpe-container-platform-community.github.io/hpecp-python-library/index.html)
 
 
-## Contributors
+## Contributing
 
 See [README](./DEVELOPING.md)
