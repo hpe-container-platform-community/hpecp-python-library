@@ -13,8 +13,8 @@ with open(REQ_PATH + '/requirements.txt') as f:
     requirements = f.read().splitlines()
 
 shutil.copyfile(
-  REQ_PATH + './bin/cli.py', 
-  REQ_PATH + './bin/hpecp'
+  REQ_PATH + '/bin/cli.py', 
+  REQ_PATH + '/bin/hpecp'
   )
 
 setup(
