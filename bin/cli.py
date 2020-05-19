@@ -217,11 +217,7 @@ class K8sWorker(object):
         :param all_columns: (True/False) set to True to return all columns
         :param columns: (aaa) afadsfs
         """
-
-        if all_columns:
-            print(get_client().k8s_worker.list().tabulate())
-        else:
-            print(get_client().k8s_worker.list().tabulate(columns=columns))
+        print(get_client().k8s_worker.list().tabulate())
 
     def get(self, k8sworker_id):
         """Retrieve a K8s Worker
