@@ -444,7 +444,7 @@ class TestDeleteCluster(TestCase):
 
         get_client().k8s_cluster.delete(k8scluster_id='/api/v2/k8scluster/123')
 
-class TestGetK8sSupportVersions(TestCase):
+class TestK8sSupportVersions(TestCase):
 
     # pylint: disable=no-method-argument 
     def mocked_requests_get(*args, **kwargs ):
@@ -480,9 +480,9 @@ class TestGetK8sSupportVersions(TestCase):
 
     @patch('requests.get', side_effect=mocked_requests_get)
     @patch('requests.post', side_effect=mocked_requests_post)
-    def test_get_k8s_supported_versions(self, mock_get, mock_post):
+    def test_k8s_supported_versions(self, mock_get, mock_post):
 
         self.assertEquals(
-            get_client().k8s_cluster.get_k8s_supported_versions(),
+            get_client().k8s_cluster.k8s_supported_versions(),
             [ "1.14.10","1.15.7","1.16.4","1.17.0","1.18.0"]
         )
