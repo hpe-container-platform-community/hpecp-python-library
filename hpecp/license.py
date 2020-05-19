@@ -24,7 +24,7 @@ class LicenseController:
         response = self.client._request(url='/api/v2/hpelicense', http_method='get', description='license/get_license')
         return response.json()
 
-    def upload(self, base64enc_license=''):
+    def upload_with_ssh_key(self, server_filename, ssh_key_file=None, ssh_key_data=None, base64enc_license=''):
         """Not implemented yet! 
 
         Workaround: 
@@ -32,6 +32,16 @@ class LicenseController:
          - run client.license.register(server_filename) to register the license
         """
         raise Exception("Not implemented yet! Workaround: scp your license to '/srv/bluedata/license/'")  
+        
+    def upload_with_ssh_pass(self, server_filename, ssh_username, ssh_password, base64enc_license=''):
+        """Not implemented yet! 
+
+        Workaround: 
+         - scp your license to '/srv/bluedata/license/' on the controller
+         - run client.license.register(server_filename) to register the license
+        """
+        raise Exception("Not implemented yet! Workaround: scp your license to '/srv/bluedata/license/'")  
+
 
     def register(self, server_filename):
         """Register a license that has been uploaded to '/srv/bluedata/license/' on the controller.
