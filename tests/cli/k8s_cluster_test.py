@@ -63,15 +63,6 @@ class TestCLI(TestCase):
             )
         raise RuntimeError("Unhandle GET request: " + args[0]) 
 
-    def mocked_requests_post(*args, **kwargs):
-        if args[0] == 'https://127.0.0.1:8080/api/v1/login':
-            return MockResponse (
-                json_data = { }, 
-                status_code = 200,
-                headers = { "location": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71" }
-                )
-        raise RuntimeError("Unhandle POST request: " + args[0]) 
-
     @patch('requests.post', side_effect=mocked_requests_post)
     @patch('requests.get', side_effect=mocked_requests_get)
     def test_k8s_supported_versions(self, mock_post, mock_get):
