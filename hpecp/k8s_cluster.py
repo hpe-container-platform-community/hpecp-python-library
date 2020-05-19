@@ -332,7 +332,10 @@ class K8sCluster():
     @property
     def admin_kube_config(self):
         """@Field: from json['admin_kube_config']"""
-        return self.json['admin_kube_config']
+        if 'admin_kube_config' in self.json:
+            return self.json['admin_kube_config']
+        else:
+            return ''
     
     @property
     def dashboard_token(self):
