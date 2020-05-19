@@ -196,7 +196,7 @@ class K8sWorker(object):
                 ssh_key_data = f.read()
 
         try:
-            worker_id = get_client().k8sworker.create_with_ssh_key(
+            worker_id = get_client().k8s_worker.create_with_ssh_key(
                 ip=ip,
                 ssh_key_data=ssh_key_data,
                 tags=tags,
