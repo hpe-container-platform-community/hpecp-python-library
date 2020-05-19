@@ -377,7 +377,10 @@ class K8sCluster():
     @property
     def status_message(self):
         """@Field: from json['status_message']"""
-        return self.json['status_message']
+        if 'status_message' in self.json:
+            return self.json['status_message']
+        else:
+            return ''
 
     @property
     def _links(self):
