@@ -95,7 +95,7 @@ class TestCLI(TestCase):
             cli.HPECP_CONFIG_FILE = tmp.name
 
             hpecp = cli.CLI()
-            hpecp.k8scluster.tabulate()
+            hpecp.k8scluster.list()
 
             self.assertTrue(True)
 

@@ -255,7 +255,7 @@ class K8sCluster(object):
             )
         )
 
-    def tabulate(self, all_columns=False, columns=["id", "description"]):
+    def list(self, all_columns=False, columns=["id", "description"]):
         """
         Print a table of K8s Clusters
         :param all_columns: (True/False) set to True to return all columns
@@ -268,7 +268,18 @@ class K8sCluster(object):
             print(get_client().k8s_cluster.list().tabulate(columns=columns))
 
     def get(self, k8scluster_id):
+        """Retrieve a K8s Cluster
+
+        :param k8scluster_id: the cluster ID
+        """
         print(get_client().k8s_cluster.get(k8scluster_id=k8scluster_id))
+
+    def delete(self, k8scluster_id):
+        """Delete a K8s Cluster
+
+        :param k8scluster_id: the cluster ID
+        """
+        print(get_client().k8s_cluster.delete(k8scluster_id=k8scluster_id))
 
     def wait_for_status(self, k8scluster_id, status=[], timeout_secs=60):
         """
