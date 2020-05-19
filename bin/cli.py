@@ -351,6 +351,32 @@ class License(object):
         get_client().license.register(server_filename=server_filename)
         print("Done.")
 
+    def upload_with_ssh_key(self, server_filename, ssh_key_file=None, ssh_key_data=None, license_file=None, base64enc_license_data=None):
+        """Not implemented yet! 
+
+        TODO: 
+        assert ssh_key_file or ssh_key_data argument is provided
+        assert license_file or base64enc_license_data argument is provided
+
+        Workaround: 
+         - scp your license to '/srv/bluedata/license/' on the controller
+         - run client.license.register(server_filename) to register the license
+        """
+        raise Exception("Not implemented yet! Workaround: scp your license to '/srv/bluedata/license/'")  
+        
+    def upload_with_ssh_pass(self, server_filename, ssh_username, ssh_password, license_file=None, base64enc_license_data=None):
+        """Not implemented yet! 
+
+        TODO: 
+        assert ssh_key_file or ssh_key_data argument is provided
+        assert license_file or base64enc_license_data argument is provided
+
+        Workaround: 
+         - scp your license to '/srv/bluedata/license/' on the controller
+         - run client.license.register(server_filename) to register the license
+        """
+        raise Exception("Not implemented yet! Workaround: scp your license to '/srv/bluedata/license/'") 
+
     def delete(self, license_key):
         """Delete a license by LicenseKey
         
