@@ -160,6 +160,12 @@ class K8sWorkerController:
         host = WorkerK8s(response.json())
         return host
 
+    def delete(self, worker_id):
+        """
+        See: https://<<controller_ip>>/apidocs/site-admin-api.html for the schema of the  response object
+        """
+        self.client._request(url='/api/v2/worker/k8shost/{}'.format(worker_id), http_method='delete', description='worker/delete_k8shosts')
+
     # TODO rename status parameter to statuses
     def wait_for_status(self, worker_id, status=[], timeout_secs=60):
         """

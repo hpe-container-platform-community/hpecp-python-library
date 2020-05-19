@@ -210,6 +210,33 @@ class K8sWorker(object):
         """Not yet implemented"""
         raise NotImplementedError("Not yet implemented")
 
+
+    def list(self, all_columns=False, columns=["id", "description"]):
+        """
+        Print a table of K8s Workers
+        :param all_columns: (True/False) set to True to return all columns
+        :param columns: (aaa) afadsfs
+        """
+
+        if all_columns:
+            print(get_client().k8s_worker.list().tabulate())
+        else:
+            print(get_client().k8s_worker.list().tabulate(columns=columns))
+
+    def get(self, k8sworker_id):
+        """Retrieve a K8s Worker
+
+        :param k8sworker_id: the worker ID
+        """
+        print(get_client().k8s_worker.get(worker_id=k8sworker_id))
+
+    def delete(self, k8sworker_id):
+        """Delete a K8s Worker
+
+        :param k8sworker_id: the cluster ID
+        """
+        print(get_client().k8s_worker.delete(worker_id=k8sworker_id))
+
 class K8sCluster(object):
     def create(
         self,
