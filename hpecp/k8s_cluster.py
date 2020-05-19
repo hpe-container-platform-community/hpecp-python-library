@@ -340,17 +340,26 @@ class K8sCluster():
     @property
     def dashboard_token(self):
         """@Field: from json['dashboard_token']"""
-        return self.json['dashboard_token']
+        if 'dashboard_token' in self.json:
+            return self.json['dashboard_token']
+        else:
+            return ''
     
     @property
     def api_endpoint_access(self):
         """@Field: from json['api_endpoint_access']"""
-        return self.json['api_endpoint_access']
+        if 'api_endpoint_access' in self.json:
+            return self.json['api_endpoint_access']
+        else:
+            return ''
 
     @property
     def dashboard_endpoint_access(self):
         """@Field: from json['dashboard_endpoint_access']"""
-        return self.json['dashboard_endpoint_access']
+        if 'dashboard_endpoint_access' in self.json:
+            return self.json['dashboard_endpoint_access']
+        else:
+            return ''
     
     @property
     def cert_data(self):

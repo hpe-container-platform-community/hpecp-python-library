@@ -278,7 +278,7 @@ class K8sCluster(object):
             )
         )
 
-    def list(self, all_columns=False, columns=["id", "description"]):
+    def list(self, all_columns=False, columns=["id", "description", "status"]):
         """
         Print a table of K8s Clusters
         :param all_columns: (True/False) set to True to return all columns
