@@ -91,7 +91,7 @@
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="s1">&#39;/api/v2/hpelicense&#39;</span><span class="p">,</span> <span class="n">http_method</span><span class="o">=</span><span class="s1">&#39;get&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;license/get_license&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="LicenseController.upload"><a class="viewcode-back" href="../../hpecp.license.html#hpecp.license.LicenseController.upload">[docs]</a>    <span class="k">def</span> <span class="nf">upload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base64enc_license</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="LicenseController.upload_with_ssh_key"><a class="viewcode-back" href="../../hpecp.license.html#hpecp.license.LicenseController.upload_with_ssh_key">[docs]</a>    <span class="k">def</span> <span class="nf">upload_with_ssh_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server_filename</span><span class="p">,</span> <span class="n">ssh_key_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ssh_key_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">base64enc_license</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Not implemented yet! </span>
 
 <span class="sd">        Workaround: </span>
@@ -99,6 +99,16 @@
 <span class="sd">         - run client.license.register(server_filename) to register the license</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Not implemented yet! Workaround: scp your license to &#39;/srv/bluedata/license/&#39;&quot;</span><span class="p">)</span>  </div>
+        
+<div class="viewcode-block" id="LicenseController.upload_with_ssh_pass"><a class="viewcode-back" href="../../hpecp.license.html#hpecp.license.LicenseController.upload_with_ssh_pass">[docs]</a>    <span class="k">def</span> <span class="nf">upload_with_ssh_pass</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server_filename</span><span class="p">,</span> <span class="n">ssh_username</span><span class="p">,</span> <span class="n">ssh_password</span><span class="p">,</span> <span class="n">base64enc_license</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Not implemented yet! </span>
+
+<span class="sd">        Workaround: </span>
+<span class="sd">         - scp your license to &#39;/srv/bluedata/license/&#39; on the controller</span>
+<span class="sd">         - run client.license.register(server_filename) to register the license</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Not implemented yet! Workaround: scp your license to &#39;/srv/bluedata/license/&#39;&quot;</span><span class="p">)</span>  </div>
+
 
 <div class="viewcode-block" id="LicenseController.register"><a class="viewcode-back" href="../../hpecp.license.html#hpecp.license.LicenseController.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server_filename</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Register a license that has been uploaded to &#39;/srv/bluedata/license/&#39; on the controller.</span>
