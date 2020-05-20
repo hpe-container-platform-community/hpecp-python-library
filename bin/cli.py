@@ -295,7 +295,10 @@ class K8sCluster(object):
 
         :param k8scluster_id: the cluster ID
         """
-        print(get_client().k8s_cluster.get(k8scluster_id=k8scluster_id))
+        response = get_client().k8s_cluster.get(k8scluster_id=k8scluster_id).json
+        print(
+                yaml.dump(yaml.load(json.dumps(response), Loader=yaml.FullLoader))
+        )
 
     def delete(self, k8scluster_id):
         """Delete a K8s Cluster
