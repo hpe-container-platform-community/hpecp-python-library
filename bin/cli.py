@@ -18,6 +18,7 @@ username = admin
 password = admin123
 """
 
+import base64
 import sys
 import os
 import fire
@@ -307,6 +308,22 @@ class K8sCluster(object):
         """
         cfg = get_client().k8s_cluster.get(k8scluster_id=k8scluster_id).json['admin_kube_config']
         print(cfg.replace('\\n', '\n'))
+
+    def dashboard_url(self, k8scluster_id):
+        """Retrieve a K8s Cluster Dashboard URL
+
+        :param k8scluster_id: the cluster ID
+        """
+        url = get_client().k8s_cluster.get(k8scluster_id=k8scluster_id).json['dashboard_endpoint_access']
+        print(url)
+
+    def dashboard_token(self, k8scluster_id):
+        """Retrieve a K8s Cluster Dashboard Token
+
+        :param k8scluster_id: the cluster ID
+        """
+        token = get_client().k8s_cluster.get(k8scluster_id=k8scluster_id).json['dashboard_token']
+        print(base64.b64decode(token))
 
     def delete(self, k8scluster_id):
         """Delete a K8s Cluster
