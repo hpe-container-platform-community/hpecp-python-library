@@ -323,7 +323,7 @@ class K8sCluster(object):
         :param k8scluster_id: the cluster ID
         """
         token = get_client().k8s_cluster.get(k8scluster_id=k8scluster_id).json['dashboard_token']
-        print(base64.b64decode(token))
+        print(base64.b64decode(token).decode('utf-8'))
 
     def delete(self, k8scluster_id):
         """Delete a K8s Cluster
