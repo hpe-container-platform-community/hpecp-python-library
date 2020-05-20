@@ -300,6 +300,14 @@ class K8sCluster(object):
                 yaml.dump(yaml.load(json.dumps(response), Loader=yaml.FullLoader))
         )
 
+    def admin_kube_config(self, k8scluster_id):
+        """Retrieve a K8s Cluster Admin Kube Config
+
+        :param k8scluster_id: the cluster ID
+        """
+        cfg = get_client().k8s_cluster.get(k8scluster_id=k8scluster_id).json['admin_kube_config']
+        print(cfg.replace('\\n', '\n'))
+
     def delete(self, k8scluster_id):
         """Delete a K8s Cluster
 
