@@ -2,7 +2,7 @@
 
 """Prototype for HPE Container Platform API.
 
-Required this functionality to be usable: https://github.com/google/python-fire/issues/239
+Required this functionality to be more usable: https://github.com/google/python-fire/issues/255
 
 Example configuration file  (~/.hpecp.conf):
 
