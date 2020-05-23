@@ -510,6 +510,78 @@ class HttpClient(object):
         print(response.text)
 
 
+class AutoComplete():
+    """Example Usage: 
+    
+    hpecp autocomplete bash > hpecp-bash.sh && source hpecp-bash.sh
+    """
+    def bash(self):
+        print("""_hpecp_complete()
+{
+    local cur prev BASE_LEVEL
+
+    COMPREPLY=()
+    cur=${COMP_WORDS[COMP_CWORD]}
+    prev=${COMP_WORDS[COMP_CWORD-1]}
+
+    # SETUP THE BASE LEVEL (everything after "hpecp")
+    if [ $COMP_CWORD -eq 1 ]; then
+        COMPREPLY=( $(compgen \
+                      -W "gateway k8scluster license" \
+                      -- $cur) )
+
+
+    # SETUP THE SECOND LEVEL (EVERYTHING AFTER "hpecp first")
+    elif [ $COMP_CWORD -eq 2 ]; then
+        case "$prev" in
+
+            # HANDLE EVERYTHING AFTER THE SECOND LEVEL NAMESPACE
+            "license")
+                COMPREPLY=( $(compgen \
+                              -W "platform-id" \
+                              -- $cur) )
+                ;;
+
+            # IF YOU HAD ANOTHER CONTROLLER, YOU'D HANDLE THAT HERE
+            "some-other-controller")
+                COMPREPLY=( $(compgen \
+                              -W "some-other-sub-command" \
+                              -- $cur) )
+                ;;
+
+            # EVERYTHING ELSE
+            *)
+                ;;
+        esac
+
+    # SETUP THE THIRD LEVEL (EVERYTHING AFTER "myapp second third")
+    elif [ $COMP_CWORD -eq 3 ]; then
+        case "$prev" in
+            # HANDLE EVERYTHING AFTER THE THIRD LEVEL NAMESPACE
+            "third")
+                COMPREPLY=( $(compgen \
+                              -W "third-cmd6 third-cmd7" \
+                              -- $cur) )
+                ;;
+
+            # IF YOU HAD ANOTHER CONTROLLER, YOU'D HANDLE THAT HERE
+            "some-other-controller")
+                COMPREPLY=( $(compgen \
+                              -W "some-other-sub-command" \
+                              -- $cur) )
+                ;;
+
+            *)
+                ;;
+        esac
+    fi
+
+    return 0
+
+} &&
+complete -F _hpecp_complete hpecp
+        """)
+
 class CLI(object):
     def __init__(self):
         self.k8sworker = K8sWorker()
@@ -518,6 +590,7 @@ class CLI(object):
         self.lock = Lock()
         self.license = License()
         self.httpclient = HttpClient()
+        self.autocomplete = AutoComplete()
 
 
 if __name__ == "__main__":
