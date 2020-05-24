@@ -622,30 +622,46 @@ def configure_cli():
 
     sys.stdout.write("Controller API Host [{}]: ".format(controller_api_host))
     tmp = input()
-
     if tmp != '':
         controller_api_host = tmp
 
     sys.stdout.write("Controller API Port [{}]: ".format(controller_api_port))
-    controller_api_port = input()
+    tmp = input()
+    if tmp != '':
+        controller_api_port = tmp
+
     sys.stdout.write("Controller uses ssl (True|False) [{}]: ".format(controller_use_ssl))
-    controller_use_ssl = input()
+    tmp = input()
+    if tmp != '':
+        controller_use_ssl = tmp
+
     sys.stdout.write("Controller verify ssl (True|False) [{}]: ".format(controller_verify_ssl))
-    controller_verify_ssl = input()
+    tmp = input()
+    if tmp != '':
+        controller_verify_ssl = tmp
+
     sys.stdout.write("Controller warn ssl (True|False) [{}]: ".format(controller_warn_ssl))
-    controller_warn_ssl = input()
+    tmp = input()
+    if tmp != '':
+        controller_warn_ssl = tmp
+
     sys.stdout.write("Controller Username [{}]: ".format(controller_username))
-    controller_username = input()
+    tmp = input()
+    if tmp != '':
+        controller_username = tmp
+
     sys.stdout.write("Controller Password [{}]: ".format(controller_password))
-    controller_password = input()
+    tmp = input()
+    if tmp != '':
+        controller_password = tmp
 
     config = configparser.ConfigParser()
     config['default'] = OrderedDict()
     config['default']['api_host'] = controller_api_host
     config['default']['api_port'] = controller_api_port
-    config['default']['use_ssl'] = controller_use_ssl
-    config['default']['verify_ssl'] = controller_verify_ssl
-    config['default']['warn_ssl'] = controller_warn_ssl
+    config['default']['use_ssl'] = str(controller_use_ssl)
+    config['default']['verify_ssl'] = str(controller_verify_ssl)
+    config['default']['warn_ssl'] = str(controller_warn_ssl)
     config['default']['username'] = controller_username
     config['default']['password'] = controller_password
 
