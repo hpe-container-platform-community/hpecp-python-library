@@ -270,9 +270,15 @@
         <span class="sd">&quot;&quot;&quot;Doc string is defined at the top of the class&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_log</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">verify_ssl</span> <span class="o">==</span> <span class="s1">&#39;True&#39;</span><span class="p">:</span>
+            <span class="n">verify_ssl</span> <span class="o">=</span> <span class="kc">True</span>
+        
+        <span class="k">if</span> <span class="n">verify_ssl</span> <span class="o">==</span> <span class="s1">&#39;False&#39;</span><span class="p">:</span>
+            <span class="n">verify_ssl</span> <span class="o">=</span> <span class="kc">False</span>
+
         <span class="c1"># TODO add other fields, except password</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;ContainerPlatformClient() created with username[&#39;</span><span class="si">{}</span><span class="s2">&#39;]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">))</span>
-        
+
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">basestring</span><span class="p">),</span> <span class="s2">&quot;&#39;username&#39; parameter must be of type string&quot;</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">password</span><span class="p">,</span> <span class="n">basestring</span><span class="p">),</span> <span class="s2">&quot;&#39;password&#39; parameter must be of type string&quot;</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">api_host</span><span class="p">,</span> <span class="n">basestring</span><span class="p">),</span> <span class="s2">&quot;&#39;api_host&#39; parameter must be of type string&quot;</span>
@@ -280,7 +286,7 @@
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">use_ssl</span><span class="p">,</span> <span class="nb">bool</span><span class="p">),</span> <span class="s2">&quot;&#39;use_ssl&#39; parameter must be of type bool&quot;</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">verify_ssl</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span> <span class="ow">or</span> \
             <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">verify_ssl</span><span class="p">,</span> <span class="n">basestring</span><span class="p">)</span> <span class="ow">and</span> 
-            <span class="n">os</span><span class="o">.</span><span class="n">access</span><span class="p">(</span><span class="n">verify_ssl</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">R_OK</span><span class="p">)),</span> <span class="s2">&quot;&#39;verify_ssl&#39; parameter must be of type bool or point to a file&quot;</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">access</span><span class="p">(</span><span class="n">verify_ssl</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">R_OK</span><span class="p">)),</span> <span class="s2">&quot;&#39;verify_ssl&#39; parameter must be of type bool or point to a certificate file&quot;</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">warn_ssl</span><span class="p">,</span> <span class="nb">bool</span><span class="p">),</span> <span class="s2">&quot;&#39;warn_ssl&#39; parameter must be of type bool&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="n">username</span>
