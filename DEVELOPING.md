@@ -6,7 +6,7 @@ You can use gitpod - click [here](https://gitpod.io/#https://github.com/hpe-cont
 
 ```
 pip install -e . && hpecp autocomplete bash > hpecp-bash.rc && source hpecp-bash.rc
-hpecp gateway states
+hpecp configure-cli
 ```
 
 #### BUILDING DOCS
