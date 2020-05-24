@@ -18,6 +18,8 @@ username = admin
 password = admin123
 """
 
+from collections import OrderedDict
+import configparser
 import base64
 import sys
 import os
@@ -30,6 +32,7 @@ if sys.version_info[0] >= 3:
 
 from hpecp import (
     ContainerPlatformClient,
+    ContainerPlatformClientException,
     APIException,
     APIItemConflictException,
     APIItemNotFoundException,
@@ -52,6 +55,9 @@ def get_client():
     except APIException as e:
         print(e.message)
         sys.exit(1)
+    except ContainerPlatformClientException as e:
+        print(e.message)
+        sys.exit(1)
 
 
 class Gateway(object):
@@ -66,6 +72,7 @@ class Gateway(object):
         :param ssh_key_file: The file path to the ssh key.  Alternatively, use the ssh_key parameter.
         :param tags: Tags to use, e.g. "{ 'tag1': 'foo', 'tag2', 'bar' }".
         """
+
         if ssh_key is None and ssh_key_file is None:
             print("Either ssh_key or ssh_key_file must be provided")
             sys.exit(1)
@@ -518,34 +525,33 @@ class AutoComplete():
     def bash(self):
         print("""_hpecp_complete()
 {
-    local cur prev BASE_LEVEL
+    local cur prev prevprev BASE_LEVEL
 
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
     prev=${COMP_WORDS[COMP_CWORD-1]}
+    prevprev=${COMP_WORDS[COMP_CWORD-2]}
 
     # SETUP THE BASE LEVEL (everything after "hpecp")
     if [ $COMP_CWORD -eq 1 ]; then
         COMPREPLY=( $(compgen \
-                      -W "gateway k8scluster license" \
+                      -W "gateway httpclient k8scluster k8sworker license lock" \
                       -- $cur) )
 
 
-    # SETUP THE SECOND LEVEL (EVERYTHING AFTER "hpecp first")
+    # SETUP THE SECOND LEVEL ("hpecp XXXX")
     elif [ $COMP_CWORD -eq 2 ]; then
         case "$prev" in
 
-            # HANDLE EVERYTHING AFTER THE SECOND LEVEL NAMESPACE
-            "license")
+            "gateway")
                 COMPREPLY=( $(compgen \
-                              -W "platform-id" \
+                              -W "create-with-ssh-key create-with-ssh-password delete get list states wait-for-delete wait-for-state" \
                               -- $cur) )
                 ;;
 
-            # IF YOU HAD ANOTHER CONTROLLER, YOU'D HANDLE THAT HERE
-            "some-other-controller")
+            "license")
                 COMPREPLY=( $(compgen \
-                              -W "some-other-sub-command" \
+                              -W "delete delete-all list platform-id register upload-with-ssh-key upload-with-ssh-pass" \
                               -- $cur) )
                 ;;
 
@@ -554,26 +560,35 @@ class AutoComplete():
                 ;;
         esac
 
-    # SETUP THE THIRD LEVEL (EVERYTHING AFTER "myapp second third")
-    elif [ $COMP_CWORD -eq 3 ]; then
-        case "$prev" in
-            # HANDLE EVERYTHING AFTER THE THIRD LEVEL NAMESPACE
-            "third")
-                COMPREPLY=( $(compgen \
-                              -W "third-cmd6 third-cmd7" \
-                              -- $cur) )
-                ;;
+    # SETUP THE THIRD LEVEL ("hpecp second XXXX")
+    elif [ $COMP_CWORD -ge 3 ]; then
 
-            # IF YOU HAD ANOTHER CONTROLLER, YOU'D HANDLE THAT HERE
-            "some-other-controller")
-                COMPREPLY=( $(compgen \
-                              -W "some-other-sub-command" \
-                              -- $cur) )
-                ;;
+        case "$prevprev" in
+            "gateway")
+
+            case "$prev" in
+
+                "create-with-ssh-key")
+                    COMPREPLY=( $(compgen \
+                                -W "--ip --proxy-node-hostname --ssh-key --ssh-key-file --tags" \
+                                -- $cur) )
+                    ;;
+
+                # EVERYTHING ELSE
+                *)
+
+                    ;;
+
+            esac
+
+            ;;
 
             *)
+
                 ;;
+
         esac
+
     fi
 
     return 0
@@ -581,6 +596,61 @@ class AutoComplete():
 } &&
 complete -F _hpecp_complete hpecp
         """)
+
+
+def configure_cli():
+
+    controller_api_host = None
+    controller_api_port = None
+    controller_use_ssl = None
+    controller_verify_ssl = None
+    controller_warn_ssl = None
+    controller_username = None
+    controller_password = None
+
+    config_path = os.path.join(os.path.expanduser("~"), ".hpecp.conf")
+
+    if os.path.exists(config_path):
+        config_reader = ContainerPlatformClient.create_from_config_file()
+        controller_api_host = config_reader.api_host
+        controller_api_port = config_reader.api_port
+        controller_use_ssl = config_reader.use_ssl
+        controller_verify_ssl = config_reader.verify_ssl
+        controller_warn_ssl = config_reader.warn_ssl
+        controller_username = config_reader.username
+        controller_password = config_reader.password
+
+    sys.stdout.write("Controller API Host [{}]: ".format(controller_api_host))
+    tmp = input()
+
+    if tmp != '':
+        controller_api_host = tmp
+
+    sys.stdout.write("Controller API Port [{}]: ".format(controller_api_port))
+    controller_api_port = input()
+    sys.stdout.write("Controller uses ssl (True|False) [{}]: ".format(controller_use_ssl))
+    controller_use_ssl = input()
+    sys.stdout.write("Controller verify ssl (True|False) [{}]: ".format(controller_verify_ssl))
+    controller_verify_ssl = input()
+    sys.stdout.write("Controller warn ssl (True|False) [{}]: ".format(controller_warn_ssl))
+    controller_warn_ssl = input()
+    sys.stdout.write("Controller Username [{}]: ".format(controller_username))
+    controller_username = input()
+    sys.stdout.write("Controller Password [{}]: ".format(controller_password))
+    controller_password = input()
+
+    config = configparser.ConfigParser()
+    config['default'] = OrderedDict()
+    config['default']['api_host'] = controller_api_host
+    config['default']['api_port'] = controller_api_port
+    config['default']['use_ssl'] = controller_use_ssl
+    config['default']['verify_ssl'] = controller_verify_ssl
+    config['default']['warn_ssl'] = controller_warn_ssl
+    config['default']['username'] = controller_username
+    config['default']['password'] = controller_password
+
+    with open(config_path, 'w') as config_file:
+        config.write(config_file)
 
 class CLI(object):
     def __init__(self):
@@ -591,6 +661,7 @@ class CLI(object):
         self.license = License()
         self.httpclient = HttpClient()
         self.autocomplete = AutoComplete()
+        self.configure_cli = configure_cli
 
 
 if __name__ == "__main__":

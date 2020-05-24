@@ -2,6 +2,13 @@
 
 You can use gitpod - click [here](https://gitpod.io/#https://github.com/hpe-container-platform-community/hpecp-python-library/blob/master/DEVELOPING.md) to launch.
 
+- Installing the CLI in gitpod:
+
+```
+pip install -e . && hpecp autocomplete bash > hpecp-bash.rc && source hpecp-bash.rc
+hpecp gateway states
+```
+
 #### BUILDING DOCS
 
 In the Gitpod Terminal:

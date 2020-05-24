@@ -203,9 +203,15 @@ class ContainerPlatformClient(object):
         """Doc string is defined at the top of the class"""
         self._log = Logger().get_logger(self.__class__.__name__)
 
+        if verify_ssl == 'True':
+            verify_ssl = True
+        
+        if verify_ssl == 'False':
+            verify_ssl = False
+
         # TODO add other fields, except password
         self._log.debug("ContainerPlatformClient() created with username['{}']".format(username))
-        
+
         assert isinstance(username, basestring), "'username' parameter must be of type string"
         assert isinstance(password, basestring), "'password' parameter must be of type string"
         assert isinstance(api_host, basestring), "'api_host' parameter must be of type string"
@@ -213,7 +219,7 @@ class ContainerPlatformClient(object):
         assert isinstance(use_ssl, bool), "'use_ssl' parameter must be of type bool"
         assert isinstance(verify_ssl, bool) or \
             (isinstance(verify_ssl, basestring) and 
-            os.access(verify_ssl, os.R_OK)), "'verify_ssl' parameter must be of type bool or point to a file"
+            os.access(verify_ssl, os.R_OK)), "'verify_ssl' parameter must be of type bool or point to a certificate file"
         assert isinstance(warn_ssl, bool), "'warn_ssl' parameter must be of type bool"
 
         self.username = username
