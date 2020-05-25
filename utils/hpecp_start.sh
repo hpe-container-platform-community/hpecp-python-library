@@ -5,13 +5,10 @@ if [[ ! -d ~/.aws ]]; then
    exit 1
 fi
 
-if [[ ! -f ~/.aws_instance_ids ]]; then
-    echo "Please input a list of instance ids, separated by whitespace:"
-    read INSTANCE_IDS
-    echo "Saving instance ids to ~/.aws_instance_ids"
-    echo $INSTANCE_IDS > ~/.aws_instance_ids
+if [[ ! -f ~/.hpecp_service ]]; then
+    echo "Please create your ~/.hpecp_service file"
+    exit 1
 fi
-
-INSTANCE_IDS=$(cat ~/.aws_instance_ids)
+source ~/.hpecp_service
 
 aws ec2 start-instances --instance-ids  $INSTANCE_IDS

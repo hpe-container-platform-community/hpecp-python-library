@@ -5,14 +5,11 @@ if [[ ! -d ~/.aws ]]; then
    exit 1
 fi
 
-if [[ ! -f ~/.aws_controller_id ]]; then
-    echo "Please input controller instance id:"
-    read CONTROLLER_ID
-    echo "Saving controller instance id to ~/.aws_controller_id"
-    echo $CONTROLLER_ID > ~/.aws_controller_id
-    echo "---"
+if [[ ! -f ~/.hpecp_service ]]; then
+    echo "Please create your ~/.hpecp_service file"
+    exit 1
 fi
-CONTROLLER_ID=$(cat ~/.aws_controller_id)
+source ~/.hpecp_service
 
 echo -n "Controller public IP: "
 

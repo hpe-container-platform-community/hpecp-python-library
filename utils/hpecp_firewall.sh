@@ -5,23 +5,11 @@ if [[ ! -d ~/.aws ]]; then
    exit 1
 fi
 
-if [[ ! -f ~/.aws_nacl_id ]]; then
-    echo "Please input network acl id:"
-    read NACL_ID
-    echo "Saving network acl id to ~/.aws_nacl_id"
-    echo $NACL_ID > ~/.aws_nacl_id
-    echo "---"
+if [[ ! -f ~/.hpecp_service ]]; then
+    echo "Please create your ~/.hpecp_service file"
+    exit 1
 fi
-NACL_ID=$(cat ~/.aws_nacl_id)
-
-if [[ ! -f ~/.aws_sg_id ]]; then
-    echo "Please input security group id:"
-    read SG_ID
-    echo "Saving security group id to ~/.aws_sg_id"
-    echo $SG_ID > ~/.aws_sg_id
-    echo "---"
-fi
-SG_ID=$(cat ~/.aws_sg_id)
+source ~/.hpecp_service
 
 aws ec2 create-network-acl-entry \
     --network-acl-id $NACL_ID \
@@ -29,7 +17,7 @@ aws ec2 create-network-acl-entry \
     --ingress \
     --protocol -1 \
     --rule-action allow \
-    --rule-number 110
+    --rule-number 110 > /dev/null 2>&1
 
 if [[ $? != 0 ]]; then
     aws ec2 replace-network-acl-entry \
@@ -38,11 +26,11 @@ if [[ $? != 0 ]]; then
         --ingress \
         --protocol -1 \
         --rule-action allow \
-        --rule-number 110
+        --rule-number 110 > /dev/null 2>&1
 fi
 
 aws ec2 authorize-security-group-ingress \
     --group-id $SG_ID \
     --protocol all \
     --port -1 \
-    --cidr "$(curl -s http://ifconfig.me/ip)/32"
+    --cidr "$(curl -s http://ifconfig.me/ip)/32" > /dev/null 2>&1
