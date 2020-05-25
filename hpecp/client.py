@@ -14,6 +14,7 @@ from .k8s_cluster import K8sClusterController
 from .license import LicenseController
 from .lock import LockController
 from .exceptions import ContainerPlatformClientException, APIException, APIItemNotFoundException, APIItemConflictException
+from .user import UserController
 
 import re
 import os
@@ -239,6 +240,7 @@ class ContainerPlatformClient(object):
         self._k8s_cluster = K8sClusterController(self)
         self._license = LicenseController(self)
         self._lock = LockController(self)
+        self._user = UserController(self)
 
     def create_session(self):
         """Create a session with the HPE CP controller defined in the object :py:class:`ContainerPlatformClient`.
@@ -518,6 +520,25 @@ class ContainerPlatformClient(object):
         """
 
         return self._log
+    
+    @property
+    def user(self):
+        """
+        This attribute is a reference to an object of type `.user.UserController`.
+
+        See the class :py:class:`.user.UserController` for the methods available.
+
+        Example::
+
+            client = ContainerPlatformClient(...)
+            client.create_session()
+            client.user.create()
+        
+        This example calls the method :py:meth:`create() <.user.UserController.create>` in :py:class:`.user.UserController`.
+        """
+
+        return self._user
+
    
 
     
