@@ -1,7 +1,7 @@
 tasks:
   - init: /usr/bin/python3 -m pip install -U pytest mock pylint -r ./requirements.txt --user
   - init: pyenv shell 2.7.17 && pip install -U pytest mock pylint -r ./requirements.txt --user
-  - command: python3 -m http.server 8080
+  - command: cd docs && make html && cd build/html && python3 -m http.server 8080
     name: Static Server
 image:
   file: .gitpod.Dockerfile
