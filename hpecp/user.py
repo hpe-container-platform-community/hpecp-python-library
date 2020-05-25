@@ -13,12 +13,12 @@ except NameError:
 
 class UserController:
     """
-    The methods of this class can be invoked using `client.gateway.method()`.  See the example below:
+    The methods of this class can be invoked using `client.user.method()`.  See the example below:
 
     Example::
 
         client = ContainerPlatformClient(...).create_session()
-        client.user.list()
+        client.user.create()
 
     """
 
@@ -26,7 +26,7 @@ class UserController:
         self.client = client
 
     def create(self, name, description="", is_external=True):
-        '''Create a gateway instance using SSH key credentials to access the host
+        '''Create a user by specifying name & description
 
         Args:
             name: str
