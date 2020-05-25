@@ -680,7 +680,7 @@ def configure_cli():
     config = configparser.ConfigParser()
     config['default'] = OrderedDict()
     config['default']['api_host'] = controller_api_host
-    config['default']['api_port'] = controller_api_port
+    config['default']['api_port'] = str(controller_api_port)
     config['default']['use_ssl'] = str(controller_use_ssl)
     config['default']['verify_ssl'] = str(controller_verify_ssl)
     config['default']['warn_ssl'] = str(controller_warn_ssl)
