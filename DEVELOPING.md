@@ -5,7 +5,7 @@ You can use gitpod - click [here](https://gitpod.io/#https://github.com/hpe-cont
 - Installing the CLI in gitpod:
 
 ```
-pip install -e . && hpecp autocomplete bash > hpecp-bash.rc && source hpecp-bash.rc
+pip install -e .
 source <(hpecp autocomplete bash) # setup autocompletion
 hpecp configure-cli
 ```
