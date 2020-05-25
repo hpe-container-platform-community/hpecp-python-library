@@ -41,7 +41,7 @@ if [[ $? != 0 ]]; then
         --rule-number 110
 fi
 
-aws ec2 default authorize-security-group-ingress \
+aws ec2 authorize-security-group-ingress \
     --group-id $SG_ID \
     --protocol all \
     --port -1 \
