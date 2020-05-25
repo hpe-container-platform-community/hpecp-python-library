@@ -1,7 +1,6 @@
 from __future__ import absolute_import
-from .logger import Logger
-from .exceptions import ContainerPlatformClientException, APIException, APIItemNotFoundException, \
-    APIItemConflictException
+#from .logger import Logger
+#from .exceptions import ContainerPlatformClientException, APIException, APIItemNotFoundException, APIItemConflictException
 
 import json
 import re
