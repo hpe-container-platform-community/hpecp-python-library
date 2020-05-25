@@ -81,6 +81,7 @@
 <span class="kn">from</span> <span class="nn">.license</span> <span class="kn">import</span> <span class="n">LicenseController</span>
 <span class="kn">from</span> <span class="nn">.lock</span> <span class="kn">import</span> <span class="n">LockController</span>
 <span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">ContainerPlatformClientException</span><span class="p">,</span> <span class="n">APIException</span><span class="p">,</span> <span class="n">APIItemNotFoundException</span><span class="p">,</span> <span class="n">APIItemConflictException</span>
+<span class="kn">from</span> <span class="nn">.user</span> <span class="kn">import</span> <span class="n">UserController</span>
 
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">os</span>
@@ -312,6 +313,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_k8s_cluster</span> <span class="o">=</span> <span class="n">K8sClusterController</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_license</span> <span class="o">=</span> <span class="n">LicenseController</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span> <span class="o">=</span> <span class="n">LockController</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_user</span> <span class="o">=</span> <span class="n">UserController</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ContainerPlatformClient.create_session"><a class="viewcode-back" href="../../hpecp.client.html#hpecp.client.ContainerPlatformClient.create_session">[docs]</a>    <span class="k">def</span> <span class="nf">create_session</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create a session with the HPE CP controller defined in the object :py:class:`ContainerPlatformClient`.</span>
@@ -590,7 +592,26 @@
 <span class="sd">                    self.client.log.error(&quot;Some Error&quot;)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_log</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_log</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This attribute is a reference to an object of type `.user.UserController`.</span>
+
+<span class="sd">        See the class :py:class:`.user.UserController` for the methods available.</span>
+
+<span class="sd">        Example::</span>
+
+<span class="sd">            client = ContainerPlatformClient(...)</span>
+<span class="sd">            client.create_session()</span>
+<span class="sd">            client.user.create()</span>
+<span class="sd">        </span>
+<span class="sd">        This example calls the method :py:meth:`create() &lt;.user.UserController.create&gt;` in :py:class:`.user.UserController`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_user</span></div>
+
    
 
     
