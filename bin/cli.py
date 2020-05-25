@@ -550,7 +550,7 @@ class AutoComplete():
     # SETUP THE BASE LEVEL (everything after "hpecp")
     if [ $COMP_CWORD -eq 1 ]; then
         COMPREPLY=( $(compgen \
-                      -W "configure-cli gateway httpclient k8scluster k8sworker license lock" \
+                      -W "autocomplete configure-cli gateway httpclient k8scluster k8sworker license lock" \
                       -- $cur) )
 
 
@@ -558,7 +558,7 @@ class AutoComplete():
     elif [ $COMP_CWORD -eq 2 ]; then
         case "$prev" in
 
-            "configure-cli")
+            "autocomplete")
                 COMPREPLY=( $(compgen \
                               -W "bash" \
                               -- $cur) )
