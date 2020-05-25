@@ -60,7 +60,7 @@ def get_client():
         sys.exit(1)
 
 
-class Gateway(object):
+class GatewayProxy(object):
     def create_with_ssh_key(
         self, ip, proxy_node_hostname, ssh_key=None, ssh_key_file=None, tags=[]
     ):
@@ -179,7 +179,7 @@ class Gateway(object):
         """Return a list of valid states"""
         print([ s.name for s in GatewayStatus ] )
 
-class K8sWorker(object):
+class K8sWorkerProxy(object):
     def create_with_ssh_key(
         self, ip, ssh_key=None, ssh_key_file=None, tags=[]
     ):
@@ -241,7 +241,7 @@ class K8sWorker(object):
         """
         print(get_client().k8s_worker.delete(worker_id=k8sworker_id))
 
-class K8sCluster(object):
+class K8sClusterProxy(object):
     def create(
         self,
         name,
@@ -356,7 +356,7 @@ class K8sCluster(object):
         """Return a list of valid statuses"""
         print([ s.name for s in K8sClusterStatus ] )
 
-class Lock(object):
+class LockProxy(object):
     def get(self, output="yaml"):
         """Get the system and user locks
         :param output: how to display the output ['yaml'|'json']
@@ -389,7 +389,7 @@ class Lock(object):
         """Delete all locks"""
         print(get_client().lock.delete_all(timeout_secs=300))
 
-class License(object):
+class LicenseProxy(object):
     def platform_id(self):
         """Get the platform ID
         """
@@ -464,7 +464,7 @@ class License(object):
             get_client().license.delete(license_key=licence_key)
         print('Delete submitted - verify with: `hpecp license list`')
 
-class HttpClient(object):
+class HttpClientProxy(object):
 
     def get(self, url):
         """Make HTTP GET request
@@ -516,6 +516,21 @@ class HttpClient(object):
         response = get_client()._request(url, http_method='post', data=data, description='CLI HTTP POST')
         print(response.text)
 
+class UserProxy():
+    def create(
+        self,
+        name,
+        description,
+        is_external=False,
+    ):
+        """Create a User
+
+        :param name: the user name
+        :param description: the user descripton
+
+        """
+
+        raise NotImplementedError
 
 class AutoComplete():
     """Example Usage: 
@@ -670,12 +685,12 @@ def configure_cli():
 
 class CLI(object):
     def __init__(self):
-        self.k8sworker = K8sWorker()
-        self.k8scluster = K8sCluster()
-        self.gateway = Gateway()
-        self.lock = Lock()
-        self.license = License()
-        self.httpclient = HttpClient()
+        self.k8sworker = K8sWorkerProxy()
+        self.k8scluster = K8sClusterProxy()
+        self.gateway = GatewayProxy()
+        self.lock = LockProxy()
+        self.license = LicenseProxy()
+        self.httpclient = HttpClientProxy()
         self.autocomplete = AutoComplete()
         self.configure_cli = configure_cli
 
