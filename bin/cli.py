@@ -540,78 +540,44 @@ class AutoComplete():
     def bash(self):
         print("""_hpecp_complete()
 {
-    local cur prev prevprev BASE_LEVEL
+    local cur prev BASE_LEVEL
 
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
     prev=${COMP_WORDS[COMP_CWORD-1]}
-    prevprev=${COMP_WORDS[COMP_CWORD-2]}
 
-    # SETUP THE BASE LEVEL (everything after "hpecp")
-    if [ $COMP_CWORD -eq 1 ]; then
-        COMPREPLY=( $(compgen \
+    COMP_WORDS_AS_STRING=$(IFS=, ; echo "${COMP_WORDS[*]}")
+
+    case "$COMP_WORDS_AS_STRING" in 
+        *"hpecp,gateway,create-with-ssh-key"*)
+            COMPREPLY=( $(compgen \
+                        -f -W "--ip --proxy-node-hostname --ssh-key --ssh-key-file --tags" \
+                        -- $cur) )
+            ;;
+        *"hpecp,gateway"*)
+            COMPREPLY=( $(compgen \
+                        -W "create-with-ssh-key create-with-ssh-password delete get list states wait-for-delete wait-for-state" \
+                        -- $cur) )
+            ;;
+        *"hpecp,license"*)
+            COMPREPLY=( $(compgen \
+                        -W "delete delete-all list platform-id register upload-with-ssh-key upload-with-ssh-pass" \
+                        -- $cur) )
+            ;;
+        *"hpecp,autocomplete,bash"*)
+            COMPREPLY=( )
+            ;;
+        *"hpecp,autocomplete"*)
+            COMPREPLY=( $(compgen \
+                        -W "bash" \
+                        -- $cur) )
+            ;;
+        *"hpecp"*)
+            COMPREPLY=( $(compgen \
                       -W "autocomplete configure-cli gateway httpclient k8scluster k8sworker license lock" \
                       -- $cur) )
-
-
-    # SETUP THE SECOND LEVEL ("hpecp XXXX")
-    elif [ $COMP_CWORD -eq 2 ]; then
-        case "$prev" in
-
-            "autocomplete")
-                COMPREPLY=( $(compgen \
-                              -W "bash" \
-                              -- $cur) )
-                ;;
-
-
-            "gateway")
-                COMPREPLY=( $(compgen \
-                              -W "create-with-ssh-key create-with-ssh-password delete get list states wait-for-delete wait-for-state" \
-                              -- $cur) )
-                ;;
-
-            "license")
-                COMPREPLY=( $(compgen \
-                              -W "delete delete-all list platform-id register upload-with-ssh-key upload-with-ssh-pass" \
-                              -- $cur) )
-                ;;
-
-            # EVERYTHING ELSE
-            *)
-                ;;
-        esac
-
-    # SETUP THE THIRD LEVEL ("hpecp second XXXX")
-    elif [ $COMP_CWORD -ge 3 ]; then
-
-        case "$prevprev" in
-            "gateway")
-
-            case "$prev" in
-
-                "create-with-ssh-key")
-                    COMPREPLY=( $(compgen \
-                                -W "--ip --proxy-node-hostname --ssh-key --ssh-key-file --tags" \
-                                -- $cur) )
-                    ;;
-
-                # EVERYTHING ELSE
-                *)
-
-                    ;;
-
-            esac
-
             ;;
-
-            *)
-
-                ;;
-
-        esac
-
-    fi
+    esac
 
     return 0
 
