@@ -181,12 +181,11 @@ class GatewayProxy(object):
 
 class K8sWorkerProxy(object):
     def create_with_ssh_key(
-        self, ip, ssh_key=None, ssh_key_file=None, tags=[]
+        self, ip=None, ssh_key=None, ssh_key_file=None, tags=[]
     ):
         """Create a K8s Worker using SSH key authentication
 
         :param ip: The IP address of the host.  Used for internal communication.
-        :param proxy_node_hostname: Clients will access cluster services will be accessed using this name.
         :param ssh_key: The ssh key data as a string.  Alternatively, use the ssh_key_file parameter.
         :param ssh_key_file: The file path to the ssh key.  Alternatively, use the ssh_key parameter.
         :param tags: Tags to use, e.g. "{ 'tag1': 'foo', 'tag2', 'bar' }".
