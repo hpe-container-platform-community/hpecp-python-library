@@ -548,7 +548,12 @@ class AutoComplete():
 
     COMP_WORDS_AS_STRING=$(IFS=, ; echo "${COMP_WORDS[*]}")
 
-    case "$COMP_WORDS_AS_STRING" in 
+    case "$COMP_WORDS_AS_STRING" in
+
+        ###############
+        ### gateway ###
+        ###############
+
         *"hpecp,gateway,create-with-ssh-key"*)
             COMPREPLY=( $(compgen \
                         -f -W "--ip --proxy-node-hostname --ssh-key --ssh-key-file --tags" \
@@ -559,11 +564,37 @@ class AutoComplete():
                         -W "create-with-ssh-key create-with-ssh-password delete get list states wait-for-delete wait-for-state" \
                         -- $cur) )
             ;;
+
+        ###############
+        ### k8sworker ###
+        ###############
+
+        *"hpecp,k8sworker,create-with-ssh-key"*)
+            COMPREPLY=( $(compgen \
+                        -W "--ip --ssh-key --ssh-key-file --tags" \
+                        -- $cur) )
+            ;;
+        *"hpecp,k8sworker"*)
+            COMPREPLY=( $(compgen \
+                        -W "create-with-ssh-key delete get list " \
+                        -- $cur) )
+            ;;
+
+
+        ###############
+        ### license ###
+        ###############
+
         *"hpecp,license"*)
             COMPREPLY=( $(compgen \
                         -W "delete delete-all list platform-id register upload-with-ssh-key upload-with-ssh-pass" \
                         -- $cur) )
             ;;
+
+        ####################
+        ### autocomplete ###
+        ####################
+
         *"hpecp,autocomplete,bash"*)
             COMPREPLY=( )
             ;;
