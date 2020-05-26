@@ -231,7 +231,11 @@ class K8sWorkerProxy(object):
 
         :param k8sworker_id: the worker ID
         """
-        print(get_client().k8s_worker.get(worker_id=k8sworker_id))
+        worker = get_client().k8s_worker.get(worker_id=k8sworker_id)
+        print(
+                yaml.dump(yaml.load(json.dumps(worker), Loader=yaml.FullLoader))
+        )
+
 
     def delete(self, k8sworker_id):
         """Delete a K8s Worker
