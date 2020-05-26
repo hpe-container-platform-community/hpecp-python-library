@@ -253,7 +253,7 @@
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">polling</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span>
-                <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_k8shost</span><span class="p">(</span><span class="n">worker_id</span><span class="p">)</span><span class="o">.</span><span class="n">status</span> <span class="ow">in</span> <span class="n">WorkerK8sStatus</span><span class="o">.</span><span class="n">status_names</span><span class="p">(</span><span class="n">status</span><span class="p">),</span>
+                <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">worker_id</span><span class="p">)</span><span class="o">.</span><span class="n">status</span> <span class="ow">in</span> <span class="n">WorkerK8sStatus</span><span class="o">.</span><span class="n">status_names</span><span class="p">(</span><span class="n">status</span><span class="p">),</span>
                 <span class="n">step</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
                 <span class="n">poll_forever</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                 <span class="n">timeout</span><span class="o">=</span><span class="n">timeout_secs</span>
