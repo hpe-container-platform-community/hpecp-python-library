@@ -206,6 +206,10 @@ class K8sWorkerController:
         :param persistent_disks: a comma separated list of zero or more persistent disks, e.g. "/dev/nvme2n1"
         :param ephemeral_disks: a comma separated list of zero or more ephemeral_disks disks, e.g. "/dev/nvme1n1"
         """
+        
+        #TODO: id is valid
+        #TODO: assert disks are arrays
+
         data = {
             "op_spec": {
                 "persistent_disks": persistent_disks, 
