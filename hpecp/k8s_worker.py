@@ -156,7 +156,7 @@ class K8sWorkerController:
         """
         See: https://<<controller_ip>>/apidocs/site-admin-api.html for the schema of the  response object
         """
-        response = self.client._request(url='/api/v2/worker/k8shost/{}'.format(worker_id), http_method='get', description='worker/get_k8shosts')
+        response = self.client._request(url=worker_id, http_method='get', description='worker/get_k8shosts')
         host = WorkerK8s(response.json())
         return host
 
@@ -164,7 +164,7 @@ class K8sWorkerController:
         """
         See: https://<<controller_ip>>/apidocs/site-admin-api.html for the schema of the  response object
         """
-        self.client._request(url='/api/v2/worker/k8shost/{}'.format(worker_id), http_method='delete', description='worker/delete_k8shosts')
+        self.client._request(url=worker_id, http_method='delete', description='worker/delete_k8shosts')
 
     # TODO rename status parameter to statuses
     def wait_for_status(self, worker_id, status=[], timeout_secs=60):
@@ -199,12 +199,22 @@ class K8sWorkerController:
 
 
 
-    def set_storage(self, worker_id, data):
+    def set_storage(self, worker_id, persistent_disks, ephemeral_disks):
+        """Set Storage
+
+        :param k8sworker_id: the worker ID
+        :param persistent_disks: a comma separated list of zero or more persistent disks, e.g. "/dev/nvme2n1"
+        :param ephemeral_disks: a comma separated list of zero or more ephemeral_disks disks, e.g. "/dev/nvme1n1"
         """
-        Example:
-        {"op_spec": {"persistent_disks": ["/dev/nvme2n1"], "ephemeral_disks": ["/dev/nvme1n1"]}, "op": "storage"}
-        """
-        self.client._request(url='/api/v2/worker/k8shost/{}'.format(worker_id), http_method='post', data=data, description='worker/add_k8shost')
+        data = {
+            "op_spec": {
+                "persistent_disks": persistent_disks, 
+                "ephemeral_disks": ephemeral_disks
+                }, 
+            "op": "storage"
+        }
+
+        self.client._request(url=worker_id, http_method='post', data=data, description='worker/add_k8shost')
         # no response - just status code
 
    

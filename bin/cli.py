@@ -236,9 +236,18 @@ class K8sWorkerProxy(object):
     def delete(self, k8sworker_id):
         """Delete a K8s Worker
 
-        :param k8sworker_id: the cluster ID
+        :param k8sworker_id: the worker ID
         """
         print(get_client().k8s_worker.delete(worker_id=k8sworker_id))
+
+    def set_storage(self, k8sworker_id=None, persistent_disks=None, ephemeral_disks=None):
+        """Set Storage
+
+        :param k8sworker_id: the worker ID
+        :param persistent_disks: a comma separated list of zero or more persistent disks, e.g. "/dev/nvme2n1"
+        :param ephemeral_disks: a comma separated list of zero or more ephemeral_disks disks, e.g. "/dev/nvme1n1"
+        """
+        print(get_client().k8s_worker.set_storage(worker_id=k8sworker_id, persistent_disks=persistent_disks, ephemeral_disks=ephemeral_disks))
 
 class K8sClusterProxy(object):
     def create(
