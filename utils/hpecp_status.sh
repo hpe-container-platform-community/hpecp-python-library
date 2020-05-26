@@ -1,14 +1,12 @@
 #!/usr/bin/env bash
 
-if [[ ! -d ~/.aws ]]; then
-   echo "Please run 'aws configure'"
-   exit 1
-fi
+set -u
+set -e
 
-if [[ ! -f ~/.hpecp_service ]]; then
-    echo "Please create your ~/.hpecp_service file"
-    exit 1
+if [[ ! -d ~/.aws || ! -f ~/.hpecp_service ]]; then
+   echo "Please run utils/hpecp_configure.sh"
+   exit 1
 fi
 source ~/.hpecp_service
 
-aws ec2 describe-instance-status --instance-ids  $INSTANCE_IDS --include-all-instances --output table --query "InstanceStatuses[*].{ID:InstanceId,State:InstanceState.Name}"
+aws ec2 describe-instance-status --instance-ids  $ALL_INSTANCE_IDS --include-all-instances --output table --query "InstanceStatuses[*].{ID:InstanceId,State:InstanceState.Name}"

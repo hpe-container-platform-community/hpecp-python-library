@@ -1,17 +1,13 @@
 #!/usr/bin/env bash
 
-if [[ ! -d ~/.aws ]]; then
-   echo "Please run 'aws configure'"
-   exit 1
-fi
+set -u
+set -e
 
-if [[ ! -f ~/.hpecp_service ]]; then
-    echo "Please create your ~/.hpecp_service file"
-    exit 1
+if [[ ! -d ~/.aws || ! -f ~/.hpecp_service ]]; then
+   echo "Please run utils/hpecp_configure.sh"
+   exit 1
 fi
 source ~/.hpecp_service
 
-echo -n "Controller public IP: "
-
-aws ec2 describe-instances --instance-ids $CONTROLLER_ID --output text --query "Reservations[*].Instances[*].[PublicIpAddress]"
+aws ec2 describe-instances --instance-ids $CONTROLLER_INSTANCE_ID --output text --query "Reservations[*].Instances[*].[PublicIpAddress]"
 
