@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 set -u
-set -e
 
 if [[ ! -d ~/.aws || ! -f ~/.hpecp_service ]]; then
    echo "Please run utils/hpecp_configure.sh"
@@ -15,7 +14,7 @@ aws ec2 create-network-acl-entry \
     --ingress \
     --protocol -1 \
     --rule-action allow \
-    --rule-number 110 > /dev/null 2>&1
+    --rule-number 110
 
 if [[ $? != 0 ]]; then
     aws ec2 replace-network-acl-entry \
@@ -24,11 +23,11 @@ if [[ $? != 0 ]]; then
         --ingress \
         --protocol -1 \
         --rule-action allow \
-        --rule-number 110 > /dev/null 2>&1
+        --rule-number 110
 fi
 
 aws ec2 authorize-security-group-ingress \
     --group-id $SG_ID \
     --protocol all \
     --port -1 \
-    --cidr "$(curl -s http://ifconfig.me/ip)/32" > /dev/null 2>&1
+    --cidr "$(curl -s http://ifconfig.me/ip)/32"
