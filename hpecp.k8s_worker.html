@@ -290,9 +290,17 @@
 
 <dl class="py method">
 <dt id="hpecp.k8s_worker.K8sWorkerController.set_storage">
-<code class="sig-name descname">set_storage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">worker_id</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_worker.html#K8sWorkerController.set_storage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_worker.K8sWorkerController.set_storage" title="Permalink to this definition">¶</a></dt>
-<dd><p>Example:
-{“op_spec”: {“persistent_disks”: [“/dev/nvme2n1”], “ephemeral_disks”: [“/dev/nvme1n1”]}, “op”: “storage”}</p>
+<code class="sig-name descname">set_storage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">worker_id</span></em>, <em class="sig-param"><span class="n">persistent_disks</span></em>, <em class="sig-param"><span class="n">ephemeral_disks</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_worker.html#K8sWorkerController.set_storage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_worker.K8sWorkerController.set_storage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set Storage</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>k8sworker_id</strong> – the worker ID</p></li>
+<li><p><strong>persistent_disks</strong> – a comma separated list of zero or more persistent disks, e.g. “/dev/nvme2n1”</p></li>
+<li><p><strong>ephemeral_disks</strong> – a comma separated list of zero or more ephemeral_disks disks, e.g. “/dev/nvme1n1”</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

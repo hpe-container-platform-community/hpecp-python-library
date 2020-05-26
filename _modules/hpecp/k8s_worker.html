@@ -223,7 +223,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        See: https://&lt;&lt;controller_ip&gt;&gt;/apidocs/site-admin-api.html for the schema of the  response object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="s1">&#39;/api/v2/worker/k8shost/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">worker_id</span><span class="p">),</span> <span class="n">http_method</span><span class="o">=</span><span class="s1">&#39;get&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;worker/get_k8shosts&#39;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">worker_id</span><span class="p">,</span> <span class="n">http_method</span><span class="o">=</span><span class="s1">&#39;get&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;worker/get_k8shosts&#39;</span><span class="p">)</span>
         <span class="n">host</span> <span class="o">=</span> <span class="n">WorkerK8s</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">host</span></div>
 
@@ -231,7 +231,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        See: https://&lt;&lt;controller_ip&gt;&gt;/apidocs/site-admin-api.html for the schema of the  response object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="s1">&#39;/api/v2/worker/k8shost/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">worker_id</span><span class="p">),</span> <span class="n">http_method</span><span class="o">=</span><span class="s1">&#39;delete&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;worker/delete_k8shosts&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">worker_id</span><span class="p">,</span> <span class="n">http_method</span><span class="o">=</span><span class="s1">&#39;delete&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;worker/delete_k8shosts&#39;</span><span class="p">)</span></div>
 
     <span class="c1"># TODO rename status parameter to statuses</span>
 <div class="viewcode-block" id="K8sWorkerController.wait_for_status"><a class="viewcode-back" href="../../hpecp.k8s_worker.html#hpecp.k8s_worker.K8sWorkerController.wait_for_status">[docs]</a>    <span class="k">def</span> <span class="nf">wait_for_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">worker_id</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="p">[],</span> <span class="n">timeout_secs</span><span class="o">=</span><span class="mi">60</span><span class="p">):</span>
@@ -266,12 +266,22 @@
 
 
 
-<div class="viewcode-block" id="K8sWorkerController.set_storage"><a class="viewcode-back" href="../../hpecp.k8s_worker.html#hpecp.k8s_worker.K8sWorkerController.set_storage">[docs]</a>    <span class="k">def</span> <span class="nf">set_storage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">worker_id</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Example:</span>
-<span class="sd">        {&quot;op_spec&quot;: {&quot;persistent_disks&quot;: [&quot;/dev/nvme2n1&quot;], &quot;ephemeral_disks&quot;: [&quot;/dev/nvme1n1&quot;]}, &quot;op&quot;: &quot;storage&quot;}</span>
+<div class="viewcode-block" id="K8sWorkerController.set_storage"><a class="viewcode-back" href="../../hpecp.k8s_worker.html#hpecp.k8s_worker.K8sWorkerController.set_storage">[docs]</a>    <span class="k">def</span> <span class="nf">set_storage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">worker_id</span><span class="p">,</span> <span class="n">persistent_disks</span><span class="p">,</span> <span class="n">ephemeral_disks</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set Storage</span>
+
+<span class="sd">        :param k8sworker_id: the worker ID</span>
+<span class="sd">        :param persistent_disks: a comma separated list of zero or more persistent disks, e.g. &quot;/dev/nvme2n1&quot;</span>
+<span class="sd">        :param ephemeral_disks: a comma separated list of zero or more ephemeral_disks disks, e.g. &quot;/dev/nvme1n1&quot;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="s1">&#39;/api/v2/worker/k8shost/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">worker_id</span><span class="p">),</span> <span class="n">http_method</span><span class="o">=</span><span class="s1">&#39;post&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;worker/add_k8shost&#39;</span><span class="p">)</span></div></div>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;op_spec&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;persistent_disks&quot;</span><span class="p">:</span> <span class="n">persistent_disks</span><span class="p">,</span> 
+                <span class="s2">&quot;ephemeral_disks&quot;</span><span class="p">:</span> <span class="n">ephemeral_disks</span>
+                <span class="p">},</span> 
+            <span class="s2">&quot;op&quot;</span><span class="p">:</span> <span class="s2">&quot;storage&quot;</span>
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">worker_id</span><span class="p">,</span> <span class="n">http_method</span><span class="o">=</span><span class="s1">&#39;post&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;worker/add_k8shost&#39;</span><span class="p">)</span></div></div>
         <span class="c1"># no response - just status code</span>
 
    
