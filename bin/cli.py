@@ -231,7 +231,7 @@ class K8sWorkerProxy(object):
 
         :param k8sworker_id: the worker ID
         """
-        worker = get_client().k8s_worker.get(worker_id=k8sworker_id)
+        worker = get_client().k8s_worker.get(worker_id=k8sworker_id).json
         print(
                 yaml.dump(yaml.load(json.dumps(worker), Loader=yaml.FullLoader))
         )
