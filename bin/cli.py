@@ -571,7 +571,7 @@ class AutoComplete():
 
         *"hpecp,k8sworker,create-with-ssh-key"*)
             COMPREPLY=( $(compgen \
-                        -W "--ip --ssh-key --ssh-key-file --tags" \
+                        -f  -W "--ip --ssh-key --ssh-key-file --tags" \
                         -- $cur) )
             ;;
         *"hpecp,k8sworker"*)
