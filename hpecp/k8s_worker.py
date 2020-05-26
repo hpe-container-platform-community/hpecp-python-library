@@ -186,7 +186,7 @@ class K8sWorkerController:
 
         try:
             polling.poll(
-                lambda: self.get_k8shost(worker_id).status in WorkerK8sStatus.status_names(status),
+                lambda: self.get(worker_id).status in WorkerK8sStatus.status_names(status),
                 step=10,
                 poll_forever=False,
                 timeout=timeout_secs
