@@ -88,3 +88,14 @@ git tag 0.0.9  -m "Add pypi python versions"
 git push origin 0.0.9 
 python setup.py sdist upload -r pypi
 ```
+
+### TROUBLESHOOTING
+
+If you are unable to push from gitpod, naviate to: https://gitpod.io/access-control/
+
+Ensure you select:
+
+- write public repos
+- read organisations
+
+Click Update and authorize on the gitpub page that opens.
