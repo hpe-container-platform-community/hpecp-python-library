@@ -90,7 +90,7 @@ class Catalog:
         self.display_columns = Catalog.default_display_fields
 
     def __repr__(self):
-        return "<Catalog id:{} state:{}>".format(self.distro_id, self.state)
+        return "<Catalog id:{} state:{}>".format(self.id, self.state)
 
     def __str__(self):
         return "Catalog(distro_id={}, state={})".format(
@@ -119,11 +119,16 @@ class Catalog:
         self.display_columns = columns
 
     @property
-    def distro_id(self):
+    def id(self):
         """@Field: from json['_links']['self']['href'] -
 
         id format: '/api/v1/catalog/[0-9]+'"""
         return self.json['_links']['self']['href']
+
+    @property
+    def distro_id(self):
+        """@Field: from json['distro_id']"""
+        return self.json['distro_id']
 
     @property
     def state(self):
@@ -206,7 +211,9 @@ class CatalogList:
             assert isinstance(columns, list),\
                 "'columns' parameter must be list"
             for column in columns:
-                assert (column in Catalog.all_fields), ("item '%s' is not a field in Catalog.all_fields" % (column))
+                assert\
+                    (column in Catalog.all_fields),\
+                    ("item %s is not a field in Catalog.all_fields" % (column))
 
         self.display_columns = columns
 
