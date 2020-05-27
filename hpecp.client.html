@@ -104,7 +104,8 @@
 <dl class="py class">
 <dt id="hpecp.client.ContainerPlatformClient">
 <em class="property">class </em><code class="sig-prename descclassname">hpecp.client.</code><code class="sig-name descname">ContainerPlatformClient</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">username</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">password</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">api_host</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">api_port</span><span class="o">=</span><span class="default_value">8080</span></em>, <em class="sig-param"><span class="n">use_ssl</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">verify_ssl</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">warn_ssl</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/client.html#ContainerPlatformClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.client.ContainerPlatformClient" title="Permalink to this definition">¶</a></dt>
-<dd><p>The ContainerPlatformClient object is the central object that users of this library work with.</p>
+<dd><p>The ContainerPlatformClient object is the central object that users of</p>
+<p>this library work with.</p>
 <dl class="simple">
 <dt>Parameters:</dt><dd><dl class="simple">
 <dt>username<span class="classifier">str</span></dt><dd><p>HPECP username</p>
@@ -128,15 +129,16 @@
 </dd>
 </dl>
 </dd>
-<dt>Notes:</dt><dd><p>Instantiating the ContainerPlatformClient does not make any connection to the HPE Container Platform API. The
-initial connection would be made by calling the method <a class="reference internal" href="#hpecp.client.ContainerPlatformClient.create_session" title="hpecp.client.ContainerPlatformClient.create_session"><code class="xref py py-meth docutils literal notranslate"><span class="pre">create_session()</span></code></a>.</p>
+<dt>Notes:</dt><dd><p>Instantiating the ContainerPlatformClient does not make any connection
+to the HPE Container Platform API. The initial connection would be made
+by calling the method <a class="reference internal" href="#hpecp.client.ContainerPlatformClient.create_session" title="hpecp.client.ContainerPlatformClient.create_session"><code class="xref py py-meth docutils literal notranslate"><span class="pre">create_session()</span></code></a>.</p>
+</dd>
+<dt>See also:</dt><dd><p><a class="reference internal" href="#hpecp.client.ContainerPlatformClient.create_from_config_file" title="hpecp.client.ContainerPlatformClient.create_from_config_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">create_from_config_file()</span></code></a> for an alternative way to create a
+ContainerPlatformClient instance
+<a class="reference internal" href="#hpecp.client.ContainerPlatformClient.create_from_env" title="hpecp.client.ContainerPlatformClient.create_from_env"><code class="xref py py-meth docutils literal notranslate"><span class="pre">create_from_env()</span></code></a> for an alternative way to create a
+ContainerPlatformClient instance</p>
 </dd>
 </dl>
-<p>See also:</p>
-<blockquote>
-<div><p><a class="reference internal" href="#hpecp.client.ContainerPlatformClient.create_from_config_file" title="hpecp.client.ContainerPlatformClient.create_from_config_file"><code class="xref py py-meth docutils literal notranslate"><span class="pre">create_from_config_file()</span></code></a> for an alternative way to create a ContainerPlatformClient instance</p>
-<p><a class="reference internal" href="#hpecp.client.ContainerPlatformClient.create_from_env" title="hpecp.client.ContainerPlatformClient.create_from_env"><code class="xref py py-meth docutils literal notranslate"><span class="pre">create_from_env()</span></code></a> for an alternative way to create a ContainerPlatformClient instance</p>
-</div></blockquote>
 <dl class="py method">
 <dt id="hpecp.client.ContainerPlatformClient.create_from_config_file">
 <em class="property">classmethod </em><code class="sig-name descname">create_from_config_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config_file</span><span class="o">=</span><span class="default_value">'~/.hpecp.conf'</span></em>, <em class="sig-param"><span class="n">profile</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/client.html#ContainerPlatformClient.create_from_config_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.client.ContainerPlatformClient.create_from_config_file" title="Permalink to this definition">¶</a></dt>
@@ -145,7 +147,8 @@ initial connection would be made by calling the method <a class="reference inter
 <dt>Parameters:</dt><dd><dl class="simple">
 <dt>config_file<span class="classifier">str</span></dt><dd><p>The configuration filename and path</p>
 </dd>
-<dt>profile<span class="classifier">str</span></dt><dd><p>If the configuration file has multiple profile sections, you can select the profile to use.</p>
+<dt>profile<span class="classifier">str</span></dt><dd><p>If the configuration file has multiple profile sections, you
+can select the profile to use.</p>
 </dd>
 </dl>
 </dd>
@@ -184,7 +187,9 @@ initial connection would be made by calling the method <a class="reference inter
 <span class="n">HPECP_warn_ssl</span>
 </pre></div>
 </div>
-<p>See ContainerPlatformClient <a class="reference internal" href="#hpecp.client.ContainerPlatformClient" title="hpecp.client.ContainerPlatformClient"><code class="xref py py-class docutils literal notranslate"><span class="pre">constructor</span></code></a> for the paramaeter definitions.</p>
+<p>See ContainerPlatformClient
+<a class="reference internal" href="#hpecp.client.ContainerPlatformClient" title="hpecp.client.ContainerPlatformClient"><code class="xref py py-class docutils literal notranslate"><span class="pre">constructor</span></code></a> for the paramaeter
+definitions.</p>
 </dd></dl>
 
 <dl class="py method">
