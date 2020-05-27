@@ -299,6 +299,10 @@ class K8sWorkerProxy(object):
         """Return a list of valid statuses"""
         print([ s.name for s in WorkerK8sStatus ] )
 
+    def statuses(self):
+        """Return a list of valid statuses"""
+        print([ s.name for s in WorkerK8sStatus ] )
+        
 class K8sClusterProxy(object):
     def create(
         self,
@@ -596,8 +600,15 @@ class UserProxy():
         :param description: the user descripton
 
         """
+        try:
+            user_id = get_client().user.create(name = name, description = description, is_external = is_external)
+            print(user_id)
+        except APIItemConflictException:
+            print("User already exists.")
+            sys.exit(1)
 
-        raise NotImplementedError
+
+        #raise NotImplementedError
 
 
 class AutoComplete():
