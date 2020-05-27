@@ -79,9 +79,12 @@
 <span class="kn">from</span> <span class="nn">six</span> <span class="kn">import</span> <span class="n">raise_from</span>
 
 <span class="kn">from</span> <span class="nn">.config</span> <span class="kn">import</span> <span class="n">ConfigController</span>
-<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="p">(</span><span class="n">APIException</span><span class="p">,</span> <span class="n">APIItemConflictException</span><span class="p">,</span>
-                         <span class="n">APIItemNotFoundException</span><span class="p">,</span>
-                         <span class="n">ContainerPlatformClientException</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">APIException</span><span class="p">,</span>
+    <span class="n">APIItemConflictException</span><span class="p">,</span>
+    <span class="n">APIItemNotFoundException</span><span class="p">,</span>
+    <span class="n">ContainerPlatformClientException</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">.gateway</span> <span class="kn">import</span> <span class="n">GatewayController</span>
 <span class="kn">from</span> <span class="nn">.k8s_cluster</span> <span class="kn">import</span> <span class="n">K8sClusterController</span>
 <span class="kn">from</span> <span class="nn">.k8s_worker</span> <span class="kn">import</span> <span class="n">K8sWorkerController</span>
@@ -136,8 +139,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ContainerPlatformClient.create_from_config_file"><a class="viewcode-back" href="../../hpecp.client.html#hpecp.client.ContainerPlatformClient.create_from_config_file">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">create_from_config_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">config_file</span><span class="o">=</span><span class="s2">&quot;~/.hpecp.conf&quot;</span><span class="p">,</span>
-                                <span class="n">profile</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">create_from_config_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">config_file</span><span class="o">=</span><span class="s2">&quot;~/.hpecp.conf&quot;</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create a ContainerPlatformClient object from a configuration file.</span>
 
 <span class="sd">        Parameters:</span>
@@ -166,80 +168,84 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">profile</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">profile</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span>
+            <span class="n">profile</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span>
 
-        <span class="k">if</span> <span class="n">config_file</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;~&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">config_file</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">):</span>
             <span class="n">file_path</span> <span class="o">=</span> <span class="n">config_file</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
-            <span class="n">file_path</span> <span class="o">=</span> <span class="n">file_path</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+            <span class="n">file_path</span> <span class="o">=</span> <span class="n">file_path</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
             <span class="n">config_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">),</span> <span class="n">file_path</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">config_file</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">ContainerPlatformClientException</span><span class="p">(</span>
-                <span class="s2">&quot;Could not find configuration file &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">config_file</span><span class="p">))</span>
+                <span class="s2">&quot;Could not find configuration file &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">config_file</span><span class="p">)</span>
+            <span class="p">)</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
         <span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">config_file</span><span class="p">)</span>
 
-        <span class="k">assert</span> <span class="n">profile</span> <span class="ow">in</span> <span class="n">config</span><span class="p">,</span> \
-            <span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39; section not found in &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">config_file</span><span class="p">)</span>
-        <span class="k">assert</span> \
-            <span class="s1">&#39;username&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="n">profile</span><span class="p">]</span> <span class="ow">or</span> <span class="s1">&#39;username&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">],</span> \
-            <span class="p">(</span><span class="s2">&quot;&#39;username&#39; not found in section &#39;</span><span class="si">{}</span><span class="s2">&#39; or in &quot;</span>
-             <span class="s2">&quot;the default section&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">profile</span><span class="p">))</span>
-        <span class="k">assert</span> \
-            <span class="s1">&#39;password&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="n">profile</span><span class="p">]</span> <span class="ow">or</span> <span class="s1">&#39;password&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">],</span> \
-            <span class="p">(</span><span class="s2">&quot;&#39;password&#39; not found in section &#39;</span><span class="si">{}</span><span class="s2">&#39; &quot;</span>
-             <span class="s2">&quot;or in the default section&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">profile</span><span class="p">))</span>
-        <span class="k">assert</span> \
-            <span class="s1">&#39;api_host&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="n">profile</span><span class="p">]</span> <span class="ow">or</span> <span class="s1">&#39;api_host&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">],</span> \
-            <span class="p">(</span><span class="s2">&quot;&#39;api_host&#39; not found in section &#39;</span><span class="si">{}</span><span class="s2">&#39; or in &quot;</span>
-             <span class="s2">&quot;the default section&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">profile</span><span class="p">))</span>
-        <span class="k">assert</span> \
-            <span class="s1">&#39;api_port&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="n">profile</span><span class="p">]</span> <span class="ow">or</span> <span class="s1">&#39;api_port&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">],</span> \
-            <span class="p">(</span><span class="s2">&quot;&#39;api_port&#39; not found in section &#39;</span><span class="si">{}</span><span class="s2">&#39; or in &quot;</span>
-             <span class="s2">&quot;the default section&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">profile</span><span class="p">))</span>
-        <span class="k">assert</span> \
-            <span class="s1">&#39;use_ssl&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="n">profile</span><span class="p">]</span> <span class="ow">or</span> <span class="s1">&#39;use_ssl&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">],</span> \
-            <span class="p">(</span><span class="s2">&quot;&#39;use_ssl&#39; not found in section &#39;</span><span class="si">{}</span><span class="s2">&#39; or in&quot;</span>
-             <span class="s2">&quot;the default section&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">profile</span><span class="p">))</span>
-        <span class="k">assert</span> \
-            <span class="s1">&#39;verify_ssl&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="n">profile</span><span class="p">]</span> <span class="ow">or</span> <span class="s1">&#39;verify_ssl&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">],</span> \
-            <span class="p">(</span><span class="s2">&quot;&#39;verify_ssl&#39; not found in section &#39;</span><span class="si">{}</span><span class="s2">&#39; or in&quot;</span>
-             <span class="s2">&quot;the default section&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">profile</span><span class="p">))</span>
-        <span class="k">assert</span> \
-            <span class="s1">&#39;warn_ssl&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="n">profile</span><span class="p">]</span> <span class="ow">or</span> <span class="s1">&#39;warn_ssl&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">],</span> \
-            <span class="p">(</span><span class="s2">&quot;&#39;warn_ssl&#39; not found in section &#39;</span><span class="si">{}</span><span class="s2">&#39; or in&quot;</span>
-             <span class="s2">&quot;the default section&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">profile</span><span class="p">))</span>
+        <span class="k">assert</span> <span class="n">profile</span> <span class="ow">in</span> <span class="n">config</span><span class="p">,</span> <span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39; section not found in &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">profile</span><span class="p">,</span> <span class="n">config_file</span>
+        <span class="p">)</span>
+        <span class="k">assert</span> <span class="s2">&quot;username&quot;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="n">profile</span><span class="p">]</span> <span class="ow">or</span> <span class="s2">&quot;username&quot;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">],</span> <span class="p">(</span>
+            <span class="s2">&quot;&#39;username&#39; not found in section &#39;</span><span class="si">{}</span><span class="s2">&#39; or in &quot;</span>
+            <span class="s2">&quot;the default section&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">assert</span> <span class="s2">&quot;password&quot;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="n">profile</span><span class="p">]</span> <span class="ow">or</span> <span class="s2">&quot;password&quot;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">],</span> <span class="p">(</span>
+            <span class="s2">&quot;&#39;password&#39; not found in section &#39;</span><span class="si">{}</span><span class="s2">&#39; &quot;</span>
+            <span class="s2">&quot;or in the default section&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">assert</span> <span class="s2">&quot;api_host&quot;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="n">profile</span><span class="p">]</span> <span class="ow">or</span> <span class="s2">&quot;api_host&quot;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">],</span> <span class="p">(</span>
+            <span class="s2">&quot;&#39;api_host&#39; not found in section &#39;</span><span class="si">{}</span><span class="s2">&#39; or in &quot;</span>
+            <span class="s2">&quot;the default section&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">assert</span> <span class="s2">&quot;api_port&quot;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="n">profile</span><span class="p">]</span> <span class="ow">or</span> <span class="s2">&quot;api_port&quot;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">],</span> <span class="p">(</span>
+            <span class="s2">&quot;&#39;api_port&#39; not found in section &#39;</span><span class="si">{}</span><span class="s2">&#39; or in &quot;</span>
+            <span class="s2">&quot;the default section&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">assert</span> <span class="s2">&quot;use_ssl&quot;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="n">profile</span><span class="p">]</span> <span class="ow">or</span> <span class="s2">&quot;use_ssl&quot;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">],</span> <span class="p">(</span>
+            <span class="s2">&quot;&#39;use_ssl&#39; not found in section &#39;</span><span class="si">{}</span><span class="s2">&#39; or in&quot;</span>
+            <span class="s2">&quot;the default section&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">assert</span> <span class="s2">&quot;verify_ssl&quot;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="n">profile</span><span class="p">]</span> <span class="ow">or</span> <span class="s2">&quot;verify_ssl&quot;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">],</span> <span class="p">(</span>
+            <span class="s2">&quot;&#39;verify_ssl&#39; not found in section &#39;</span><span class="si">{}</span><span class="s2">&#39; or in&quot;</span>
+            <span class="s2">&quot;the default section&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">assert</span> <span class="s2">&quot;warn_ssl&quot;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="n">profile</span><span class="p">]</span> <span class="ow">or</span> <span class="s2">&quot;warn_ssl&quot;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">],</span> <span class="p">(</span>
+            <span class="s2">&quot;&#39;warn_ssl&#39; not found in section &#39;</span><span class="si">{}</span><span class="s2">&#39; or in&quot;</span>
+            <span class="s2">&quot;the default section&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
+        <span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">get_config_value</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">profile</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="n">profile</span><span class="p">]:</span>
                 <span class="k">return</span> <span class="n">config</span><span class="p">[</span><span class="n">profile</span><span class="p">][</span><span class="n">key</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span>
+                <span class="k">return</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span>
 
-        <span class="n">username</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">get_config_value</span><span class="p">(</span><span class="s1">&#39;username&#39;</span><span class="p">,</span> <span class="n">profile</span><span class="p">))</span>
-        <span class="n">password</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">get_config_value</span><span class="p">(</span><span class="s1">&#39;password&#39;</span><span class="p">,</span> <span class="n">profile</span><span class="p">))</span>
-        <span class="n">api_host</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">get_config_value</span><span class="p">(</span><span class="s1">&#39;api_host&#39;</span><span class="p">,</span> <span class="n">profile</span><span class="p">))</span>
-        <span class="n">api_port</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">get_config_value</span><span class="p">(</span><span class="s1">&#39;api_port&#39;</span><span class="p">,</span> <span class="n">profile</span><span class="p">))</span>
-        <span class="n">use_ssl</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">get_config_value</span><span class="p">(</span><span class="s1">&#39;use_ssl&#39;</span><span class="p">,</span> <span class="n">profile</span><span class="p">))</span>
-        <span class="n">verify_ssl</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">get_config_value</span><span class="p">(</span><span class="s1">&#39;verify_ssl&#39;</span><span class="p">,</span> <span class="n">profile</span><span class="p">))</span>
-        <span class="n">warn_ssl</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">get_config_value</span><span class="p">(</span><span class="s1">&#39;warn_ssl&#39;</span><span class="p">,</span> <span class="n">profile</span><span class="p">))</span>
+        <span class="n">username</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">get_config_value</span><span class="p">(</span><span class="s2">&quot;username&quot;</span><span class="p">,</span> <span class="n">profile</span><span class="p">))</span>
+        <span class="n">password</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">get_config_value</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="n">profile</span><span class="p">))</span>
+        <span class="n">api_host</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">get_config_value</span><span class="p">(</span><span class="s2">&quot;api_host&quot;</span><span class="p">,</span> <span class="n">profile</span><span class="p">))</span>
+        <span class="n">api_port</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">get_config_value</span><span class="p">(</span><span class="s2">&quot;api_port&quot;</span><span class="p">,</span> <span class="n">profile</span><span class="p">))</span>
+        <span class="n">use_ssl</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">get_config_value</span><span class="p">(</span><span class="s2">&quot;use_ssl&quot;</span><span class="p">,</span> <span class="n">profile</span><span class="p">))</span>
+        <span class="n">verify_ssl</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">get_config_value</span><span class="p">(</span><span class="s2">&quot;verify_ssl&quot;</span><span class="p">,</span> <span class="n">profile</span><span class="p">))</span>
+        <span class="n">warn_ssl</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">get_config_value</span><span class="p">(</span><span class="s2">&quot;warn_ssl&quot;</span><span class="p">,</span> <span class="n">profile</span><span class="p">))</span>
 
-        <span class="k">if</span> <span class="n">use_ssl</span> <span class="o">==</span> <span class="s1">&#39;False&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">use_ssl</span> <span class="o">==</span> <span class="s2">&quot;False&quot;</span><span class="p">:</span>
             <span class="n">use_ssl</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">use_ssl</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="c1"># verify_ssl could be a path</span>
-        <span class="k">if</span> <span class="n">verify_ssl</span> <span class="o">==</span> <span class="s1">&#39;False&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">verify_ssl</span> <span class="o">==</span> <span class="s2">&quot;False&quot;</span><span class="p">:</span>
             <span class="n">verify_ssl</span> <span class="o">=</span> <span class="kc">False</span>
 
-        <span class="k">if</span> <span class="n">warn_ssl</span> <span class="o">==</span> <span class="s1">&#39;False&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">warn_ssl</span> <span class="o">==</span> <span class="s2">&quot;False&quot;</span><span class="p">:</span>
             <span class="n">warn_ssl</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">warn_ssl</span> <span class="o">=</span> <span class="kc">True</span>
 
-        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">api_port</span><span class="p">,</span> <span class="n">use_ssl</span><span class="p">,</span> <span class="n">verify_ssl</span><span class="p">,</span> <span class="n">warn_ssl</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
+            <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">api_port</span><span class="p">,</span> <span class="n">use_ssl</span><span class="p">,</span> <span class="n">verify_ssl</span><span class="p">,</span> <span class="n">warn_ssl</span>
+        <span class="p">)</span></div>
 
 <div class="viewcode-block" id="ContainerPlatformClient.create_from_env"><a class="viewcode-back" href="../../hpecp.client.html#hpecp.client.ContainerPlatformClient.create_from_env">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">create_from_env</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
@@ -260,25 +266,25 @@
 <span class="sd">        definitions.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">if</span> <span class="s1">&#39;HPECP_USERNAME&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;HPECP_USERNAME&quot;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
             <span class="n">HPECP_USERNAME</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="n">HPECP_USERNAME</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="s1">&#39;HPECP_PASSWORD&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;HPECP_PASSWORD&quot;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
             <span class="n">HPECP_PASSWORD</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="n">HPECP_PASSWORD</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="s1">&#39;HPECP_API_HOST&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;HPECP_API_HOST&quot;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
             <span class="n">HPECP_API_HOST</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="n">HPECP_API_HOST</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="s1">&#39;HPECP_API_PORT&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;HPECP_API_PORT&quot;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
             <span class="n">HPECP_API_PORT</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="n">HPECP_API_PORT</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="s1">&#39;HPECP_USE_SSL&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;HPECP_USE_SSL&quot;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
             <span class="n">HPECP_USE_SSL</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="n">HPECP_USE_SSL</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="s1">&#39;HPECP_VERIFY_SSL&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;HPECP_VERIFY_SSL&quot;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
             <span class="n">HPECP_VERIFY_SSL</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="n">HPECP_VERIFY_SSL</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="s1">&#39;HPECP_warn_ssl&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;HPECP_warn_ssl&quot;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
             <span class="n">HPECP_warn_ssl</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="n">HPECP_warn_ssl</span><span class="p">]</span>
 
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
@@ -288,52 +294,61 @@
             <span class="n">api_port</span><span class="o">=</span><span class="n">HPECP_API_PORT</span><span class="p">,</span>
             <span class="n">use_ssl</span><span class="o">=</span><span class="n">HPECP_USE_SSL</span><span class="p">,</span>
             <span class="n">verify_ssl</span><span class="o">=</span><span class="n">HPECP_VERIFY_SSL</span><span class="p">,</span>
-            <span class="n">warn_ssl</span><span class="o">=</span><span class="n">HPECP_warn_ssl</span>
-            <span class="p">)</span></div>
+            <span class="n">warn_ssl</span><span class="o">=</span><span class="n">HPECP_warn_ssl</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">username</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">password</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">api_host</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">api_port</span><span class="o">=</span><span class="mi">8080</span><span class="p">,</span>
-                 <span class="n">use_ssl</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                 <span class="n">verify_ssl</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                 <span class="n">warn_ssl</span><span class="o">=</span><span class="kc">False</span>
-                 <span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">username</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">password</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">api_host</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">api_port</span><span class="o">=</span><span class="mi">8080</span><span class="p">,</span>
+        <span class="n">use_ssl</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">verify_ssl</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">warn_ssl</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Doc string is defined at the top of the class&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_log</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">verify_ssl</span> <span class="o">==</span> <span class="s1">&#39;True&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">verify_ssl</span> <span class="o">==</span> <span class="s2">&quot;True&quot;</span><span class="p">:</span>
             <span class="n">verify_ssl</span> <span class="o">=</span> <span class="kc">True</span>
 
-        <span class="k">if</span> <span class="n">verify_ssl</span> <span class="o">==</span> <span class="s1">&#39;False&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">verify_ssl</span> <span class="o">==</span> <span class="s2">&quot;False&quot;</span><span class="p">:</span>
             <span class="n">verify_ssl</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="c1"># TODO add other fields, except password</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;ContainerPlatformClient() created with username[&#39;</span><span class="si">{}</span><span class="s2">&#39;]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="s2">&quot;ContainerPlatformClient() created with username[&#39;</span><span class="si">{}</span><span class="s2">&#39;]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">)</span>
+        <span class="p">)</span>
 
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">basestring</span><span class="p">),</span> <span class="s2">&quot;&#39;username&#39; parameter must be of type string&quot;</span>
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">password</span><span class="p">,</span> <span class="n">basestring</span><span class="p">),</span> <span class="s2">&quot;&#39;password&#39; parameter must be of type string&quot;</span>
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">api_host</span><span class="p">,</span> <span class="n">basestring</span><span class="p">),</span> <span class="s2">&quot;&#39;api_host&#39; parameter must be of type string&quot;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
+            <span class="n">username</span><span class="p">,</span> <span class="n">basestring</span>
+        <span class="p">),</span> <span class="s2">&quot;&#39;username&#39; parameter must be of type string&quot;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
+            <span class="n">password</span><span class="p">,</span> <span class="n">basestring</span>
+        <span class="p">),</span> <span class="s2">&quot;&#39;password&#39; parameter must be of type string&quot;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
+            <span class="n">api_host</span><span class="p">,</span> <span class="n">basestring</span>
+        <span class="p">),</span> <span class="s2">&quot;&#39;api_host&#39; parameter must be of type string&quot;</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">api_port</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span> <span class="s2">&quot;&#39;api_port&#39; parameter must be of type int&quot;</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">use_ssl</span><span class="p">,</span> <span class="nb">bool</span><span class="p">),</span> <span class="s2">&quot;&#39;use_ssl&#39; parameter must be of type bool&quot;</span>
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">verify_ssl</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span> <span class="ow">or</span> \
-            <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">verify_ssl</span><span class="p">,</span> <span class="n">basestring</span><span class="p">)</span> <span class="ow">and</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">access</span><span class="p">(</span><span class="n">verify_ssl</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">R_OK</span><span class="p">)),</span> <span class="s2">&quot;&#39;verify_ssl&#39; parameter must be of type bool or point to a certificate file&quot;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">verify_ssl</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">verify_ssl</span><span class="p">,</span> <span class="n">basestring</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">access</span><span class="p">(</span><span class="n">verify_ssl</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">R_OK</span><span class="p">)</span>
+        <span class="p">),</span> <span class="s2">&quot;&#39;verify_ssl&#39; parameter must be of type bool or point to a certificate file&quot;</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">warn_ssl</span><span class="p">,</span> <span class="nb">bool</span><span class="p">),</span> <span class="s2">&quot;&#39;warn_ssl&#39; parameter must be of type bool&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="n">username</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="n">password</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span> <span class="o">=</span> <span class="n">api_host</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">api_port</span> <span class="o">=</span> <span class="n">api_port</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">use_ssl</span>  <span class="o">=</span> <span class="n">use_ssl</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_ssl</span> <span class="o">=</span> <span class="n">use_ssl</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">verify_ssl</span> <span class="o">=</span> <span class="n">verify_ssl</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">warn_ssl</span> <span class="o">=</span> <span class="n">warn_ssl</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_ssl</span><span class="p">:</span>
-            <span class="n">scheme</span> <span class="o">=</span> <span class="s1">&#39;https&#39;</span>
+            <span class="n">scheme</span> <span class="o">=</span> <span class="s2">&quot;https&quot;</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">scheme</span> <span class="o">=</span> <span class="s1">&#39;http&#39;</span>
+            <span class="n">scheme</span> <span class="o">=</span> <span class="s2">&quot;http&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">://</span><span class="si">{}</span><span class="s2">:</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">scheme</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_port</span><span class="p">)</span>
 
@@ -363,49 +378,61 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/api/v1/login&quot;</span>
-        <span class="n">auth</span> <span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="s2">&quot;password&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">password</span> <span class="p">}</span>
+        <span class="n">auth</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="s2">&quot;password&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">}</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">warn_ssl</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
             <span class="kn">import</span> <span class="nn">urllib3</span>
+
             <span class="n">urllib3</span><span class="o">.</span><span class="n">disable_warnings</span><span class="p">(</span><span class="n">urllib3</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">InsecureRequestWarning</span><span class="p">)</span>
 
         <span class="n">response</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;REQ: </span><span class="si">{}</span><span class="s1"> : </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;Login&#39;</span><span class="p">,</span> <span class="s1">&#39;post&#39;</span><span class="p">,</span> <span class="n">url</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;REQ: </span><span class="si">{}</span><span class="s2"> : </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;Login&quot;</span><span class="p">,</span> <span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="n">url</span><span class="p">))</span>
             <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">auth</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verify_ssl</span><span class="p">)</span>
             <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
 
         <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">ConnectionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;RES: </span><span class="si">{}</span><span class="s1"> : </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;Login&#39;</span><span class="p">,</span> <span class="s1">&#39;post&#39;</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)))</span>
-            <span class="n">raise_from</span><span class="p">(</span><span class="n">APIException</span><span class="p">(</span>
-                        <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Could not connect to controller - set LOG_LEVEL=DEBUG to see more detail.&#39;</span><span class="p">,</span>
-                        <span class="n">request_method</span><span class="o">=</span><span class="s1">&#39;post&#39;</span><span class="p">,</span>
-                        <span class="n">request_url</span><span class="o">=</span><span class="n">url</span>
-                        <span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;RES: </span><span class="si">{}</span><span class="s2"> : </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;Login&quot;</span><span class="p">,</span> <span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)))</span>
+            <span class="n">raise_from</span><span class="p">(</span>
+                <span class="n">APIException</span><span class="p">(</span>
+                    <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Could not connect to controller - set LOG_LEVEL=DEBUG to see more detail.&quot;</span><span class="p">,</span>
+                    <span class="n">request_method</span><span class="o">=</span><span class="s2">&quot;post&quot;</span><span class="p">,</span>
+                    <span class="n">request_url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="kc">None</span><span class="p">,</span>
+            <span class="p">)</span>
 
         <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">RequestException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">response</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Auth Response: &#39;</span> <span class="o">+</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Auth Response: &quot;</span> <span class="o">+</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
             <span class="k">raise</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">session_headers</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">headers</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">session_id</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session_id</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;location&quot;</span><span class="p">]</span>
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
     <span class="k">def</span> <span class="nf">_request_headers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
         <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;accept&#39;</span><span class="p">:</span> <span class="s1">&#39;application/json&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;X-BDS-SESSION&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_id</span><span class="p">,</span>
-            <span class="s1">&#39;cache-control&#39;</span><span class="p">:</span> <span class="s1">&#39;no-cache&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;content-type&#39;</span><span class="p">:</span> <span class="s1">&#39;application/json&#39;</span>
-            <span class="p">}</span>
+            <span class="s2">&quot;accept&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;X-BDS-SESSION&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_id</span><span class="p">,</span>
+            <span class="s2">&quot;cache-control&quot;</span><span class="p">:</span> <span class="s2">&quot;no-cache&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;content-type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
         <span class="k">return</span> <span class="n">headers</span>
 
-    <span class="k">def</span> <span class="nf">_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">http_method</span><span class="o">=</span><span class="s1">&#39;get&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{},</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">create_auth_headers</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">additional_headers</span><span class="o">=</span><span class="p">{}):</span>
+    <span class="k">def</span> <span class="nf">_request</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">url</span><span class="p">,</span>
+        <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;get&quot;</span><span class="p">,</span>
+        <span class="n">data</span><span class="o">=</span><span class="p">{},</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">create_auth_headers</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">additional_headers</span><span class="o">=</span><span class="p">{},</span>
+    <span class="p">):</span>
         <span class="k">if</span> <span class="n">create_auth_headers</span><span class="p">:</span>
             <span class="n">headers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request_headers</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
@@ -419,21 +446,40 @@
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">warn_ssl</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
             <span class="kn">import</span> <span class="nn">urllib3</span>
+
             <span class="n">urllib3</span><span class="o">.</span><span class="n">disable_warnings</span><span class="p">(</span><span class="n">urllib3</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">InsecureRequestWarning</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">http_method</span> <span class="o">==</span> <span class="s1">&#39;get&#39;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;REQ: </span><span class="si">{}</span><span class="s1"> : </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">description</span><span class="p">,</span> <span class="n">http_method</span><span class="p">,</span> <span class="n">url</span><span class="p">))</span>
-                <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">all_headers</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verify_ssl</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">http_method</span> <span class="o">==</span> <span class="s1">&#39;put&#39;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;REQ: </span><span class="si">{}</span><span class="s1"> : </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">description</span><span class="p">,</span> <span class="n">http_method</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="p">))</span>
-                <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">all_headers</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">verify</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verify_ssl</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">http_method</span> <span class="o">==</span> <span class="s1">&#39;post&#39;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;REQ: </span><span class="si">{}</span><span class="s1"> : </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">description</span><span class="p">,</span> <span class="n">http_method</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="p">))</span>
-                <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">all_headers</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">verify</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verify_ssl</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">http_method</span> <span class="o">==</span> <span class="s1">&#39;delete&#39;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;REQ: </span><span class="si">{}</span><span class="s1"> : </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">description</span><span class="p">,</span> <span class="n">http_method</span><span class="p">,</span> <span class="n">url</span><span class="p">))</span>
-                <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">all_headers</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verify_ssl</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">http_method</span> <span class="o">==</span> <span class="s2">&quot;get&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;REQ: </span><span class="si">{}</span><span class="s2"> : </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">description</span><span class="p">,</span> <span class="n">http_method</span><span class="p">,</span> <span class="n">url</span><span class="p">))</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                    <span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">all_headers</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verify_ssl</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">http_method</span> <span class="o">==</span> <span class="s2">&quot;put&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                    <span class="s2">&quot;REQ: </span><span class="si">{}</span><span class="s2"> : </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">description</span><span class="p">,</span> <span class="n">http_method</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">put</span><span class="p">(</span>
+                    <span class="n">url</span><span class="p">,</span>
+                    <span class="n">headers</span><span class="o">=</span><span class="n">all_headers</span><span class="p">,</span>
+                    <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">),</span>
+                    <span class="n">verify</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verify_ssl</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">http_method</span> <span class="o">==</span> <span class="s2">&quot;post&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                    <span class="s2">&quot;REQ: </span><span class="si">{}</span><span class="s2"> : </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">description</span><span class="p">,</span> <span class="n">http_method</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+                    <span class="n">url</span><span class="p">,</span>
+                    <span class="n">headers</span><span class="o">=</span><span class="n">all_headers</span><span class="p">,</span>
+                    <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">),</span>
+                    <span class="n">verify</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verify_ssl</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">http_method</span> <span class="o">==</span> <span class="s2">&quot;delete&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;REQ: </span><span class="si">{}</span><span class="s2"> : </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">description</span><span class="p">,</span> <span class="n">http_method</span><span class="p">,</span> <span class="n">url</span><span class="p">))</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span>
+                    <span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">all_headers</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verify_ssl</span>
+                <span class="p">)</span>
 
             <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
         <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">RequestException</span><span class="p">:</span>
@@ -442,27 +488,65 @@
             <span class="k">except</span><span class="p">:</span>
                 <span class="n">response_info</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">response_info</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+                <span class="n">response_info</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 
             <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">404</span><span class="p">:</span>
                 <span class="c1"># This is expected for some method calls so do not log as an error</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> : </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1"> REQ: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">description</span><span class="p">,</span> <span class="n">http_method</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">)))</span>
-                <span class="k">raise</span> <span class="n">APIItemNotFoundException</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">response_info</span><span class="p">,</span> <span class="n">request_method</span><span class="o">=</span><span class="n">http_method</span><span class="p">,</span> <span class="n">request_url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">request_data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                    <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> : </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> REQ: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">description</span><span class="p">,</span> <span class="n">http_method</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+                <span class="k">raise</span> <span class="n">APIItemNotFoundException</span><span class="p">(</span>
+                    <span class="n">message</span><span class="o">=</span><span class="n">response_info</span><span class="p">,</span>
+                    <span class="n">request_method</span><span class="o">=</span><span class="n">http_method</span><span class="p">,</span>
+                    <span class="n">request_url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
+                    <span class="n">request_data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">),</span>
+                <span class="p">)</span>
             <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">409</span><span class="p">:</span>
                 <span class="c1"># This is expected for some method calls so do not log as an error</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> : </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1"> REQ: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">description</span><span class="p">,</span> <span class="n">http_method</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">)))</span>
-                <span class="k">raise</span> <span class="n">APIItemConflictException</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">response_info</span><span class="p">,</span> <span class="n">request_method</span><span class="o">=</span><span class="n">http_method</span><span class="p">,</span> <span class="n">request_url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">request_data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                    <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> : </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> REQ: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">description</span><span class="p">,</span> <span class="n">http_method</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+                <span class="k">raise</span> <span class="n">APIItemConflictException</span><span class="p">(</span>
+                    <span class="n">message</span><span class="o">=</span><span class="n">response_info</span><span class="p">,</span>
+                    <span class="n">request_method</span><span class="o">=</span><span class="n">http_method</span><span class="p">,</span>
+                    <span class="n">request_url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
+                    <span class="n">request_data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">),</span>
+                <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> : </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1"> REQ: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">description</span><span class="p">,</span> <span class="n">http_method</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">)))</span>
-                <span class="k">raise</span> <span class="n">APIException</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">response_info</span><span class="p">,</span> <span class="n">request_method</span><span class="o">=</span><span class="n">http_method</span><span class="p">,</span> <span class="n">request_url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">request_data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span>
+                    <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> : </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> REQ: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">description</span><span class="p">,</span> <span class="n">http_method</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+                <span class="k">raise</span> <span class="n">APIException</span><span class="p">(</span>
+                    <span class="n">message</span><span class="o">=</span><span class="n">response_info</span><span class="p">,</span>
+                    <span class="n">request_method</span><span class="o">=</span><span class="n">http_method</span><span class="p">,</span>
+                    <span class="n">request_url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
+                    <span class="n">request_data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">),</span>
+                <span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;RES: </span><span class="si">{}</span><span class="s1"> : </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1"> : </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">description</span><span class="p">,</span> <span class="n">http_method</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">())))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="s2">&quot;RES: </span><span class="si">{}</span><span class="s2"> : </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> : </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">description</span><span class="p">,</span>
+                    <span class="n">http_method</span><span class="p">,</span>
+                    <span class="n">url</span><span class="p">,</span>
+                    <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span>
+                    <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()),</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;RES: </span><span class="si">{}</span><span class="s1"> : </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1"> : </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">description</span><span class="p">,</span> <span class="n">http_method</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="s2">&quot;RES: </span><span class="si">{}</span><span class="s2"> : </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> : </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">description</span><span class="p">,</span> <span class="n">http_method</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">response</span>
-
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">tenant</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -604,7 +688,6 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span>
-
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

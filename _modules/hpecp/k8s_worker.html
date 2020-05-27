@@ -77,9 +77,10 @@
 <span class="kn">import</span> <span class="nn">re</span>
 
 <span class="k">try</span><span class="p">:</span>
-  <span class="n">basestring</span>
+    <span class="n">basestring</span>
 <span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>
-  <span class="n">basestring</span> <span class="o">=</span> <span class="nb">str</span>
+    <span class="n">basestring</span> <span class="o">=</span> <span class="nb">str</span>
+
 
 <div class="viewcode-block" id="WorkerK8sStatus"><a class="viewcode-back" href="../../hpecp.k8s_worker.html#hpecp.k8s_worker.WorkerK8sStatus">[docs]</a><span class="k">class</span> <span class="nc">WorkerK8sStatus</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
     <span class="n">bundle</span> <span class="o">=</span> <span class="mi">1</span>
@@ -90,29 +91,32 @@
     <span class="n">configuring</span> <span class="o">=</span> <span class="mi">6</span>
     <span class="n">configured</span> <span class="o">=</span> <span class="mi">7</span>
     <span class="n">error</span> <span class="o">=</span> <span class="mi">8</span>
-    <span class="n">sysinfo</span> <span class="o">=</span> <span class="mi">9</span> 
-    <span class="n">unconfiguring</span> <span class="o">=</span> <span class="mi">10</span> 
+    <span class="n">sysinfo</span> <span class="o">=</span> <span class="mi">9</span>
+    <span class="n">unconfiguring</span> <span class="o">=</span> <span class="mi">10</span>
     <span class="n">deleting</span> <span class="o">=</span> <span class="mi">11</span>
-    <span class="n">storage_pending</span> <span class="o">=</span> <span class="mi">12</span> 
+    <span class="n">storage_pending</span> <span class="o">=</span> <span class="mi">12</span>
     <span class="n">storage_configuring</span> <span class="o">=</span> <span class="mi">13</span>
     <span class="n">storage_error</span> <span class="o">=</span> <span class="mi">14</span></div>
 
-<div class="viewcode-block" id="WorkerK8s"><a class="viewcode-back" href="../../hpecp.k8s_worker.html#hpecp.k8s_worker.WorkerK8s">[docs]</a><span class="k">class</span> <span class="nc">WorkerK8s</span><span class="p">():</span>
 
+<div class="viewcode-block" id="WorkerK8s"><a class="viewcode-back" href="../../hpecp.k8s_worker.html#hpecp.k8s_worker.WorkerK8s">[docs]</a><span class="k">class</span> <span class="nc">WorkerK8s</span><span class="p">:</span>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">__class_dir__</span><span class="p">():</span>
-        <span class="k">return</span> <span class="p">[</span> <span class="s1">&#39;worker_id&#39;</span><span class="p">,</span> <span class="s1">&#39;status&#39;</span><span class="p">,</span> <span class="s1">&#39;hostname&#39;</span><span class="p">,</span> <span class="s1">&#39;ipaddr&#39;</span><span class="p">,</span> <span class="s1">&#39;href&#39;</span> <span class="p">]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;worker_id&quot;</span><span class="p">,</span> <span class="s2">&quot;status&quot;</span><span class="p">,</span> <span class="s2">&quot;hostname&quot;</span><span class="p">,</span> <span class="s2">&quot;ipaddr&quot;</span><span class="p">,</span> <span class="s2">&quot;href&quot;</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;&lt;WorkerK8S worker_id:</span><span class="si">{}</span><span class="s2"> status:</span><span class="si">{}</span><span class="s2"> ipaddr:</span><span class="si">{}</span><span class="s2">&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">worker_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ipaddr</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;&lt;WorkerK8S worker_id:</span><span class="si">{}</span><span class="s2"> status:</span><span class="si">{}</span><span class="s2"> ipaddr:</span><span class="si">{}</span><span class="s2">&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">worker_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ipaddr</span>
+        <span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;WorkerK8s(worker_id=</span><span class="si">{}</span><span class="s2">, status=</span><span class="si">{}</span><span class="s2">, ipaddr=</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">worker_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ipaddr</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">worker_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ipaddr</span>
+        <span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">json</span> <span class="o">=</span> <span class="n">json</span>
-    
+
     <span class="k">def</span> <span class="fm">__dir__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">WorkerK8s</span><span class="o">.</span><span class="n">__class_dir__</span><span class="p">()</span>
 
@@ -120,41 +124,46 @@
         <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__dir__</span><span class="p">()[</span><span class="n">item</span><span class="p">])</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">worker_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;_links&#39;</span><span class="p">][</span><span class="s1">&#39;self&#39;</span><span class="p">][</span><span class="s1">&#39;href&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">worker_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;_links&quot;</span><span class="p">][</span><span class="s2">&quot;self&quot;</span><span class="p">][</span><span class="s2">&quot;href&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span>
+    <span class="k">def</span> <span class="nf">status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">hostname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;hostname&#39;</span><span class="p">]</span>
+    <span class="k">def</span> <span class="nf">hostname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;hostname&quot;</span><span class="p">]</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">ipaddr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;ipaddr&#39;</span><span class="p">]</span>
+    <span class="k">def</span> <span class="nf">ipaddr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;ipaddr&quot;</span><span class="p">]</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">href</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;_links&#39;</span><span class="p">][</span><span class="s1">&#39;self&#39;</span><span class="p">][</span><span class="s1">&#39;href&#39;</span><span class="p">]</span>
+    <span class="k">def</span> <span class="nf">href</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;_links&quot;</span><span class="p">][</span><span class="s2">&quot;self&quot;</span><span class="p">][</span><span class="s2">&quot;href&quot;</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="nb">dir</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="WorkerK8sList"><a class="viewcode-back" href="../../hpecp.k8s_worker.html#hpecp.k8s_worker.WorkerK8sList">[docs]</a><span class="k">class</span> <span class="nc">WorkerK8sList</span><span class="p">():</span>
 
+<div class="viewcode-block" id="WorkerK8sList"><a class="viewcode-back" href="../../hpecp.k8s_worker.html#hpecp.k8s_worker.WorkerK8sList">[docs]</a><span class="k">class</span> <span class="nc">WorkerK8sList</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">json</span> <span class="o">=</span> <span class="n">json</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tenants</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">WorkerK8s</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">json</span><span class="p">],</span>  <span class="n">key</span><span class="o">=</span><span class="n">attrgetter</span><span class="p">(</span><span class="s1">&#39;worker_id&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tenants</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">WorkerK8s</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">json</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="n">attrgetter</span><span class="p">(</span><span class="s2">&quot;worker_id&quot;</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tenants</span><span class="p">[</span><span class="n">item</span><span class="p">]</span>
 
 <div class="viewcode-block" id="WorkerK8sList.next"><a class="viewcode-back" href="../../hpecp.k8s_worker.html#hpecp.k8s_worker.WorkerK8sList.next">[docs]</a>    <span class="k">def</span> <span class="nf">next</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">tenants</span><span class="p">:</span>
-           <span class="k">raise</span> <span class="ne">StopIteration</span>
+            <span class="k">raise</span> <span class="ne">StopIteration</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tenants</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
 
     <span class="c1"># TODO do we need  both next() and __next__()?</span>
     <span class="k">def</span> <span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">tenants</span><span class="p">:</span>
-           <span class="k">raise</span> <span class="ne">StopIteration</span>
+            <span class="k">raise</span> <span class="ne">StopIteration</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tenants</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -164,21 +173,20 @@
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tenants</span><span class="p">)</span>
 
 <div class="viewcode-block" id="WorkerK8sList.tabulate"><a class="viewcode-back" href="../../hpecp.k8s_worker.html#hpecp.k8s_worker.WorkerK8sList.tabulate">[docs]</a>    <span class="k">def</span> <span class="nf">tabulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="c1">#FIXME columns is ignored, see GatewayController.list().tabulate() for an example implementation</span>
+        <span class="c1"># FIXME columns is ignored, see GatewayController.list().tabulate() for an example implementation</span>
         <span class="k">return</span> <span class="n">tabulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">WorkerK8s</span><span class="o">.</span><span class="n">__class_dir__</span><span class="p">(),</span> <span class="n">tablefmt</span><span class="o">=</span><span class="s2">&quot;pretty&quot;</span><span class="p">)</span></div></div>
 
-<div class="viewcode-block" id="K8sWorkerController"><a class="viewcode-back" href="../../hpecp.k8s_worker.html#hpecp.k8s_worker.K8sWorkerController">[docs]</a><span class="k">class</span> <span class="nc">K8sWorkerController</span><span class="p">:</span>
 
+<div class="viewcode-block" id="K8sWorkerController"><a class="viewcode-back" href="../../hpecp.k8s_worker.html#hpecp.k8s_worker.K8sWorkerController">[docs]</a><span class="k">class</span> <span class="nc">K8sWorkerController</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">client</span>
-
 
 <div class="viewcode-block" id="K8sWorkerController.create_with_ssh_password"><a class="viewcode-back" href="../../hpecp.k8s_worker.html#hpecp.k8s_worker.K8sWorkerController.create_with_ssh_password">[docs]</a>    <span class="k">def</span> <span class="nf">create_with_ssh_password</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Not Implemented yet&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="K8sWorkerController.create_with_ssh_key"><a class="viewcode-back" href="../../hpecp.k8s_worker.html#hpecp.k8s_worker.K8sWorkerController.create_with_ssh_key">[docs]</a>    <span class="k">def</span> <span class="nf">create_with_ssh_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="n">ssh_key_data</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[]):</span>
-        <span class="sd">&#39;&#39;&#39;Create a gateway instance using SSH key credentials to access the host</span>
+        <span class="sd">&quot;&quot;&quot;Create a gateway instance using SSH key credentials to access the host</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            ip: str</span>
@@ -189,36 +197,46 @@
 <span class="sd">                Tags to use, e.g. &quot;{ &#39;tag1&#39;: &#39;foo&#39;, &#39;tag2&#39;, &#39;bar&#39; }&quot;.</span>
 
 <span class="sd">        Returns: Worker ID</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="n">basestring</span><span class="p">),</span> <span class="s2">&quot;&#39;ip&#39; must be provided and must be a string&quot;</span>
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ssh_key_data</span><span class="p">,</span> <span class="n">basestring</span><span class="p">),</span> <span class="s2">&quot;&#39;ssh_key_data&#39; must be provided and must be a string&quot;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
+            <span class="n">ssh_key_data</span><span class="p">,</span> <span class="n">basestring</span>
+        <span class="p">),</span> <span class="s2">&quot;&#39;ssh_key_data&#39; must be provided and must be a string&quot;</span>
 
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s2">&quot;ipaddr&quot;</span><span class="p">:</span> <span class="n">ip</span><span class="p">,</span>
-                <span class="s2">&quot;credentials&quot;</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;ssh_key_access&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;ssh_key_data&quot;</span><span class="p">:</span> <span class="n">ssh_key_data</span>
-                <span class="p">},</span>
-                <span class="s2">&quot;tags&quot;</span><span class="p">:</span> <span class="n">tags</span><span class="p">,</span>
-            <span class="p">}</span>
-             
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="s1">&#39;/api/v2/worker/k8shost/&#39;</span><span class="p">,</span> <span class="n">http_method</span><span class="o">=</span><span class="s1">&#39;post&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;worker/create_with_ssh_key&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">]</span></div>
+            <span class="s2">&quot;ipaddr&quot;</span><span class="p">:</span> <span class="n">ip</span><span class="p">,</span>
+            <span class="s2">&quot;credentials&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;ssh_key_access&quot;</span><span class="p">,</span> <span class="s2">&quot;ssh_key_data&quot;</span><span class="p">:</span> <span class="n">ssh_key_data</span><span class="p">},</span>
+            <span class="s2">&quot;tags&quot;</span><span class="p">:</span> <span class="n">tags</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
+            <span class="n">url</span><span class="o">=</span><span class="s2">&quot;/api/v2/worker/k8shost/&quot;</span><span class="p">,</span>
+            <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;post&quot;</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;worker/create_with_ssh_key&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;location&quot;</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="K8sWorkerController.list"><a class="viewcode-back" href="../../hpecp.k8s_worker.html#hpecp.k8s_worker.K8sWorkerController.list">[docs]</a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        See: https://&lt;&lt;controller_ip&gt;&gt;/apidocs/site-admin-api.html for the schema of the  response object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="s1">&#39;/api/v2/worker/k8shost/&#39;</span><span class="p">,</span> <span class="n">http_method</span><span class="o">=</span><span class="s1">&#39;get&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;worker/get_k8shosts&#39;</span><span class="p">)</span>
-        <span class="n">hosts</span> <span class="o">=</span> <span class="n">WorkerK8sList</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;_embedded&#39;</span><span class="p">][</span><span class="s1">&#39;k8shosts&#39;</span><span class="p">])</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
+            <span class="n">url</span><span class="o">=</span><span class="s2">&quot;/api/v2/worker/k8shost/&quot;</span><span class="p">,</span>
+            <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;get&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;worker/get_k8shosts&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">hosts</span> <span class="o">=</span> <span class="n">WorkerK8sList</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;_embedded&quot;</span><span class="p">][</span><span class="s2">&quot;k8shosts&quot;</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">hosts</span></div>
 
 <div class="viewcode-block" id="K8sWorkerController.get"><a class="viewcode-back" href="../../hpecp.k8s_worker.html#hpecp.k8s_worker.K8sWorkerController.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">worker_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        See: https://&lt;&lt;controller_ip&gt;&gt;/apidocs/site-admin-api.html for the schema of the  response object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">worker_id</span><span class="p">,</span> <span class="n">http_method</span><span class="o">=</span><span class="s1">&#39;get&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;worker/get_k8shosts&#39;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
+            <span class="n">url</span><span class="o">=</span><span class="n">worker_id</span><span class="p">,</span> <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;worker/get_k8shosts&quot;</span>
+        <span class="p">)</span>
         <span class="n">host</span> <span class="o">=</span> <span class="n">WorkerK8s</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">host</span></div>
 
@@ -226,7 +244,9 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        See: https://&lt;&lt;controller_ip&gt;&gt;/apidocs/site-admin-api.html for the schema of the  response object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">worker_id</span><span class="p">,</span> <span class="n">http_method</span><span class="o">=</span><span class="s1">&#39;delete&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;worker/delete_k8shosts&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
+            <span class="n">url</span><span class="o">=</span><span class="n">worker_id</span><span class="p">,</span> <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;delete&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;worker/delete_k8shosts&quot;</span>
+        <span class="p">)</span></div>
 
     <span class="c1"># TODO rename status parameter to statuses</span>
 <div class="viewcode-block" id="K8sWorkerController.wait_for_status"><a class="viewcode-back" href="../../hpecp.k8s_worker.html#hpecp.k8s_worker.K8sWorkerController.wait_for_status">[docs]</a>    <span class="k">def</span> <span class="nf">wait_for_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">worker_id</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="p">[],</span> <span class="n">timeout_secs</span><span class="o">=</span><span class="mi">1200</span><span class="p">):</span>
@@ -248,15 +268,20 @@
 <span class="sd">            APIException: if a generic API exception occurred</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">worker_id</span><span class="p">,</span> <span class="n">basestring</span><span class="p">),</span> <span class="s2">&quot;&#39;worker_id&#39; must be a string&quot;</span>
-        <span class="k">assert</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\/api\/v2\/worker\/k8shost\/[0-9]+&#39;</span><span class="p">,</span> <span class="n">worker_id</span><span class="p">),</span> <span class="s2">&quot;&#39;worker_id&#39; must have format &#39;/api/v2/worker/k8shost/[0-9]+&#39;&quot;</span>
+        <span class="k">assert</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+            <span class="sa">r</span><span class="s2">&quot;\/api\/v2\/worker\/k8shost\/[0-9]+&quot;</span><span class="p">,</span> <span class="n">worker_id</span>
+        <span class="p">),</span> <span class="s2">&quot;&#39;worker_id&#39; must have format &#39;/api/v2/worker/k8shost/[0-9]+&#39;&quot;</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span> <span class="s2">&quot;&#39;status&#39; must be a list&quot;</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">status</span><span class="p">):</span>
-            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">WorkerK8sStatus</span><span class="p">),</span> <span class="s2">&quot;&#39;status&#39; item &#39;</span><span class="si">{}</span><span class="s2">&#39; is not of type WorkerK8sStatus&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">timeout_secs</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span> <span class="s2">&quot;&#39;timeout_secs&#39; must be an int&quot;</span>   
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
+                <span class="n">s</span><span class="p">,</span> <span class="n">WorkerK8sStatus</span>
+            <span class="p">),</span> <span class="s2">&quot;&#39;status&#39; item &#39;</span><span class="si">{}</span><span class="s2">&#39; is not of type WorkerK8sStatus&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">timeout_secs</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span> <span class="s2">&quot;&#39;timeout_secs&#39; must be an int&quot;</span>
         <span class="k">assert</span> <span class="n">timeout_secs</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;&#39;timeout_secs&#39; must be &gt;= 0&quot;</span>
 
         <span class="c1"># if status is empty return success when worker_id not found</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">status</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+
             <span class="k">def</span> <span class="nf">item_not_exists</span><span class="p">():</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">worker_id</span><span class="p">)</span>
@@ -269,7 +294,7 @@
                     <span class="k">lambda</span><span class="p">:</span> <span class="n">item_not_exists</span><span class="p">(),</span>
                     <span class="n">step</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
                     <span class="n">poll_forever</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                    <span class="n">timeout</span><span class="o">=</span><span class="n">timeout_secs</span>
+                    <span class="n">timeout</span><span class="o">=</span><span class="n">timeout_secs</span><span class="p">,</span>
                 <span class="p">)</span>
                 <span class="k">return</span> <span class="kc">True</span>
             <span class="k">except</span> <span class="n">polling</span><span class="o">.</span><span class="n">TimeoutException</span><span class="p">:</span>
@@ -279,10 +304,10 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">polling</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span>
-                    <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">worker_id</span><span class="p">)</span><span class="o">.</span><span class="n">status</span> <span class="ow">in</span> <span class="p">[</span> <span class="n">s</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">status</span> <span class="p">],</span>
+                    <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">worker_id</span><span class="p">)</span><span class="o">.</span><span class="n">status</span> <span class="ow">in</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">status</span><span class="p">],</span>
                     <span class="n">step</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
                     <span class="n">poll_forever</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                    <span class="n">timeout</span><span class="o">=</span><span class="n">timeout_secs</span>
+                    <span class="n">timeout</span><span class="o">=</span><span class="n">timeout_secs</span><span class="p">,</span>
                 <span class="p">)</span>
                 <span class="k">return</span> <span class="kc">True</span>
             <span class="k">except</span> <span class="n">polling</span><span class="o">.</span><span class="n">TimeoutException</span><span class="p">:</span>
@@ -295,22 +320,25 @@
 <span class="sd">        :param persistent_disks: a comma separated list of zero or more persistent disks, e.g. &quot;/dev/nvme2n1&quot;</span>
 <span class="sd">        :param ephemeral_disks: a comma separated list of zero or more ephemeral_disks disks, e.g. &quot;/dev/nvme1n1&quot;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        
-        <span class="c1">#TODO: id is valid</span>
-        <span class="c1">#TODO: assert disks are arrays</span>
+
+        <span class="c1"># TODO: id is valid</span>
+        <span class="c1"># TODO: assert disks are arrays</span>
 
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;op_spec&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;persistent_disks&quot;</span><span class="p">:</span> <span class="n">persistent_disks</span><span class="p">,</span> 
-                <span class="s2">&quot;ephemeral_disks&quot;</span><span class="p">:</span> <span class="n">ephemeral_disks</span>
-                <span class="p">},</span> 
-            <span class="s2">&quot;op&quot;</span><span class="p">:</span> <span class="s2">&quot;storage&quot;</span>
+                <span class="s2">&quot;persistent_disks&quot;</span><span class="p">:</span> <span class="n">persistent_disks</span><span class="p">,</span>
+                <span class="s2">&quot;ephemeral_disks&quot;</span><span class="p">:</span> <span class="n">ephemeral_disks</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;op&quot;</span><span class="p">:</span> <span class="s2">&quot;storage&quot;</span><span class="p">,</span>
         <span class="p">}</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">worker_id</span><span class="p">,</span> <span class="n">http_method</span><span class="o">=</span><span class="s1">&#39;post&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;worker/add_k8shost&#39;</span><span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
+            <span class="n">url</span><span class="o">=</span><span class="n">worker_id</span><span class="p">,</span>
+            <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;post&quot;</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;worker/add_k8shost&quot;</span><span class="p">,</span>
+        <span class="p">)</span></div></div>
         <span class="c1"># no response - just status code</span>
-
-   
 </pre></div>
 
           </div>

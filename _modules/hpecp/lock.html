@@ -71,25 +71,27 @@
 
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
 <span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">requests</span> 
+<span class="kn">import</span> <span class="nn">requests</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">urllib</span>
 <span class="kn">import</span> <span class="nn">polling</span>
 <span class="kn">import</span> <span class="nn">re</span>
 
 <span class="k">try</span><span class="p">:</span>
-  <span class="n">basestring</span>
+    <span class="n">basestring</span>
 <span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>
-  <span class="n">basestring</span> <span class="o">=</span> <span class="nb">str</span>
+    <span class="n">basestring</span> <span class="o">=</span> <span class="nb">str</span>
+
 
 <div class="viewcode-block" id="LockController"><a class="viewcode-back" href="../../hpecp.lock.html#hpecp.lock.LockController">[docs]</a><span class="k">class</span> <span class="nc">LockController</span><span class="p">:</span>
-
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">client</span>
 
 <div class="viewcode-block" id="LockController.get"><a class="viewcode-back" href="../../hpecp.lock.html#hpecp.lock.LockController.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Retrieve the locks&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="s1">&#39;/api/v1/lock&#39;</span><span class="p">,</span> <span class="n">http_method</span><span class="o">=</span><span class="s1">&#39;get&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;lock/get_locks&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
+            <span class="n">url</span><span class="o">=</span><span class="s2">&quot;/api/v1/lock&quot;</span><span class="p">,</span> <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;lock/get_locks&quot;</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="LockController.list"><a class="viewcode-back" href="../../hpecp.lock.html#hpecp.lock.LockController.list">[docs]</a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Retrieve the locks&quot;&quot;&quot;</span>
@@ -107,8 +109,13 @@
 
 <span class="sd">            APIException</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;reason&quot;</span> <span class="p">:</span> <span class="n">reason</span><span class="p">}</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="s1">&#39;/api/v1/lock&#39;</span><span class="p">,</span> <span class="n">http_method</span><span class="o">=</span><span class="s1">&#39;post&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;lock/set_lock&#39;</span><span class="p">)</span></div>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="n">reason</span><span class="p">}</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
+            <span class="n">url</span><span class="o">=</span><span class="s2">&quot;/api/v1/lock&quot;</span><span class="p">,</span>
+            <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;post&quot;</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;lock/set_lock&quot;</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 <div class="viewcode-block" id="LockController.delete"><a class="viewcode-back" href="../../hpecp.lock.html#hpecp.lock.LockController.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lock_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Delete a lock</span>
@@ -123,10 +130,16 @@
 <span class="sd">            APIException</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lock_id</span><span class="p">,</span> <span class="n">basestring</span><span class="p">),</span><span class="s2">&quot;&#39;lock_id&#39; must be provided and must be a string&quot;</span>
-        <span class="k">assert</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\/api\/v1\/lock\/[0-9]+&#39;</span><span class="p">,</span> <span class="n">lock_id</span><span class="p">),</span> <span class="s2">&quot;&#39;lock_id&#39; must have format &#39;/api/v1/lock/[0-9]+&#39;&quot;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
+            <span class="n">lock_id</span><span class="p">,</span> <span class="n">basestring</span>
+        <span class="p">),</span> <span class="s2">&quot;&#39;lock_id&#39; must be provided and must be a string&quot;</span>
+        <span class="k">assert</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+            <span class="sa">r</span><span class="s2">&quot;\/api\/v1\/lock\/[0-9]+&quot;</span><span class="p">,</span> <span class="n">lock_id</span>
+        <span class="p">),</span> <span class="s2">&quot;&#39;lock_id&#39; must have format &#39;/api/v1/lock/[0-9]+&#39;&quot;</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">lock_id</span><span class="p">,</span> <span class="n">http_method</span><span class="o">=</span><span class="s1">&#39;delete&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;lock/delete_lock&#39;</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
+            <span class="n">url</span><span class="o">=</span><span class="n">lock_id</span><span class="p">,</span> <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;delete&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;lock/delete_lock&quot;</span>
+        <span class="p">)</span></div>
 
 <div class="viewcode-block" id="LockController.delete_all"><a class="viewcode-back" href="../../hpecp.lock.html#hpecp.lock.LockController.delete_all">[docs]</a>    <span class="k">def</span> <span class="nf">delete_all</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout_secs</span><span class="o">=</span><span class="mi">300</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Delete all locks</span>
@@ -143,21 +156,20 @@
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">polling</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span>
-                <span class="k">lambda</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">()[</span><span class="s1">&#39;_embedded&#39;</span><span class="p">][</span><span class="s1">&#39;internal_locks&#39;</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="k">lambda</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">()[</span><span class="s2">&quot;_embedded&quot;</span><span class="p">][</span><span class="s2">&quot;internal_locks&quot;</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span>
                 <span class="n">step</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
                 <span class="n">poll_forever</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                <span class="n">timeout</span><span class="o">=</span><span class="n">timeout_secs</span>
-                <span class="p">)</span>
+                <span class="n">timeout</span><span class="o">=</span><span class="n">timeout_secs</span><span class="p">,</span>
+            <span class="p">)</span>
         <span class="k">except</span> <span class="n">polling</span><span class="o">.</span><span class="n">TimeoutException</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Timed out waiting for internal locks to free.&quot;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">()[</span><span class="s1">&#39;_embedded&#39;</span><span class="p">][</span><span class="s1">&#39;external_locks&#39;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">lock</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">()[</span><span class="s1">&#39;_embedded&#39;</span><span class="p">][</span><span class="s1">&#39;external_locks&#39;</span><span class="p">]:</span>
-                <span class="n">lock_id</span> <span class="o">=</span> <span class="n">lock</span><span class="p">[</span><span class="s1">&#39;_links&#39;</span><span class="p">][</span><span class="s1">&#39;self&#39;</span><span class="p">][</span><span class="s1">&#39;href&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">()[</span><span class="s2">&quot;_embedded&quot;</span><span class="p">][</span><span class="s2">&quot;external_locks&quot;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">lock</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">()[</span><span class="s2">&quot;_embedded&quot;</span><span class="p">][</span><span class="s2">&quot;external_locks&quot;</span><span class="p">]:</span>
+                <span class="n">lock_id</span> <span class="o">=</span> <span class="n">lock</span><span class="p">[</span><span class="s2">&quot;_links&quot;</span><span class="p">][</span><span class="s2">&quot;self&quot;</span><span class="p">][</span><span class="s2">&quot;href&quot;</span><span class="p">]</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">lock_id</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="kc">True</span></div></div>
-
 </pre></div>
 
           </div>
