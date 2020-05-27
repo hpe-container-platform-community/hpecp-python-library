@@ -83,7 +83,6 @@ class GatewayController:
         response = self.client._request(url='/api/v1/workers/', http_method='get', description='gateway/list')
         return GatewayList(response.json()['_embedded']['workers'])
 
-
     def get(self, gateway_id):
         """Retrieve a Gateway by ID.
 

@@ -1,6 +1,9 @@
+import re
 from operator import attrgetter
 
 from tabulate import tabulate
+
+from hpecp.exceptions import APIItemNotFoundException
 
 
 class CatalogController:
@@ -34,10 +37,37 @@ class CatalogController:
         response = self.client._request(
             url="/api/v1/catalog/",
             http_method="get",
-            description="catalog/list"
-        )
+            description="catalog/list")
         return CatalogList(
             response.json()["_embedded"]["independent_catalog_entries"])
+
+    def get(self, catalog_id):
+        """Retrieve a catalog identified by {catalog_id}
+
+        Args:
+            catalog_id: str
+                The Catalog ID - format: '/api/v1/catalog/[0-9]+'
+
+        Raises:
+            APIException
+
+        Returns:
+            Catalog -- object representing the requested Catalog
+        """
+        assert isinstance(catalog_id, str),\
+            "'catalog_id' must be provided and must be a string"
+        assert re.match(r'\/api\/v1\/workers\/[0-9]+', catalog_id),\
+            "'catalog_id' must have format '/api/v1/workers/[0-9]+'"
+
+        response = self.client._request(
+            url=catalog_id, http_method='get', description='catalog/get')
+        if response.json()['purpose'] != 'proxy':
+            raise APIItemNotFoundException(
+                message='catalog not found with id: ' + catalog_id,
+                request_method='get',
+                request_url=catalog_id)
+
+        return Catalog(response.json())
 
 
 class Catalog:
