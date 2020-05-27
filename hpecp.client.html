@@ -124,11 +124,11 @@
 </dl>
 </dd>
 <dt>Returns:</dt><dd><dl class="simple">
-<dt>ContainerPlatformClient: </dt><dd><p>An instance of ContainerPlatformClient</p>
+<dt>ContainerPlatformClient:</dt><dd><p>An instance of ContainerPlatformClient</p>
 </dd>
 </dl>
 </dd>
-<dt>Notes:</dt><dd><p>Instantiating the ContainerPlatformClient does not make any connection to the HPE Container Platform API. The 
+<dt>Notes:</dt><dd><p>Instantiating the ContainerPlatformClient does not make any connection to the HPE Container Platform API. The
 initial connection would be made by calling the method <a class="reference internal" href="#hpecp.client.ContainerPlatformClient.create_session" title="hpecp.client.ContainerPlatformClient.create_session"><code class="xref py py-meth docutils literal notranslate"><span class="pre">create_session()</span></code></a>.</p>
 </dd>
 </dl>
@@ -150,7 +150,7 @@ initial connection would be made by calling the method <a class="reference inter
 </dl>
 </dd>
 <dt>Returns:</dt><dd><dl class="simple">
-<dt>ContainerPlatformClient: </dt><dd><p>An instance of ContainerPlatformClient is returned.</p>
+<dt>ContainerPlatformClient:</dt><dd><p>An instance of ContainerPlatformClient is returned.</p>
 </dd>
 </dl>
 </dd>
@@ -193,7 +193,7 @@ initial connection would be made by calling the method <a class="reference inter
 <dd><p>Create a session with the HPE CP controller defined in the object <a class="reference internal" href="#hpecp.client.ContainerPlatformClient" title="hpecp.client.ContainerPlatformClient"><code class="xref py py-class docutils literal notranslate"><span class="pre">ContainerPlatformClient</span></code></a>.</p>
 <dl class="simple">
 <dt>Returns:</dt><dd><dl class="simple">
-<dt>ContainerPlatformClient: </dt><dd><p>An instance of ContainerPlatformClient is returned.</p>
+<dt>ContainerPlatformClient:</dt><dd><p>An instance of ContainerPlatformClient is returned.</p>
 </dd>
 </dl>
 </dd>
@@ -241,7 +241,7 @@ initial connection would be made by calling the method <a class="reference inter
             <span class="s2">&quot;base_dn&quot;</span><span class="p">:</span><span class="s2">&quot;CN=Users,DC=samdom,DC=example,DC=com&quot;</span><span class="p">,</span>
             <span class="s2">&quot;verify_peer&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
             <span class="s2">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;Active Directory&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">636</span> 
+            <span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">636</span>
         <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">)</span>
@@ -351,6 +351,20 @@ via the <cite>client</cite> parameter passed in during instantiation of the cont
 </pre></div>
 </div>
 <p>This example calls the method <code class="xref py py-meth docutils literal notranslate"><span class="pre">create()</span></code> in <code class="xref py py-class docutils literal notranslate"><span class="pre">user.UserController</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="hpecp.client.ContainerPlatformClient.catalog">
+<em class="property">property </em><code class="sig-name descname">catalog</code><a class="headerlink" href="#hpecp.client.ContainerPlatformClient.catalog" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute is a reference to an object of type <cite>.catalog.CatalogController</cite>.</p>
+<p>See the class <code class="xref py py-class docutils literal notranslate"><span class="pre">catalog.CatalogController</span></code> for the methods available.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">client</span> <span class="o">=</span> <span class="n">ContainerPlatformClient</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="n">client</span><span class="o">.</span><span class="n">create_session</span><span class="p">()</span>
+<span class="n">client</span><span class="o">.</span><span class="n">catalog</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This example calls the method <code class="xref py py-meth docutils literal notranslate"><span class="pre">create()</span></code> in <code class="xref py py-class docutils literal notranslate"><span class="pre">catalog.CatalogController</span></code>.</p>
 </dd></dl>
 
 </dd></dl>

@@ -70,30 +70,33 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
+
+<span class="kn">import</span> <span class="nn">configparser</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">import</span> <span class="nn">requests</span>
 <span class="kn">from</span> <span class="nn">six</span> <span class="kn">import</span> <span class="n">raise_from</span>
 
-<span class="kn">from</span> <span class="nn">.logger</span> <span class="kn">import</span> <span class="n">Logger</span>
-<span class="kn">from</span> <span class="nn">.tenant</span> <span class="kn">import</span> <span class="n">TenantController</span>
 <span class="kn">from</span> <span class="nn">.config</span> <span class="kn">import</span> <span class="n">ConfigController</span>
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="p">(</span><span class="n">APIException</span><span class="p">,</span> <span class="n">APIItemConflictException</span><span class="p">,</span>
+                         <span class="n">APIItemNotFoundException</span><span class="p">,</span>
+                         <span class="n">ContainerPlatformClientException</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">.gateway</span> <span class="kn">import</span> <span class="n">GatewayController</span>
-<span class="kn">from</span> <span class="nn">.k8s_worker</span> <span class="kn">import</span> <span class="n">K8sWorkerController</span>
 <span class="kn">from</span> <span class="nn">.k8s_cluster</span> <span class="kn">import</span> <span class="n">K8sClusterController</span>
+<span class="kn">from</span> <span class="nn">.k8s_worker</span> <span class="kn">import</span> <span class="n">K8sWorkerController</span>
 <span class="kn">from</span> <span class="nn">.license</span> <span class="kn">import</span> <span class="n">LicenseController</span>
 <span class="kn">from</span> <span class="nn">.lock</span> <span class="kn">import</span> <span class="n">LockController</span>
-<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">ContainerPlatformClientException</span><span class="p">,</span> <span class="n">APIException</span><span class="p">,</span> <span class="n">APIItemNotFoundException</span><span class="p">,</span> <span class="n">APIItemConflictException</span>
+<span class="kn">from</span> <span class="nn">.logger</span> <span class="kn">import</span> <span class="n">Logger</span>
+<span class="kn">from</span> <span class="nn">.tenant</span> <span class="kn">import</span> <span class="n">TenantController</span>
 <span class="kn">from</span> <span class="nn">.user</span> <span class="kn">import</span> <span class="n">UserController</span>
-
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">requests</span>
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">configparser</span>
-<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">.catalog</span> <span class="kn">import</span> <span class="n">CatalogController</span>
 
 <span class="k">try</span><span class="p">:</span>
-  <span class="n">basestring</span>
+    <span class="n">basestring</span>
 <span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>
-  <span class="n">basestring</span> <span class="o">=</span> <span class="nb">str</span>
+    <span class="n">basestring</span> <span class="o">=</span> <span class="nb">str</span>
+
 
 <div class="viewcode-block" id="ContainerPlatformClient"><a class="viewcode-back" href="../../hpecp.client.html#hpecp.client.ContainerPlatformClient">[docs]</a><span class="k">class</span> <span class="nc">ContainerPlatformClient</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;The ContainerPlatformClient object is the central object that users of this library work with.</span>
@@ -104,22 +107,22 @@
 <span class="sd">        password : str</span>
 <span class="sd">            HPECP password</span>
 <span class="sd">        api_host : str</span>
-<span class="sd">            HPECP api_host </span>
+<span class="sd">            HPECP api_host</span>
 <span class="sd">        api_port : int</span>
-<span class="sd">            HPECP api_port </span>
+<span class="sd">            HPECP api_port</span>
 <span class="sd">        use_ssl : bool:</span>
-<span class="sd">            Connect to HPECP using SSL: True|False </span>
+<span class="sd">            Connect to HPECP using SSL: True|False</span>
 <span class="sd">        verify_ssl : bool|str</span>
 <span class="sd">            See https://requests.readthedocs.io/en/master/user/advanced/#ssl-cert-verification</span>
 <span class="sd">        warn_ssl : bool</span>
 <span class="sd">            Disable ssl warnings</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        ContainerPlatformClient: </span>
+<span class="sd">        ContainerPlatformClient:</span>
 <span class="sd">            An instance of ContainerPlatformClient</span>
 
 <span class="sd">    Notes:</span>
-<span class="sd">        Instantiating the ContainerPlatformClient does not make any connection to the HPE Container Platform API. The </span>
+<span class="sd">        Instantiating the ContainerPlatformClient does not make any connection to the HPE Container Platform API. The</span>
 <span class="sd">        initial connection would be made by calling the method :py:meth:`create_session`.</span>
 
 <span class="sd">    See also:</span>
@@ -140,7 +143,7 @@
 <span class="sd">                If the configuration file has multiple profile sections, you can select the profile to use.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            ContainerPlatformClient: </span>
+<span class="sd">            ContainerPlatformClient:</span>
 <span class="sd">                An instance of ContainerPlatformClient is returned.</span>
 
 <span class="sd">        Example config_file::</span>
@@ -186,7 +189,7 @@
                 <span class="k">return</span> <span class="n">config</span><span class="p">[</span><span class="n">profile</span><span class="p">][</span><span class="n">key</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span>
-            
+
         <span class="n">username</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">get_config_value</span><span class="p">(</span><span class="s1">&#39;username&#39;</span><span class="p">,</span> <span class="n">profile</span><span class="p">))</span>
         <span class="n">password</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">get_config_value</span><span class="p">(</span><span class="s1">&#39;password&#39;</span><span class="p">,</span> <span class="n">profile</span><span class="p">))</span>
         <span class="n">api_host</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">get_config_value</span><span class="p">(</span><span class="s1">&#39;api_host&#39;</span><span class="p">,</span> <span class="n">profile</span><span class="p">))</span>
@@ -208,7 +211,7 @@
             <span class="n">warn_ssl</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">warn_ssl</span> <span class="o">=</span> <span class="kc">True</span>
-        
+
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">api_host</span><span class="p">,</span> <span class="n">api_port</span><span class="p">,</span> <span class="n">use_ssl</span><span class="p">,</span> <span class="n">verify_ssl</span><span class="p">,</span> <span class="n">warn_ssl</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ContainerPlatformClient.create_from_env"><a class="viewcode-back" href="../../hpecp.client.html#hpecp.client.ContainerPlatformClient.create_from_env">[docs]</a>    <span class="nd">@classmethod</span>
@@ -248,10 +251,10 @@
 
         <span class="k">if</span> <span class="s1">&#39;HPECP_warn_ssl&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
             <span class="n">HPECP_warn_ssl</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="n">HPECP_warn_ssl</span><span class="p">]</span>
-        
+
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
-            <span class="n">username</span><span class="o">=</span><span class="n">HPECP_USERNAME</span><span class="p">,</span> 
-            <span class="n">password</span><span class="o">=</span><span class="n">HPECP_PASSWORD</span><span class="p">,</span> 
+            <span class="n">username</span><span class="o">=</span><span class="n">HPECP_USERNAME</span><span class="p">,</span>
+            <span class="n">password</span><span class="o">=</span><span class="n">HPECP_PASSWORD</span><span class="p">,</span>
             <span class="n">api_host</span><span class="o">=</span><span class="n">HPECP_API_HOST</span><span class="p">,</span>
             <span class="n">api_port</span><span class="o">=</span><span class="n">HPECP_API_PORT</span><span class="p">,</span>
             <span class="n">use_ssl</span><span class="o">=</span><span class="n">HPECP_USE_SSL</span><span class="p">,</span>
@@ -259,12 +262,12 @@
             <span class="n">warn_ssl</span><span class="o">=</span><span class="n">HPECP_warn_ssl</span>
             <span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
-                 <span class="n">username</span>   <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
-                 <span class="n">password</span>   <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">api_host</span>   <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">api_port</span>   <span class="o">=</span> <span class="mi">8080</span><span class="p">,</span>
-                 <span class="n">use_ssl</span>    <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">username</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">password</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">api_host</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">api_port</span> <span class="o">=</span> <span class="mi">8080</span><span class="p">,</span>
+                 <span class="n">use_ssl</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
                  <span class="n">verify_ssl</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
                  <span class="n">warn_ssl</span> <span class="o">=</span> <span class="kc">False</span>
                  <span class="p">):</span>
@@ -273,7 +276,7 @@
 
         <span class="k">if</span> <span class="n">verify_ssl</span> <span class="o">==</span> <span class="s1">&#39;True&#39;</span><span class="p">:</span>
             <span class="n">verify_ssl</span> <span class="o">=</span> <span class="kc">True</span>
-        
+
         <span class="k">if</span> <span class="n">verify_ssl</span> <span class="o">==</span> <span class="s1">&#39;False&#39;</span><span class="p">:</span>
             <span class="n">verify_ssl</span> <span class="o">=</span> <span class="kc">False</span>
 
@@ -286,18 +289,18 @@
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">api_port</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span> <span class="s2">&quot;&#39;api_port&#39; parameter must be of type int&quot;</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">use_ssl</span><span class="p">,</span> <span class="nb">bool</span><span class="p">),</span> <span class="s2">&quot;&#39;use_ssl&#39; parameter must be of type bool&quot;</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">verify_ssl</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span> <span class="ow">or</span> \
-            <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">verify_ssl</span><span class="p">,</span> <span class="n">basestring</span><span class="p">)</span> <span class="ow">and</span> 
+            <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">verify_ssl</span><span class="p">,</span> <span class="n">basestring</span><span class="p">)</span> <span class="ow">and</span>
             <span class="n">os</span><span class="o">.</span><span class="n">access</span><span class="p">(</span><span class="n">verify_ssl</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">R_OK</span><span class="p">)),</span> <span class="s2">&quot;&#39;verify_ssl&#39; parameter must be of type bool or point to a certificate file&quot;</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">warn_ssl</span><span class="p">,</span> <span class="nb">bool</span><span class="p">),</span> <span class="s2">&quot;&#39;warn_ssl&#39; parameter must be of type bool&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="n">username</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="n">password</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span> <span class="o">=</span> <span class="n">api_host</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">api_port</span> <span class="o">=</span> <span class="n">api_port</span>  
+        <span class="bp">self</span><span class="o">.</span><span class="n">api_port</span> <span class="o">=</span> <span class="n">api_port</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">use_ssl</span>  <span class="o">=</span> <span class="n">use_ssl</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">verify_ssl</span> <span class="o">=</span> <span class="n">verify_ssl</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">warn_ssl</span> <span class="o">=</span> <span class="n">warn_ssl</span>
-        
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_ssl</span><span class="p">:</span>
             <span class="n">scheme</span> <span class="o">=</span> <span class="s1">&#39;https&#39;</span>
         <span class="k">else</span><span class="p">:</span>
@@ -314,12 +317,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_license</span> <span class="o">=</span> <span class="n">LicenseController</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span> <span class="o">=</span> <span class="n">LockController</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_user</span> <span class="o">=</span> <span class="n">UserController</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_catalog</span> <span class="o">=</span> <span class="n">CatalogController</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ContainerPlatformClient.create_session"><a class="viewcode-back" href="../../hpecp.client.html#hpecp.client.ContainerPlatformClient.create_session">[docs]</a>    <span class="k">def</span> <span class="nf">create_session</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create a session with the HPE CP controller defined in the object :py:class:`ContainerPlatformClient`.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            ContainerPlatformClient: </span>
+<span class="sd">            ContainerPlatformClient:</span>
 <span class="sd">                An instance of ContainerPlatformClient is returned.</span>
 
 <span class="sd">        Raises:</span>
@@ -345,8 +349,8 @@
         <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">ConnectionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;RES: </span><span class="si">{}</span><span class="s1"> : </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;Login&#39;</span><span class="p">,</span> <span class="s1">&#39;post&#39;</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)))</span>
             <span class="n">raise_from</span><span class="p">(</span><span class="n">APIException</span><span class="p">(</span>
-                        <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Could not connect to controller - set LOG_LEVEL=DEBUG to see more detail.&#39;</span><span class="p">,</span> 
-                        <span class="n">request_method</span><span class="o">=</span><span class="s1">&#39;post&#39;</span><span class="p">,</span> 
+                        <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Could not connect to controller - set LOG_LEVEL=DEBUG to see more detail.&#39;</span><span class="p">,</span>
+                        <span class="n">request_method</span><span class="o">=</span><span class="s1">&#39;post&#39;</span><span class="p">,</span>
                         <span class="n">request_url</span><span class="o">=</span><span class="n">url</span>
                         <span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
 
@@ -367,7 +371,7 @@
         <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;accept&#39;</span><span class="p">:</span> <span class="s1">&#39;application/json&#39;</span><span class="p">,</span>
             <span class="s1">&#39;X-BDS-SESSION&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_id</span><span class="p">,</span>
-            <span class="s1">&#39;cache-control&#39;</span><span class="p">:</span> <span class="s1">&#39;no-cache&#39;</span><span class="p">,</span> 
+            <span class="s1">&#39;cache-control&#39;</span><span class="p">:</span> <span class="s1">&#39;no-cache&#39;</span><span class="p">,</span>
             <span class="s1">&#39;content-type&#39;</span><span class="p">:</span> <span class="s1">&#39;application/json&#39;</span>
             <span class="p">}</span>
         <span class="k">return</span> <span class="n">headers</span>
@@ -377,7 +381,7 @@
             <span class="n">headers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request_headers</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">headers</span> <span class="o">=</span> <span class="p">{}</span>
-            
+
         <span class="n">all_headers</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">all_headers</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">headers</span><span class="p">)</span>
         <span class="n">all_headers</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">additional_headers</span><span class="p">)</span>
@@ -430,7 +434,7 @@
 
         <span class="k">return</span> <span class="n">response</span>
 
-    
+
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">tenant</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -443,7 +447,7 @@
 <span class="sd">            client = ContainerPlatformClient(...)</span>
 <span class="sd">            client.create_session()</span>
 <span class="sd">            client.tenant.list()</span>
-<span class="sd">        </span>
+
 <span class="sd">        This example calls the method :py:meth:`list() &lt;.tenant.TenantController.list&gt;` in :py:class:`.tenant.TenantController`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -472,11 +476,11 @@
 <span class="sd">                        &quot;base_dn&quot;:&quot;CN=Users,DC=samdom,DC=example,DC=com&quot;,</span>
 <span class="sd">                        &quot;verify_peer&quot;: False,</span>
 <span class="sd">                        &quot;type&quot;:&quot;Active Directory&quot;,</span>
-<span class="sd">                        &quot;port&quot;:636 </span>
+<span class="sd">                        &quot;port&quot;:636</span>
 <span class="sd">                    }</span>
 <span class="sd">                }</span>
 <span class="sd">            )</span>
-<span class="sd">        </span>
+
 <span class="sd">        This example calls the method :py:meth:`auth() &lt;.config.ConfigController.auth&gt;` in :py:class:`.config.ConfigController`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -494,7 +498,7 @@
 <span class="sd">            client = ContainerPlatformClient(...)</span>
 <span class="sd">            client.create_session()</span>
 <span class="sd">            client.k8s_cluster.list()</span>
-<span class="sd">        </span>
+
 <span class="sd">        This example calls the method :py:meth:`list() &lt;.k8s_cluster.K8sClusterController.list&gt;` in :py:class:`.k8s_cluster.K8sClusterController`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -512,7 +516,7 @@
 <span class="sd">            client = ContainerPlatformClient(...)</span>
 <span class="sd">            client.create_session()</span>
 <span class="sd">            client.k8s_worker.list()</span>
-<span class="sd">        </span>
+
 <span class="sd">        This example calls the method :py:meth:`list() &lt;.k8s_worker.K8sWorkerController.list&gt;` in :py:class:`.k8s_worker.K8sWorkerController`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -530,7 +534,7 @@
 <span class="sd">            client = ContainerPlatformClient(...)</span>
 <span class="sd">            client.create_session()</span>
 <span class="sd">            client.gateway.list()</span>
-<span class="sd">        </span>
+
 <span class="sd">        This example calls the method :py:meth:`list() &lt;.gateway.GatewayController.list&gt;` in :py:class:`.gateway.GatewayController`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -548,7 +552,7 @@
 <span class="sd">            client = ContainerPlatformClient(...)</span>
 <span class="sd">            client.create_session()</span>
 <span class="sd">            client.license.list()</span>
-<span class="sd">        </span>
+
 <span class="sd">        This example calls the method :py:meth:`list() &lt;.license.LicenseController.list&gt;` in :py:class:`.license.LicenseController`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -566,7 +570,7 @@
 <span class="sd">            client = ContainerPlatformClient(...)</span>
 <span class="sd">            client.create_session()</span>
 <span class="sd">            client.lock.get()</span>
-<span class="sd">        </span>
+
 <span class="sd">        This example calls the method :py:meth:`get() &lt;.lock.LockController.list&gt;` in :py:class:`.lock.LockController`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -593,7 +597,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_log</span>
-    
+
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -606,15 +610,29 @@
 <span class="sd">            client = ContainerPlatformClient(...)</span>
 <span class="sd">            client.create_session()</span>
 <span class="sd">            client.user.create()</span>
-<span class="sd">        </span>
+
 <span class="sd">        This example calls the method :py:meth:`create() &lt;.user.UserController.create&gt;` in :py:class:`.user.UserController`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_user</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_user</span>
 
-   
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">catalog</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This attribute is a reference to an object of type `.catalog.CatalogController`.</span>
 
-    
+<span class="sd">        See the class :py:class:`.catalog.CatalogController` for the methods available.</span>
+
+<span class="sd">        Example::</span>
+
+<span class="sd">            client = ContainerPlatformClient(...)</span>
+<span class="sd">            client.create_session()</span>
+<span class="sd">            client.catalog.create()</span>
+
+<span class="sd">        This example calls the method :py:meth:`create() &lt;.catalog.CatalogController.create&gt;` in :py:class:`.catalog.CatalogController`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_catalog</span></div>
 </pre></div>
 
           </div>
