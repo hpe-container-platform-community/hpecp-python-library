@@ -175,16 +175,6 @@
 <code class="sig-name descname">storage_error</code><em class="property"> = 14</em><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8sStatus.storage_error" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py method">
-<dt id="hpecp.k8s_worker.WorkerK8sStatus.status_name">
-<em class="property">static </em><code class="sig-name descname">status_name</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">index</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_worker.html#WorkerK8sStatus.status_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8sStatus.status_name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="hpecp.k8s_worker.WorkerK8sStatus.status_names">
-<em class="property">static </em><code class="sig-name descname">status_names</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">indices</span><span class="o">=</span><span class="default_value">[]</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_worker.html#WorkerK8sStatus.status_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8sStatus.status_names" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 <dl class="py class">
@@ -283,9 +273,23 @@
 <dl class="py method">
 <dt id="hpecp.k8s_worker.K8sWorkerController.wait_for_status">
 <code class="sig-name descname">wait_for_status</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">worker_id</span></em>, <em class="sig-param"><span class="n">status</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">timeout_secs</span><span class="o">=</span><span class="default_value">60</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_worker.html#K8sWorkerController.wait_for_status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_worker.K8sWorkerController.wait_for_status" title="Permalink to this definition">¶</a></dt>
-<dd><p>Uses: <a class="reference external" href="https://github.com/justiniso/polling/blob/master/polling.py">https://github.com/justiniso/polling/blob/master/polling.py</a></p>
-<p>status: WorkerK8sStatus value, e.g. WorkerK8sStatus.configured</p>
-<p>raises: Exception</p>
+<dd><p>Wait for K8S worker status.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>worker_id: str</dt><dd><p>The worker ID - format: ‘/api/v1/workers/[0-9]+’</p>
+</dd>
+<dt>status: list[<a class="reference internal" href="#hpecp.k8s_worker.WorkerK8sStatus" title="hpecp.k8s_worker.WorkerK8sStatus"><code class="xref py py-class docutils literal notranslate"><span class="pre">WorkerK8sStatus</span></code></a>]</dt><dd><p>Status(es) to wait for.  Use an empty array if you want to wait for a cluster’s existence to cease.</p>
+</dd>
+<dt>timeout_secs: int</dt><dd><p>How long to wait for the status(es) before raising an exception.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>bool: True if status was found before timeout, otherwise False</p>
+</dd>
+<dt>Raises:</dt><dd><p>APIItemNotFoundException: if the item is not found and status is not empty
+APIException: if a generic API exception occurred</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">

@@ -68,10 +68,13 @@
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
 <span class="kn">from</span> <span class="nn">.logger</span> <span class="kn">import</span> <span class="n">Logger</span>
 
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">APIItemNotFoundException</span>
+
 <span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">attrgetter</span>
 <span class="kn">from</span> <span class="nn">tabulate</span> <span class="kn">import</span> <span class="n">tabulate</span>
 <span class="kn">import</span> <span class="nn">polling</span>
 <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">import</span> <span class="nn">re</span>
 
 <span class="k">try</span><span class="p">:</span>
   <span class="n">basestring</span>
@@ -92,16 +95,7 @@
     <span class="n">deleting</span> <span class="o">=</span> <span class="mi">11</span>
     <span class="n">storage_pending</span> <span class="o">=</span> <span class="mi">12</span> 
     <span class="n">storage_configuring</span> <span class="o">=</span> <span class="mi">13</span>
-    <span class="n">storage_error</span> <span class="o">=</span> <span class="mi">14</span>
-
-<div class="viewcode-block" id="WorkerK8sStatus.status_name"><a class="viewcode-back" href="../../hpecp.k8s_worker.html#hpecp.k8s_worker.WorkerK8sStatus.status_name">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">status_name</span><span class="p">(</span><span class="n">index</span><span class="p">):</span>
-        <span class="n">items</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">WorkerK8sStatus</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
-        <span class="k">return</span> <span class="n">items</span><span class="p">[</span><span class="n">index</span><span class="p">]</span></div>
-
-<div class="viewcode-block" id="WorkerK8sStatus.status_names"><a class="viewcode-back" href="../../hpecp.k8s_worker.html#hpecp.k8s_worker.WorkerK8sStatus.status_names">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">status_names</span><span class="p">(</span><span class="n">indices</span><span class="o">=</span><span class="p">[]):</span>
-       <span class="k">return</span> <span class="p">[</span> <span class="n">WorkerK8sStatus</span><span class="o">.</span><span class="n">status_name</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">indices</span> <span class="p">]</span></div></div>
+    <span class="n">storage_error</span> <span class="o">=</span> <span class="mi">14</span></div>
 
 <div class="viewcode-block" id="WorkerK8s"><a class="viewcode-back" href="../../hpecp.k8s_worker.html#hpecp.k8s_worker.WorkerK8s">[docs]</a><span class="k">class</span> <span class="nc">WorkerK8s</span><span class="p">():</span>
 
@@ -236,36 +230,64 @@
 
     <span class="c1"># TODO rename status parameter to statuses</span>
 <div class="viewcode-block" id="K8sWorkerController.wait_for_status"><a class="viewcode-back" href="../../hpecp.k8s_worker.html#hpecp.k8s_worker.K8sWorkerController.wait_for_status">[docs]</a>    <span class="k">def</span> <span class="nf">wait_for_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">worker_id</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="p">[],</span> <span class="n">timeout_secs</span><span class="o">=</span><span class="mi">60</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Uses: https://github.com/justiniso/polling/blob/master/polling.py</span>
+        <span class="sd">&quot;&quot;&quot;Wait for K8S worker status.</span>
 
-<span class="sd">        status: WorkerK8sStatus value, e.g. WorkerK8sStatus.configured</span>
+<span class="sd">        Args:</span>
+<span class="sd">            worker_id: str</span>
+<span class="sd">                The worker ID - format: &#39;/api/v1/workers/[0-9]+&#39;</span>
+<span class="sd">            status: list[:py:class:`WorkerK8sStatus`]</span>
+<span class="sd">                Status(es) to wait for.  Use an empty array if you want to wait for a cluster&#39;s existence to cease.</span>
+<span class="sd">            timeout_secs: int</span>
+<span class="sd">                How long to wait for the status(es) before raising an exception.</span>
 
-<span class="sd">        raises: Exception</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if status was found before timeout, otherwise False</span>
+<span class="sd">            </span>
+<span class="sd">        Raises:</span>
+<span class="sd">            APIItemNotFoundException: if the item is not found and status is not empty</span>
+<span class="sd">            APIException: if a generic API exception occurred</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">status</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;At least one &#39;status&#39; must be provided&quot;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">worker_id</span><span class="p">,</span> <span class="n">basestring</span><span class="p">),</span> <span class="s2">&quot;&#39;worker_id&#39; must be a string&quot;</span>
+        <span class="k">assert</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\/api\/v2\/worker\/k8shost\/[0-9]+&#39;</span><span class="p">,</span> <span class="n">worker_id</span><span class="p">),</span> <span class="s2">&quot;&#39;worker_id&#39; must have format &#39;/api/v2/worker/k8shost/[0-9]+&#39;&quot;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span> <span class="s2">&quot;&#39;status&#39; must be a list&quot;</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">status</span><span class="p">):</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">WorkerK8sStatus</span><span class="p">),</span> <span class="s2">&quot;&#39;status&#39; item &#39;</span><span class="si">{}</span><span class="s2">&#39; is not of type WorkerK8sStatus&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">timeout_secs</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span> <span class="s2">&quot;&#39;timeout_secs&#39; must be an int&quot;</span>   
         <span class="k">assert</span> <span class="n">timeout_secs</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;&#39;timeout_secs&#39; must be &gt;= 0&quot;</span>
 
-        <span class="c1"># current_status = self.get_k8shost(worker_id).status</span>
+        <span class="c1"># if status is empty return success when worker_id not found</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">status</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">def</span> <span class="nf">item_not_exists</span><span class="p">():</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">worker_id</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+                <span class="k">except</span> <span class="n">APIItemNotFoundException</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">True</span>
 
-        <span class="c1"># # if we aren&#39;t configuring,  we aren&#39;t going to change state</span>
-        <span class="c1"># if current_status.find(&#39;configuring&#39;) &lt; 0:</span>
-        <span class="c1">#     raise Exception(&#39;Host status is: {} - not polling for an update&#39;.format(current_status))</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">polling</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span>
+                    <span class="k">lambda</span><span class="p">:</span> <span class="n">item_not_exists</span><span class="p">(),</span>
+                    <span class="n">step</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                    <span class="n">poll_forever</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">timeout</span><span class="o">=</span><span class="n">timeout_secs</span>
+                <span class="p">)</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">except</span> <span class="n">polling</span><span class="o">.</span><span class="n">TimeoutException</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
 
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">polling</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span>
-                <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">worker_id</span><span class="p">)</span><span class="o">.</span><span class="n">status</span> <span class="ow">in</span> <span class="n">WorkerK8sStatus</span><span class="o">.</span><span class="n">status_names</span><span class="p">(</span><span class="n">status</span><span class="p">),</span>
-                <span class="n">step</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-                <span class="n">poll_forever</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                <span class="n">timeout</span><span class="o">=</span><span class="n">timeout_secs</span>
-            <span class="p">)</span>
-        <span class="k">except</span> <span class="n">polling</span><span class="o">.</span><span class="n">TimeoutException</span><span class="p">:</span>
-            <span class="n">status_names</span> <span class="o">=</span> <span class="p">[</span> <span class="n">WorkerK8sStatus</span><span class="o">.</span><span class="n">status_name</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">status</span> <span class="p">]</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-                    <span class="s2">&quot;Timed out waiting for status(es): </span><span class="si">{}</span><span class="s2"> on K8S Worker: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                        <span class="n">status_names</span><span class="p">,</span> <span class="n">worker_id</span><span class="p">))</span></div>
-
-
+        <span class="c1"># if state is not empty return success when gateway current state is in desired state</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">([</span> <span class="n">s</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">status</span> <span class="p">])</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">polling</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span>
+                    <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">worker_id</span><span class="p">)</span><span class="o">.</span><span class="n">status</span> <span class="ow">in</span> <span class="p">[</span> <span class="n">s</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">status</span> <span class="p">],</span>
+                    <span class="n">step</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                    <span class="n">poll_forever</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">timeout</span><span class="o">=</span><span class="n">timeout_secs</span>
+                <span class="p">)</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">except</span> <span class="n">polling</span><span class="o">.</span><span class="n">TimeoutException</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="K8sWorkerController.set_storage"><a class="viewcode-back" href="../../hpecp.k8s_worker.html#hpecp.k8s_worker.K8sWorkerController.set_storage">[docs]</a>    <span class="k">def</span> <span class="nf">set_storage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">worker_id</span><span class="p">,</span> <span class="n">persistent_disks</span><span class="p">,</span> <span class="n">ephemeral_disks</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Set Storage</span>
