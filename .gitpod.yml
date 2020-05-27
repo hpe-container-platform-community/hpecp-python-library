@@ -1,5 +1,5 @@
 tasks:
-  - init: /usr/bin/python3 -m pip install -U pytest mock pylint awscli -r ./requirements.txt --user
+  - init: pyenv shell 3.8.2 && pip3 install -U pytest mock pylint awscli black flake8 -r ./requirements.txt --user
   - init: pyenv shell 2.7.17 && pip install -U pytest mock pylint awscli -r ./requirements.txt --user
   - init: [[ -d /workspace/.aws ]] && ln -sf /workspace/.aws ~/.aws
   - init: [[ -f /workspace/.hpecp_service ]] && ln -sf /workspace/.hpecp_service ~/.hpecp_service
