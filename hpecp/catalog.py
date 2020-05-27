@@ -89,11 +89,12 @@ class Catalog:
         self.json = json
         self.display_columns = Catalog.default_display_fields
 
-    # def __repr__(self):
-    #     return "<Catalog id:{} state:{}>".format(self.id, self.state)
+    def __repr__(self):
+        return "<Catalog id:{} state:{}>".format(self.distro_id, self.state)
 
-    # def __str__(self):
-    #     return "K8sCluster(id={}, state={})".format(self.id, self.state)
+    def __str__(self):
+        return "Catalog(distro_id={}, state={})".format(
+            self.distro_id, self.state)
 
     def __dir__(self):
         return self.display_columns
@@ -116,6 +117,18 @@ class Catalog:
         See :py:attr:`all_fields` for the complete list of field names.
         """
         self.display_columns = columns
+
+    @property
+    def distro_id(self):
+        """@Field: from json['_links']['self']['href'] -
+
+        id format: '/api/v1/catalog/[0-9]+'"""
+        return self.json['_links']['self']['href']
+
+    @property
+    def state(self):
+        """@Field: from json['state']"""
+        return self.json['state']
 
 
 class CatalogList:
