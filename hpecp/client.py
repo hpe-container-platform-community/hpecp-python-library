@@ -3,30 +3,33 @@ This module is the main module that users of this library will interact with.
 """
 
 from __future__ import absolute_import
+
+import configparser
+import json
+import os
+
+import requests
 from six import raise_from
 
-from .logger import Logger
-from .tenant import TenantController
 from .config import ConfigController
+from .exceptions import (APIException, APIItemConflictException,
+                         APIItemNotFoundException,
+                         ContainerPlatformClientException)
 from .gateway import GatewayController
-from .k8s_worker import K8sWorkerController
 from .k8s_cluster import K8sClusterController
+from .k8s_worker import K8sWorkerController
 from .license import LicenseController
 from .lock import LockController
-from .exceptions import ContainerPlatformClientException, APIException, APIItemNotFoundException, APIItemConflictException
+from .logger import Logger
+from .tenant import TenantController
 from .user import UserController
-
-import re
-import os
-import requests
-import json
-import configparser
-import sys
+from .catalog import CatalogController
 
 try:
-  basestring
+    basestring
 except NameError:
-  basestring = str
+    basestring = str
+
 
 class ContainerPlatformClient(object):
     """The ContainerPlatformClient object is the central object that users of this library work with.
@@ -37,22 +40,22 @@ class ContainerPlatformClient(object):
         password : str
             HPECP password
         api_host : str
-            HPECP api_host 
+            HPECP api_host
         api_port : int
-            HPECP api_port 
+            HPECP api_port
         use_ssl : bool:
-            Connect to HPECP using SSL: True|False 
+            Connect to HPECP using SSL: True|False
         verify_ssl : bool|str
             See https://requests.readthedocs.io/en/master/user/advanced/#ssl-cert-verification
         warn_ssl : bool
             Disable ssl warnings
 
     Returns:
-        ContainerPlatformClient: 
+        ContainerPlatformClient:
             An instance of ContainerPlatformClient
 
     Notes:
-        Instantiating the ContainerPlatformClient does not make any connection to the HPE Container Platform API. The 
+        Instantiating the ContainerPlatformClient does not make any connection to the HPE Container Platform API. The
         initial connection would be made by calling the method :py:meth:`create_session`.
 
     See also:
@@ -73,7 +76,7 @@ class ContainerPlatformClient(object):
                 If the configuration file has multiple profile sections, you can select the profile to use.
 
         Returns:
-            ContainerPlatformClient: 
+            ContainerPlatformClient:
                 An instance of ContainerPlatformClient is returned.
 
         Example config_file::
@@ -119,7 +122,7 @@ class ContainerPlatformClient(object):
                 return config[profile][key]
             else:
                 return config['default'][key]
-            
+
         username = str(get_config_value('username', profile))
         password = str(get_config_value('password', profile))
         api_host = str(get_config_value('api_host', profile))
@@ -141,7 +144,7 @@ class ContainerPlatformClient(object):
             warn_ssl = False
         else:
             warn_ssl = True
-        
+
         return cls(username, password, api_host, api_port, use_ssl, verify_ssl, warn_ssl)
 
     @classmethod
@@ -181,10 +184,10 @@ class ContainerPlatformClient(object):
 
         if 'HPECP_warn_ssl' in os.environ:
             HPECP_warn_ssl = os.environ[HPECP_warn_ssl]
-        
+
         return cls(
-            username=HPECP_USERNAME, 
-            password=HPECP_PASSWORD, 
+            username=HPECP_USERNAME,
+            password=HPECP_PASSWORD,
             api_host=HPECP_API_HOST,
             api_port=HPECP_API_PORT,
             use_ssl=HPECP_USE_SSL,
@@ -192,12 +195,12 @@ class ContainerPlatformClient(object):
             warn_ssl=HPECP_warn_ssl
             )
 
-    def __init__(self, 
-                 username   = None, 
-                 password   = None,
-                 api_host   = None,
-                 api_port   = 8080,
-                 use_ssl    = True,
+    def __init__(self,
+                 username = None,
+                 password = None,
+                 api_host = None,
+                 api_port = 8080,
+                 use_ssl = True,
                  verify_ssl = True,
                  warn_ssl = False
                  ):
@@ -206,7 +209,7 @@ class ContainerPlatformClient(object):
 
         if verify_ssl == 'True':
             verify_ssl = True
-        
+
         if verify_ssl == 'False':
             verify_ssl = False
 
@@ -219,18 +222,18 @@ class ContainerPlatformClient(object):
         assert isinstance(api_port, int), "'api_port' parameter must be of type int"
         assert isinstance(use_ssl, bool), "'use_ssl' parameter must be of type bool"
         assert isinstance(verify_ssl, bool) or \
-            (isinstance(verify_ssl, basestring) and 
+            (isinstance(verify_ssl, basestring) and
             os.access(verify_ssl, os.R_OK)), "'verify_ssl' parameter must be of type bool or point to a certificate file"
         assert isinstance(warn_ssl, bool), "'warn_ssl' parameter must be of type bool"
 
         self.username = username
         self.password = password
         self.api_host = api_host
-        self.api_port = api_port  
+        self.api_port = api_port
         self.use_ssl  = use_ssl
         self.verify_ssl = verify_ssl
         self.warn_ssl = warn_ssl
-        
+
         if self.use_ssl:
             scheme = 'https'
         else:
@@ -247,12 +250,13 @@ class ContainerPlatformClient(object):
         self._license = LicenseController(self)
         self._lock = LockController(self)
         self._user = UserController(self)
+        self._catalog = CatalogController(self)
 
     def create_session(self):
         """Create a session with the HPE CP controller defined in the object :py:class:`ContainerPlatformClient`.
 
         Returns:
-            ContainerPlatformClient: 
+            ContainerPlatformClient:
                 An instance of ContainerPlatformClient is returned.
 
         Raises:
@@ -278,8 +282,8 @@ class ContainerPlatformClient(object):
         except requests.exceptions.ConnectionError as e:
             self.log.debug('RES: {} : {} {} {}'.format('Login', 'post', url, str(e)))
             raise_from(APIException(
-                        message='Could not connect to controller - set LOG_LEVEL=DEBUG to see more detail.', 
-                        request_method='post', 
+                        message='Could not connect to controller - set LOG_LEVEL=DEBUG to see more detail.',
+                        request_method='post',
                         request_url=url
                         ), None)
 
@@ -300,7 +304,7 @@ class ContainerPlatformClient(object):
         headers = {
             'accept': 'application/json',
             'X-BDS-SESSION': self.session_id,
-            'cache-control': 'no-cache', 
+            'cache-control': 'no-cache',
             'content-type': 'application/json'
             }
         return headers
@@ -310,7 +314,7 @@ class ContainerPlatformClient(object):
             headers = self._request_headers()
         else:
             headers = {}
-            
+
         all_headers = {}
         all_headers.update(headers)
         all_headers.update(additional_headers)
@@ -363,7 +367,7 @@ class ContainerPlatformClient(object):
 
         return response
 
-    
+
     @property
     def tenant(self):
         """
@@ -376,7 +380,7 @@ class ContainerPlatformClient(object):
             client = ContainerPlatformClient(...)
             client.create_session()
             client.tenant.list()
-        
+
         This example calls the method :py:meth:`list() <.tenant.TenantController.list>` in :py:class:`.tenant.TenantController`.
         """
 
@@ -405,11 +409,11 @@ class ContainerPlatformClient(object):
                         "base_dn":"CN=Users,DC=samdom,DC=example,DC=com",
                         "verify_peer": False,
                         "type":"Active Directory",
-                        "port":636 
+                        "port":636
                     }
                 }
             )
-        
+
         This example calls the method :py:meth:`auth() <.config.ConfigController.auth>` in :py:class:`.config.ConfigController`.
         """
 
@@ -427,7 +431,7 @@ class ContainerPlatformClient(object):
             client = ContainerPlatformClient(...)
             client.create_session()
             client.k8s_cluster.list()
-        
+
         This example calls the method :py:meth:`list() <.k8s_cluster.K8sClusterController.list>` in :py:class:`.k8s_cluster.K8sClusterController`.
         """
 
@@ -445,7 +449,7 @@ class ContainerPlatformClient(object):
             client = ContainerPlatformClient(...)
             client.create_session()
             client.k8s_worker.list()
-        
+
         This example calls the method :py:meth:`list() <.k8s_worker.K8sWorkerController.list>` in :py:class:`.k8s_worker.K8sWorkerController`.
         """
 
@@ -463,7 +467,7 @@ class ContainerPlatformClient(object):
             client = ContainerPlatformClient(...)
             client.create_session()
             client.gateway.list()
-        
+
         This example calls the method :py:meth:`list() <.gateway.GatewayController.list>` in :py:class:`.gateway.GatewayController`.
         """
 
@@ -481,7 +485,7 @@ class ContainerPlatformClient(object):
             client = ContainerPlatformClient(...)
             client.create_session()
             client.license.list()
-        
+
         This example calls the method :py:meth:`list() <.license.LicenseController.list>` in :py:class:`.license.LicenseController`.
         """
 
@@ -499,7 +503,7 @@ class ContainerPlatformClient(object):
             client = ContainerPlatformClient(...)
             client.create_session()
             client.lock.get()
-        
+
         This example calls the method :py:meth:`get() <.lock.LockController.list>` in :py:class:`.lock.LockController`.
         """
 
@@ -526,7 +530,7 @@ class ContainerPlatformClient(object):
         """
 
         return self._log
-    
+
     @property
     def user(self):
         """
@@ -539,12 +543,26 @@ class ContainerPlatformClient(object):
             client = ContainerPlatformClient(...)
             client.create_session()
             client.user.create()
-        
+
         This example calls the method :py:meth:`create() <.user.UserController.create>` in :py:class:`.user.UserController`.
         """
 
         return self._user
 
-   
+    @property
+    def catalog(self):
+        """
+        This attribute is a reference to an object of type `.catalog.CatalogController`.
 
-    
+        See the class :py:class:`.catalog.CatalogController` for the methods available.
+
+        Example::
+
+            client = ContainerPlatformClient(...)
+            client.create_session()
+            client.catalog.create()
+
+        This example calls the method :py:meth:`create() <.catalog.CatalogController.create>` in :py:class:`.catalog.CatalogController`.
+        """
+
+        return self._catalog

@@ -20,7 +20,7 @@ class GatewayController:
     """This is the main class that users will interact with to work with Gateways.
 
     An instance of this class is available in the client.ContainerPlatformClient with the attribute name
-    :py:attr:`gateway <.client.ContainerPlatformClient.gateway>`.  The methods of this class can be 
+    :py:attr:`gateway <.client.ContainerPlatformClient.gateway>`.  The methods of this class can be
     invoked using `client.gateway.method()`.  See the example below:
 
     Example::
@@ -82,7 +82,7 @@ class GatewayController:
         """
         response = self.client._request(url='/api/v1/workers/', http_method='get', description='gateway/list')
         return GatewayList(response.json()['_embedded']['workers'])
-        
+
 
     def get(self, gateway_id):
         """Retrieve a Gateway by ID.
@@ -93,7 +93,7 @@ class GatewayController:
 
         Returns:
             Gateway: object representing Gateway
-            
+
         Raises:
             APIException
         """
@@ -117,7 +117,7 @@ class GatewayController:
         Args:
             gateway_id: str
                 The Gateway ID - format: '/api/v1/workers/[0-9]+'
-            
+
         Raises:
             APIException
         """
@@ -126,7 +126,7 @@ class GatewayController:
 
         # check if host is actually a gateway - raises APIItemNotFoundException() if gateway not found
         self.get(gateway_id)
-            
+
         self.client._request(url=gateway_id, http_method='delete', description='gateway/delete')
 
     def wait_for_delete(self, gateway_id, timeout_secs=1200):
@@ -155,7 +155,7 @@ class GatewayController:
 
         Returns:
             bool: True if status was found before timeout, otherwise False
-            
+
         Raises:
             APIItemNotFoundException: if the item is not found and state is not empty
             APIException: if a generic API exception occurred
@@ -165,7 +165,7 @@ class GatewayController:
         assert isinstance(state, list), "'state' must be a list"
         for i, s in enumerate(state):
             assert isinstance(s, GatewayStatus), "'state' item '{}' is not of type GatewayStatus".format(i)
-        assert isinstance(timeout_secs, int), "'timeout_secs' must be an int"   
+        assert isinstance(timeout_secs, int), "'timeout_secs' must be an int"
         assert timeout_secs >= 0, "'timeout_secs' must be >= 0"
 
         # if state is empty return success when gateway_id not found
@@ -203,12 +203,12 @@ class GatewayController:
 
 class GatewayStatus(Enum):
     """Bases: enum.Enum
-    
+
     The statuses for a Gateway
 
-    **Note:** 
-    
-    The integer values do not have a meaning outside of this library.  
+    **Note:**
+
+    The integer values do not have a meaning outside of this library.
     The API uses a string identifier with the status name rather than an integer value.
     """
 
@@ -238,11 +238,11 @@ class Gateway():
             The json returned by the API representing a Gateway.
 
     Returns:
-        Gateway: 
+        Gateway:
             An instance of Gateway
     """
 
-    all_fields = [ 
+    all_fields = [
         'id',
         'hacapable',
         'propinfo',
@@ -302,67 +302,67 @@ class Gateway():
         self.display_columns = columns
 
     @property
-    def id(self): 
+    def id(self):
         """@Field: from json['_links']['self']['href'] - id format: '/api/v1/workers/[0-9]+'"""
         return self.json['_links']['self']['href']
 
     @property
-    def state(self): 
+    def state(self):
         """@Field: from json['state']"""
         return self.json['state']
 
     @property
-    def hacapable(self): 
+    def hacapable(self):
         """@Field: from json['hacapable']"""
         return self.json['hacapable']
 
     @property
-    def propinfo(self): 
+    def propinfo(self):
         """@Field: from json['propinfo']"""
         return self.json['propinfo']
 
     @property
-    def approved_worker_pubkey(self): 
+    def approved_worker_pubkey(self):
         """@Field: from json['approved_worker_pubkey']"""
         return self.json['approved_worker_pubkey']
 
     @property
-    def schedule(self): 
+    def schedule(self):
         """@Field: from json['schedule']"""
         return self.json['schedule']
 
     @property
-    def ip(self): 
+    def ip(self):
         """@Field: from json['ip']"""
         return self.json['ip']
 
     @property
-    def proxy_nodes_hostname(self): 
+    def proxy_nodes_hostname(self):
         """@Field: from json['proxy_nodes_hostname']"""
         return self.json['proxy_nodes_hostname']
 
     @property
-    def hostname(self): 
+    def hostname(self):
         """@Field: from json['hostname']"""
         return self.json['hostname']
 
     @property
-    def purpose(self): 
+    def purpose(self):
         """@Field: from json['purpose']"""
         return self.json['purpose']
 
     @property
-    def status_info(self): 
+    def status_info(self):
         """@Field: from json['status_info']"""
         return self.json['status_info']
 
     @property
-    def sysinfo(self): 
+    def sysinfo(self):
         """@Field: from json['sysinfo']"""
         return self.json['sysinfo']
 
     @property
-    def tags(self): 
+    def tags(self):
         """@Field: from json['tags']"""
         return self.json['tags']
 
