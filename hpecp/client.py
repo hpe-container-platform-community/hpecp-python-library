@@ -3,25 +3,29 @@ This module is the main module that users of this library will interact with.
 """
 
 from __future__ import absolute_import
+
+import configparser
+import json
+import os
+import re
+import sys
+
+import requests
 from six import raise_from
 
-from .logger import Logger
-from .tenant import TenantController
 from .config import ConfigController
+from .exceptions import (APIException, APIItemConflictException,
+                         APIItemNotFoundException,
+                         ContainerPlatformClientException)
 from .gateway import GatewayController
-from .k8s_worker import K8sWorkerController
 from .k8s_cluster import K8sClusterController
+from .k8s_worker import K8sWorkerController
 from .license import LicenseController
 from .lock import LockController
-from .exceptions import ContainerPlatformClientException, APIException, APIItemNotFoundException, APIItemConflictException
+from .logger import Logger
+from .tenant import TenantController
 from .user import UserController
-
-import re
-import os
-import requests
-import json
-import configparser
-import sys
+from .catalog import CatalogController
 
 try:
   basestring
@@ -247,6 +251,7 @@ class ContainerPlatformClient(object):
         self._license = LicenseController(self)
         self._lock = LockController(self)
         self._user = UserController(self)
+        self._catalog = CatalogController(self)
 
     def create_session(self):
         """Create a session with the HPE CP controller defined in the object :py:class:`ContainerPlatformClient`.
@@ -545,6 +550,20 @@ class ContainerPlatformClient(object):
 
         return self._user
 
-   
+    @property
+    def catalog(self):
+        """
+        This attribute is a reference to an object of type `.catalog.CatalogController`.
 
-    
+        See the class :py:class:`.catalog.CatalogController` for the methods available.
+
+        Example::
+
+            client = ContainerPlatformClient(...)
+            client.create_session()
+            client.catalog.create()
+        
+        This example calls the method :py:meth:`create() <.catalog.CatalogController.create>` in :py:class:`.catalog.CatalogController`.
+        """
+
+        return self._catalog
