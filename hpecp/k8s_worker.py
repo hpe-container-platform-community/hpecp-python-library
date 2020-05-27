@@ -162,7 +162,7 @@ class K8sWorkerController:
         self.client._request(url=worker_id, http_method='delete', description='worker/delete_k8shosts')
 
     # TODO rename status parameter to statuses
-    def wait_for_status(self, worker_id, status=[], timeout_secs=60):
+    def wait_for_status(self, worker_id, status=[], timeout_secs=1200):
         """Wait for K8S worker status.
 
         Args:
@@ -210,7 +210,6 @@ class K8sWorkerController:
 
         # if state is not empty return success when gateway current state is in desired state
         else:
-            print([ s.name for s in status ])
             try:
                 polling.poll(
                     lambda: self.get(worker_id).status in [ s.name for s in status ],
