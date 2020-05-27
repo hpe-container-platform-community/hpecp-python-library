@@ -162,7 +162,7 @@ class K8sWorkerController:
         self.client._request(url=worker_id, http_method='delete', description='worker/delete_k8shosts')
 
     # TODO rename status parameter to statuses
-    def wait_for_status(self, worker_id, status=[], timeout_secs=60):
+    def wait_for_status(self, worker_id, status=[], timeout_secs=1200):
         """Wait for K8S worker status.
 
         Args:
