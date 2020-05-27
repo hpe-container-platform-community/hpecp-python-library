@@ -32,7 +32,9 @@ except NameError:
 
 
 class ContainerPlatformClient(object):
-    """The ContainerPlatformClient object is the central object that users of this library work with.
+    """The ContainerPlatformClient object is the central object that users of
+
+    this library work with.
 
     Parameters:
         username : str
@@ -55,25 +57,28 @@ class ContainerPlatformClient(object):
             An instance of ContainerPlatformClient
 
     Notes:
-        Instantiating the ContainerPlatformClient does not make any connection to the HPE Container Platform API. The
-        initial connection would be made by calling the method :py:meth:`create_session`.
+        Instantiating the ContainerPlatformClient does not make any connection
+        to the HPE Container Platform API. The initial connection would be made
+        by calling the method :py:meth:`create_session`.
 
     See also:
-
-        :py:meth:`create_from_config_file` for an alternative way to create a ContainerPlatformClient instance
-
-        :py:meth:`create_from_env` for an alternative way to create a ContainerPlatformClient instance
+        :py:meth:`create_from_config_file` for an alternative way to create a
+        ContainerPlatformClient instance
+        :py:meth:`create_from_env` for an alternative way to create a
+        ContainerPlatformClient instance
     """
 
     @classmethod
-    def create_from_config_file(cls, config_file="~/.hpecp.conf", profile=None):
+    def create_from_config_file(cls, config_file="~/.hpecp.conf",
+                                profile=None):
         """Create a ContainerPlatformClient object from a configuration file.
 
         Parameters:
             config_file : str
                 The configuration filename and path
             profile : str
-                If the configuration file has multiple profile sections, you can select the profile to use.
+                If the configuration file has multiple profile sections, you
+                can select the profile to use.
 
         Returns:
             ContainerPlatformClient:
@@ -103,19 +108,41 @@ class ContainerPlatformClient(object):
 
         if not os.path.exists(config_file):
             raise ContainerPlatformClientException(
-                    "Could not find configuration file '{}'".format(config_file))
+                "Could not find configuration file '{}'".format(config_file))
 
         config = configparser.ConfigParser()
         config.read(config_file)
 
-        assert profile in config, "'{}' section not found in '{}'".format(profile, config_file)
-        assert 'username' in config[profile] or 'username' in config['default'], "'username' not found in section '{}' or in the default section".format(profile)
-        assert 'password' in config[profile] or 'password' in config['default'], "'password' not found in section '{}' or in the default section".format(profile)
-        assert 'api_host' in config[profile] or 'api_host' in config['default'], "'api_host' not found in section '{}' or in the default section".format(profile)
-        assert 'api_port' in config[profile] or 'api_port' in config['default'], "'api_port' not found in section '{}' or in the default section".format(profile)
-        assert 'use_ssl' in config[profile] or 'use_ssl' in config['default'], "'use_ssl' not found in section '{}' or in the default section".format(profile)
-        assert 'verify_ssl' in config[profile] or 'verify_ssl' in config['default'], "'verify_ssl' not found in section '{}' or in the default section".format(profile)
-        assert 'warn_ssl' in config[profile] or 'warn_ssl' in config['default'], "'warn_ssl' not found in section '{}' or in the default section".format(profile)
+        assert profile in config, \
+            "'{}' section not found in '{}'".format(profile, config_file)
+        assert \
+            'username' in config[profile] or 'username' in config['default'], \
+            ("'username' not found in section '{}' or in "
+             "the default section".format(profile))
+        assert \
+            'password' in config[profile] or 'password' in config['default'], \
+            ("'password' not found in section '{}' "
+             "or in the default section".format(profile))
+        assert \
+            'api_host' in config[profile] or 'api_host' in config['default'], \
+            ("'api_host' not found in section '{}' or in "
+             "the default section".format(profile))
+        assert \
+            'api_port' in config[profile] or 'api_port' in config['default'], \
+            ("'api_port' not found in section '{}' or in "
+             "the default section".format(profile))
+        assert \
+            'use_ssl' in config[profile] or 'use_ssl' in config['default'], \
+            ("'use_ssl' not found in section '{}' or in"
+             "the default section".format(profile))
+        assert \
+            'verify_ssl' in config[profile] or 'verify_ssl' in config['default'], \
+            ("'verify_ssl' not found in section '{}' or in"
+             "the default section".format(profile))
+        assert \
+            'warn_ssl' in config[profile] or 'warn_ssl' in config['default'], \
+            ("'warn_ssl' not found in section '{}' or in"
+             "the default section".format(profile))
 
         def get_config_value(key, profile):
             if key in config[profile]:
@@ -161,7 +188,9 @@ class ContainerPlatformClient(object):
             HPECP_VERIFY_SSL
             HPECP_warn_ssl
 
-        See ContainerPlatformClient :py:class:`constructor <ContainerPlatformClient>` for the paramaeter definitions.
+        See ContainerPlatformClient
+        :py:class:`constructor <ContainerPlatformClient>` for the paramaeter
+        definitions.
         """
 
         if 'HPECP_USERNAME' in os.environ:
@@ -196,13 +225,13 @@ class ContainerPlatformClient(object):
             )
 
     def __init__(self,
-                 username = None,
-                 password = None,
-                 api_host = None,
-                 api_port = 8080,
-                 use_ssl = True,
-                 verify_ssl = True,
-                 warn_ssl = False
+                 username=None,
+                 password=None,
+                 api_host=None,
+                 api_port=8080,
+                 use_ssl=True,
+                 verify_ssl=True,
+                 warn_ssl=False
                  ):
         """Doc string is defined at the top of the class"""
         self._log = Logger().get_logger(self.__class__.__name__)

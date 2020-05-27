@@ -1,6 +1,9 @@
+import re
 from operator import attrgetter
 
 from tabulate import tabulate
+
+from hpecp.exceptions import APIItemNotFoundException
 
 
 class CatalogController:
@@ -34,10 +37,37 @@ class CatalogController:
         response = self.client._request(
             url="/api/v1/catalog/",
             http_method="get",
-            description="catalog/list"
-        )
+            description="catalog/list")
         return CatalogList(
             response.json()["_embedded"]["independent_catalog_entries"])
+
+    def get(self, catalog_id):
+        """Retrieve a catalog identified by {catalog_id}
+
+        Args:
+            catalog_id: str
+                The Catalog ID - format: '/api/v1/catalog/[0-9]+'
+
+        Raises:
+            APIException
+
+        Returns:
+            Catalog -- object representing the requested Catalog
+        """
+        assert isinstance(catalog_id, str),\
+            "'catalog_id' must be provided and must be a string"
+        assert re.match(r'\/api\/v1\/catalog\/[0-9]+', catalog_id),\
+            "'catalog_id' must have format '/api/v1/catalog/[0-9]+'"
+
+        response = self.client._request(
+            url=catalog_id, http_method='get', description='catalog/get')
+        if response.json()['purpose'] != 'proxy':
+            raise APIItemNotFoundException(
+                message='catalog not found with id: ' + catalog_id,
+                request_method='get',
+                request_url=catalog_id)
+
+        return Catalog(response.json())
 
 
 class Catalog:
@@ -90,7 +120,7 @@ class Catalog:
         self.display_columns = Catalog.default_display_fields
 
     def __repr__(self):
-        return "<Catalog id:{} state:{}>".format(self.distro_id, self.state)
+        return "<Catalog id:{} state:{}>".format(self.id, self.state)
 
     def __str__(self):
         return "Catalog(distro_id={}, state={})".format(
@@ -119,11 +149,16 @@ class Catalog:
         self.display_columns = columns
 
     @property
-    def distro_id(self):
+    def id(self):
         """@Field: from json['_links']['self']['href'] -
 
         id format: '/api/v1/catalog/[0-9]+'"""
         return self.json['_links']['self']['href']
+
+    @property
+    def distro_id(self):
+        """@Field: from json['distro_id']"""
+        return self.json['distro_id']
 
     @property
     def state(self):
@@ -206,7 +241,9 @@ class CatalogList:
             assert isinstance(columns, list),\
                 "'columns' parameter must be list"
             for column in columns:
-                assert (column in Catalog.all_fields), ("item '%s' is not a field in Catalog.all_fields" % (column))
+                assert\
+                    (column in Catalog.all_fields),\
+                    ("item %s is not a field in Catalog.all_fields" % (column))
 
         self.display_columns = columns
 
