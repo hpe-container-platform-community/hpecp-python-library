@@ -1,10 +1,13 @@
 from __future__ import absolute_import
 from .logger import Logger
 
+from .exceptions import APIItemNotFoundException
+
 from operator import attrgetter
 from tabulate import tabulate
 import polling
 from enum import Enum
+import re
 
 try:
   basestring
@@ -26,15 +29,6 @@ class WorkerK8sStatus(Enum):
     storage_pending = 12 
     storage_configuring = 13
     storage_error = 14
-
-    @staticmethod
-    def status_name(index):
-        items = {v: k for k, v in WorkerK8sStatus.__dict__.items()}
-        return items[index]
-
-    @staticmethod
-    def status_names(indices=[]):
-       return [ WorkerK8sStatus.status_name(i) for i in indices ]
 
 class WorkerK8s():
 
@@ -168,36 +162,64 @@ class K8sWorkerController:
 
     # TODO rename status parameter to statuses
     def wait_for_status(self, worker_id, status=[], timeout_secs=60):
-        """
-        Uses: https://github.com/justiniso/polling/blob/master/polling.py
+        """Wait for K8S worker status.
 
-        status: WorkerK8sStatus value, e.g. WorkerK8sStatus.configured
+        Args:
+            worker_id: str
+                The worker ID - format: '/api/v1/workers/[0-9]+'
+            status: list[:py:class:`WorkerK8sStatus`]
+                Status(es) to wait for.  Use an empty array if you want to wait for a cluster's existence to cease.
+            timeout_secs: int
+                How long to wait for the status(es) before raising an exception.
 
-        raises: Exception
+        Returns:
+            bool: True if status was found before timeout, otherwise False
+            
+        Raises:
+            APIItemNotFoundException: if the item is not found and status is not empty
+            APIException: if a generic API exception occurred
         """
-        assert len(status) > 0, "At least one 'status' must be provided"
+        assert isinstance(worker_id, basestring), "'worker_id' must be a string"
+        assert re.match(r'\/api\/v2\/worker\/k8shost\/[0-9]+', worker_id), "'worker_id' must have format '/api/v2/worker/k8shost/[0-9]+'"
+        assert isinstance(status, list), "'status' must be a list"
+        for i, s in enumerate(status):
+            assert isinstance(s, WorkerK8sStatus), "'status' item '{}' is not of type WorkerK8sStatus".format(i)
+        assert isinstance(timeout_secs, int), "'timeout_secs' must be an int"   
         assert timeout_secs >= 0, "'timeout_secs' must be >= 0"
 
-        # current_status = self.get_k8shost(worker_id).status
+        # if status is empty return success when worker_id not found
+        if len(status) == 0:
+            def item_not_exists():
+                try:
+                    self.get(worker_id)
+                    return False
+                except APIItemNotFoundException:
+                    return True
 
-        # # if we aren't configuring,  we aren't going to change state
-        # if current_status.find('configuring') < 0:
-        #     raise Exception('Host status is: {} - not polling for an update'.format(current_status))
+            try:
+                polling.poll(
+                    lambda: item_not_exists(),
+                    step=10,
+                    poll_forever=False,
+                    timeout=timeout_secs
+                )
+                return True
+            except polling.TimeoutException:
+                return False
 
-        try:
-            polling.poll(
-                lambda: self.get(worker_id).status in WorkerK8sStatus.status_names(status),
-                step=10,
-                poll_forever=False,
-                timeout=timeout_secs
-            )
-        except polling.TimeoutException:
-            status_names = [ WorkerK8sStatus.status_name(s) for s in status ]
-            raise Exception(
-                    "Timed out waiting for status(es): {} on K8S Worker: {}".format(
-                        status_names, worker_id))
-
-
+        # if state is not empty return success when gateway current state is in desired state
+        else:
+            print([ s.name for s in status ])
+            try:
+                polling.poll(
+                    lambda: self.get(worker_id).status in [ s.name for s in status ],
+                    step=10,
+                    poll_forever=False,
+                    timeout=timeout_secs
+                )
+                return True
+            except polling.TimeoutException:
+                return False
 
     def set_storage(self, worker_id, persistent_disks, ephemeral_disks):
         """Set Storage
