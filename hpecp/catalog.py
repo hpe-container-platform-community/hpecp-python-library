@@ -58,15 +58,32 @@ class Catalog:
     # All of the fields of Catalog objects as returned by the HPE Container
     # Platform API.
     # TODO: Verify this with the specification
-    all_fields = [
-
-    ]
+    all_fields = (
+        "label_name",
+        "label_description",
+        "self_href",
+        "feed_href",
+        "feed_name",
+        "distro_id",
+        "name",
+        "description",
+        "version",
+        "timestamp",
+        "isdebug",
+        "osclass",
+        "logo_checksum",
+        "logo_url",
+        "documentation_checksum",
+        "documentation_mimetype",
+        "documentation_file",
+        "state",
+        "state_info"
+    )
 
     # These fields are displayed by default, e.g. in tabulate()
     # TODO: Verify this with the specification
-    default_display_fields = [
-
-    ]
+    # TODO: Pick a smaller subset, again based on the API response
+    default_display_fields = all_fields
 
     def __init__(self, json):
         self.json = json
