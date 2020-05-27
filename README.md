@@ -171,6 +171,33 @@ cat >$JSON_FILE<<-EOF
 }
 EOF
 hpecp httpclient post /api/v2/config/auth --json-file ${JSON_FILE}
+
+echo "Adding K8s workers"
+WRKR_IDS=()
+for WRKR in ${WRKR_PRV_IPS[@]}; do
+    echo "   worker $WRKR"
+    WRKR_ID="$(hpecp k8sworker create-with-ssh-key --ip ${WRKR} --ssh-key-file ./generated/controller.prv_key)"
+    echo "       id $WRKR_ID"
+    WRKR_IDS+=($WRKR_ID)
+done
+
+echo "Waiting for K8s workers to have state 'storage_pending'"
+for WRKR in ${WRKR_IDS[@]}; do
+    echo "   worker $WRKR"
+    hpecp k8sworker wait-for-status ${WRKR} --status  "['storage_pending']"
+done
+
+echo "Setting K8s worker storage"
+for WRKR in ${WRKR_IDS[@]}; do
+    echo "   worker $WRKR"
+    hpecp k8sworker set-storage --k8sworker_id ${WRKR} --persistent-disks=/dev/nvme1n1 --ephemeral-disks=/dev/nvme2n1
+done
+
+echo "Waiting for K8s workers to have state 'ready'"
+for WRKR in ${WRKR_IDS[@]}; do
+    echo "   worker $WRKR"
+    hpecp k8sworker wait-for-status ${WRKR} --status  "['ready']"
+done
 ```
 
 ## Documentation
