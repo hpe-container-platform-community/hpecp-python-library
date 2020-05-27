@@ -261,7 +261,34 @@ class K8sWorkerProxy(object):
 
         print(get_client().k8s_worker.set_storage(worker_id=k8sworker_id, persistent_disks=p_disks, ephemeral_disks=e_disks))
 
+   def wait_for_status(self, worker_id, status=[], timeout_secs=1200):
+        """
+        Wait for Worker to have one or more statuses
+        :param worker_id: Worker id with format: /api/v1/workers/[0-9]+
+        :param status: status(es) to wait for with format: ['status1', 'status2', 'statusn'] - set to [] to wait for item to be deleted
+        :param timeout_secs: how many secs to wait before exiting
+        :returns True/False if status was found within timeout_secs. May raise APIException.
 
+        See also: `hpecp k8sworker states`
+        """
+        worker_statuses = [WorkerK8sStatus[s] for s in status]
+
+        client = get_client()
+        try:
+            success = client.k8s_worker.wait_for_status(
+                            worker_id=worker_id, status=worker_statuses)
+        except Exception as e:
+            client.log.debug(e)
+            success = False
+        
+        if not success:
+            print("Failed to reach state(s) {} in {}".format(str(status), str(timeout_secs)))
+            sys.exit(1)
+
+    def statuses(self):
+        """Return a list of valid statuses"""
+        print([ s.name for s in WorkerK8sStatus ] )
+        
 class K8sClusterProxy(object):
     def create(
         self,
