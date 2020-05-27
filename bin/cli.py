@@ -28,8 +28,12 @@ from collections import OrderedDict
 import fire
 import yaml
 
-from hpecp import (APIException, APIItemConflictException,
-                   ContainerPlatformClient, ContainerPlatformClientException)
+from hpecp import (
+    APIException,
+    APIItemConflictException,
+    ContainerPlatformClient,
+    ContainerPlatformClientException,
+)
 from hpecp.gateway import Gateway, GatewayStatus
 from hpecp.k8s_cluster import K8sClusterHostConfig, K8sClusterStatus
 
@@ -130,7 +134,11 @@ class GatewayProxy(object):
         if output == "table":
             print(get_client().gateway.list().tabulate(columns=columns))
         elif output == "text":
-            print(get_client().gateway.list().tabulate(columns=columns, style='plain', display_headers=False))
+            print(
+                get_client()
+                .gateway.list()
+                .tabulate(columns=columns, style="plain", display_headers=False)
+            )
         else:
             print(get_client().gateway.list().json)
 
@@ -149,7 +157,9 @@ class GatewayProxy(object):
             sys.exit(1)
 
         if wait_for_delete_secs > 0:
-            self.wait_for_delete(gateway_id=gateway_id, timeout_secs=wait_for_delete_secs)
+            self.wait_for_delete(
+                gateway_id=gateway_id, timeout_secs=wait_for_delete_secs
+            )
 
     def wait_for_delete(self, gateway_id, timeout_secs=1200):
         """
@@ -174,12 +184,17 @@ class GatewayProxy(object):
 
         try:
             success = get_client().gateway.wait_for_state(
-                            gateway_id=gateway_id, state=gateway_states)
+                gateway_id=gateway_id, state=gateway_states
+            )
         except:
             success = False
 
         if not success:
-            print("Failed to reach state(s) {} in {}".format(str(states), str(timeout_secs)))
+            print(
+                "Failed to reach state(s) {} in {}".format(
+                    str(states), str(timeout_secs)
+                )
+            )
             sys.exit(1)
 
     def states(self):
@@ -188,9 +203,7 @@ class GatewayProxy(object):
 
 
 class K8sWorkerProxy(object):
-    def create_with_ssh_key(
-        self, ip=None, ssh_key=None, ssh_key_file=None, tags=[]
-    ):
+    def create_with_ssh_key(self, ip=None, ssh_key=None, ssh_key_file=None, tags=[]):
         """Create a K8s Worker using SSH key authentication
 
         :param ip: The IP address of the host.  Used for internal communication.
@@ -212,9 +225,7 @@ class K8sWorkerProxy(object):
 
         try:
             worker_id = get_client().k8s_worker.create_with_ssh_key(
-                ip=ip,
-                ssh_key_data=ssh_key_data,
-                tags=tags,
+                ip=ip, ssh_key_data=ssh_key_data, tags=tags,
             )
             print(worker_id)
         except APIItemConflictException:
@@ -225,8 +236,7 @@ class K8sWorkerProxy(object):
         """Not yet implemented"""
         raise NotImplementedError("Not yet implemented")
 
-    def list(self, all_columns=False, columns=["id", "description"],
-             output="table"):
+    def list(self, all_columns=False, columns=["id", "description"], output="table"):
         """Print a table of K8s Workers
 
         :param all_columns: (True/False) set to True to return all columns
@@ -236,8 +246,11 @@ class K8sWorkerProxy(object):
         if output == "table":
             print(get_client().k8s_worker.list().tabulate(columns=columns))
         elif output == "text":
-            print(get_client().k8s_worker.list().tabulate(columns=columns,
-                  style='plain', display_headers=False))
+            print(
+                get_client()
+                .k8s_worker.list()
+                .tabulate(columns=columns, style="plain", display_headers=False)
+            )
         else:
             print(get_client().k8s_worker.list().json)
 
@@ -247,9 +260,7 @@ class K8sWorkerProxy(object):
         :param k8sworker_id: the worker ID
         """
         worker = get_client().k8s_worker.get(worker_id=k8sworker_id).json
-        print(
-                yaml.dump(yaml.load(json.dumps(worker), Loader=yaml.FullLoader))
-        )
+        print(yaml.dump(yaml.load(json.dumps(worker), Loader=yaml.FullLoader)))
 
     def delete(self, k8sworker_id):
         """Delete a K8s Worker
@@ -258,7 +269,9 @@ class K8sWorkerProxy(object):
         """
         print(get_client().k8s_worker.delete(worker_id=k8sworker_id))
 
-    def set_storage(self, k8sworker_id=None, persistent_disks=None, ephemeral_disks=None):
+    def set_storage(
+        self, k8sworker_id=None, persistent_disks=None, ephemeral_disks=None
+    ):
         """Set Storage
 
         :param k8sworker_id: the worker ID
@@ -266,10 +279,16 @@ class K8sWorkerProxy(object):
         :param ephemeral_disks: a comma separated list of zero or more ephemeral_disks disks, e.g. "/dev/nvme1n1"
         """
 
-        p_disks = persistent_disks.split(',')
-        e_disks = ephemeral_disks.split(',')
+        p_disks = persistent_disks.split(",")
+        e_disks = ephemeral_disks.split(",")
 
-        print(get_client().k8s_worker.set_storage(worker_id=k8sworker_id, persistent_disks=p_disks, ephemeral_disks=e_disks))
+        print(
+            get_client().k8s_worker.set_storage(
+                worker_id=k8sworker_id,
+                persistent_disks=p_disks,
+                ephemeral_disks=e_disks,
+            )
+        )
 
     def wait_for_status(self, worker_id, status=[], timeout_secs=1200):
         """
@@ -286,23 +305,29 @@ class K8sWorkerProxy(object):
         client = get_client()
         try:
             success = client.k8s_worker.wait_for_status(
-                            worker_id=worker_id, status=worker_statuses, timeout_secs=timeout_secs)
+                worker_id=worker_id, status=worker_statuses, timeout_secs=timeout_secs
+            )
         except Exception as e:
             client.log.debug(e)
             success = False
-        
+
         if not success:
-            print("Failed to reach state(s) {} in {}".format(str(status), str(timeout_secs)))
+            print(
+                "Failed to reach state(s) {} in {}".format(
+                    str(status), str(timeout_secs)
+                )
+            )
             sys.exit(1)
 
     def statuses(self):
         """Return a list of valid statuses"""
-        print([ s.name for s in WorkerK8sStatus ] )
+        print([s.name for s in WorkerK8sStatus])
 
     def statuses(self):
         """Return a list of valid statuses"""
-        print([ s.name for s in WorkerK8sStatus ] )
-        
+        print([s.name for s in WorkerK8sStatus])
+
+
 class K8sClusterProxy(object):
     def create(
         self,
@@ -366,24 +391,30 @@ class K8sClusterProxy(object):
         :param k8scluster_id: the cluster ID
         """
         response = get_client().k8s_cluster.get(k8scluster_id=k8scluster_id).json
-        print(
-                yaml.dump(yaml.load(json.dumps(response), Loader=yaml.FullLoader))
-        )
+        print(yaml.dump(yaml.load(json.dumps(response), Loader=yaml.FullLoader)))
 
     def admin_kube_config(self, k8scluster_id):
         """Retrieve a K8s Cluster Admin Kube Config
 
         :param k8scluster_id: the cluster ID
         """
-        cfg = get_client().k8s_cluster.get(k8scluster_id=k8scluster_id).json['admin_kube_config']
-        print(cfg.replace('\\n', '\n'))
+        cfg = (
+            get_client()
+            .k8s_cluster.get(k8scluster_id=k8scluster_id)
+            .json["admin_kube_config"]
+        )
+        print(cfg.replace("\\n", "\n"))
 
     def dashboard_url(self, k8scluster_id):
         """Retrieve a K8s Cluster Dashboard URL
 
         :param k8scluster_id: the cluster ID
         """
-        url = get_client().k8s_cluster.get(k8scluster_id=k8scluster_id).json['dashboard_endpoint_access']
+        url = (
+            get_client()
+            .k8s_cluster.get(k8scluster_id=k8scluster_id)
+            .json["dashboard_endpoint_access"]
+        )
         print(url)
 
     def dashboard_token(self, k8scluster_id):
@@ -391,8 +422,12 @@ class K8sClusterProxy(object):
 
         :param k8scluster_id: the cluster ID
         """
-        token = get_client().k8s_cluster.get(k8scluster_id=k8scluster_id).json['dashboard_token']
-        print(base64.b64decode(token).decode('utf-8'))
+        token = (
+            get_client()
+            .k8s_cluster.get(k8scluster_id=k8scluster_id)
+            .json["dashboard_token"]
+        )
+        print(base64.b64decode(token).decode("utf-8"))
 
     def delete(self, k8scluster_id):
         """Delete a K8s Cluster
@@ -427,8 +462,7 @@ class LockProxy(object):
         response = get_client().lock.get()
 
         if output == "yaml":
-            print(yaml.dump(
-                yaml.load(json.dumps(response), Loader=yaml.FullLoader)))
+            print(yaml.dump(yaml.load(json.dumps(response), Loader=yaml.FullLoader)))
         else:
             print(response)
 
@@ -441,7 +475,7 @@ class LockProxy(object):
     def create(self, reason):
         """Create a lock"""
         get_client().lock.create(reason)
-        print('Done')
+        print("Done")
 
     def delete(self, lock_id):
         """Delete a user lock"""
@@ -465,13 +499,13 @@ class LicenseProxy(object):
         """
         response = get_client().license.list()
         if license_key_only:
-            response = [
-                str(unicode(li['LicenseKey'])) for li in response['Licenses']]
+            response = [str(unicode(li["LicenseKey"])) for li in response["Licenses"]]
             print(response)
         else:
             if output == "yaml":
-                print(yaml.dump(
-                    yaml.load(json.dumps(response), Loader=yaml.FullLoader)))
+                print(
+                    yaml.dump(yaml.load(json.dumps(response), Loader=yaml.FullLoader))
+                )
             else:
                 print(json.dumps(response))
 
@@ -483,9 +517,14 @@ class LicenseProxy(object):
         get_client().license.register(server_filename=server_filename)
         print("Done.")
 
-    def upload_with_ssh_key(self, server_filename, ssh_key_file=None,
-                            ssh_key_data=None, license_file=None,
-                            base64enc_license_data=None):
+    def upload_with_ssh_key(
+        self,
+        server_filename,
+        ssh_key_file=None,
+        ssh_key_data=None,
+        license_file=None,
+        base64enc_license_data=None,
+    ):
         """Not implemented yet!
 
         TODO:
@@ -496,10 +535,18 @@ class LicenseProxy(object):
          - scp your license to '/srv/bluedata/license/' on the controller
          - run client.license.register(server_filename) to register the license
         """
-        raise Exception("Not implemented yet! Workaround: scp your license to '/srv/bluedata/license/'")
+        raise Exception(
+            "Not implemented yet! Workaround: scp your license to '/srv/bluedata/license/'"
+        )
 
-    def upload_with_ssh_pass(self, server_filename, ssh_username, ssh_password,
-                             license_file=None, base64enc_license_data=None):
+    def upload_with_ssh_pass(
+        self,
+        server_filename,
+        ssh_username,
+        ssh_password,
+        license_file=None,
+        base64enc_license_data=None,
+    ):
         """Not implemented yet!
 
         TODO:
@@ -510,7 +557,9 @@ class LicenseProxy(object):
          - scp your license to '/srv/bluedata/license/' on the controller
          - run client.license.register(server_filename) to register the license
         """
-        raise Exception("Not implemented yet! Workaround: scp your license to '/srv/bluedata/license/'")
+        raise Exception(
+            "Not implemented yet! Workaround: scp your license to '/srv/bluedata/license/'"
+        )
 
     def delete(self, license_key):
         """Delete a license by LicenseKey
@@ -520,20 +569,20 @@ class LicenseProxy(object):
         TIP: use `hpecp license list --license_key_only True` to get the license key
         """
         get_client().license.delete(license_key=license_key)
-        print('Delete submitted - verify with: `hpecp license list`')
+        print("Delete submitted - verify with: `hpecp license list`")
 
     def delete_all(self):
         """Delete all licenses"""
         response = get_client().license.list()
         all_license_keys = [
-            str(unicode(li['LicenseKey'])) for li in response['Licenses']]
+            str(unicode(li["LicenseKey"])) for li in response["Licenses"]
+        ]
         for licence_key in all_license_keys:
             get_client().license.delete(license_key=licence_key)
-        print('Delete submitted - verify with: `hpecp license list`')
+        print("Delete submitted - verify with: `hpecp license list`")
 
 
 class HttpClientProxy(object):
-
     def get(self, url):
         """Make HTTP GET request
 
@@ -541,8 +590,9 @@ class HttpClientProxy(object):
 
             hpecp httpclient get /api/v1/workers
         """
-        response = get_client()._request(url, http_method='get',
-                                         description='CLI HTTP GET')
+        response = get_client()._request(
+            url, http_method="get", description="CLI HTTP GET"
+        )
         print(response.text)
 
     def delete(self, url):
@@ -552,11 +602,12 @@ class HttpClientProxy(object):
 
             hpecp httpclient delete /api/v1/workers/1
         """
-        response = get_client()._request(url, http_method='delete',
-                                         description='CLI HTTP DELETE')
+        response = get_client()._request(
+            url, http_method="delete", description="CLI HTTP DELETE"
+        )
         print(response.text)
 
-    def post(self, url, json_file=''):
+    def post(self, url, json_file=""):
         """Make HTTP POST request
 
         Example:
@@ -580,19 +631,18 @@ class HttpClientProxy(object):
 
             hpecp httpclient post /api/v2/config/auth --json-file my.json
         """
-        with open(json_file, 'r') as f:
+        with open(json_file, "r") as f:
             data = json.load(f)
 
-        response = get_client()._request(url, http_method='post', data=data, description='CLI HTTP POST')
+        response = get_client()._request(
+            url, http_method="post", data=data, description="CLI HTTP POST"
+        )
         print(response.text)
 
 
-class UserProxy():
+class UserProxy:
     def create(
-        self,
-        name,
-        description,
-        is_external=False,
+        self, name, description, is_external=False,
     ):
         """Create a User
 
@@ -601,23 +651,26 @@ class UserProxy():
 
         """
         try:
-            user_id = get_client().user.create(name = name, description = description, is_external = is_external)
+            user_id = get_client().user.create(
+                name=name, description=description, is_external=is_external
+            )
             print(user_id)
         except APIItemConflictException:
             print("User already exists.")
             sys.exit(1)
 
+        # raise NotImplementedError
 
-        #raise NotImplementedError
 
-
-class AutoComplete():
+class AutoComplete:
     """Example Usage:
 
     hpecp autocomplete bash > hpecp-bash.sh && source hpecp-bash.sh
     """
+
     def bash(self):
-        print("""_hpecp_complete()
+        print(
+            """_hpecp_complete()
 {
     local cur prev BASE_LEVEL
 
@@ -693,7 +746,8 @@ class AutoComplete():
 
 } &&
 complete -F _hpecp_complete hpecp
-        """)
+        """
+        )
 
 
 def configure_cli():
@@ -720,51 +774,58 @@ def configure_cli():
 
     sys.stdout.write("Controller API Host [{}]: ".format(controller_api_host))
     tmp = input()
-    if tmp != '':
+    if tmp != "":
         controller_api_host = tmp
 
     sys.stdout.write("Controller API Port [{}]: ".format(controller_api_port))
     tmp = input()
-    if tmp != '':
+    if tmp != "":
         controller_api_port = tmp
 
-    sys.stdout.write("Controller uses ssl (True|False) [{}]: ".format(controller_use_ssl))
+    sys.stdout.write(
+        "Controller uses ssl (True|False) [{}]: ".format(controller_use_ssl)
+    )
     tmp = input()
-    if tmp != '':
+    if tmp != "":
         controller_use_ssl = tmp
 
-    sys.stdout.write("Controller verify ssl (True|False) [{}]: ".format(controller_verify_ssl))
+    sys.stdout.write(
+        "Controller verify ssl (True|False) [{}]: ".format(controller_verify_ssl)
+    )
     tmp = input()
-    if tmp != '':
+    if tmp != "":
         controller_verify_ssl = tmp
 
-    sys.stdout.write("Controller warn ssl (True|False) [{}]: ".format(controller_warn_ssl))
+    sys.stdout.write(
+        "Controller warn ssl (True|False) [{}]: ".format(controller_warn_ssl)
+    )
     tmp = input()
-    if tmp != '':
+    if tmp != "":
         controller_warn_ssl = tmp
 
     sys.stdout.write("Controller Username [{}]: ".format(controller_username))
     tmp = input()
-    if tmp != '':
+    if tmp != "":
         controller_username = tmp
 
     sys.stdout.write("Controller Password [{}]: ".format(controller_password))
     tmp = input()
-    if tmp != '':
+    if tmp != "":
         controller_password = tmp
 
     config = configparser.ConfigParser()
-    config['default'] = OrderedDict()
-    config['default']['api_host'] = controller_api_host
-    config['default']['api_port'] = str(controller_api_port)
-    config['default']['use_ssl'] = str(controller_use_ssl)
-    config['default']['verify_ssl'] = str(controller_verify_ssl)
-    config['default']['warn_ssl'] = str(controller_warn_ssl)
-    config['default']['username'] = controller_username
-    config['default']['password'] = controller_password
+    config["default"] = OrderedDict()
+    config["default"]["api_host"] = controller_api_host
+    config["default"]["api_port"] = str(controller_api_port)
+    config["default"]["use_ssl"] = str(controller_use_ssl)
+    config["default"]["verify_ssl"] = str(controller_verify_ssl)
+    config["default"]["warn_ssl"] = str(controller_warn_ssl)
+    config["default"]["username"] = controller_username
+    config["default"]["password"] = controller_password
 
-    with open(config_path, 'w') as config_file:
+    with open(config_path, "w") as config_file:
         config.write(config_file)
+
 
 class CLI(object):
     def __init__(self):
