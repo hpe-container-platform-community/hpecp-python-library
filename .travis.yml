@@ -24,11 +24,14 @@ after_success:
 jobs:
   include:
     - stage: format
+      name: "Check code formatting"
       python: 3.8
       install: 
         - pip3 install black
       script:
         - black --check hpecp/
+        - black --check tests/
+        - black --check bin/
     - stage: deploy
       python: 3.8
       install: 
