@@ -12,13 +12,13 @@ try:
 except ImportError:
     from urllib.parse import quote  # Python 3+
 
-class ConfigController:
 
+class ConfigController:
     def __init__(self, client):
         self.client = client
 
     def auth(self, data):
-        '''
+        """
         Example::
         
             data = { 
@@ -35,5 +35,10 @@ class ConfigController:
                     "port":636 
                 }
             }
-        '''
-        self.client._request(url='/api/v2/config/auth', http_method='post', data=data, description='config/auth')
+        """
+        self.client._request(
+            url="/api/v2/config/auth",
+            http_method="post",
+            data=data,
+            description="config/auth",
+        )

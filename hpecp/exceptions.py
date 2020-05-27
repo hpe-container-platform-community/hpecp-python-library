@@ -1,7 +1,8 @@
 class ContainerPlatformClientException(Exception):
     def __init__(self, message, *args):
         self.message = message
-        super( ContainerPlatformClientException, self).__init__(message, *args) 
+        super(ContainerPlatformClientException, self).__init__(message, *args)
+
 
 class APIException(Exception):
     def __init__(self, message, request_method, request_url, request_data=None, *args):
@@ -9,7 +10,10 @@ class APIException(Exception):
         self.request_method = request_method
         self.request_url = request_url
         self.request_data = request_data
-        super( APIException, self).__init__(message, request_method, request_url, request_data, *args) 
+        super(APIException, self).__init__(
+            message, request_method, request_url, request_data, *args
+        )
+
 
 class APIItemNotFoundException(APIException):
     def __init__(self, message, request_method, request_url, request_data=None, *args):
@@ -17,7 +21,10 @@ class APIItemNotFoundException(APIException):
         self.request_method = request_method
         self.request_url = request_url
         self.request_data = request_data
-        super( APIItemNotFoundException, self).__init__(message, request_method, request_url, request_data, *args) 
+        super(APIItemNotFoundException, self).__init__(
+            message, request_method, request_url, request_data, *args
+        )
+
 
 class APIItemConflictException(APIException):
     def __init__(self, message, request_method, request_url, request_data=None, *args):
@@ -25,4 +32,6 @@ class APIItemConflictException(APIException):
         self.request_method = request_method
         self.request_url = request_url
         self.request_data = request_data
-        super( APIItemConflictException, self).__init__(message, request_method, request_url, request_data, *args) 
+        super(APIItemConflictException, self).__init__(
+            message, request_method, request_url, request_data, *args
+        )

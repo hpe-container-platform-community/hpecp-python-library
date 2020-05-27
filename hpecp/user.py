@@ -1,6 +1,7 @@
 from __future__ import absolute_import
-#from .logger import Logger
-#from .exceptions import ContainerPlatformClientException, APIException, APIItemNotFoundException, APIItemConflictException
+
+# from .logger import Logger
+# from .exceptions import ContainerPlatformClientException, APIException, APIItemNotFoundException, APIItemConflictException
 
 import json
 import re
@@ -26,7 +27,7 @@ class UserController:
         self.client = client
 
     def create(self, name, description="", is_external=True):
-        '''Create a user by specifying name & description
+        """Create a user by specifying name & description
 
         Args:
             name: str
@@ -37,19 +38,22 @@ class UserController:
                 Set to True for external users
 
         Returns: user ID
-        '''
+        """
 
-        assert isinstance(name, basestring), "'name' must be provided and must be a string"
+        assert isinstance(
+            name, basestring
+        ), "'name' must be provided and must be a string"
         assert isinstance(description, basestring), "'description must be a string"
-        assert isinstance(is_external, bool), "'is_external' must be provided and must be a bool"
+        assert isinstance(
+            is_external, bool
+        ), "'is_external' must be provided and must be a bool"
 
         data = {
-            'label': {
-                'name': name,
-                'description': description
-            },
-            'is_external': is_external
+            "label": {"name": name, "description": description},
+            "is_external": is_external,
         }
 
-        response = self.client._request(url='/api/v1/user', http_method='post', data=data, description='user/create')
-        return response.headers['location']
+        response = self.client._request(
+            url="/api/v1/user", http_method="post", data=data, description="user/create"
+        )
+        return response.headers["location"]

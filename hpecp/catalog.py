@@ -35,11 +35,9 @@ class CatalogController:
             APIException
         """
         response = self.client._request(
-            url="/api/v1/catalog/",
-            http_method="get",
-            description="catalog/list")
-        return CatalogList(
-            response.json()["_embedded"]["independent_catalog_entries"])
+            url="/api/v1/catalog/", http_method="get", description="catalog/list"
+        )
+        return CatalogList(response.json()["_embedded"]["independent_catalog_entries"])
 
     def get(self, catalog_id):
         """Retrieve a catalog identified by {catalog_id}
@@ -54,18 +52,22 @@ class CatalogController:
         Returns:
             Catalog -- object representing the requested Catalog
         """
-        assert isinstance(catalog_id, str),\
-            "'catalog_id' must be provided and must be a string"
-        assert re.match(r'\/api\/v1\/catalog\/[0-9]+', catalog_id),\
-            "'catalog_id' must have format '/api/v1/catalog/[0-9]+'"
+        assert isinstance(
+            catalog_id, str
+        ), "'catalog_id' must be provided and must be a string"
+        assert re.match(
+            r"\/api\/v1\/catalog\/[0-9]+", catalog_id
+        ), "'catalog_id' must have format '/api/v1/catalog/[0-9]+'"
 
         response = self.client._request(
-            url=catalog_id, http_method='get', description='catalog/get')
-        if response.json()['purpose'] != 'proxy':
+            url=catalog_id, http_method="get", description="catalog/get"
+        )
+        if response.json()["purpose"] != "proxy":
             raise APIItemNotFoundException(
-                message='catalog not found with id: ' + catalog_id,
-                request_method='get',
-                request_url=catalog_id)
+                message="catalog not found with id: " + catalog_id,
+                request_method="get",
+                request_url=catalog_id,
+            )
 
         return Catalog(response.json())
 
@@ -107,7 +109,7 @@ class Catalog:
         "documentation_mimetype",
         "documentation_file",
         "state",
-        "state_info"
+        "state_info",
     )
 
     # These fields are displayed by default, e.g. in tabulate()
@@ -123,8 +125,7 @@ class Catalog:
         return "<Catalog id:{} state:{}>".format(self.id, self.state)
 
     def __str__(self):
-        return "Catalog(distro_id={}, state={})".format(
-            self.distro_id, self.state)
+        return "Catalog(distro_id={}, state={})".format(self.distro_id, self.state)
 
     def __dir__(self):
         return self.display_columns
@@ -153,17 +154,17 @@ class Catalog:
         """@Field: from json['_links']['self']['href'] -
 
         id format: '/api/v1/catalog/[0-9]+'"""
-        return self.json['_links']['self']['href']
+        return self.json["_links"]["self"]["href"]
 
     @property
     def distro_id(self):
         """@Field: from json['distro_id']"""
-        return self.json['distro_id']
+        return self.json["distro_id"]
 
     @property
     def state(self):
         """@Field: from json['state']"""
-        return self.json['state']
+        return self.json["state"]
 
 
 class CatalogList:
@@ -180,8 +181,7 @@ class CatalogList:
     def __init__(self, json):
         self.json = [g for g in json if g["purpose"] == "proxy"]
         self.catalogs = sorted(
-            [Catalog(g) for g in json
-             if g["purpose"] == "proxy"], key=attrgetter("id")
+            [Catalog(g) for g in json if g["purpose"] == "proxy"], key=attrgetter("id")
         )
         self.display_columns = Catalog.default_display_fields
 
@@ -238,12 +238,11 @@ class CatalogList:
             print(hpeclient.catalog.list().tabulate(columns=['id', 'state']))
         """
         if columns != Catalog.default_display_fields:
-            assert isinstance(columns, list),\
-                "'columns' parameter must be list"
+            assert isinstance(columns, list), "'columns' parameter must be list"
             for column in columns:
-                assert\
-                    (column in Catalog.all_fields),\
-                    ("item %s is not a field in Catalog.all_fields" % (column))
+                assert (
+                    column in Catalog.all_fields
+                ), "item %s is not a field in Catalog.all_fields" % (column)
 
         self.display_columns = columns
 

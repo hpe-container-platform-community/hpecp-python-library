@@ -1,6 +1,11 @@
 from __future__ import absolute_import
 from .logger import Logger
-from .exceptions import ContainerPlatformClientException, APIException, APIItemNotFoundException, APIItemConflictException
+from .exceptions import (
+    ContainerPlatformClientException,
+    APIException,
+    APIItemNotFoundException,
+    APIItemConflictException,
+)
 
 import json
 from operator import attrgetter
@@ -12,9 +17,10 @@ import six
 import sys
 
 try:
-  basestring
+    basestring
 except NameError:
-  basestring = str
+    basestring = str
+
 
 class GatewayController:
     """This is the main class that users will interact with to work with Gateways.
@@ -38,7 +44,7 @@ class GatewayController:
         raise NotImplementedError()
 
     def create_with_ssh_key(self, ip, proxy_node_hostname, ssh_key_data, tags=[]):
-        '''Create a gateway instance using SSH key credentials to access the host
+        """Create a gateway instance using SSH key credentials to access the host
 
         Args:
             ip: str
@@ -51,25 +57,31 @@ class GatewayController:
                 Tags to use, e.g. "{ 'tag1': 'foo', 'tag2', 'bar' }".
 
         Returns: gateway ID
-        '''
+        """
 
         assert isinstance(ip, basestring), "'ip' must be provided and must be a string"
-        assert isinstance(proxy_node_hostname, basestring), "'proxy_node_hostname' must be provided and must be a string"
-        assert isinstance(ssh_key_data, basestring), "'ssh_key_data' must be provided and must be a string"
+        assert isinstance(
+            proxy_node_hostname, basestring
+        ), "'proxy_node_hostname' must be provided and must be a string"
+        assert isinstance(
+            ssh_key_data, basestring
+        ), "'ssh_key_data' must be provided and must be a string"
 
         data = {
-                "ip": ip,
-                "credentials": {
-                    "type": "ssh_key_access",
-                    "ssh_key_data": ssh_key_data
-                },
-                "tags": tags,
-                "proxy_nodes_hostname": proxy_node_hostname,
-                "purpose": "proxy"
-            }
+            "ip": ip,
+            "credentials": {"type": "ssh_key_access", "ssh_key_data": ssh_key_data},
+            "tags": tags,
+            "proxy_nodes_hostname": proxy_node_hostname,
+            "purpose": "proxy",
+        }
 
-        response = self.client._request(url='/api/v1/workers/', http_method='post', data=data, description='gateway/create_with_ssh_key')
-        return response.headers['location']
+        response = self.client._request(
+            url="/api/v1/workers/",
+            http_method="post",
+            data=data,
+            description="gateway/create_with_ssh_key",
+        )
+        return response.headers["location"]
 
     def list(self):
         """Retrieve a list of Gateways
@@ -80,8 +92,10 @@ class GatewayController:
         Raises:
             APIException
         """
-        response = self.client._request(url='/api/v1/workers/', http_method='get', description='gateway/list')
-        return GatewayList(response.json()['_embedded']['workers'])
+        response = self.client._request(
+            url="/api/v1/workers/", http_method="get", description="gateway/list"
+        )
+        return GatewayList(response.json()["_embedded"]["workers"])
 
     def get(self, gateway_id):
         """Retrieve a Gateway by ID.
@@ -96,15 +110,22 @@ class GatewayController:
         Raises:
             APIException
         """
-        assert isinstance(gateway_id, str),"'gateway_id' must be provided and must be a string"
-        assert re.match(r'\/api\/v1\/workers\/[0-9]+', gateway_id), "'gateway_id' must have format '/api/v1/workers/[0-9]+'"
+        assert isinstance(
+            gateway_id, str
+        ), "'gateway_id' must be provided and must be a string"
+        assert re.match(
+            r"\/api\/v1\/workers\/[0-9]+", gateway_id
+        ), "'gateway_id' must have format '/api/v1/workers/[0-9]+'"
 
-        response = self.client._request(url=gateway_id, http_method='get', description='gateway/get')
-        if response.json()['purpose'] != 'proxy':
+        response = self.client._request(
+            url=gateway_id, http_method="get", description="gateway/get"
+        )
+        if response.json()["purpose"] != "proxy":
             raise APIItemNotFoundException(
-                message='gateway not found with id: ' + gateway_id,
-                request_method='get',
-                request_url=gateway_id)
+                message="gateway not found with id: " + gateway_id,
+                request_method="get",
+                request_url=gateway_id,
+            )
 
         return Gateway(response.json())
 
@@ -120,13 +141,19 @@ class GatewayController:
         Raises:
             APIException
         """
-        assert isinstance(gateway_id, str),"'gateway_id' must be provided and must be a string"
-        assert re.match(r'\/api\/v1\/workers\/[0-9]+', gateway_id), "'gateway_id' must have format '/api/v1/workers/[0-9]+'"
+        assert isinstance(
+            gateway_id, str
+        ), "'gateway_id' must be provided and must be a string"
+        assert re.match(
+            r"\/api\/v1\/workers\/[0-9]+", gateway_id
+        ), "'gateway_id' must have format '/api/v1/workers/[0-9]+'"
 
         # check if host is actually a gateway - raises APIItemNotFoundException() if gateway not found
         self.get(gateway_id)
 
-        self.client._request(url=gateway_id, http_method='delete', description='gateway/delete')
+        self.client._request(
+            url=gateway_id, http_method="delete", description="gateway/delete"
+        )
 
     def wait_for_delete(self, gateway_id, timeout_secs=1200):
         """Wait for gateway to be deleted.
@@ -160,15 +187,20 @@ class GatewayController:
             APIException: if a generic API exception occurred
         """
         assert isinstance(gateway_id, basestring), "'gateway_id' must be a string"
-        assert re.match(r'\/api\/v1\/workers\/[0-9]+', gateway_id), "'gateway_id' must have format '/api/v1/workers/[0-9]+'"
+        assert re.match(
+            r"\/api\/v1\/workers\/[0-9]+", gateway_id
+        ), "'gateway_id' must have format '/api/v1/workers/[0-9]+'"
         assert isinstance(state, list), "'state' must be a list"
         for i, s in enumerate(state):
-            assert isinstance(s, GatewayStatus), "'state' item '{}' is not of type GatewayStatus".format(i)
+            assert isinstance(
+                s, GatewayStatus
+            ), "'state' item '{}' is not of type GatewayStatus".format(i)
         assert isinstance(timeout_secs, int), "'timeout_secs' must be an int"
         assert timeout_secs >= 0, "'timeout_secs' must be >= 0"
 
         # if state is empty return success when gateway_id not found
         if len(state) == 0:
+
             def item_not_exists():
                 try:
                     self.get(gateway_id)
@@ -181,7 +213,7 @@ class GatewayController:
                     lambda: item_not_exists(),
                     step=10,
                     poll_forever=False,
-                    timeout=timeout_secs
+                    timeout=timeout_secs,
                 )
                 return True
             except polling.TimeoutException:
@@ -191,14 +223,15 @@ class GatewayController:
         else:
             try:
                 polling.poll(
-                    lambda: self.get(gateway_id).state in [ s.name for s in state ],
+                    lambda: self.get(gateway_id).state in [s.name for s in state],
                     step=10,
                     poll_forever=False,
-                    timeout=timeout_secs
+                    timeout=timeout_secs,
                 )
                 return True
             except polling.TimeoutException:
                 return False
+
 
 class GatewayStatus(Enum):
     """Bases: enum.Enum
@@ -227,7 +260,7 @@ class GatewayStatus(Enum):
     storage_error = 14
 
 
-class Gateway():
+class Gateway:
     """Create an instance of Gateway from json data returned from the HPE Container Platform API.
 
     Users of this library are not expected to create an instance of this class.
@@ -242,31 +275,31 @@ class Gateway():
     """
 
     all_fields = [
-        'id',
-        'hacapable',
-        'propinfo',
-        'approved_worker_pubkey',
-        'schedule',
-        'ip',
-        'proxy_nodes_hostname',
-        'hostname',
-        'state',
-        'status_info',
-        'purpose',
-        'sysinfo',
-        'tags'
-        ]
+        "id",
+        "hacapable",
+        "propinfo",
+        "approved_worker_pubkey",
+        "schedule",
+        "ip",
+        "proxy_nodes_hostname",
+        "hostname",
+        "state",
+        "status_info",
+        "purpose",
+        "sysinfo",
+        "tags",
+    ]
     """All of the fields of Gateway objects as returned by the HPE Container Platform API"""
 
     default_display_fields = [
-        'id',
-        'ip',
-        'proxy_nodes_hostname',
-        'hostname',
-        'state',
-        'status_info',
-        'purpose',
-        'tags'
+        "id",
+        "ip",
+        "proxy_nodes_hostname",
+        "hostname",
+        "state",
+        "status_info",
+        "purpose",
+        "tags",
     ]
     """These fields are displayed by default, e.g. in tabulate()"""
 
@@ -275,7 +308,7 @@ class Gateway():
         self.display_columns = Gateway.default_display_fields
 
     def __repr__(self):
-        return "<Gateway id:{} state:{}>".format( self.id, self.state)
+        return "<Gateway id:{} state:{}>".format(self.id, self.state)
 
     def __str__(self):
         return "K8sCluster(id={}, state={})".format(self.id, self.state)
@@ -303,74 +336,75 @@ class Gateway():
     @property
     def id(self):
         """@Field: from json['_links']['self']['href'] - id format: '/api/v1/workers/[0-9]+'"""
-        return self.json['_links']['self']['href']
+        return self.json["_links"]["self"]["href"]
 
     @property
     def state(self):
         """@Field: from json['state']"""
-        return self.json['state']
+        return self.json["state"]
 
     @property
     def hacapable(self):
         """@Field: from json['hacapable']"""
-        return self.json['hacapable']
+        return self.json["hacapable"]
 
     @property
     def propinfo(self):
         """@Field: from json['propinfo']"""
-        return self.json['propinfo']
+        return self.json["propinfo"]
 
     @property
     def approved_worker_pubkey(self):
         """@Field: from json['approved_worker_pubkey']"""
-        return self.json['approved_worker_pubkey']
+        return self.json["approved_worker_pubkey"]
 
     @property
     def schedule(self):
         """@Field: from json['schedule']"""
-        return self.json['schedule']
+        return self.json["schedule"]
 
     @property
     def ip(self):
         """@Field: from json['ip']"""
-        return self.json['ip']
+        return self.json["ip"]
 
     @property
     def proxy_nodes_hostname(self):
         """@Field: from json['proxy_nodes_hostname']"""
-        return self.json['proxy_nodes_hostname']
+        return self.json["proxy_nodes_hostname"]
 
     @property
     def hostname(self):
         """@Field: from json['hostname']"""
-        return self.json['hostname']
+        return self.json["hostname"]
 
     @property
     def purpose(self):
         """@Field: from json['purpose']"""
-        return self.json['purpose']
+        return self.json["purpose"]
 
     @property
     def status_info(self):
         """@Field: from json['status_info']"""
-        return self.json['status_info']
+        return self.json["status_info"]
 
     @property
     def sysinfo(self):
         """@Field: from json['sysinfo']"""
-        return self.json['sysinfo']
+        return self.json["sysinfo"]
 
     @property
     def tags(self):
         """@Field: from json['tags']"""
-        return self.json['tags']
+        return self.json["tags"]
 
     @property
     def _links(self):
         """@Field: from json['_links']"""
-        return self.json['_links']
+        return self.json["_links"]
 
-class GatewayList():
+
+class GatewayList:
     """List of :py:obj:`.Gateway` objects
 
     This class is not expected to be instantiated by users.
@@ -381,8 +415,10 @@ class GatewayList():
     """
 
     def __init__(self, json):
-        self.json = [ g for g in json if g['purpose'] == 'proxy']
-        self.gateways = sorted([Gateway(g) for g in json if g['purpose'] == 'proxy'], key=attrgetter('id'))
+        self.json = [g for g in json if g["purpose"] == "proxy"]
+        self.gateways = sorted(
+            [Gateway(g) for g in json if g["purpose"] == "proxy"], key=attrgetter("id")
+        )
         self.display_columns = Gateway.default_display_fields
 
     def __getitem__(self, item):
@@ -392,7 +428,7 @@ class GatewayList():
     def next(self):
         """Support iterator access on Python 2.7"""
         if not self.gateways:
-           raise StopIteration
+            raise StopIteration
         gateway = self.gateways.pop(0)
         gateway.set_display_columns(self.display_columns)
         return gateway
@@ -400,7 +436,7 @@ class GatewayList():
     # Python 3
     def __next__(self):
         if not self.gateways:
-           raise StopIteration
+            raise StopIteration
         gateway = self.gateways.pop(0)
         gateway.set_display_columns(self.display_columns)
         return gateway
@@ -411,7 +447,12 @@ class GatewayList():
     def __len__(self):
         return len(self.gateways)
 
-    def tabulate(self, columns=Gateway.default_display_fields, style='pretty', display_headers=True):
+    def tabulate(
+        self,
+        columns=Gateway.default_display_fields,
+        style="pretty",
+        display_headers=True,
+    ):
         """Provide a tabular represenation of the list of Gateways
 
         Parameters:
@@ -434,7 +475,9 @@ class GatewayList():
         if columns != Gateway.default_display_fields:
             assert isinstance(columns, list), "'columns' parameter must be list"
             for column in columns:
-                assert column in Gateway.all_fields, "item '{}' is not a field in Gateway.all_fields".format(column)
+                assert (
+                    column in Gateway.all_fields
+                ), "item '{}' is not a field in Gateway.all_fields".format(column)
 
         self.display_columns = columns
 
