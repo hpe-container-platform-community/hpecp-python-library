@@ -286,7 +286,7 @@ class K8sWorkerProxy(object):
         client = get_client()
         try:
             success = client.k8s_worker.wait_for_status(
-                            worker_id=worker_id, status=worker_statuses)
+                            worker_id=worker_id, status=worker_statuses, timeout_secs=timeout_secs)
         except Exception as e:
             client.log.debug(e)
             success = False
