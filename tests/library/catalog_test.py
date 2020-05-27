@@ -41,11 +41,10 @@ def session_mock_response():
         status_code=200,
         headers={
             "location": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
-        }
-    )
+        })
 
 
-def mocked_requests_get(self, *args, **kwargs):
+def mocked_requests_get(*args, **kwargs):
     if args[0] == 'https://127.0.0.1:8080/api/v1/catalog/99':
         return MockResponse(
             json_data=dict(),
@@ -66,22 +65,35 @@ def mocked_requests_post(*args, **kwargs):
 
 
 class TestCatalogGet(TestCase):
-
     @patch('requests.get', side_effect=mocked_requests_get)
     @patch('requests.post', side_effect=mocked_requests_post)
-    def test_get_catalog_assertions(self, mock_get, mock_post):
+    def test_get_catalog_id_type(self, mock_get, mock_post):
 
         with self.assertRaisesRegexp(
                 AssertionError,
                 "'catalog_id' must be provided and must be a string"):
             get_client().catalog.get(123)
 
-        # pylint: disable=anomalous-backslash-in-string
         with self.assertRaisesRegexp(
                 AssertionError,
-                "'catalog_id' must have format: " +
+                "'catalog_id' must be provided and must be a string"):
+            get_client().catalog.get(False)
+
+    @patch('requests.get', side_effect=mocked_requests_get)
+    @patch('requests.post', side_effect=mocked_requests_post)
+    def test_get_catalog_id_format(self, mock_get, mock_post):
+
+        with self.assertRaisesRegexp(
+                AssertionError,
+                "'catalog_id' must have format " +
                 r"'\/api\/v1\/catalog\/\[0-9\]\+'"):
-            get_client().catalog.get('garbage')
+            get_client().catalog.get("garbage")
+
+        with self.assertRaisesRegexp(
+                AssertionError,
+                "'catalog_id' must have format " +
+                r"'\/api\/v1\/catalog\/\[0-9\]\+'"):
+            get_client().catalog.get("/api/v1/catalog/some_id")
 
     @patch('requests.get', side_effect=mocked_requests_get)
     @patch('requests.post', side_effect=mocked_requests_post)
