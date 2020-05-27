@@ -545,8 +545,15 @@ class UserProxy():
         :param description: the user descripton
 
         """
+        try:
+            user_id = get_client().user.create(name = name, description = description, is_external = is_external)
+            print(user_id)
+        except APIItemConflictException:
+            print("User already exists.")
+            sys.exit(1)
 
-        raise NotImplementedError
+
+        #raise NotImplementedError
 
 class AutoComplete():
     """Example Usage: 
