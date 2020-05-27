@@ -17,6 +17,8 @@ script:
   - coverage report -m
   - python --version 2>&1 | grep '2.7' || python setup.py install # (don't run on 2.7)
   - python --version 2>&1 | grep '2.7' || echo q | ./bin/hpecp --help # check cli outputs help and doesn't return an error (don't run on 2.7)
+  - python --version 2>&1 | grep '3.8' && pip3 install black && black --check hpecp/
+
 
 after_success:
   - coveralls
