@@ -210,7 +210,6 @@ class K8sWorkerController:
 
         # if state is not empty return success when gateway current state is in desired state
         else:
-            print([ s.name for s in status ])
             try:
                 polling.poll(
                     lambda: self.get(worker_id).status in [ s.name for s in status ],
