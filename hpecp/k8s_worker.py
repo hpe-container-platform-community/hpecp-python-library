@@ -96,7 +96,8 @@ class WorkerK8sList():
     def __len__(self):
         return len(self.tenants)
 
-    def tabulate(self):
+    def tabulate(self, columns):
+        # TODO columns is ignored -  see. GatewayController.tabulate() for an example implementation
         return tabulate(self, headers=WorkerK8s.__class_dir__(), tablefmt="pretty")
 
 class K8sWorkerController:
