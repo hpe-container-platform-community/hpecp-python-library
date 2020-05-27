@@ -70,10 +70,10 @@ coverage erase && coverage run --source hpecp setup.py test && coverage report -
 
 ### FORMATTING
 
-Currently not used
-
 ```
-autopep8 --in-place --aggressive --recursive hpecp/
+pip3 install black
+# automatically format hpecp folder
+black hpecp 
 ```
 
 ### RELEASING
