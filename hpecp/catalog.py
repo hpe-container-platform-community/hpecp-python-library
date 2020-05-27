@@ -56,8 +56,8 @@ class CatalogController:
         """
         assert isinstance(catalog_id, str),\
             "'catalog_id' must be provided and must be a string"
-        assert re.match(r'\/api\/v1\/workers\/[0-9]+', catalog_id),\
-            "'catalog_id' must have format '/api/v1/workers/[0-9]+'"
+        assert re.match(r'\/api\/v1\/catalog\/[0-9]+', catalog_id),\
+            "'catalog_id' must have format '/api/v1/catalog/[0-9]+'"
 
         response = self.client._request(
             url=catalog_id, http_method='get', description='catalog/get')
