@@ -193,9 +193,7 @@ class CatalogList:
             assert isinstance(columns, list),\
                 "'columns' parameter must be list"
             for column in columns:
-                assert (
-                    column in Catalog.all_fields
-                ), f"item '{column}' is not a field in Catalog.all_fields"
+                assert (column in Catalog.all_fields), ("item '%s' is not a field in Catalog.all_fields" % (column))
 
         self.display_columns = columns
 

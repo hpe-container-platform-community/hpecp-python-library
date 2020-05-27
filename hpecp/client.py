@@ -7,8 +7,6 @@ from __future__ import absolute_import
 import configparser
 import json
 import os
-import re
-import sys
 
 import requests
 from six import raise_from
@@ -28,9 +26,10 @@ from .user import UserController
 from .catalog import CatalogController
 
 try:
-  basestring
+    basestring
 except NameError:
-  basestring = str
+    basestring = str
+
 
 class ContainerPlatformClient(object):
     """The ContainerPlatformClient object is the central object that users of this library work with.
@@ -197,11 +196,11 @@ class ContainerPlatformClient(object):
             )
 
     def __init__(self,
-                 username   = None,
-                 password   = None,
-                 api_host   = None,
-                 api_port   = 8080,
-                 use_ssl    = True,
+                 username = None,
+                 password = None,
+                 api_host = None,
+                 api_port = 8080,
+                 use_ssl = True,
                  verify_ssl = True,
                  warn_ssl = False
                  ):
