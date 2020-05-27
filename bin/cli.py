@@ -18,27 +18,24 @@ username = admin
 password = admin123
 """
 
-from collections import OrderedDict
-import configparser
 import base64
-import sys
+import configparser
+import json
 import os
+import sys
+from collections import OrderedDict
+
 import fire
 import yaml
-import json
-import sys
+
+from hpecp import (APIException, APIItemConflictException,
+                   ContainerPlatformClient, ContainerPlatformClientException)
+from hpecp.gateway import Gateway, GatewayStatus
+from hpecp.k8s_cluster import K8sClusterHostConfig, K8sClusterStatus
+
 if sys.version_info[0] >= 3:
     unicode = str
 
-from hpecp import (
-    ContainerPlatformClient,
-    ContainerPlatformClientException,
-    APIException,
-    APIItemConflictException,
-    APIItemNotFoundException,
-)
-from hpecp.k8s_cluster import K8sClusterHostConfig, K8sClusterStatus
-from hpecp.gateway import Gateway, GatewayStatus
 
 PROFILE = os.getenv("PROFILE", "default")
 HPECP_CONFIG_FILE = os.getenv("HPECP_CONFIG_FILE", "~/.hpecp.conf")
@@ -170,14 +167,15 @@ class GatewayProxy(object):
                             gateway_id=gateway_id, state=gateway_states)
         except:
             success = False
-        
+
         if not success:
             print("Failed to reach state(s) {} in {}".format(str(states), str(timeout_secs)))
             sys.exit(1)
 
     def states(self):
         """Return a list of valid states"""
-        print([ s.name for s in GatewayStatus ] )
+        print([s.name for s in GatewayStatus])
+
 
 class K8sWorkerProxy(object):
     def create_with_ssh_key(
@@ -217,14 +215,21 @@ class K8sWorkerProxy(object):
         """Not yet implemented"""
         raise NotImplementedError("Not yet implemented")
 
+    def list(self, all_columns=False, columns=["id", "description"],
+             output="table"):
+        """Print a table of K8s Workers
 
-    def list(self, all_columns=False, columns=["id", "description"]):
-        """
-        Print a table of K8s Workers
         :param all_columns: (True/False) set to True to return all columns
         :param columns: (aaa) afadsfs
+        :param output: how to display the output [text|table|json]
         """
-        print(get_client().k8s_worker.list().tabulate())
+        if output == "table":
+            print(get_client().k8s_worker.list().tabulate(columns=columns))
+        elif output == "text":
+            print(get_client().k8s_worker.list().tabulate(columns=columns,
+                  style='plain', display_headers=False))
+        else:
+            print(get_client().k8s_worker.list().json)
 
     def get(self, k8sworker_id):
         """Retrieve a K8s Worker
@@ -235,7 +240,6 @@ class K8sWorkerProxy(object):
         print(
                 yaml.dump(yaml.load(json.dumps(worker), Loader=yaml.FullLoader))
         )
-
 
     def delete(self, k8sworker_id):
         """Delete a K8s Worker
@@ -256,6 +260,7 @@ class K8sWorkerProxy(object):
         e_disks = ephemeral_disks.split(',')
 
         print(get_client().k8s_worker.set_storage(worker_id=k8sworker_id, persistent_disks=p_disks, ephemeral_disks=e_disks))
+
 
 class K8sClusterProxy(object):
     def create(
@@ -370,7 +375,8 @@ class K8sClusterProxy(object):
 
     def statuses(self):
         """Return a list of valid statuses"""
-        print([ s.name for s in K8sClusterStatus ] )
+        print([s.name for s in K8sClusterStatus])
+
 
 class LockProxy(object):
     def get(self, output="yaml"):
@@ -380,9 +386,8 @@ class LockProxy(object):
         response = get_client().lock.get()
 
         if output == "yaml":
-            print(
-                yaml.dump(yaml.load(json.dumps(response), Loader=yaml.FullLoader))
-            )
+            print(yaml.dump(
+                yaml.load(json.dumps(response), Loader=yaml.FullLoader)))
         else:
             print(response)
 
@@ -405,6 +410,7 @@ class LockProxy(object):
         """Delete all locks"""
         print(get_client().lock.delete_all(timeout_secs=300))
 
+
 class LicenseProxy(object):
     def platform_id(self):
         """Get the platform ID
@@ -418,13 +424,13 @@ class LicenseProxy(object):
         """
         response = get_client().license.list()
         if license_key_only:
-            response = [ str(unicode(l['LicenseKey'])) for l in response['Licenses'] ]
+            response = [
+                str(unicode(li['LicenseKey'])) for li in response['Licenses']]
             print(response)
         else:
             if output == "yaml":
-                print(
-                    yaml.dump(yaml.load(json.dumps(response), Loader=yaml.FullLoader))
-                )
+                print(yaml.dump(
+                    yaml.load(json.dumps(response), Loader=yaml.FullLoader)))
             else:
                 print(json.dumps(response))
 
@@ -436,35 +442,38 @@ class LicenseProxy(object):
         get_client().license.register(server_filename=server_filename)
         print("Done.")
 
-    def upload_with_ssh_key(self, server_filename, ssh_key_file=None, ssh_key_data=None, license_file=None, base64enc_license_data=None):
-        """Not implemented yet! 
+    def upload_with_ssh_key(self, server_filename, ssh_key_file=None,
+                            ssh_key_data=None, license_file=None,
+                            base64enc_license_data=None):
+        """Not implemented yet!
 
-        TODO: 
+        TODO:
         assert ssh_key_file or ssh_key_data argument is provided
         assert license_file or base64enc_license_data argument is provided
 
-        Workaround: 
+        Workaround:
          - scp your license to '/srv/bluedata/license/' on the controller
          - run client.license.register(server_filename) to register the license
         """
-        raise Exception("Not implemented yet! Workaround: scp your license to '/srv/bluedata/license/'")  
-        
-    def upload_with_ssh_pass(self, server_filename, ssh_username, ssh_password, license_file=None, base64enc_license_data=None):
-        """Not implemented yet! 
+        raise Exception("Not implemented yet! Workaround: scp your license to '/srv/bluedata/license/'")
 
-        TODO: 
+    def upload_with_ssh_pass(self, server_filename, ssh_username, ssh_password,
+                             license_file=None, base64enc_license_data=None):
+        """Not implemented yet!
+
+        TODO:
         assert ssh_key_file or ssh_key_data argument is provided
         assert license_file or base64enc_license_data argument is provided
 
-        Workaround: 
+        Workaround:
          - scp your license to '/srv/bluedata/license/' on the controller
          - run client.license.register(server_filename) to register the license
         """
-        raise Exception("Not implemented yet! Workaround: scp your license to '/srv/bluedata/license/'") 
+        raise Exception("Not implemented yet! Workaround: scp your license to '/srv/bluedata/license/'")
 
     def delete(self, license_key):
         """Delete a license by LicenseKey
-        
+
         :param license_key: The license key, e.g. '1234 1234 ... 1234 "SOMETEXT"'
 
         TIP: use `hpecp license list --license_key_only True` to get the license key
@@ -475,10 +484,12 @@ class LicenseProxy(object):
     def delete_all(self):
         """Delete all licenses"""
         response = get_client().license.list()
-        all_license_keys = [ str(unicode(l['LicenseKey'])) for l in response['Licenses'] ]
+        all_license_keys = [
+            str(unicode(li['LicenseKey'])) for li in response['Licenses']]
         for licence_key in all_license_keys:
             get_client().license.delete(license_key=licence_key)
         print('Delete submitted - verify with: `hpecp license list`')
+
 
 class HttpClientProxy(object):
 
@@ -489,7 +500,8 @@ class HttpClientProxy(object):
 
             hpecp httpclient get /api/v1/workers
         """
-        response = get_client()._request(url, http_method='get', description='CLI HTTP GET')
+        response = get_client()._request(url, http_method='get',
+                                         description='CLI HTTP GET')
         print(response.text)
 
     def delete(self, url):
@@ -499,7 +511,8 @@ class HttpClientProxy(object):
 
             hpecp httpclient delete /api/v1/workers/1
         """
-        response = get_client()._request(url, http_method='delete', description='CLI HTTP DELETE')
+        response = get_client()._request(url, http_method='delete',
+                                         description='CLI HTTP DELETE')
         print(response.text)
 
     def post(self, url, json_file=''):
@@ -508,7 +521,7 @@ class HttpClientProxy(object):
         Example:
 
             cat > my.json <<-EOF
-            { 
+            {
                 "external_identity_server":  {
                     "bind_pwd":"5ambaPwd@",
                     "user_attribute":"sAMAccountName",
@@ -519,7 +532,7 @@ class HttpClientProxy(object):
                     "base_dn":"CN=Users,DC=samdom,DC=example,DC=com",
                     "verify_peer": false,
                     "type":"Active Directory",
-                    "port":636 
+                    "port":636
                 }
             }
             EOF
@@ -531,6 +544,7 @@ class HttpClientProxy(object):
 
         response = get_client()._request(url, http_method='post', data=data, description='CLI HTTP POST')
         print(response.text)
+
 
 class UserProxy():
     def create(
@@ -548,9 +562,10 @@ class UserProxy():
 
         raise NotImplementedError
 
+
 class AutoComplete():
-    """Example Usage: 
-    
+    """Example Usage:
+
     hpecp autocomplete bash > hpecp-bash.sh && source hpecp-bash.sh
     """
     def bash(self):
