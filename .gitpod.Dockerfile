@@ -19,7 +19,9 @@ RUN /home/gitpod/.pyenv/versions/3.8.2/bin/python3 -m pip install --upgrade pip
 RUN pyenv install 3.5.9
 RUN pyenv install 3.6.9
 RUN pyenv install 3.7.7
-RUN pyenv install 3.9-dev
+
+# The following fails: build failed: cannot build base image: The command '/bin/sh -c pyenv install 3.9-dev' returned a non-zero code: 1
+# RUN pyenv install 3.9-dev
 
 # Allow pytest to discover tests
 RUN echo 'PYTHONPATH=/workspace/hpecp-python-library:$PYTHONPATH' > ~/.bashrc.d/40-pythonpath
