@@ -7,13 +7,22 @@ import os
 import json
 import requests
 from requests.exceptions import RequestException
-from hpecp import ContainerPlatformClient, APIException, APIItemNotFoundException
+from hpecp import (
+    ContainerPlatformClient,
+    APIException,
+    APIItemNotFoundException,
+)
 from hpecp.k8s_cluster import K8sClusterHostConfig, K8sClusterStatus
 
 
 class MockResponse:
     def __init__(
-        self, json_data, status_code, headers, raise_for_status_flag=False, text_data=""
+        self,
+        json_data,
+        status_code,
+        headers,
+        raise_for_status_flag=False,
+        text_data="",
     ):
         self.json_data = json_data
         self.text = text_data
@@ -55,8 +64,13 @@ class TestClusterList(TestCase):
                     "_embedded": {
                         "k8sclusters": [
                             {
-                                "_links": {"self": {"href": "/api/v2/k8scluster/20"}},
-                                "label": {"name": "def", "description": "my cluster"},
+                                "_links": {
+                                    "self": {"href": "/api/v2/k8scluster/20"}
+                                },
+                                "label": {
+                                    "name": "def",
+                                    "description": "my cluster",
+                                },
                                 "k8s_version": "1.17.0",
                                 "pod_network_range": "10.192.0.0/12",
                                 "service_network_range": "10.96.0.0/12",
@@ -131,7 +145,9 @@ class TestClusterList(TestCase):
         self.assertEqual(clusters[0].admin_kube_config, "xyz==")
         self.assertEqual(clusters[0].dashboard_token, "abc==")
         self.assertEqual(clusters[0].api_endpoint_access, "api:1234")
-        self.assertEqual(clusters[0].dashboard_endpoint_access, "dashboard:1234")
+        self.assertEqual(
+            clusters[0].dashboard_endpoint_access, "dashboard:1234"
+        )
         self.assertIsNone(
             clusters[0].cert_data
         )  # The cluster wasn't created with certs - TODO: need a test with this value set
@@ -229,12 +245,17 @@ class TestCreateCluster(TestCase):
         with self.assertRaisesRegexp(
             AssertionError, "'persistent_storage_local' must be True or False"
         ):
-            get_client().k8s_cluster.create(name="a", persistent_storage_local=1)
+            get_client().k8s_cluster.create(
+                name="a", persistent_storage_local=1
+            )
 
         with self.assertRaisesRegexp(
-            AssertionError, "'persistent_storage_nimble_csi' must be True or False"
+            AssertionError,
+            "'persistent_storage_nimble_csi' must be True or False",
         ):
-            get_client().k8s_cluster.create(name="a", persistent_storage_nimble_csi=1)
+            get_client().k8s_cluster.create(
+                name="a", persistent_storage_nimble_csi=1
+            )
 
         with self.assertRaisesRegexp(
             AssertionError, "'k8shosts_config' must be a list"
@@ -266,7 +287,9 @@ class TestCreateCluster(TestCase):
         ):
             get_client().k8s_cluster.create(
                 name="a",
-                k8shosts_config=[K8sClusterHostConfig("/api/v2/worker/k8shost/1", "b")],
+                k8shosts_config=[
+                    K8sClusterHostConfig("/api/v2/worker/k8shost/1", "b")
+                ],
             )
 
         # Finally we can create a cluster
@@ -289,7 +312,10 @@ class TestCreateCluster(TestCase):
             )
         elif args[0] == "https://127.0.0.1:8080/api/v2/k8scluster":
             return MockResponse(
-                json_data={}, raise_for_status_flag=True, status_code=500, headers={}
+                json_data={},
+                raise_for_status_flag=True,
+                status_code=500,
+                headers={},
             )
         raise RuntimeError("Unhandle POST request: " + args[0])
 
@@ -311,7 +337,10 @@ class TestGetCluster(TestCase):
     def mocked_requests_get(*args, **kwargs):
         if args[0] == "https://127.0.0.1:8080/api/v2/k8scluster/999":
             return MockResponse(
-                json_data={}, status_code=404, raise_for_status_flag=True, headers={}
+                json_data={},
+                status_code=404,
+                raise_for_status_flag=True,
+                headers={},
             )
         if args[0] == "https://127.0.0.1:8080/api/v2/k8scluster/123":
             return MockResponse(
@@ -402,7 +431,10 @@ class TestWaitForClusterStatus(TestCase):
             )
         if args[0] == "https://127.0.0.1:8080/api/v2/k8scluster/999":
             return MockResponse(
-                json_data={}, status_code=404, raise_for_status_flag=True, headers={}
+                json_data={},
+                status_code=404,
+                raise_for_status_flag=True,
+                headers={},
             )
         raise RuntimeError("Unhandle GET request: " + args[0])
 
@@ -427,7 +459,9 @@ class TestWaitForClusterStatus(TestCase):
             AssertionError, "'k8scluster_id' must be a string"
         ):
             get_client().k8s_cluster.wait_for_status(
-                k8scluster_id=1, timeout_secs=1, status=[K8sClusterStatus.ready]
+                k8scluster_id=1,
+                timeout_secs=1,
+                status=[K8sClusterStatus.ready],
             )
 
         # pylint: disable=anomalous-backslash-in-string
@@ -436,17 +470,23 @@ class TestWaitForClusterStatus(TestCase):
             "'k8scluster_id' must have format '\/api\/v2\/worker\/k8scluster\/\[0-9\]\+'",
         ):
             get_client().k8s_cluster.wait_for_status(
-                k8scluster_id="garbage", timeout_secs=1, status=[K8sClusterStatus.ready]
+                k8scluster_id="garbage",
+                timeout_secs=1,
+                status=[K8sClusterStatus.ready],
             )
 
-        with self.assertRaisesRegexp(AssertionError, "'timeout_secs' must be an int"):
+        with self.assertRaisesRegexp(
+            AssertionError, "'timeout_secs' must be an int"
+        ):
             get_client().k8s_cluster.wait_for_status(
                 k8scluster_id="/api/v2/k8scluster/123",
                 timeout_secs="blah",
                 status=[K8sClusterStatus.ready],
             )
 
-        with self.assertRaisesRegexp(AssertionError, "'timeout_secs' must be >= 0"):
+        with self.assertRaisesRegexp(
+            AssertionError, "'timeout_secs' must be >= 0"
+        ):
             get_client().k8s_cluster.wait_for_status(
                 k8scluster_id="/api/v2/k8scluster/123",
                 timeout_secs=-1,
@@ -457,7 +497,9 @@ class TestWaitForClusterStatus(TestCase):
             AssertionError, "'status' item '0' is not of type K8sClusterStatus"
         ):
             get_client().k8s_cluster.wait_for_status(
-                k8scluster_id="/api/v2/k8scluster/123", timeout_secs=1, status=["abc"]
+                k8scluster_id="/api/v2/k8scluster/123",
+                timeout_secs=1,
+                status=["abc"],
             )
 
         self.assertTrue(
@@ -503,7 +545,9 @@ class TestWaitForClusterStatus(TestCase):
         # Get the status of a Cluster ID that doesn't exist - without providing a status
         with self.assertRaises(APIItemNotFoundException):
             get_client().k8s_cluster.wait_for_status(
-                k8scluster_id="/api/v2/k8scluster/999", timeout_secs=1, status=[]
+                k8scluster_id="/api/v2/k8scluster/999",
+                timeout_secs=1,
+                status=[],
             )
 
 
@@ -513,7 +557,10 @@ class TestDeleteCluster(TestCase):
     def mocked_requests_delete(*args, **kwargs):
         if args[0] == "https://127.0.0.1:8080/api/v2/k8scluster/999":
             return MockResponse(
-                json_data={}, status_code=404, raise_for_status_flag=True, headers={}
+                json_data={},
+                status_code=404,
+                raise_for_status_flag=True,
+                headers={},
             )
         if args[0] == "https://127.0.0.1:8080/api/v2/k8scluster/123":
             return MockResponse(
@@ -567,6 +614,8 @@ class TestDeleteCluster(TestCase):
             get_client().k8s_cluster.delete(k8scluster_id="garbage")
 
         with self.assertRaises(APIItemNotFoundException):
-            get_client().k8s_cluster.delete(k8scluster_id="/api/v2/k8scluster/999")
+            get_client().k8s_cluster.delete(
+                k8scluster_id="/api/v2/k8scluster/999"
+            )
 
         get_client().k8s_cluster.delete(k8scluster_id="/api/v2/k8scluster/123")

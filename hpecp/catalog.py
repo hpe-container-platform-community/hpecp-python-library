@@ -35,9 +35,13 @@ class CatalogController:
             APIException
         """
         response = self.client._request(
-            url="/api/v1/catalog/", http_method="get", description="catalog/list"
+            url="/api/v1/catalog/",
+            http_method="get",
+            description="catalog/list",
         )
-        return CatalogList(response.json()["_embedded"]["independent_catalog_entries"])
+        return CatalogList(
+            response.json()["_embedded"]["independent_catalog_entries"]
+        )
 
     def get(self, catalog_id):
         """Retrieve a catalog identified by {catalog_id}
@@ -125,7 +129,9 @@ class Catalog:
         return "<Catalog id:{} state:{}>".format(self.id, self.state)
 
     def __str__(self):
-        return "Catalog(distro_id={}, state={})".format(self.distro_id, self.state)
+        return "Catalog(distro_id={}, state={})".format(
+            self.distro_id, self.state
+        )
 
     def __dir__(self):
         return self.display_columns
@@ -181,7 +187,8 @@ class CatalogList:
     def __init__(self, json):
         self.json = [g for g in json if g["purpose"] == "proxy"]
         self.catalogs = sorted(
-            [Catalog(g) for g in json if g["purpose"] == "proxy"], key=attrgetter("id")
+            [Catalog(g) for g in json if g["purpose"] == "proxy"],
+            key=attrgetter("id"),
         )
         self.display_columns = Catalog.default_display_fields
 
@@ -238,7 +245,9 @@ class CatalogList:
             print(hpeclient.catalog.list().tabulate(columns=['id', 'state']))
         """
         if columns != Catalog.default_display_fields:
-            assert isinstance(columns, list), "'columns' parameter must be list"
+            assert isinstance(
+                columns, list
+            ), "'columns' parameter must be list"
             for column in columns:
                 assert (
                     column in Catalog.all_fields

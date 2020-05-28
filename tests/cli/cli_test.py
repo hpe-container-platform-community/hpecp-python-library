@@ -62,8 +62,13 @@ class TestCLI(TestCase):
                     "_embedded": {
                         "k8sclusters": [
                             {
-                                "_links": {"self": {"href": "/api/v2/k8scluster/20"}},
-                                "label": {"name": "def", "description": "my cluster"},
+                                "_links": {
+                                    "self": {"href": "/api/v2/k8scluster/20"}
+                                },
+                                "label": {
+                                    "name": "def",
+                                    "description": "my cluster",
+                                },
                                 "k8s_version": "1.17.0",
                                 "pod_network_range": "10.192.0.0/12",
                                 "service_network_range": "10.96.0.0/12",

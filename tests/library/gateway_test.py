@@ -7,13 +7,22 @@ import os
 import json
 import requests
 from requests.exceptions import RequestException
-from hpecp import ContainerPlatformClient, APIException, APIItemNotFoundException
+from hpecp import (
+    ContainerPlatformClient,
+    APIException,
+    APIItemNotFoundException,
+)
 from hpecp.gateway import GatewayStatus
 
 
 class MockResponse:
     def __init__(
-        self, json_data, status_code, headers, raise_for_status_flag=False, text_data=""
+        self,
+        json_data,
+        status_code,
+        headers,
+        raise_for_status_flag=False,
+        text_data="",
     ):
         self.json_data = json_data
         self.text = text_data
@@ -48,7 +57,9 @@ def session_mock_response():
     return MockResponse(
         json_data={},
         status_code=200,
-        headers={"location": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"},
+        headers={
+            "location": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+        },
     )
 
 
@@ -618,7 +629,8 @@ class TestGatewayGet(TestCase):
     def test_get_gateway_assertions(self, mock_get, mock_post):
 
         with self.assertRaisesRegexp(
-            AssertionError, "'gateway_id' must be provided and must be a string"
+            AssertionError,
+            "'gateway_id' must be provided and must be a string",
         ):
             get_client().gateway.get(123)
 
@@ -641,7 +653,8 @@ class TestGatewayGet(TestCase):
 
         # /api/v1/workers/100 has "'purpose': 'controller'" so it isn't a gateway
         with self.assertRaisesRegexp(
-            APIItemNotFoundException, "'gateway not found with id: /api/v1/workers/100'"
+            APIItemNotFoundException,
+            "'gateway not found with id: /api/v1/workers/100'",
         ):
             get_client().gateway.get("/api/v1/workers/100")
 
@@ -962,7 +975,10 @@ class TestWaitForGatewayStatus(TestCase):
             )
         if args[0] == "https://127.0.0.1:8080/api/v1/workers/999":
             return MockResponse(
-                json_data={}, status_code=404, raise_for_status_flag=True, headers={}
+                json_data={},
+                status_code=404,
+                raise_for_status_flag=True,
+                headers={},
             )
         raise RuntimeError("Unhandle GET request: " + args[0])
 
@@ -983,7 +999,9 @@ class TestWaitForGatewayStatus(TestCase):
 
         # FIXME speed these tests up
 
-        with self.assertRaisesRegexp(AssertionError, "'gateway_id' must be a string"):
+        with self.assertRaisesRegexp(
+            AssertionError, "'gateway_id' must be a string"
+        ):
             get_client().gateway.wait_for_state(
                 gateway_id=1, timeout_secs=1, state=[GatewayStatus.ready]
             )
@@ -994,17 +1012,23 @@ class TestWaitForGatewayStatus(TestCase):
             "'gateway_id' must have format '\/api\/v1\/workers\/\[0-9\]\+'",
         ):
             get_client().gateway.wait_for_state(
-                gateway_id="garbage", timeout_secs=1, state=[GatewayStatus.ready]
+                gateway_id="garbage",
+                timeout_secs=1,
+                state=[GatewayStatus.ready],
             )
 
-        with self.assertRaisesRegexp(AssertionError, "'timeout_secs' must be an int"):
+        with self.assertRaisesRegexp(
+            AssertionError, "'timeout_secs' must be an int"
+        ):
             get_client().gateway.wait_for_state(
                 gateway_id="/api/v1/workers/123",
                 timeout_secs="blah",
                 state=[GatewayStatus.ready],
             )
 
-        with self.assertRaisesRegexp(AssertionError, "'timeout_secs' must be >= 0"):
+        with self.assertRaisesRegexp(
+            AssertionError, "'timeout_secs' must be >= 0"
+        ):
             get_client().gateway.wait_for_state(
                 gateway_id="/api/v1/workers/123",
                 timeout_secs=-1,

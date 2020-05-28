@@ -43,7 +43,9 @@ class GatewayController:
         """Not Implemented yet"""
         raise NotImplementedError()
 
-    def create_with_ssh_key(self, ip, proxy_node_hostname, ssh_key_data, tags=[]):
+    def create_with_ssh_key(
+        self, ip, proxy_node_hostname, ssh_key_data, tags=[]
+    ):
         """Create a gateway instance using SSH key credentials to access the host
 
         Args:
@@ -59,7 +61,9 @@ class GatewayController:
         Returns: gateway ID
         """
 
-        assert isinstance(ip, basestring), "'ip' must be provided and must be a string"
+        assert isinstance(
+            ip, basestring
+        ), "'ip' must be provided and must be a string"
         assert isinstance(
             proxy_node_hostname, basestring
         ), "'proxy_node_hostname' must be provided and must be a string"
@@ -69,7 +73,10 @@ class GatewayController:
 
         data = {
             "ip": ip,
-            "credentials": {"type": "ssh_key_access", "ssh_key_data": ssh_key_data},
+            "credentials": {
+                "type": "ssh_key_access",
+                "ssh_key_data": ssh_key_data,
+            },
             "tags": tags,
             "proxy_nodes_hostname": proxy_node_hostname,
             "purpose": "proxy",
@@ -93,7 +100,9 @@ class GatewayController:
             APIException
         """
         response = self.client._request(
-            url="/api/v1/workers/", http_method="get", description="gateway/list"
+            url="/api/v1/workers/",
+            http_method="get",
+            description="gateway/list",
         )
         return GatewayList(response.json()["_embedded"]["workers"])
 
@@ -186,7 +195,9 @@ class GatewayController:
             APIItemNotFoundException: if the item is not found and state is not empty
             APIException: if a generic API exception occurred
         """
-        assert isinstance(gateway_id, basestring), "'gateway_id' must be a string"
+        assert isinstance(
+            gateway_id, basestring
+        ), "'gateway_id' must be a string"
         assert re.match(
             r"\/api\/v1\/workers\/[0-9]+", gateway_id
         ), "'gateway_id' must have format '/api/v1/workers/[0-9]+'"
@@ -223,7 +234,8 @@ class GatewayController:
         else:
             try:
                 polling.poll(
-                    lambda: self.get(gateway_id).state in [s.name for s in state],
+                    lambda: self.get(gateway_id).state
+                    in [s.name for s in state],
                     step=10,
                     poll_forever=False,
                     timeout=timeout_secs,
@@ -417,7 +429,8 @@ class GatewayList:
     def __init__(self, json):
         self.json = [g for g in json if g["purpose"] == "proxy"]
         self.gateways = sorted(
-            [Gateway(g) for g in json if g["purpose"] == "proxy"], key=attrgetter("id")
+            [Gateway(g) for g in json if g["purpose"] == "proxy"],
+            key=attrgetter("id"),
         )
         self.display_columns = Gateway.default_display_fields
 
@@ -473,11 +486,15 @@ class GatewayList:
             print(hpeclient.gateway.list().tabulate(columns=['id', 'state']))
         """
         if columns != Gateway.default_display_fields:
-            assert isinstance(columns, list), "'columns' parameter must be list"
+            assert isinstance(
+                columns, list
+            ), "'columns' parameter must be list"
             for column in columns:
                 assert (
                     column in Gateway.all_fields
-                ), "item '{}' is not a field in Gateway.all_fields".format(column)
+                ), "item '{}' is not a field in Gateway.all_fields".format(
+                    column
+                )
 
         self.display_columns = columns
 
