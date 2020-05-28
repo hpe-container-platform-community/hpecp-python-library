@@ -21,6 +21,7 @@ RUN pyenv install 3.6.9
 RUN pyenv install 3.7.7
 RUN pyenv install 3.9-dev
 
-ENV PYTHONPATH=/workspace/hpecp-python-library:$PYTHONPATH
+# Allow pytest to discover tests
+RUN echo 'PYTHONPATH=/workspace/hpecp-python-library:$PYTHONPATH' > ~/.bashrc.d/40-pythonpath
 #
 # More information: https://www.gitpod.io/docs/config-docker/
