@@ -7,7 +7,7 @@ USER gitpod
 #
 # RUN sudo apt-get -q update && #     sudo apt-get install -yq bastet && #     sudo rm -rf /var/lib/apt/lists/*
 
-RUN sudo apt-get -q update && sudo apt-get install -y shellcheck
+RUN sudo apt-get -q update && sudo apt-get install -y shellcheck tox python3-sphinx 
 
 # setup the gitpod bundled python
 RUN /home/gitpod/.pyenv/versions/2.7.17/bin/python2 -m pip install --upgrade pip
