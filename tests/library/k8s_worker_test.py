@@ -56,7 +56,9 @@ class TestWorkers(TestCase):
                                 "ipaddr": "10.1.0.238",
                                 "setup_log": "/var/log/bluedata/install/k8shost_setup_10.1.0.238-2020-4-26-18-41-16",
                                 "_links": {
-                                    "self": {"href": "/api/v2/worker/k8shost/4"}
+                                    "self": {
+                                        "href": "/api/v2/worker/k8shost/4"
+                                    }
                                 },
                                 "sysinfo": {
                                     "network": [],
@@ -84,7 +86,9 @@ class TestWorkers(TestCase):
                                 "ipaddr": "10.1.0.186",
                                 "setup_log": "/var/log/bluedata/install/k8shost_setup_10.1.0.186-2020-4-26-18-49-10",
                                 "_links": {
-                                    "self": {"href": "/api/v2/worker/k8shost/5"}
+                                    "self": {
+                                        "href": "/api/v2/worker/k8shost/5"
+                                    }
                                 },
                             },
                         ]
@@ -130,9 +134,14 @@ class TestWorkers(TestCase):
         # Test WorkerK8sList subscriptable access and property setters
         assert workers[0].worker_id == 4
         assert workers[0].status == WorkerK8sStatus.unlicensed.name
-        assert workers[0].hostname == "ip-10-1-0-238.eu-west-2.compute.internal"
+        assert (
+            workers[0].hostname == "ip-10-1-0-238.eu-west-2.compute.internal"
+        )
         assert workers[0].ipaddr == "10.1.0.238"
         assert workers[0].href == "/api/v2/worker/k8shost/4"
 
         # Test WorkerK8sList iterators
-        assert [worker.worker_id for worker in client.k8s_worker.list()] == [4, 5]
+        assert [worker.worker_id for worker in client.k8s_worker.list()] == [
+            4,
+            5,
+        ]

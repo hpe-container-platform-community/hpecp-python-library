@@ -135,7 +135,10 @@ class TestAuth(TestCase):
     def mocked_requests_post_return_500(*args, **kwargs):
         if args[0] == "https://127.0.0.1:8080/api/v1/login":
             return MockResponse(
-                json_data={}, status_code=500, headers={}, raise_for_status_flag=True
+                json_data={},
+                status_code=500,
+                headers={},
+                raise_for_status_flag=True,
             )
         raise RuntimeError("Unhandle POST request: " + args[0])
 

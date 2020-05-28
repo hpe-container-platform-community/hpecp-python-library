@@ -9,7 +9,12 @@ from hpecp.exceptions import APIItemNotFoundException
 
 class MockResponse:
     def __init__(
-        self, json_data, status_code, headers, raise_for_status_flag=False, text_data=""
+        self,
+        json_data,
+        status_code,
+        headers,
+        raise_for_status_flag=False,
+        text_data="",
     ):
         self.json_data = json_data
         self.text = text_data
@@ -44,7 +49,9 @@ def session_mock_response():
     return MockResponse(
         json_data={},
         status_code=200,
-        headers={"location": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"},
+        headers={
+            "location": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+        },
     )
 
 
@@ -68,12 +75,14 @@ class TestCatalogGet(unittest.TestCase):
     def test_get_catalog_id_type(self, mock_get, mock_post):
 
         with self.assertRaisesRegexp(
-            AssertionError, "'catalog_id' must be provided and must be a string"
+            AssertionError,
+            "'catalog_id' must be provided and must be a string",
         ):
             get_client().catalog.get(123)
 
         with self.assertRaisesRegexp(
-            AssertionError, "'catalog_id' must be provided and must be a string"
+            AssertionError,
+            "'catalog_id' must be provided and must be a string",
         ):
             get_client().catalog.get(False)
 
@@ -83,13 +92,15 @@ class TestCatalogGet(unittest.TestCase):
 
         with self.assertRaisesRegexp(
             AssertionError,
-            "'catalog_id' must have format " + r"'\/api\/v1\/catalog\/\[0-9\]\+'",
+            "'catalog_id' must have format "
+            + r"'\/api\/v1\/catalog\/\[0-9\]\+'",
         ):
             get_client().catalog.get("garbage")
 
         with self.assertRaisesRegexp(
             AssertionError,
-            "'catalog_id' must have format " + r"'\/api\/v1\/catalog\/\[0-9\]\+'",
+            "'catalog_id' must have format "
+            + r"'\/api\/v1\/catalog\/\[0-9\]\+'",
         ):
             get_client().catalog.get("/api/v1/catalog/some_id")
 
@@ -104,6 +115,7 @@ class TestCatalogGet(unittest.TestCase):
 
         # TODO: test other property accessors
         with self.assertRaisesRegexp(
-            APIItemNotFoundException, "'catalog not found with id: /api/v1/catalog/100'"
+            APIItemNotFoundException,
+            "'catalog not found with id: /api/v1/catalog/100'",
         ):
             get_client().catalog.get("/api/v1/catalog/100")
