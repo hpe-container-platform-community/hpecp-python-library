@@ -1,4 +1,10 @@
 tasks:
+  - command: /home/gitpod/.pyenv/versions/2.7.17/bin/python2 -m pip install -U -r ./requirements.txt --user
+  - command: /home/gitpod/.pyenv/versions/3.8.2/bin/python3 -m pip install -U -r ./requirements.txt --user
+  - command: /home/gitpod/.pyenv/versions/3.5.9/bin/python3 -m pip install -U -r ./requirements.txt --user
+  - command: /home/gitpod/.pyenv/versions/3.6.9/bin/python3 -m pip install -U -r ./requirements.txt --user
+  - command: /home/gitpod/.pyenv/versions/3.7.7/bin/python3 -m pip install -U -r ./requirements.txt --user
+  - command: /home/gitpod/.pyenv/versions/3.9-dev/bin/python3 -m pip install -U -r ./requirements.txt --user
   - command: cd docs && make html && cd build/html && python3 -m http.server 8080
     name: Static Server
 image:
