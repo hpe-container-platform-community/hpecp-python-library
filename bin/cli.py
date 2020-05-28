@@ -1,22 +1,6 @@
 #!/usr/bin/env python3
 
-"""Prototype for HPE Container Platform API.
-
-Required this functionality to be more usable: https://github.com/google/python-fire/issues/255
-
-Example configuration file  (~/.hpecp.conf):
-
-[default]
-api_host = 127.0.0.1
-api_port = 8080
-use_ssl = True
-verify_ssl = False
-warn_ssl = True
-
-[demosrv]
-username = admin
-password = admin123
-"""
+"""Prototype for HPE Container Platform API."""
 
 import base64
 import configparser
@@ -37,8 +21,7 @@ from hpecp import (
 from hpecp.gateway import Gateway, GatewayStatus
 from hpecp.k8s_cluster import K8sClusterHostConfig, K8sClusterStatus
 
-if sys.version_info[0] >= 3:
-    unicode = str
+if sys.version_info[0] >= 3: unicode = str
 
 from hpecp import (
     ContainerPlatformClient,
