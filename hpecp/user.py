@@ -43,7 +43,9 @@ class UserController:
         assert isinstance(
             name, basestring
         ), "'name' must be provided and must be a string"
-        assert isinstance(description, basestring), "'description must be a string"
+        assert isinstance(
+            description, basestring
+        ), "'description must be a string"
         assert isinstance(
             is_external, bool
         ), "'is_external' must be provided and must be a bool"
@@ -54,6 +56,9 @@ class UserController:
         }
 
         response = self.client._request(
-            url="/api/v1/user", http_method="post", data=data, description="user/create"
+            url="/api/v1/user",
+            http_method="post",
+            data=data,
+            description="user/create",
         )
         return response.headers["location"]

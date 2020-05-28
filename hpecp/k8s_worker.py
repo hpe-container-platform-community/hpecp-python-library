@@ -83,7 +83,9 @@ class WorkerK8s:
 class WorkerK8sList:
     def __init__(self, json):
         self.json = json
-        self.tenants = sorted([WorkerK8s(t) for t in json], key=attrgetter("worker_id"))
+        self.tenants = sorted(
+            [WorkerK8s(t) for t in json], key=attrgetter("worker_id")
+        )
 
     def __getitem__(self, item):
         return self.tenants[item]
@@ -107,7 +109,9 @@ class WorkerK8sList:
 
     def tabulate(self, columns=None):
         # FIXME columns is ignored, see GatewayController.list().tabulate() for an example implementation
-        return tabulate(self, headers=WorkerK8s.__class_dir__(), tablefmt="pretty")
+        return tabulate(
+            self, headers=WorkerK8s.__class_dir__(), tablefmt="pretty"
+        )
 
 
 class K8sWorkerController:
@@ -132,14 +136,19 @@ class K8sWorkerController:
         Returns: Worker ID
         """
 
-        assert isinstance(ip, basestring), "'ip' must be provided and must be a string"
+        assert isinstance(
+            ip, basestring
+        ), "'ip' must be provided and must be a string"
         assert isinstance(
             ssh_key_data, basestring
         ), "'ssh_key_data' must be provided and must be a string"
 
         data = {
             "ipaddr": ip,
-            "credentials": {"type": "ssh_key_access", "ssh_key_data": ssh_key_data},
+            "credentials": {
+                "type": "ssh_key_access",
+                "ssh_key_data": ssh_key_data,
+            },
             "tags": tags,
         }
 
@@ -178,7 +187,9 @@ class K8sWorkerController:
         See: https://<<controller_ip>>/apidocs/site-admin-api.html for the schema of the  response object
         """
         self.client._request(
-            url=worker_id, http_method="delete", description="worker/delete_k8shosts"
+            url=worker_id,
+            http_method="delete",
+            description="worker/delete_k8shosts",
         )
 
     # TODO rename status parameter to statuses
@@ -200,7 +211,9 @@ class K8sWorkerController:
             APIItemNotFoundException: if the item is not found and status is not empty
             APIException: if a generic API exception occurred
         """
-        assert isinstance(worker_id, basestring), "'worker_id' must be a string"
+        assert isinstance(
+            worker_id, basestring
+        ), "'worker_id' must be a string"
         assert re.match(
             r"\/api\/v2\/worker\/k8shost\/[0-9]+", worker_id
         ), "'worker_id' must have format '/api/v2/worker/k8shost/[0-9]+'"
@@ -237,7 +250,8 @@ class K8sWorkerController:
         else:
             try:
                 polling.poll(
-                    lambda: self.get(worker_id).status in [s.name for s in status],
+                    lambda: self.get(worker_id).status
+                    in [s.name for s in status],
                     step=10,
                     poll_forever=False,
                     timeout=timeout_secs,

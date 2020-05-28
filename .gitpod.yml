@@ -1,9 +1,14 @@
 tasks:
-  - init: /bin/python3 -m pip install -U pytest mock pylint awscli black flake8 -r ./requirements.txt --user
-  - init: pyenv shell 2.7.17 && pip install -U pytest mock pylint awscli -r ./requirements.txt --user
-  - init: [[ -d /workspace/.aws ]] && ln -sf /workspace/.aws ~/.aws
-  - init: [[ -f /workspace/.hpecp_service ]] && ln -sf /workspace/.hpecp_service ~/.hpecp_service
+  - before: gp env -e PYTHONPATH=/workspace/hpecp-python-library:$PYTHONPATH
+  - command: /home/gitpod/.pyenv/versions/2.7.17/bin/python2 -m pip install -U pytest mock awscli -r ./requirements.txt --user && exit
+  - command: /home/gitpod/.pyenv/versions/3.5.9/bin/python3 -m pip install -U pytest tox mock awscli flake8 -r ./requirements.txt --user && exit
+  - command: /home/gitpod/.pyenv/versions/3.6.9/bin/python3 -m pip install -U pytest tox mock awscli black flake8 -r ./requirements.txt --user && exit
+  - command: /home/gitpod/.pyenv/versions/3.7.7/bin/python3 -m pip install -U pytest tox mock awscli black flake8 -r ./requirements.txt --user && exit
+  - command: /bin/python3 -m pip install -U pytest tox mock awscli black flake8 -r ./requirements.txt --user && exit
+
+  # - command: /home/gitpod/.pyenv/versions/3.9-dev/bin/python3 -m pip install -U pytest tox mock awscli black flake8 -r ./requirements.txt --user && exit
   - command: cd docs && make html && cd build/html && python3 -m http.server 8080
+  - command: echo "Welcome"
     name: Static Server
 image:
   file: .gitpod.Dockerfile
@@ -11,3 +16,4 @@ vscode:
   extensions:
     - littlefoxteam.vscode-python-test-adapter@0.3.16:tZ/6xOSSdKUaq6JCUVkD+A==
     - almenon.arepl@1.0.20:Uu7lIOwyLgmNWpTwCl/iqQ==
+    - timonwong.shellcheck@0.9.0:hsU/Rd39aqPYowTqL+DbXg==

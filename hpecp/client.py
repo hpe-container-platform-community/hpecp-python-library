@@ -72,7 +72,9 @@ class ContainerPlatformClient(object):
     """
 
     @classmethod
-    def create_from_config_file(cls, config_file="~/.hpecp.conf", profile=None):
+    def create_from_config_file(
+        cls, config_file="~/.hpecp.conf", profile=None
+    ):
         """Create a ContainerPlatformClient object from a configuration file.
 
         Parameters:
@@ -119,31 +121,46 @@ class ContainerPlatformClient(object):
         assert profile in config, "'{}' section not found in '{}'".format(
             profile, config_file
         )
-        assert "username" in config[profile] or "username" in config["default"], (
+        assert (
+            "username" in config[profile] or "username" in config["default"]
+        ), (
             "'username' not found in section '{}' or in "
             "the default section".format(profile)
         )
-        assert "password" in config[profile] or "password" in config["default"], (
+        assert (
+            "password" in config[profile] or "password" in config["default"]
+        ), (
             "'password' not found in section '{}' "
             "or in the default section".format(profile)
         )
-        assert "api_host" in config[profile] or "api_host" in config["default"], (
+        assert (
+            "api_host" in config[profile] or "api_host" in config["default"]
+        ), (
             "'api_host' not found in section '{}' or in "
             "the default section".format(profile)
         )
-        assert "api_port" in config[profile] or "api_port" in config["default"], (
+        assert (
+            "api_port" in config[profile] or "api_port" in config["default"]
+        ), (
             "'api_port' not found in section '{}' or in "
             "the default section".format(profile)
         )
-        assert "use_ssl" in config[profile] or "use_ssl" in config["default"], (
+        assert (
+            "use_ssl" in config[profile] or "use_ssl" in config["default"]
+        ), (
             "'use_ssl' not found in section '{}' or in"
             "the default section".format(profile)
         )
-        assert "verify_ssl" in config[profile] or "verify_ssl" in config["default"], (
+        assert (
+            "verify_ssl" in config[profile]
+            or "verify_ssl" in config["default"]
+        ), (
             "'verify_ssl' not found in section '{}' or in"
             "the default section".format(profile)
         )
-        assert "warn_ssl" in config[profile] or "warn_ssl" in config["default"], (
+        assert (
+            "warn_ssl" in config[profile] or "warn_ssl" in config["default"]
+        ), (
             "'warn_ssl' not found in section '{}' or in"
             "the default section".format(profile)
         )
@@ -177,7 +194,13 @@ class ContainerPlatformClient(object):
             warn_ssl = True
 
         return cls(
-            username, password, api_host, api_port, use_ssl, verify_ssl, warn_ssl
+            username,
+            password,
+            api_host,
+            api_port,
+            use_ssl,
+            verify_ssl,
+            warn_ssl,
         )
 
     @classmethod
@@ -251,7 +274,9 @@ class ContainerPlatformClient(object):
 
         # TODO add other fields, except password
         self._log.debug(
-            "ContainerPlatformClient() created with username['{}']".format(username)
+            "ContainerPlatformClient() created with username['{}']".format(
+                username
+            )
         )
 
         assert isinstance(
@@ -263,12 +288,19 @@ class ContainerPlatformClient(object):
         assert isinstance(
             api_host, basestring
         ), "'api_host' parameter must be of type string"
-        assert isinstance(api_port, int), "'api_port' parameter must be of type int"
-        assert isinstance(use_ssl, bool), "'use_ssl' parameter must be of type bool"
+        assert isinstance(
+            api_port, int
+        ), "'api_port' parameter must be of type int"
+        assert isinstance(
+            use_ssl, bool
+        ), "'use_ssl' parameter must be of type bool"
         assert isinstance(verify_ssl, bool) or (
-            isinstance(verify_ssl, basestring) and os.access(verify_ssl, os.R_OK)
+            isinstance(verify_ssl, basestring)
+            and os.access(verify_ssl, os.R_OK)
         ), "'verify_ssl' parameter must be of type bool or point to a certificate file"
-        assert isinstance(warn_ssl, bool), "'warn_ssl' parameter must be of type bool"
+        assert isinstance(
+            warn_ssl, bool
+        ), "'warn_ssl' parameter must be of type bool"
 
         self.username = username
         self.password = password
@@ -283,7 +315,9 @@ class ContainerPlatformClient(object):
         else:
             scheme = "http"
 
-        self.base_url = "{}://{}:{}".format(scheme, self.api_host, self.api_port)
+        self.base_url = "{}://{}:{}".format(
+            scheme, self.api_host, self.api_port
+        )
 
         # register endpoint modules - see @property definitions at end of file for each module
         self._tenant = TenantController(self)
@@ -325,7 +359,9 @@ class ContainerPlatformClient(object):
             response.raise_for_status()
 
         except requests.exceptions.ConnectionError as e:
-            self.log.debug("RES: {} : {} {} {}".format("Login", "post", url, str(e)))
+            self.log.debug(
+                "RES: {} : {} {} {}".format("Login", "post", url, str(e))
+            )
             raise_from(
                 APIException(
                     message="Could not connect to controller - set LOG_LEVEL=DEBUG to see more detail.",
@@ -384,13 +420,17 @@ class ContainerPlatformClient(object):
 
         try:
             if http_method == "get":
-                self.log.debug("REQ: {} : {} {}".format(description, http_method, url))
+                self.log.debug(
+                    "REQ: {} : {} {}".format(description, http_method, url)
+                )
                 response = requests.get(
                     url, headers=all_headers, verify=self.verify_ssl
                 )
             elif http_method == "put":
                 self.log.debug(
-                    "REQ: {} : {} {} {}".format(description, http_method, url, data)
+                    "REQ: {} : {} {} {}".format(
+                        description, http_method, url, data
+                    )
                 )
                 response = requests.put(
                     url,
@@ -400,7 +440,9 @@ class ContainerPlatformClient(object):
                 )
             elif http_method == "post":
                 self.log.debug(
-                    "REQ: {} : {} {} {}".format(description, http_method, url, data)
+                    "REQ: {} : {} {} {}".format(
+                        description, http_method, url, data
+                    )
                 )
                 response = requests.post(
                     url,
@@ -409,7 +451,9 @@ class ContainerPlatformClient(object):
                     verify=self.verify_ssl,
                 )
             elif http_method == "delete":
-                self.log.debug("REQ: {} : {} {}".format(description, http_method, url))
+                self.log.debug(
+                    "REQ: {} : {} {}".format(description, http_method, url)
+                )
                 response = requests.delete(
                     url, headers=all_headers, verify=self.verify_ssl
                 )
@@ -475,7 +519,11 @@ class ContainerPlatformClient(object):
         except ValueError:
             self.log.debug(
                 "RES: {} : {} {} : {} {}".format(
-                    description, http_method, url, response.status_code, response.text
+                    description,
+                    http_method,
+                    url,
+                    response.status_code,
+                    response.text,
                 )
             )
 

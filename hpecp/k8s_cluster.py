@@ -102,8 +102,12 @@ class K8sClusterController:
         assert isinstance(
             persistent_storage_nimble_csi, bool
         ), "'persistent_storage_nimble_csi' must be True or False"
-        assert isinstance(k8shosts_config, list), "'k8shosts_config' must be a list"
-        assert len(k8shosts_config) > 0, "'k8shosts_config' must have at least one item"
+        assert isinstance(
+            k8shosts_config, list
+        ), "'k8shosts_config' must be a list"
+        assert (
+            len(k8shosts_config) > 0
+        ), "'k8shosts_config' must have at least one item"
         for i, conf in enumerate(k8shosts_config):
             assert isinstance(
                 conf, K8sClusterHostConfig
@@ -147,7 +151,9 @@ class K8sClusterController:
             APIException
         """
         response = self.client._request(
-            url="/api/v2/k8scluster", http_method="get", description="k8s_cluster/list"
+            url="/api/v2/k8scluster",
+            http_method="get",
+            description="k8s_cluster/list",
         )
         return K8sClusterList(response.json()["_embedded"]["k8sclusters"])
 
@@ -204,7 +210,9 @@ class K8sClusterController:
             APIException: if a generic API exception occurred
         """
 
-        assert isinstance(k8scluster_id, basestring), "'k8scluster_id' must be a string"
+        assert isinstance(
+            k8scluster_id, basestring
+        ), "'k8scluster_id' must be a string"
         assert re.match(
             r"\/api\/v2\/k8scluster\/[0-9]+", k8scluster_id
         ), "'k8scluster_id' must have format '/api/v2/worker/k8scluster/[0-9]+'"
@@ -218,7 +226,8 @@ class K8sClusterController:
 
         try:
             polling.poll(
-                lambda: self.get(k8scluster_id).status in [s.name for s in status],
+                lambda: self.get(k8scluster_id).status
+                in [s.name for s in status],
                 step=10,
                 poll_forever=False,
                 timeout=timeout_secs,
@@ -247,7 +256,9 @@ class K8sClusterController:
         ), "'k8scluster_id' must have format '/api/v2/worker/k8scluster/[0-9]+'"
 
         self.client._request(
-            url=k8scluster_id, http_method="delete", description="k8s_cluster/delete"
+            url=k8scluster_id,
+            http_method="delete",
+            description="k8s_cluster/delete",
         )
 
     def supported_k8s_versions(self):
@@ -454,7 +465,9 @@ class K8sClusterList:
 
     def __init__(self, json):
         self.json = json
-        self.clusters = sorted([K8sCluster(t) for t in json], key=attrgetter("id"))
+        self.clusters = sorted(
+            [K8sCluster(t) for t in json], key=attrgetter("id")
+        )
         self.tenant_columns = K8sCluster.all_fields
 
     def __getitem__(self, item):
@@ -502,11 +515,15 @@ class K8sClusterList:
             print(hpeclient.cluster.list().tabulate(columns=['id', 'name', 'description']))
         """
         if columns != K8sCluster.all_fields:
-            assert isinstance(columns, list), "'columns' parameter must be list"
+            assert isinstance(
+                columns, list
+            ), "'columns' parameter must be list"
             for field in K8sCluster.all_fields:
                 assert (
                     field in K8sCluster.all_fields
-                ), "item '{}' is not a field in K8sCluster.all_fields".format(field)
+                ), "item '{}' is not a field in K8sCluster.all_fields".format(
+                    field
+                )
 
         self.tenant_columns = columns
         return tabulate(self, headers=columns, tablefmt="pretty")
@@ -544,7 +561,10 @@ class K8sClusterHostConfig:
         assert re.match(
             r"\/api\/v2\/worker\/k8shost\/[0-9]+", node
         ), "'node' must have format '/api/v2/worker/k8shost/[0-9]+'"
-        assert role in ["master", "worker"], "'role' must one of ['master, worker']"
+        assert role in [
+            "master",
+            "worker",
+        ], "'role' must one of ['master, worker']"
 
         self.node = node
         self.role = role

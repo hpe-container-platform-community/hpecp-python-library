@@ -5,7 +5,9 @@ class ContainerPlatformClientException(Exception):
 
 
 class APIException(Exception):
-    def __init__(self, message, request_method, request_url, request_data=None, *args):
+    def __init__(
+        self, message, request_method, request_url, request_data=None, *args
+    ):
         self.message = message
         self.request_method = request_method
         self.request_url = request_url
@@ -16,7 +18,9 @@ class APIException(Exception):
 
 
 class APIItemNotFoundException(APIException):
-    def __init__(self, message, request_method, request_url, request_data=None, *args):
+    def __init__(
+        self, message, request_method, request_url, request_data=None, *args
+    ):
         self.message = message
         self.request_method = request_method
         self.request_url = request_url
@@ -27,7 +31,9 @@ class APIItemNotFoundException(APIException):
 
 
 class APIItemConflictException(APIException):
-    def __init__(self, message, request_method, request_url, request_data=None, *args):
+    def __init__(
+        self, message, request_method, request_url, request_data=None, *args
+    ):
         self.message = message
         self.request_method = request_method
         self.request_url = request_url

@@ -63,7 +63,9 @@ class TestTentants(TestCase):
                                 },
                                 "external_user_groups": [],
                                 "gpu_usage_supported": True,
-                                "_links": {"self": {"href": "/api/v1/tenant/1"}},
+                                "_links": {
+                                    "self": {"href": "/api/v1/tenant/1"}
+                                },
                                 "filesystem_mount_supported": True,
                                 "tenant_enforcements": [],
                                 "label": {
@@ -93,7 +95,9 @@ class TestTentants(TestCase):
                                 },
                                 "external_user_groups": [],
                                 "gpu_usage_supported": True,
-                                "_links": {"self": {"href": "/api/v1/tenant/2"}},
+                                "_links": {
+                                    "self": {"href": "/api/v1/tenant/2"}
+                                },
                                 "filesystem_mount_supported": True,
                                 "tenant_enforcements": [],
                                 "label": {
