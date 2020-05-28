@@ -22,7 +22,7 @@ RUN /home/gitpod/.pyenv/versions/3.8.2/bin/python3 -m pip install -U pytest tox 
 RUN pyenv install 3.5.9
 RUN pyenv install 3.6.9
 RUN pyenv install 3.7.7
-RUN pyenv install 3.9-dev
+#RUN pyenv install 3.9-dev
 
 ENV PYTHONPATH=/workspace/hpecp-python-library:$PYTHONPATH
 #
