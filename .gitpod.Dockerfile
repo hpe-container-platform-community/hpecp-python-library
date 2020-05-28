@@ -7,6 +7,8 @@ USER gitpod
 #
 # RUN sudo apt-get -q update && #     sudo apt-get install -yq bastet && #     sudo rm -rf /var/lib/apt/lists/*
 
+RUN sudo apt-get -q update && sudo apt-get install -y shellcheck
+
 # setup the gitpod bundled python
 RUN /home/gitpod/.pyenv/versions/2.7.17/bin/python2 -m pip install --upgrade pip
 RUN /home/gitpod/.pyenv/versions/3.8.2/bin/python3 -m pip install --upgrade pip
