@@ -150,7 +150,9 @@
 <div class="viewcode-block" id="WorkerK8sList"><a class="viewcode-back" href="../../hpecp.k8s_worker.html#hpecp.k8s_worker.WorkerK8sList">[docs]</a><span class="k">class</span> <span class="nc">WorkerK8sList</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">json</span> <span class="o">=</span> <span class="n">json</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tenants</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">WorkerK8s</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">json</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="n">attrgetter</span><span class="p">(</span><span class="s2">&quot;worker_id&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tenants</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">WorkerK8s</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">json</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="n">attrgetter</span><span class="p">(</span><span class="s2">&quot;worker_id&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tenants</span><span class="p">[</span><span class="n">item</span><span class="p">]</span>
@@ -174,7 +176,9 @@
 
 <div class="viewcode-block" id="WorkerK8sList.tabulate"><a class="viewcode-back" href="../../hpecp.k8s_worker.html#hpecp.k8s_worker.WorkerK8sList.tabulate">[docs]</a>    <span class="k">def</span> <span class="nf">tabulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># FIXME columns is ignored, see GatewayController.list().tabulate() for an example implementation</span>
-        <span class="k">return</span> <span class="n">tabulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">WorkerK8s</span><span class="o">.</span><span class="n">__class_dir__</span><span class="p">(),</span> <span class="n">tablefmt</span><span class="o">=</span><span class="s2">&quot;pretty&quot;</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">tabulate</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">WorkerK8s</span><span class="o">.</span><span class="n">__class_dir__</span><span class="p">(),</span> <span class="n">tablefmt</span><span class="o">=</span><span class="s2">&quot;pretty&quot;</span>
+        <span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="K8sWorkerController"><a class="viewcode-back" href="../../hpecp.k8s_worker.html#hpecp.k8s_worker.K8sWorkerController">[docs]</a><span class="k">class</span> <span class="nc">K8sWorkerController</span><span class="p">:</span>
@@ -199,14 +203,19 @@
 <span class="sd">        Returns: Worker ID</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="n">basestring</span><span class="p">),</span> <span class="s2">&quot;&#39;ip&#39; must be provided and must be a string&quot;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
+            <span class="n">ip</span><span class="p">,</span> <span class="n">basestring</span>
+        <span class="p">),</span> <span class="s2">&quot;&#39;ip&#39; must be provided and must be a string&quot;</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
             <span class="n">ssh_key_data</span><span class="p">,</span> <span class="n">basestring</span>
         <span class="p">),</span> <span class="s2">&quot;&#39;ssh_key_data&#39; must be provided and must be a string&quot;</span>
 
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;ipaddr&quot;</span><span class="p">:</span> <span class="n">ip</span><span class="p">,</span>
-            <span class="s2">&quot;credentials&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;ssh_key_access&quot;</span><span class="p">,</span> <span class="s2">&quot;ssh_key_data&quot;</span><span class="p">:</span> <span class="n">ssh_key_data</span><span class="p">},</span>
+            <span class="s2">&quot;credentials&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;ssh_key_access&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;ssh_key_data&quot;</span><span class="p">:</span> <span class="n">ssh_key_data</span><span class="p">,</span>
+            <span class="p">},</span>
             <span class="s2">&quot;tags&quot;</span><span class="p">:</span> <span class="n">tags</span><span class="p">,</span>
         <span class="p">}</span>
 
@@ -245,7 +254,9 @@
 <span class="sd">        See: https://&lt;&lt;controller_ip&gt;&gt;/apidocs/site-admin-api.html for the schema of the  response object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
-            <span class="n">url</span><span class="o">=</span><span class="n">worker_id</span><span class="p">,</span> <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;delete&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;worker/delete_k8shosts&quot;</span>
+            <span class="n">url</span><span class="o">=</span><span class="n">worker_id</span><span class="p">,</span>
+            <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;delete&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;worker/delete_k8shosts&quot;</span><span class="p">,</span>
         <span class="p">)</span></div>
 
     <span class="c1"># TODO rename status parameter to statuses</span>
@@ -267,7 +278,9 @@
 <span class="sd">            APIItemNotFoundException: if the item is not found and status is not empty</span>
 <span class="sd">            APIException: if a generic API exception occurred</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">worker_id</span><span class="p">,</span> <span class="n">basestring</span><span class="p">),</span> <span class="s2">&quot;&#39;worker_id&#39; must be a string&quot;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
+            <span class="n">worker_id</span><span class="p">,</span> <span class="n">basestring</span>
+        <span class="p">),</span> <span class="s2">&quot;&#39;worker_id&#39; must be a string&quot;</span>
         <span class="k">assert</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
             <span class="sa">r</span><span class="s2">&quot;\/api\/v2\/worker\/k8shost\/[0-9]+&quot;</span><span class="p">,</span> <span class="n">worker_id</span>
         <span class="p">),</span> <span class="s2">&quot;&#39;worker_id&#39; must have format &#39;/api/v2/worker/k8shost/[0-9]+&#39;&quot;</span>
@@ -304,7 +317,8 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">polling</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span>
-                    <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">worker_id</span><span class="p">)</span><span class="o">.</span><span class="n">status</span> <span class="ow">in</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">status</span><span class="p">],</span>
+                    <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">worker_id</span><span class="p">)</span><span class="o">.</span><span class="n">status</span>
+                    <span class="ow">in</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">status</span><span class="p">],</span>
                     <span class="n">step</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
                     <span class="n">poll_forever</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                     <span class="n">timeout</span><span class="o">=</span><span class="n">timeout_secs</span><span class="p">,</span>
