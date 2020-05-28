@@ -8,14 +8,22 @@ USER gitpod
 # RUN sudo apt-get -q update && #     sudo apt-get install -yq bastet && #     sudo rm -rf /var/lib/apt/lists/*
 
 # setup the gitpod bundled python
-RUN pyenv shell 2.7.17 && pip install -U pytest mock awscli -r ./requirements.txt --user
-RUN pyenv shell 3.8.2 && pip3 install -U pytest tox mock awscli black flake8 -r ./requirements.txt --user
+RUN /home/gitpod/.pyenv/versions/2.7.17/bin/python2 -m pip install --upgrade pip
+RUN /home/gitpod/.pyenv/versions/3.8.2/bin/python3 -m pip install --upgrade pip
+
+RUN /home/gitpod/.pyenv/versions/2.7.17/bin/python2 -m pip install -U pytest mock awscli -r ./requirements.txt --user
+RUN /home/gitpod/.pyenv/versions/3.8.2/bin/python3 -m pip install -U pytest tox mock awscli black flake8 -r ./requirements.txt --user
 
 # additional python versions
-RUN pyenv install 3.5.9   && pyenv shell 3.5.9   && pip3 install -U pytest mock awscli flake8 -r ./requirements.txt --user
-RUN pyenv install 3.6.9   && pyenv shell 3.6.9   && pip3 install -U pytest mock awscli black flake8 -r ./requirements.txt --user
-RUN pyenv install 3.7.7   && pyenv shell 3.7.7   && pip3 install -U pytest mock awscli black flake8 -r ./requirements.txt --user
-RUN pyenv install 3.9-dev && pyenv shell 3.9-dev && pip3 install -U pytest mock awscli black flake8 -r ./requirements.txt --user
+RUN pyenv install 3.5.9
+RUN pyenv install 3.6.9
+RUN pyenv install 3.7.7
+RUN pyenv install 3.9-dev
+
+RUN /home/gitpod/.pyenv/versions/3.5.9/bin/python3 -m pip install -U pytest tox mock awscli flake8 -r ./requirements.txt --user
+RUN /home/gitpod/.pyenv/versions/3.6.9/bin/python3 -m pip install -U pytest tox mock awscli black flake8 -r ./requirements.txt --user
+RUN /home/gitpod/.pyenv/versions/3.7.7/bin/python3 -m pip install -U pytest tox mock awscli black flake8 -r ./requirements.txt --user
+RUN /home/gitpod/.pyenv/versions/3.9-dev/bin/python3 -m pip install -U pytest tox mock awscli black flake8 -r ./requirements.txt --user
 
 ENV PYTHONPATH=/workspace/hpecp-python-library:$PYTHONPATH
 #
