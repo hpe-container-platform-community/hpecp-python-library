@@ -4,9 +4,7 @@ tasks:
   - command: /home/gitpod/.pyenv/versions/3.5.9/bin/python3 -m pip install -U pytest tox mock awscli flake8 -r ./requirements.txt --user && exit
   - command: /home/gitpod/.pyenv/versions/3.6.9/bin/python3 -m pip install -U pytest tox mock awscli black flake8 -r ./requirements.txt --user && exit
   - command: /home/gitpod/.pyenv/versions/3.7.7/bin/python3 -m pip install -U pytest tox mock awscli black flake8 -r ./requirements.txt --user && exit
-  - command: \
-      /home/gitpod/.pyenv/versions/3.8.2/bin/python3 -m pip install -U pytest tox mock awscli black flake8 -r ./requirements.txt --user && \
-      /bin/python3 -m pip install -U pytest tox mock awscli black flake8 -r ./requirements.txt --user && exit
+  - command: /bin/python3 -m pip install -U pytest tox mock awscli black flake8 -r ./requirements.txt --user && exit
 
   # - command: /home/gitpod/.pyenv/versions/3.9-dev/bin/python3 -m pip install -U pytest tox mock awscli black flake8 -r ./requirements.txt --user && exit
   - command: cd docs && make html && cd build/html && python3 -m http.server 8080
