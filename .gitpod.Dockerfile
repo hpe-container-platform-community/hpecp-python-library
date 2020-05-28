@@ -7,7 +7,7 @@ USER gitpod
 #
 # RUN sudo apt-get -q update && #     sudo apt-get install -yq bastet && #     sudo rm -rf /var/lib/apt/lists/*
 
-RUN sudo apt-get -q update && sudo apt-get install -y shellcheck tox python3-sphinx 
+RUN sudo apt-get -q update && sudo apt-get install -y shellcheck tox python3-sphinx python3-pip
 
 ENV PATH=$PATH:/home/gitpod/.local/bin
 
