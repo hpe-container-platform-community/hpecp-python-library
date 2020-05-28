@@ -24,5 +24,5 @@
     "python.formatting.provider": "black",
     "python.pythonPath": "/bin/python3",
     "python.envFile": "${workspaceFolder}/gitpod.env",
-    "editor.formatOnSave": false
+    "editor.formatOnSave": true
 }
