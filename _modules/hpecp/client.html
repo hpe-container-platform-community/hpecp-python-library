@@ -72,14 +72,10 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
 
 <span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">requests</span>
-<span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">configparser</span>
-<span class="kn">import</span> <span class="nn">sys</span>
 
-<span class="kn">import</span> <span class="nn">requests</span>
 <span class="kn">from</span> <span class="nn">six</span> <span class="kn">import</span> <span class="n">raise_from</span>
 
 <span class="kn">from</span> <span class="nn">.config</span> <span class="kn">import</span> <span class="n">ConfigController</span>
@@ -97,7 +93,6 @@
 <span class="kn">from</span> <span class="nn">.user</span> <span class="kn">import</span> <span class="n">UserController</span>
 <span class="kn">from</span> <span class="nn">.logger</span> <span class="kn">import</span> <span class="n">Logger</span>
 <span class="kn">from</span> <span class="nn">.tenant</span> <span class="kn">import</span> <span class="n">TenantController</span>
-<span class="kn">from</span> <span class="nn">.user</span> <span class="kn">import</span> <span class="n">UserController</span>
 <span class="kn">from</span> <span class="nn">.catalog</span> <span class="kn">import</span> <span class="n">CatalogController</span>
 
 <span class="k">try</span><span class="p">:</span>
@@ -777,24 +772,6 @@
 <span class="sd">            client.user.get()</span>
 
 <span class="sd">        This example calls the method :py:meth:`get() &lt;.user.UserController.list&gt;` in :py:class:`.user.UserController`.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_user</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This attribute is a reference to an object of type `.user.UserController`.</span>
-
-<span class="sd">        See the class :py:class:`.user.UserController` for the methods available.</span>
-
-<span class="sd">        Example::</span>
-
-<span class="sd">            client = ContainerPlatformClient(...)</span>
-<span class="sd">            client.create_session()</span>
-<span class="sd">            client.user.create()</span>
-
-<span class="sd">        This example calls the method :py:meth:`create() &lt;.user.UserController.create&gt;` in :py:class:`.user.UserController`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_user</span>
