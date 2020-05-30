@@ -4,9 +4,13 @@ This module is the main module that users of this library will interact with.
 
 from __future__ import absolute_import
 
-import configparser
 import json
+import re
 import os
+import requests
+import json
+import configparser
+import sys
 
 import requests
 from six import raise_from
@@ -23,6 +27,7 @@ from .k8s_cluster import K8sClusterController
 from .k8s_worker import K8sWorkerController
 from .license import LicenseController
 from .lock import LockController
+from .user import UserController
 from .logger import Logger
 from .tenant import TenantController
 from .user import UserController
@@ -690,6 +695,24 @@ class ContainerPlatformClient(object):
         """
 
         return self._log
+   
+    @property
+    def user(self):
+        """
+        This attribute is a reference to an object of type `.user.UserController`.
+
+        See the class :py:class:`.lock.UserController` for the methods available.
+
+        Example::
+
+            client = ContainerPlatformClient(...)
+            client.create_session()
+            client.user.get()
+
+        This example calls the method :py:meth:`get() <.user.UserController.list>` in :py:class:`.user.UserController`.
+        """
+
+        return self._user
 
     @property
     def user(self):
