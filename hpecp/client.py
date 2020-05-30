@@ -695,7 +695,7 @@ class ContainerPlatformClient(object):
         """
 
         return self._log
-   
+
     @property
     def user(self):
         """
