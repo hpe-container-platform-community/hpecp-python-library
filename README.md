@@ -28,6 +28,14 @@ pip3 install -U pip
 pip3 install --upgrade git+https://github.com/hpe-container-platform-community/hpecp-client@master
 ```
 
+## Documentation
+
+[See here](https://hpe-container-platform-community.github.io/hpecp-python-library/index.html)
+
+## Contributing
+
+See [README](./DEVELOPING.md)
+
 ## Basic Library Usage
 
 Example:
@@ -200,11 +208,4 @@ for WRKR in ${WRKR_IDS[@]}; do
 done
 ```
 
-## Documentation
 
-[See here](https://hpe-container-platform-community.github.io/hpecp-python-library/index.html)
-
-
-## Contributing
-
-See [README](./DEVELOPING.md)
