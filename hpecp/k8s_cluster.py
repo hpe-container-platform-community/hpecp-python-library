@@ -9,9 +9,10 @@ from enum import Enum
 import re
 
 try:
-  basestring
+    basestring
 except NameError:
-  basestring = str
+    basestring = str
+
 
 class K8sClusterController:
     """This is the main class that users will interact with to work with K8S Clusters.
@@ -30,17 +31,18 @@ class K8sClusterController:
     def __init__(self, client):
         self.client = client
 
-    def create(self, 
-                name=None, 
-                description=None, 
-                k8s_version=None,
-                pod_network_range='10.192.0.0/12', 
-                service_network_range='10.96.0.0/12',
-                pod_dns_domain='cluster.local',
-                persistent_storage_local=False,
-                persistent_storage_nimble_csi=False,
-                k8shosts_config = [],
-                ):
+    def create(
+        self,
+        name=None,
+        description=None,
+        k8s_version=None,
+        pod_network_range="10.192.0.0/12",
+        service_network_range="10.96.0.0/12",
+        pod_dns_domain="cluster.local",
+        persistent_storage_local=False,
+        persistent_storage_nimble_csi=False,
+        k8shosts_config=[],
+    ):
         """Send an API request to create a K8s Cluster.  The cluster creation will be asynchronous - use 
         the :py:meth:`wait_for_status` method to wait for the cluster to be created.
 
@@ -76,37 +78,66 @@ class K8sClusterController:
             APIException
         """
 
-        assert isinstance(name, basestring) and len(name) > 0,"'name' must be provided and must be a string"
-        assert description is None or isinstance(description, basestring), "'description' if provided, must be a string"
-        assert k8s_version is None or isinstance(k8s_version, basestring), "'k8s_version' if provided, must be a string"
-        assert isinstance(pod_network_range, basestring), "'pod_network_range' must be a string"
-        assert isinstance(service_network_range, basestring), "'service_network_range' must be a string"
-        assert isinstance(pod_dns_domain, basestring), "'pod_dns_domain' must be a string"
-        assert isinstance(persistent_storage_local, bool), "'persistent_storage_local' must be True or False"
-        assert isinstance(persistent_storage_nimble_csi, bool), "'persistent_storage_nimble_csi' must be True or False"
-        assert isinstance(k8shosts_config, list), "'k8shosts_config' must be a list"
-        assert len(k8shosts_config) > 0, "'k8shosts_config' must have at least one item"
+        assert (
+            isinstance(name, basestring) and len(name) > 0
+        ), "'name' must be provided and must be a string"
+        assert description is None or isinstance(
+            description, basestring
+        ), "'description' if provided, must be a string"
+        assert k8s_version is None or isinstance(
+            k8s_version, basestring
+        ), "'k8s_version' if provided, must be a string"
+        assert isinstance(
+            pod_network_range, basestring
+        ), "'pod_network_range' must be a string"
+        assert isinstance(
+            service_network_range, basestring
+        ), "'service_network_range' must be a string"
+        assert isinstance(
+            pod_dns_domain, basestring
+        ), "'pod_dns_domain' must be a string"
+        assert isinstance(
+            persistent_storage_local, bool
+        ), "'persistent_storage_local' must be True or False"
+        assert isinstance(
+            persistent_storage_nimble_csi, bool
+        ), "'persistent_storage_nimble_csi' must be True or False"
+        assert isinstance(
+            k8shosts_config, list
+        ), "'k8shosts_config' must be a list"
+        assert (
+            len(k8shosts_config) > 0
+        ), "'k8shosts_config' must have at least one item"
         for i, conf in enumerate(k8shosts_config):
-            assert isinstance(conf, K8sClusterHostConfig), "'k8shosts_config' item '{}' is not of type K8sClusterHostConfig".format(i)
+            assert isinstance(
+                conf, K8sClusterHostConfig
+            ), "'k8shosts_config' item '{}' is not of type K8sClusterHostConfig".format(
+                i
+            )
 
         data = {
-            'label': { 
-                'name': name
+            "label": {"name": name},
+            "pod_network_range": pod_network_range,
+            "service_network_range": service_network_range,
+            "pod_dns_domain": pod_dns_domain,
+            "persistent_storage": {
+                "local": persistent_storage_local,
+                "nimble_csi": persistent_storage_nimble_csi,
             },
-            'pod_network_range': pod_network_range,
-            'service_network_range': service_network_range,
-            'pod_dns_domain': pod_dns_domain,
-            'persistent_storage': { 
-                'local': persistent_storage_local,
-                'nimble_csi': persistent_storage_nimble_csi
-            },
-            'k8shosts_config': [ c.to_dict() for c in k8shosts_config ]
+            "k8shosts_config": [c.to_dict() for c in k8shosts_config],
         }
-        if description is not None: data['label']['description'] = description
-        if k8s_version is not None: data['k8s_version'] = k8s_version
+        if description is not None:
+            data["label"]["description"] = description
+        if k8s_version is not None:
+            data["k8s_version"] = k8s_version
 
-        response = self.client._request(url='/api/v2/k8scluster', http_method='post', data=data, description='k8s_cluster/create')
-        return response.headers['Location']
+        response = self.client._request(
+            url="/api/v2/k8scluster",
+            http_method="post",
+            data=data,
+            description="k8s_cluster/create",
+        )
+        return response.headers["Location"]
 
     def list(self):
         """Retrieve list of K8S Clusters.
@@ -119,8 +150,12 @@ class K8sClusterController:
 
             APIException
         """
-        response = self.client._request(url='/api/v2/k8scluster', http_method='get', description='k8s_cluster/list')
-        return K8sClusterList(response.json()['_embedded']['k8sclusters'])
+        response = self.client._request(
+            url="/api/v2/k8scluster",
+            http_method="get",
+            description="k8s_cluster/list",
+        )
+        return K8sClusterList(response.json()["_embedded"]["k8sclusters"])
 
     def get(self, k8scluster_id, setup_log=False):
         """Retrieve a K8S Cluster by ID.
@@ -137,15 +172,23 @@ class K8sClusterController:
         Raises:
             APIException
         """
-        assert isinstance(k8scluster_id, str),"'k8scluster_id' must be provided and must be a string"
-        assert re.match(r'\/api\/v2\/k8scluster\/[0-9]+', k8scluster_id), "'k8scluster_id' must have format '/api/v2/k8scluster/[0-9]+'"
+        assert isinstance(
+            k8scluster_id, str
+        ), "'k8scluster_id' must be provided and must be a string"
+        assert re.match(
+            r"\/api\/v2\/k8scluster\/[0-9]+", k8scluster_id
+        ), "'k8scluster_id' must have format '/api/v2/k8scluster/[0-9]+'"
 
         if setup_log == True:
-            params = '?setup_log'
+            params = "?setup_log"
         else:
-            params = ''
+            params = ""
 
-        response = self.client._request(url='{}{}'.format(k8scluster_id, params), http_method='get', description='k8s_cluster/get')
+        response = self.client._request(
+            url="{}{}".format(k8scluster_id, params),
+            http_method="get",
+            description="k8s_cluster/get",
+        )
         return K8sCluster(response.json())
 
     def wait_for_status(self, k8scluster_id, status=[], timeout_secs=60):
@@ -166,21 +209,28 @@ class K8sClusterController:
             APIItemNotFoundException: if the item is not found
             APIException: if a generic API exception occurred
         """
-   
-        assert isinstance(k8scluster_id, basestring), "'k8scluster_id' must be a string"
-        assert re.match(r'\/api\/v2\/k8scluster\/[0-9]+', k8scluster_id), "'k8scluster_id' must have format '/api/v2/worker/k8scluster/[0-9]+'"
+
+        assert isinstance(
+            k8scluster_id, basestring
+        ), "'k8scluster_id' must be a string"
+        assert re.match(
+            r"\/api\/v2\/k8scluster\/[0-9]+", k8scluster_id
+        ), "'k8scluster_id' must have format '/api/v2/worker/k8scluster/[0-9]+'"
         assert isinstance(status, list), "'status' must be a list"
         for i, s in enumerate(status):
-            assert isinstance(s, K8sClusterStatus), "'status' item '{}' is not of type K8sClusterStatus".format(i)
-        assert isinstance(timeout_secs, int), "'timeout_secs' must be an int"   
+            assert isinstance(
+                s, K8sClusterStatus
+            ), "'status' item '{}' is not of type K8sClusterStatus".format(i)
+        assert isinstance(timeout_secs, int), "'timeout_secs' must be an int"
         assert timeout_secs >= 0, "'timeout_secs' must be >= 0"
 
         try:
             polling.poll(
-                lambda: self.get(k8scluster_id).status in [ s.name for s in status ],
+                lambda: self.get(k8scluster_id).status
+                in [s.name for s in status],
                 step=10,
                 poll_forever=False,
-                timeout=timeout_secs
+                timeout=timeout_secs,
             )
             return True
         except polling.TimeoutException:
@@ -198,14 +248,23 @@ class K8sClusterController:
         Raises:
             APIException
         """
-        assert isinstance(k8scluster_id, str),"'k8scluster_id' must be provided and must be a string"
-        assert re.match(r'\/api\/v2\/k8scluster\/[0-9]+', k8scluster_id), "'k8scluster_id' must have format '/api/v2/worker/k8scluster/[0-9]+'"
+        assert isinstance(
+            k8scluster_id, str
+        ), "'k8scluster_id' must be provided and must be a string"
+        assert re.match(
+            r"\/api\/v2\/k8scluster\/[0-9]+", k8scluster_id
+        ), "'k8scluster_id' must have format '/api/v2/worker/k8scluster/[0-9]+'"
 
-        self.client._request(url=k8scluster_id, http_method='delete', description='k8s_cluster/delete')
+        self.client._request(
+            url=k8scluster_id,
+            http_method="delete",
+            description="k8s_cluster/delete",
+        )
 
     def supported_k8s_versions(self):
         """Not yet implemented - see https://github.com/hpe-container-platform-community/hpecp-python-library/issues/3"""
         raise NotImplementedError()
+
 
 class K8sClusterStatus(Enum):
     """Bases: enum.Enum
@@ -227,7 +286,7 @@ class K8sClusterStatus(Enum):
     warning = 7
 
 
-class K8sCluster():
+class K8sCluster:
     """Create an instance of K8sCluster from json data returned from the HPE Container Platform API.
 
     Users of this library are not expected to create an instance of this class.
@@ -241,24 +300,24 @@ class K8sCluster():
             An instance of K8sCluster
     """
 
-    all_fields = [ 
-        'id', 
-        'name', 
-        'description', 
-        'k8s_version', 
-        'created_by_user_id', 
-        'created_by_user_name', 
-        'created_time',
-        'k8shosts_config',
-        'admin_kube_config',
-        'dashboard_token',
-        'api_endpoint_access',
-        'dashboard_endpoint_access',
-        'cert_data',
-        'status',
-        'status_message',
-        '_links'
-        ]
+    all_fields = [
+        "id",
+        "name",
+        "description",
+        "k8s_version",
+        "created_by_user_id",
+        "created_by_user_name",
+        "created_time",
+        "k8shosts_config",
+        "admin_kube_config",
+        "dashboard_token",
+        "api_endpoint_access",
+        "dashboard_endpoint_access",
+        "cert_data",
+        "status",
+        "status_message",
+        "_links",
+    ]
     """All of the fields of a K8s Cluster objects that are returned by the HPE Container Platform API"""
 
     def __init__(self, json):
@@ -266,11 +325,14 @@ class K8sCluster():
         self.display_columns = K8sCluster.all_fields
 
     def __repr__(self):
-        return "<K8sCluster id:{} name:{} description:{} status:{}>".format( self.id, self.name, self.description, self.status)
+        return "<K8sCluster id:{} name:{} description:{} status:{}>".format(
+            self.id, self.name, self.description, self.status
+        )
 
     def __str__(self):
         return "K8sCluster(id={}, name={}, description={}, status={})".format(
-                    self.id, self.name, self.description, self.status)
+            self.id, self.name, self.description, self.status
+        )
 
     def __dir__(self):
         return self.display_columns
@@ -290,107 +352,108 @@ class K8sCluster():
         self.display_columns = columns
 
     @property
-    def id(self): 
+    def id(self):
         """@Field: from json['_links']['self']['href'] - id format: '/api/v2/k8scluster/[0-9]+'"""
-        return self.json['_links']['self']['href']
+        return self.json["_links"]["self"]["href"]
 
     @property
-    def name(self): 
+    def name(self):
         """@Field: from json['label']['name']"""
-        return self.json['label']['name']
+        return self.json["label"]["name"]
 
     @property
     def description(self):
         """@Field: from json['label']['description']"""
-        return self.json['label']['description']
-    
+        return self.json["label"]["description"]
+
     @property
     def k8s_version(self):
         """@Field: from json['k8s_version']"""
-        return self.json['k8s_version']
-    
+        return self.json["k8s_version"]
+
     @property
     def created_by_user_id(self):
         """@Field: from json['created_by_user_id']"""
-        return self.json['created_by_user_id']
-    
+        return self.json["created_by_user_id"]
+
     @property
     def created_by_user_name(self):
         """@Field: from json['created_by_user_name']"""
-        return self.json['created_by_user_name']
-    
+        return self.json["created_by_user_name"]
+
     @property
     def created_time(self):
         """@Field: from json['created_time']"""
-        return self.json['created_time']
-    
+        return self.json["created_time"]
+
     @property
     def k8shosts_config(self):
         """@Field: from json['k8shosts_config']"""
-        return self.json['k8shosts_config']
-    
+        return self.json["k8shosts_config"]
+
     @property
     def admin_kube_config(self):
         """@Field: from json['admin_kube_config']"""
-        if 'admin_kube_config' in self.json:
-            return self.json['admin_kube_config']
+        if "admin_kube_config" in self.json:
+            return self.json["admin_kube_config"]
         else:
-            return ''
-    
+            return ""
+
     @property
     def dashboard_token(self):
         """@Field: from json['dashboard_token']"""
-        if 'dashboard_token' in self.json:
-            return self.json['dashboard_token']
+        if "dashboard_token" in self.json:
+            return self.json["dashboard_token"]
         else:
-            return ''
-    
+            return ""
+
     @property
     def api_endpoint_access(self):
         """@Field: from json['api_endpoint_access']"""
-        if 'api_endpoint_access' in self.json:
-            return self.json['api_endpoint_access']
+        if "api_endpoint_access" in self.json:
+            return self.json["api_endpoint_access"]
         else:
-            return ''
+            return ""
 
     @property
     def dashboard_endpoint_access(self):
         """@Field: from json['dashboard_endpoint_access']"""
-        if 'dashboard_endpoint_access' in self.json:
-            return self.json['dashboard_endpoint_access']
+        if "dashboard_endpoint_access" in self.json:
+            return self.json["dashboard_endpoint_access"]
         else:
-            return ''
-    
+            return ""
+
     @property
     def cert_data(self):
         """@Field: from json['cert_data'] or None if cert_data not available"""
         try:
-            return self.json['cert_data']
+            return self.json["cert_data"]
         except KeyError:
             return None
 
     @property
     def status(self):
         """@Field: from json['status']"""
-        return self.json['status']
+        return self.json["status"]
 
     @property
     def status_message(self):
         """@Field: from json['status_message']"""
-        if 'status_message' in self.json:
-            return self.json['status_message']
+        if "status_message" in self.json:
+            return self.json["status_message"]
         else:
-            return ''
+            return ""
 
     @property
     def _links(self):
         """@Field: from json['_links']"""
-        return self.json['_links']
+        return self.json["_links"]
 
     def __len__(self):
         return len(dir(self))
 
-class K8sClusterList():
+
+class K8sClusterList:
     """List of :py:obj:`.K8sCluster` objects
 
     This class is not expected to be instantiated by users.
@@ -402,7 +465,9 @@ class K8sClusterList():
 
     def __init__(self, json):
         self.json = json
-        self.clusters = sorted([K8sCluster(t) for t in json],  key=attrgetter('id'))
+        self.clusters = sorted(
+            [K8sCluster(t) for t in json], key=attrgetter("id")
+        )
         self.tenant_columns = K8sCluster.all_fields
 
     def __getitem__(self, item):
@@ -412,7 +477,7 @@ class K8sClusterList():
     def next(self):
         """Support iterator access on Python 2.7"""
         if not self.clusters:
-           raise StopIteration
+            raise StopIteration
         tenant = self.clusters.pop(0)
         tenant.set_display_columns(self.tenant_columns)
         return tenant
@@ -420,7 +485,7 @@ class K8sClusterList():
     # Python 3
     def __next__(self):
         if not self.clusters:
-           raise StopIteration
+            raise StopIteration
         tenant = self.clusters.pop(0)
         tenant.set_display_columns(self.tenant_columns)
         return tenant
@@ -450,14 +515,21 @@ class K8sClusterList():
             print(hpeclient.cluster.list().tabulate(columns=['id', 'name', 'description']))
         """
         if columns != K8sCluster.all_fields:
-            assert isinstance(columns, list), "'columns' parameter must be list"
+            assert isinstance(
+                columns, list
+            ), "'columns' parameter must be list"
             for field in K8sCluster.all_fields:
-                assert field in K8sCluster.all_fields, "item '{}' is not a field in K8sCluster.all_fields".format(field)
+                assert (
+                    field in K8sCluster.all_fields
+                ), "item '{}' is not a field in K8sCluster.all_fields".format(
+                    field
+                )
 
         self.tenant_columns = columns
         return tabulate(self, headers=columns, tablefmt="pretty")
 
-class K8sClusterHostConfig():
+
+class K8sClusterHostConfig:
     """Object to represent a pair of `host node` and the `role` of the host - `master` or `worker`.
 
     Arguments:
@@ -479,13 +551,20 @@ class K8sClusterHostConfig():
         See :py:meth:`K8sClusterHostConfig` for the allowed node and role values.
         """
 
-        assert len(noderole) == 2, "'noderole' list must have two values [  node, role ]"
+        assert (
+            len(noderole) == 2
+        ), "'noderole' list must have two values [  node, role ]"
         return K8sClusterHostConfig(node=noderole[0], role=noderole[1])
 
     def __init__(self, node, role):
         assert isinstance(node, basestring), "'node' must be an string"
-        assert re.match(r'\/api\/v2\/worker\/k8shost\/[0-9]+', node), "'node' must have format '/api/v2/worker/k8shost/[0-9]+'"
-        assert role in [ 'master', 'worker' ], "'role' must one of ['master, worker']"
+        assert re.match(
+            r"\/api\/v2\/worker\/k8shost\/[0-9]+", node
+        ), "'node' must have format '/api/v2/worker/k8shost/[0-9]+'"
+        assert role in [
+            "master",
+            "worker",
+        ], "'role' must one of ['master, worker']"
 
         self.node = node
         self.role = role
@@ -503,7 +582,4 @@ class K8sClusterHostConfig():
                 'role': 'master'
             }
         """
-        return { 
-                'node': self.node, 
-                'role': self.role 
-            }
+        return {"node": self.node, "role": self.role}

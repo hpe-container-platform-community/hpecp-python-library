@@ -1,4 +1,5 @@
 from __future__ import absolute_import
+
 from .logger import Logger
 from .exceptions import ContainerPlatformClientException, APIException, APIItemNotFoundException, APIItemConflictException
 
@@ -12,9 +13,10 @@ import six
 import sys
 
 try:
-  basestring
+    basestring
 except NameError:
-  basestring = str
+    basestring = str
+
 
 class UserController:
     """This is the main class that users will interact get the li .
@@ -27,7 +29,6 @@ class UserController:
 
         client = ContainerPlatformClient(...).create_session()
         client.user.list()
-
     """
 
     def __init__(self, client):
@@ -86,6 +87,43 @@ class UserController:
     def wait_for_delete(self, user_id, timeout_secs=1200):
         """Not Implemented yet"""
         raise NotImplementedError()
+        
+    def create(self, name, description="", is_external=True):
+        """Create a user by specifying name & description
+
+        Args:
+            name: str
+                Client name.
+            description: str
+                Description as a string.
+            is_external: bool
+                Set to True for external users
+
+        Returns: user ID
+        """
+
+        assert isinstance(
+            name, basestring
+        ), "'name' must be provided and must be a string"
+        assert isinstance(
+            description, basestring
+        ), "'description must be a string"
+        assert isinstance(
+            is_external, bool
+        ), "'is_external' must be provided and must be a bool"
+
+        data = {
+            "label": {"name": name, "description": description},
+            "is_external": is_external,
+        }
+
+        response = self.client._request(
+            url="/api/v1/user",
+            http_method="post",
+            data=data,
+            description="user/create",
+        )
+        return response.headers["location"]
 
 class User():
     """Create an instance of User from json data returned from the HPE Container Platform API.
@@ -260,3 +298,4 @@ class UserList():
             return tabulate(self, headers=columns, tablefmt=style)
         else:
             return tabulate(self, tablefmt=style)
+
