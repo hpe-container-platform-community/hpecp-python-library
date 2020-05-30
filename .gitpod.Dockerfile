@@ -1,5 +1,5 @@
 FROM gitpod/workspace-full
-                    
+
 USER gitpod
 
 # Install custom tools, runtime, etc. using apt-get
@@ -7,22 +7,23 @@ USER gitpod
 #
 # RUN sudo apt-get -q update && #     sudo apt-get install -yq bastet && #     sudo rm -rf /var/lib/apt/lists/*
 
-RUN \
-    sudo apt-get update \
-    && sudo apt-get install -y tox python3-sphinx python3-pip
+RUN sudo apt-get -q update && sudo apt-get install -y shellcheck tox python3-sphinx python3-pip
 
-RUN \
-  pyenv install 3.5.9 \
-  && pyenv install 3.6.9 \
-  && pyenv install 3.7.7 \
-  && pyenv install 3.9-dev \
-  && pyenv global 3.5.9 3.6.9 3.7.7 3.9-dev \
-  && pip install --upgrade pip
+ENV PATH=$PATH:/home/gitpod/.local/bin
 
-RUN \
-  pip3 install -U pytest --user \
-  && pip3 install -U pylint --user
+# setup the gitpod bundled python
+RUN /home/gitpod/.pyenv/versions/2.7.17/bin/python2 -m pip install --upgrade pip
+RUN /home/gitpod/.pyenv/versions/3.8.2/bin/python3 -m pip install --upgrade pip
 
-ENV PYTHONPATH=/workspace/hpecp-python-library:$PYTHONPATH
+# additional python versions
+RUN pyenv install 3.5.9
+RUN pyenv install 3.6.9
+RUN pyenv install 3.7.7
+
+# The following fails: build failed: cannot build base image: The command '/bin/sh -c pyenv install 3.9-dev' returned a non-zero code: 1
+# RUN pyenv install 3.9-dev
+
+# Allow pytest to discover tests
+RUN echo 'PYTHONPATH=/workspace/hpecp-python-library:$PYTHONPATH' > ~/.bashrc.d/40-pythonpath
 #
 # More information: https://www.gitpod.io/docs/config-docker/

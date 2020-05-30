@@ -2,6 +2,14 @@
 
 You can use gitpod - click [here](https://gitpod.io/#https://github.com/hpe-container-platform-community/hpecp-python-library/blob/master/DEVELOPING.md) to launch.
 
+- Installing the CLI in gitpod:
+
+```
+pip install -e .
+source <(hpecp autocomplete bash) # setup autocompletion
+hpecp configure-cli
+```
+
 #### BUILDING DOCS
 
 In the Gitpod Terminal:
@@ -62,10 +70,10 @@ coverage erase && coverage run --source hpecp setup.py test && coverage report -
 
 ### FORMATTING
 
-Currently not used
-
 ```
-autopep8 --in-place --aggressive --recursive hpecp/
+pip3 install black
+# automatically format hpecp folder
+black hpecp 
 ```
 
 ### RELEASING
@@ -80,3 +88,14 @@ git tag 0.0.9  -m "Add pypi python versions"
 git push origin 0.0.9 
 python setup.py sdist upload -r pypi
 ```
+
+### TROUBLESHOOTING
+
+If you are unable to push from gitpod, naviate to: https://gitpod.io/access-control/
+
+Ensure you select:
+
+- write public repos
+- read organisations
+
+Click Update and authorize on the gitpub page that opens.

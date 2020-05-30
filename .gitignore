@@ -108,3 +108,4 @@ hpecp.egg-info/
 .coverage
 docs/build/
 .noseids
+bin/hpecp

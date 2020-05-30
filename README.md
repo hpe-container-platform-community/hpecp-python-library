@@ -3,7 +3,11 @@
 [![Coverage Status](https://coveralls.io/repos/github/hpe-container-platform-community/hpecp-python-library/badge.png?branch=master)](https://coveralls.io/github/hpe-container-platform-community/hpecp-python-library?branch=master)
 [![Pyversions](https://img.shields.io/badge/Pyversions-2.7,%203.5,%203.6,%203.7,%203.8,%203.9-green.svg)](https://github.com/hpe-container-platform-community/hpecp-python-library/blob/master/tox.ini#L7)
 [![Apache2 license](http://img.shields.io/badge/license-apache2-brightgreen.svg)](http://opensource.org/licenses/Apache-2.0)
+[![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 [![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/hpe-container-platform-community/hpecp-python-library)
+[![Good first issues open](https://img.shields.io/github/issues/hpe-container-platform-community/hpecp-python-library/good%20first%20issue.svg?label=good%20first%20issue)](https://github.com/hpe-container-platform-community/hpecp-python-library/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)
+
 
 ----
 
@@ -167,6 +171,33 @@ cat >$JSON_FILE<<-EOF
 }
 EOF
 hpecp httpclient post /api/v2/config/auth --json-file ${JSON_FILE}
+
+echo "Adding K8s workers"
+WRKR_IDS=()
+for WRKR in ${WRKR_PRV_IPS[@]}; do
+    echo "   worker $WRKR"
+    WRKR_ID="$(hpecp k8sworker create-with-ssh-key --ip ${WRKR} --ssh-key-file ./generated/controller.prv_key)"
+    echo "       id $WRKR_ID"
+    WRKR_IDS+=($WRKR_ID)
+done
+
+echo "Waiting for K8s workers to have state 'storage_pending'"
+for WRKR in ${WRKR_IDS[@]}; do
+    echo "   worker $WRKR"
+    hpecp k8sworker wait-for-status ${WRKR} --status  "['storage_pending']"
+done
+
+echo "Setting K8s worker storage"
+for WRKR in ${WRKR_IDS[@]}; do
+    echo "   worker $WRKR"
+    hpecp k8sworker set-storage --k8sworker_id ${WRKR} --persistent-disks=/dev/nvme1n1 --ephemeral-disks=/dev/nvme2n1
+done
+
+echo "Waiting for K8s workers to have state 'ready'"
+for WRKR in ${WRKR_IDS[@]}; do
+    echo "   worker $WRKR"
+    hpecp k8sworker wait-for-status ${WRKR} --status  "['ready']"
+done
 ```
 
 ## Documentation
