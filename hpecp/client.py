@@ -5,14 +5,10 @@ This module is the main module that users of this library will interact with.
 from __future__ import absolute_import
 
 import json
-import re
 import os
 import requests
-import json
 import configparser
-import sys
 
-import requests
 from six import raise_from
 
 from .config import ConfigController
@@ -30,7 +26,6 @@ from .lock import LockController
 from .user import UserController
 from .logger import Logger
 from .tenant import TenantController
-from .user import UserController
 from .catalog import CatalogController
 
 try:
@@ -710,24 +705,6 @@ class ContainerPlatformClient(object):
             client.user.get()
 
         This example calls the method :py:meth:`get() <.user.UserController.list>` in :py:class:`.user.UserController`.
-        """
-
-        return self._user
-
-    @property
-    def user(self):
-        """
-        This attribute is a reference to an object of type `.user.UserController`.
-
-        See the class :py:class:`.user.UserController` for the methods available.
-
-        Example::
-
-            client = ContainerPlatformClient(...)
-            client.create_session()
-            client.user.create()
-
-        This example calls the method :py:meth:`create() <.user.UserController.create>` in :py:class:`.user.UserController`.
         """
 
         return self._user
