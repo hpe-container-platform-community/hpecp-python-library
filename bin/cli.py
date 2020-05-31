@@ -480,9 +480,23 @@ class K8sClusterProxy(object):
         :returns True/False if status was found within timeout_secs. May raise APIException.
         """
         cluster_status = [K8sClusterStatus[s] for s in status]
-        get_client().k8s_cluster.wait_for_status(
-            k8scluster_id=k8scluster_id, status=cluster_status,
-        )
+
+        try:
+            success = get_client().k8s_cluster.wait_for_status(
+                k8scluster_id=k8scluster_id,
+                status=cluster_status,
+                timeout_secs=timeout_secs,
+            )
+        except:
+            success = False
+
+        if not success:
+            print(
+                "Failed to reach state(s) {} in {}".format(
+                    str(status), str(timeout_secs),
+                )
+            )
+            sys.exit(1)
 
     def statuses(self,):
         """Return a list of valid statuses"""
