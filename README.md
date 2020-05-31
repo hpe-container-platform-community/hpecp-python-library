@@ -206,6 +206,42 @@ for WRKR in ${WRKR_IDS[@]}; do
     echo "   worker $WRKR"
     hpecp k8sworker wait-for-status ${WRKR} --status  "['ready']"
 done
+
+# get the k8s worker IDs
+hpecp k8sworker list 
+
+# Example output:
+# +-----------+--------+------------------------------------------+------------+---------------------------+
+# | worker_id | status |                 hostname                 |   ipaddr   |           href            |
+# +-----------+--------+------------------------------------------+------------+---------------------------+
+# |    16     | ready  | ip-10-1-0-178.us-west-2.compute.internal | 10.1.0.178 | /api/v2/worker/k8shost/16 |
+# |    17     | ready  | ip-10-1-0-93.us-west-2.compute.internal  | 10.1.0.93  | /api/v2/worker/k8shost/17 |
+# +-----------+--------+------------------------------------------+------------+---------------------------+
+
+# get the HPE CP supported k8s 1.17.x version number
+KVERS=$(hpecp httpclient get /api/v2/k8smanifest |  python3 -c 'import json,sys;obj=json.load(sys.stdin);  [ print(v) for v in obj["version_info"] if v.startswith("1.17") ]')
+echo $KVERS
+
+# replace IDs defined below with the ones from `hpecp k8sworker list'
+MASTER_ID="/api/v2/worker/k8shost/16"
+WORKER_ID="/api/v2/worker/k8shost/17"
+MASTER_IP="10.1.0.178"
+
+# create a K8s Cluster
+CLUS_ID=$(hpecp k8scluster create clus1 ${MASTER_ID}:master,${WORKER_ID}:worker --k8s-version $KVERS)
+echo $CLUS_ID
+
+# wait until cluster is ready
+watch hpecp k8scluster list
+
+# check connectivity to cluster
+ping -c 5 $MASTER_IP
+
+export KUBECONFIG=./clus_kfg
+hpecp k8scluster admin-kube-config ${CLUS_ID} > ${KUBECONFIG}
+
+# test kubectl:
+kubectl get pods --all-namespaces 
 ```
 
 
