@@ -57,8 +57,7 @@ class TestCLI(TestCase):
                         "1.18.0":{"_version":"1.0","min_upgrade_version":"1.17.0","relnote_url":"https://kubernetes.io/docs/setup/release/notes/","hpecsi":"1.18"}
                         }
                     },
-                status_code = 404,
-                raise_for_status_flag = True,
+                status_code = 200,
                 headers = { }
             )
         raise RuntimeError("Unhandle GET request: " + args[0]) 
