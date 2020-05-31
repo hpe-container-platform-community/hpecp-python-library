@@ -492,7 +492,7 @@ class K8sClusterProxy(object):
         """
         Print a list of supported k8s versions
         """
-        print(get_client().k8s_cluster.supported_k8s_versions())
+        print(get_client().k8s_cluster.k8s_supported_versions())
 
 
 class LockProxy(object):

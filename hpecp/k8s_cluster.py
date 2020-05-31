@@ -261,7 +261,7 @@ class K8sClusterController:
             description="k8s_cluster/delete",
         )
 
-    def supported_k8s_versions(self):
+    def k8s_supported_versions(self):
         #"""Not yet implemented - see https://github.com/hpe-container-platform-community/hpecp-python-library/issues/3"""
         #raise NotImplementedError()
         """Retrieve list of K8S Supported Versions.
