@@ -624,7 +624,7 @@ class TestK8sSupportVersions(TestCase):
 
     # pylint: disable=no-method-argument 
     def mocked_requests_get(*args, **kwargs ):
-        if args[0] == 'http://localhost:8080/api/v2/k8smanifest':
+        if args[0] == 'https://127.0.0.1:8080/api/v2/k8smanifest':
             return MockResponse  (
                 json_data = {
                     "_version":"1.0",
@@ -639,8 +639,7 @@ class TestK8sSupportVersions(TestCase):
                         "1.18.0":{"_version":"1.0","min_upgrade_version":"1.17.0","relnote_url":"https://kubernetes.io/docs/setup/release/notes/","hpecsi":"1.18"}
                         }
                     },
-                status_code = 404,
-                raise_for_status_flag = True,
+                status_code = 200,
                 headers = { }
             )
         raise RuntimeError("Unhandle GET request: " + args[0]) 
