@@ -261,9 +261,22 @@ class K8sClusterController:
             description="k8s_cluster/delete",
         )
 
-    def supported_k8s_versions(self):
-        """Not yet implemented - see https://github.com/hpe-container-platform-community/hpecp-python-library/issues/3"""
-        raise NotImplementedError()
+    def k8s_supported_versions(self):
+        #"""Not yet implemented - see https://github.com/hpe-container-platform-community/hpecp-python-library/issues/3"""
+        #raise NotImplementedError()
+        """Retrieve list of K8S Supported Versions.
+        Returns:
+            List of K8s Supported Versions
+
+        Raises:
+            APIException
+        """
+        response = self.client._request(
+            url="/api/v2/k8smanifest",
+            http_method="get",
+            description="k8s_cluster/k8s_supported_versions",
+        )
+        return response.json()["supported_versions"]
 
 
 class K8sClusterStatus(Enum):
