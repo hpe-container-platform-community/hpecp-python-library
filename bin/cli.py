@@ -487,6 +487,12 @@ class K8sClusterProxy(object):
     def statuses(self,):
         """Return a list of valid statuses"""
         print([s.name for s in K8sClusterStatus])
+    
+    def k8s_supported_versions():
+        """
+        Print a list of supported k8s versions
+        """
+        print(get_client().k8s_cluster.supported_k8s_versions())
 
 
 class LockProxy(object):
