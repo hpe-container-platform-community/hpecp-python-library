@@ -328,9 +328,22 @@
             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;k8s_cluster/delete&quot;</span><span class="p">,</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="K8sClusterController.supported_k8s_versions"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.supported_k8s_versions">[docs]</a>    <span class="k">def</span> <span class="nf">supported_k8s_versions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Not yet implemented - see https://github.com/hpe-container-platform-community/hpecp-python-library/issues/3&quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div></div>
+<div class="viewcode-block" id="K8sClusterController.k8s_supported_versions"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.k8s_supported_versions">[docs]</a>    <span class="k">def</span> <span class="nf">k8s_supported_versions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># &quot;&quot;&quot;Not yet implemented - see https://github.com/hpe-container-platform-community/hpecp-python-library/issues/3&quot;&quot;&quot;</span>
+        <span class="c1"># raise NotImplementedError()</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve list of K8S Supported Versions.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            List of K8s Supported Versions</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            APIException</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
+            <span class="n">url</span><span class="o">=</span><span class="s2">&quot;/api/v2/k8smanifest&quot;</span><span class="p">,</span>
+            <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;get&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;k8s_cluster/k8s_supported_versions&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;supported_versions&quot;</span><span class="p">]</span></div></div>
 
 
 <div class="viewcode-block" id="K8sClusterStatus"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterStatus">[docs]</a><span class="k">class</span> <span class="nc">K8sClusterStatus</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
