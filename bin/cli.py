@@ -488,11 +488,64 @@ class K8sClusterProxy(object):
         """Return a list of valid statuses"""
         print([s.name for s in K8sClusterStatus])
 
-    def k8s_supported_versions(self):
+    def k8s_supported_versions(
+        self,
+        output="json",
+        major_filter=None,
+        minor_filter=None,
+        patch_filter=None,
+    ):
         """
         Print a list of supported k8s versions
+
+        :param output: how to print the output, 'json' or 'text'
+        :param major_filter: only return versions matching major_filter
+        :param minor_filter: only return versions matching minor_filter
+        :param patch_filter: only return versions matching patch_filter
+
+        Example::
+
+        hpecp k8scluster k8s_supported_versions --major-filter 1 --minor-filter 17
         """
-        print(get_client().k8s_cluster.k8s_supported_versions())
+        assert output in [
+            "json",
+            "text",
+        ], "'output' parameter ust be 'json' or 'text'"
+
+        assert major_filter is None or isinstance(
+            major_filter, int
+        ), "'major_filter' if provided must be an int"
+        assert minor_filter is None or isinstance(
+            minor_filter, int
+        ), "'minor_filter' if provided must be an int"
+        assert patch_filter is None or isinstance(
+            patch_filter, int
+        ), "'patch_filter' if provided must be an int"
+
+        vers = []
+        for v in get_client().k8s_cluster.k8s_supported_versions():
+            if (
+                (
+                    major_filter is not None
+                    and not v.startswith(str(major_filter))
+                )
+                or (
+                    minor_filter is not None
+                    and not v.find("." + str(minor_filter) + ".") > 0
+                )
+                or (
+                    patch_filter is not None
+                    and not v.endswith(str(patch_filter))
+                )
+            ):
+                continue
+            else:
+                vers.append(v)
+
+        if output == "json":
+            print(vers)
+        else:
+            print(" ".join(vers))
 
 
 class LockProxy(object):
