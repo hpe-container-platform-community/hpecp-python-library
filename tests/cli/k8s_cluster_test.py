@@ -42,7 +42,7 @@ class TestCLI(TestCase):
 
     # pylint: disable=no-method-argument 
     def mocked_requests_get(*args, **kwargs ):
-        if args[0] == 'http://localhost:8080/api/v2/k8smanifest':
+        if args[0] == 'https://127.0.0.1:8080/api/v2/k8smanifest':
             return MockResponse  (
                 json_data = {
                     "_version":"1.0",
