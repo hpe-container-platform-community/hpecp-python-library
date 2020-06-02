@@ -12,6 +12,8 @@ from collections import OrderedDict
 import fire
 import yaml
 
+from hpecp.logger import Logger
+
 from hpecp.gateway import (
     Gateway,
     GatewayStatus,
@@ -31,8 +33,28 @@ from hpecp.k8s_worker import WorkerK8sStatus
 if sys.version_info[0] >= 3:
     unicode = str
 
+_log = Logger().get_logger(__file__)
+
 PROFILE = os.getenv("PROFILE", "default",)
-HPECP_CONFIG_FILE = os.getenv("HPECP_CONFIG_FILE", "~/.hpecp.conf",)
+
+_log.debug(
+    "PROFILE envirionment variable exists with value '{}'".format(PROFILE)
+)
+
+if "HPECP_CONFIG_FILE" in os.environ:
+    HPECP_CONFIG_FILE = os.getenv("HPECP_CONFIG_FILE")
+    _log.debug(
+        "HPECP_CONFIG_FILE envirionment variable exists with value '{}'".format(
+            HPECP_CONFIG_FILE
+        )
+    )
+else:
+    HPECP_CONFIG_FILE = "~/.hpecp.conf"
+    _log.debug(
+        "HPECP_CONFIG_FILE envirionment variable not found, setting to '{}'".format(
+            HPECP_CONFIG_FILE
+        )
+    )
 
 
 def get_client():
