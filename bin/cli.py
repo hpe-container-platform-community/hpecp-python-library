@@ -148,6 +148,11 @@ class GatewayProxy(object):
         """Retrieve the list of Gateways
 
         :param output: how to display the output [text|table|json]
+        :param query: jmespath (https://jmespath.org/) query
+
+        Example::
+
+        hpecp gateway list --output json --query '[0].ip'
         """
         if output == "table":
             print(get_client().gateway.list().tabulate(columns=columns))
@@ -162,8 +167,9 @@ class GatewayProxy(object):
         else:
             data = get_client().gateway.list().json
             if query:
-                print(jmespath.search(query, data))
-            print(data)
+                print(jmespath.search(str(query), data))
+            else:
+                print(data)
 
     def delete(
         self, gateway_id, wait_for_delete_secs=0,
