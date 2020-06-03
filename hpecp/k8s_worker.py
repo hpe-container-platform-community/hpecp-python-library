@@ -1,13 +1,13 @@
 from __future__ import absolute_import
-from .logger import Logger
+
+import re
+from enum import Enum
+from operator import attrgetter
+
+import polling
+from tabulate import tabulate
 
 from .exceptions import APIItemNotFoundException
-
-from operator import attrgetter
-from tabulate import tabulate
-import polling
-from enum import Enum
-import re
 
 try:
     basestring
@@ -129,7 +129,7 @@ class K8sWorkerController:
             ip: str
                 The IP address of the proxy host.  Used for internal communication.
             ssh_key_data: str
-                The ssh key data as a string. 
+                The ssh key data as a string.
             tags: list
                 Tags to use, e.g. "{ 'tag1': 'foo', 'tag2', 'bar' }".
 
@@ -206,7 +206,7 @@ class K8sWorkerController:
 
         Returns:
             bool: True if status was found before timeout, otherwise False
-            
+
         Raises:
             APIItemNotFoundException: if the item is not found and status is not empty
             APIException: if a generic API exception occurred

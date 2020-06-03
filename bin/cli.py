@@ -10,22 +10,17 @@ import sys
 from collections import OrderedDict
 
 import fire
+import jmespath
 import yaml
 
-from hpecp.gateway import (
-    Gateway,
-    GatewayStatus,
-)
-from hpecp.k8s_cluster import (
-    K8sClusterHostConfig,
-    K8sClusterStatus,
-)
 from hpecp import (
-    ContainerPlatformClient,
-    ContainerPlatformClientException,
     APIException,
     APIItemConflictException,
+    ContainerPlatformClient,
+    ContainerPlatformClientException,
 )
+from hpecp.gateway import Gateway, GatewayStatus
+from hpecp.k8s_cluster import K8sClusterHostConfig, K8sClusterStatus
 from hpecp.k8s_worker import WorkerK8sStatus
 
 if sys.version_info[0] >= 3:
@@ -118,7 +113,7 @@ class GatewayProxy(object):
             print(response.json)
 
     def list(
-        self, output="table", columns=Gateway.default_display_fields,
+        self, output="table", columns=Gateway.default_display_fields, query={}
     ):
         """Retrieve the list of Gateways
 
@@ -135,7 +130,10 @@ class GatewayProxy(object):
                 )
             )
         else:
-            print(get_client().gateway.list().json)
+            data = get_client().gateway.list().json
+            if query:
+                print(jmespath.search(query, data))
+            print(data)
 
     def delete(
         self, gateway_id, wait_for_delete_secs=0,
@@ -189,7 +187,7 @@ class GatewayProxy(object):
             success = get_client().gateway.wait_for_state(
                 gateway_id=gateway_id, state=gateway_states,
             )
-        except:
+        except Exception:
             success = False
 
         if not success:
@@ -257,7 +255,7 @@ class K8sWorkerProxy(object):
                 get_client()
                 .k8s_worker.list()
                 .tabulate(
-                    columns=columns, style="plain", display_headers=False,
+                    columns=columns, style="plain", display_headers=False
                 )
             )
         else:
