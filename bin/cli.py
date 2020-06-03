@@ -1018,6 +1018,7 @@ class CLI(object):
         self.lock = LockProxy()
         self.license = LicenseProxy()
         self.httpclient = HttpClientProxy()
+        self.user = UserProxy()
         self.autocomplete = AutoComplete()
         self.configure_cli = configure_cli
 
