@@ -13,21 +13,51 @@ import fire
 import jmespath
 import yaml
 
+from hpecp.logger import Logger
+
+from hpecp.gateway import (
+    Gateway,
+    GatewayStatus,
+)
+from hpecp.k8s_cluster import (
+    K8sClusterHostConfig,
+    K8sClusterStatus,
+)
+from hpecp.user import User
+
 from hpecp import (
     APIException,
     APIItemConflictException,
     ContainerPlatformClient,
     ContainerPlatformClientException,
 )
-from hpecp.gateway import Gateway, GatewayStatus
-from hpecp.k8s_cluster import K8sClusterHostConfig, K8sClusterStatus
 from hpecp.k8s_worker import WorkerK8sStatus
 
 if sys.version_info[0] >= 3:
     unicode = str
 
+_log = Logger().get_logger(__file__)
+
 PROFILE = os.getenv("PROFILE", "default",)
-HPECP_CONFIG_FILE = os.getenv("HPECP_CONFIG_FILE", "~/.hpecp.conf",)
+
+_log.debug(
+    "PROFILE envirionment variable exists with value '{}'".format(PROFILE)
+)
+
+if "HPECP_CONFIG_FILE" in os.environ:
+    HPECP_CONFIG_FILE = os.getenv("HPECP_CONFIG_FILE")
+    _log.debug(
+        "HPECP_CONFIG_FILE envirionment variable exists with value '{}'".format(
+            HPECP_CONFIG_FILE
+        )
+    )
+else:
+    HPECP_CONFIG_FILE = "~/.hpecp.conf"
+    _log.debug(
+        "HPECP_CONFIG_FILE envirionment variable not found, setting to '{}'".format(
+            HPECP_CONFIG_FILE
+        )
+    )
 
 
 def get_client():
@@ -797,7 +827,24 @@ class UserProxy:
             print("User already exists.")
             sys.exit(1)
 
-        # raise NotImplementedError
+    def list(
+        self, output="table", columns=User.default_display_fields,
+    ):
+        """Retrieve the list of Users
+        :param output: how to display the output [text|table|json]
+        """
+        if output == "table":
+            print(get_client().user.list().tabulate(columns=columns))
+        elif output == "text":
+            print(
+                get_client()
+                .user.list()
+                .tabulate(
+                    columns=columns, style="plain", display_headers=False,
+                )
+            )
+        else:
+            print(get_client().user.list().json)
 
 
 class AutoComplete:
@@ -975,6 +1022,7 @@ class CLI(object):
         self.lock = LockProxy()
         self.license = LicenseProxy()
         self.httpclient = HttpClientProxy()
+        self.user = UserProxy()
         self.autocomplete = AutoComplete()
         self.configure_cli = configure_cli
 
