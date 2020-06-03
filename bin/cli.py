@@ -22,9 +22,7 @@ from hpecp.k8s_cluster import (
     K8sClusterHostConfig,
     K8sClusterStatus,
 )
-from hpecp.user import (
-    User
-)
+from hpecp.user import User
 from hpecp import (
     ContainerPlatformClient,
     ContainerPlatformClientException,
@@ -825,7 +823,7 @@ class UserProxy:
             sys.exit(1)
 
     def list(
-        self, output = "table", columns = User.default_display_fields,
+        self, output="table", columns=User.default_display_fields,
     ):
         """Retrieve the list of Users
         :param output: how to display the output [text|table|json]
