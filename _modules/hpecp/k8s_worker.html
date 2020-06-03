@@ -66,15 +66,15 @@
             
   <h1>Source code for hpecp.k8s_worker</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
-<span class="kn">from</span> <span class="nn">.logger</span> <span class="kn">import</span> <span class="n">Logger</span>
+
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">attrgetter</span>
+
+<span class="kn">import</span> <span class="nn">polling</span>
+<span class="kn">from</span> <span class="nn">tabulate</span> <span class="kn">import</span> <span class="n">tabulate</span>
 
 <span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">APIItemNotFoundException</span>
-
-<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">attrgetter</span>
-<span class="kn">from</span> <span class="nn">tabulate</span> <span class="kn">import</span> <span class="n">tabulate</span>
-<span class="kn">import</span> <span class="nn">polling</span>
-<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
-<span class="kn">import</span> <span class="nn">re</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="n">basestring</span>
@@ -196,7 +196,7 @@
 <span class="sd">            ip: str</span>
 <span class="sd">                The IP address of the proxy host.  Used for internal communication.</span>
 <span class="sd">            ssh_key_data: str</span>
-<span class="sd">                The ssh key data as a string. </span>
+<span class="sd">                The ssh key data as a string.</span>
 <span class="sd">            tags: list</span>
 <span class="sd">                Tags to use, e.g. &quot;{ &#39;tag1&#39;: &#39;foo&#39;, &#39;tag2&#39;, &#39;bar&#39; }&quot;.</span>
 
@@ -273,7 +273,7 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            bool: True if status was found before timeout, otherwise False</span>
-<span class="sd">            </span>
+
 <span class="sd">        Raises:</span>
 <span class="sd">            APIItemNotFoundException: if the item is not found and status is not empty</span>
 <span class="sd">            APIException: if a generic API exception occurred</span>
