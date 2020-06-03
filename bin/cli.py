@@ -22,6 +22,9 @@ from hpecp.k8s_cluster import (
     K8sClusterHostConfig,
     K8sClusterStatus,
 )
+from hpecp.user import (
+    User
+)
 from hpecp import (
     ContainerPlatformClient,
     ContainerPlatformClientException,
