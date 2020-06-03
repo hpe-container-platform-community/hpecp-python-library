@@ -10,6 +10,7 @@ import sys
 from collections import OrderedDict
 
 import fire
+import jmespath
 import yaml
 
 from hpecp.logger import Logger
@@ -23,11 +24,12 @@ from hpecp.k8s_cluster import (
     K8sClusterStatus,
 )
 from hpecp.user import User
+
 from hpecp import (
-    ContainerPlatformClient,
-    ContainerPlatformClientException,
     APIException,
     APIItemConflictException,
+    ContainerPlatformClient,
+    ContainerPlatformClientException,
 )
 from hpecp.k8s_worker import WorkerK8sStatus
 
@@ -141,11 +143,16 @@ class GatewayProxy(object):
             print(response.json)
 
     def list(
-        self, output="table", columns=Gateway.default_display_fields,
+        self, output="table", columns=Gateway.default_display_fields, query={}
     ):
         """Retrieve the list of Gateways
 
         :param output: how to display the output [text|table|json]
+        :param query: jmespath (https://jmespath.org/) query
+
+        Example::
+
+        hpecp gateway list --output json --query '[0].ip'
         """
         if output == "table":
             print(get_client().gateway.list().tabulate(columns=columns))
@@ -158,7 +165,11 @@ class GatewayProxy(object):
                 )
             )
         else:
-            print(get_client().gateway.list().json)
+            data = get_client().gateway.list().json
+            if query:
+                print(jmespath.search(str(query), data))
+            else:
+                print(data)
 
     def delete(
         self, gateway_id, wait_for_delete_secs=0,
@@ -212,7 +223,7 @@ class GatewayProxy(object):
             success = get_client().gateway.wait_for_state(
                 gateway_id=gateway_id, state=gateway_states,
             )
-        except:
+        except Exception:
             success = False
 
         if not success:
@@ -280,7 +291,7 @@ class K8sWorkerProxy(object):
                 get_client()
                 .k8s_worker.list()
                 .tabulate(
-                    columns=columns, style="plain", display_headers=False,
+                    columns=columns, style="plain", display_headers=False
                 )
             )
         else:
@@ -840,7 +851,6 @@ class UserProxy:
             )
         else:
             print(get_client().user.list().json)
-        # raise NotImplementedError
 
 
 class AutoComplete:

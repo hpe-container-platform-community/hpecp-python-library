@@ -6,3 +6,4 @@ configparser; python_version == "2.7"
 polling
 pyyaml
 fire
+jmespath
