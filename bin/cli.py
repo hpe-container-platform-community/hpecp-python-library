@@ -22,6 +22,9 @@ from hpecp.k8s_cluster import (
     K8sClusterHostConfig,
     K8sClusterStatus,
 )
+from hpecp.user import (
+    User
+)
 from hpecp import (
     ContainerPlatformClient,
     ContainerPlatformClientException,
@@ -821,6 +824,24 @@ class UserProxy:
             print("User already exists.")
             sys.exit(1)
 
+    def list(
+        self, output = "table", columns = User.default_display_fields,
+    ):
+        """Retrieve the list of Users
+        :param output: how to display the output [text|table|json]
+        """
+        if output == "table":
+            print(get_client().user.list().tabulate(columns=columns))
+        elif output == "text":
+            print(
+                get_client()
+                .user.list()
+                .tabulate(
+                    columns=columns, style="plain", display_headers=False,
+                )
+            )
+        else:
+            print(get_client().user.list().json)
         # raise NotImplementedError
 
 
