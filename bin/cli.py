@@ -351,12 +351,10 @@ class K8sWorkerProxy(object):
         p_disks = persistent_disks.split(",")
         e_disks = ephemeral_disks.split(",")
 
-        print(
-            get_client().k8s_worker.set_storage(
-                worker_id=k8sworker_id,
-                persistent_disks=p_disks,
-                ephemeral_disks=e_disks,
-            )
+        get_client().k8s_worker.set_storage(
+            worker_id=k8sworker_id,
+            persistent_disks=p_disks,
+            ephemeral_disks=e_disks,
         )
 
     def wait_for_status(
