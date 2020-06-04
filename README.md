@@ -34,7 +34,10 @@ pip3 install --upgrade git+https://github.com/hpe-container-platform-community/h
 
 ## Contributing
 
-See [README](./DEVELOPING.md)
+See:
+
+- [Developing Guide](./DEVELOPING.md)
+- [Contribution Guide](./CONTRIBUTING.md)
 
 ## Basic Library Usage
 
