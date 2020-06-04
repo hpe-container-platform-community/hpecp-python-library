@@ -18,16 +18,6 @@
 - Help Wanted - please consider contributing! 
 ```
 
-## Installation
-
-```shell
-# ensure you have an up-to-date pip
-pip3 install -U pip
-
-# install hpecp directly from git
-pip3 install --upgrade git+https://github.com/hpe-container-platform-community/hpecp-client@master
-```
-
 ## Documentation
 
 See [here](https://hpe-container-platform-community.github.io/hpecp-python-library/index.html) for User Documentation.
@@ -38,6 +28,16 @@ See:
 
 - [Developing Guide](./DEVELOPING.md)
 - [Contribution Guide](./CONTRIBUTING.md)
+
+## Installation
+
+```shell
+# ensure you have an up-to-date pip
+pip3 install -U pip
+
+# install hpecp directly from git
+pip3 install --upgrade git+https://github.com/hpe-container-platform-community/hpecp-client@master
+```
 
 ## Basic Library Usage
 
