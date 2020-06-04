@@ -172,7 +172,12 @@ class GatewayProxy(object):
 
         Example::
 
-        hpecp gateway list --output json --query '[0].ip'
+        > hpecp gateway list --output json --query '[0].ip'
+        10.1.0.185
+        
+        > hpecp gateway list --output json --query '[*].[ip, purpose, state, hostname]'
+        [['10.1.0.185', 'proxy', 'installed', 'ip-10-1-0-185.us-west-2.compute.internal']]
+        
         """
         if output == "table":
             print(get_client().gateway.list().tabulate(columns=columns))
