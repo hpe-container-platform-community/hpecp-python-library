@@ -30,7 +30,7 @@ pip3 install --upgrade git+https://github.com/hpe-container-platform-community/h
 
 ## Documentation
 
-[See here](https://hpe-container-platform-community.github.io/hpecp-python-library/index.html)
+See [here](https://hpe-container-platform-community.github.io/hpecp-python-library/index.html) for User Documentation.
 
 ## Contributing
 
