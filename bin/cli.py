@@ -301,13 +301,27 @@ class K8sWorkerProxy(object):
         raise NotImplementedError("Not yet implemented")
 
     def list(
-        self, all_columns=False, columns=["id", "description"], output="table",
+        self,
+        all_columns=False,
+        columns=["id", "description"],
+        output="table",
+        query={},
     ):
         """Print a table of K8s Workers
 
         :param all_columns: (True/False) set to True to return all columns
         :param columns: (aaa) afadsfs
         :param output: how to display the output [text|table|json]
+        :param query: jmespath (https://jmespath.org/) query
+
+        Example::
+
+        > hpecp k8sworker list --output json --query '[0].ip'
+        10.1.0.185
+        
+        > hpecp k8sworker list --output json --query '[*].[ip, purpose, state, hostname]'
+        [['10.1.0.185', 'proxy', 'installed', 'ip-10-1-0-185.us-west-2.compute.internal']]
+
         """
         if output == "table":
             print(get_client().k8s_worker.list().tabulate(columns=columns))
@@ -320,7 +334,11 @@ class K8sWorkerProxy(object):
                 )
             )
         else:
-            print(get_client().k8s_worker.list().json)
+            data = get_client().k8s_worker.list().json
+            if query:
+                print(jmespath.search(str(query), data))
+            else:
+                print(data)
 
     def get(
         self, k8sworker_id,
