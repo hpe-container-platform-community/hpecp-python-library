@@ -192,7 +192,7 @@ class GatewayProxy(object):
         else:
             data = get_client().gateway.list().json
             if query:
-                print(jmespath.search(str(query), data))
+                print(json.dumps(jmespath.search(str(query), data)))
             else:
                 print(data)
 
@@ -319,8 +319,14 @@ class K8sWorkerProxy(object):
         > hpecp k8sworker list --output json --query '[0].ip'
         10.1.0.185
         
-        > hpecp k8sworker list --output json --query '[*].[ip, purpose, state, hostname]'
-        [['10.1.0.185', 'proxy', 'installed', 'ip-10-1-0-185.us-west-2.compute.internal']]
+        > hpecp k8sworker list --output json --query "[*].[status, hostname, ipaddr]"
+        [['configured', 'ip-10-1-0-72.us-west-2.compute.internal', '10.1.0.72'], 
+        ['configured', 'ip-10-1-0-238.us-west-2.compute.internal', '10.1.0.238']]
+
+        # Using jq to convert the json output to a table
+        > hpecp k8sworker list --output json --query "[*].[status, hostname, ipaddr]" | jq -r '.[] | @csv'
+        "configured","ip-10-1-0-72.us-west-2.compute.internal","10.1.0.72"
+        "configured","ip-10-1-0-238.us-west-2.compute.internal","10.1.0.238"
 
         """
         if output == "table":
@@ -336,7 +342,7 @@ class K8sWorkerProxy(object):
         else:
             data = get_client().k8s_worker.list().json
             if query:
-                print(jmespath.search(str(query), data))
+                print(json.dumps(jmespath.search(str(query), data)))
             else:
                 print(data)
 
