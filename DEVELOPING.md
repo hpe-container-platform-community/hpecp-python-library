@@ -50,7 +50,8 @@ hpecp license platform-id
 
 - The following mock responses have been defined:
   - `POST /api/v1/login` (create session)
-  - `GET /api/v1/license`
+  - `GET /api/v1/license` (list licenses)
+  - `GET /api/v1/role` (list roles)
 
 
 #### BUILDING DOCS
