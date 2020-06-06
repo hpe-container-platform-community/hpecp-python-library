@@ -10,8 +10,7 @@ source <(hpecp autocomplete bash) # setup autocompletion
 hpecp configure-cli
 ```
 
-- Start a Mock REST Service
-  - Open a terminal, then:
+- Start a Mock REST Service.  First, open a terminal, then run:
 
 ```
 /opt/SoapUI-5.5.0/bin/mockservicerunner.sh -m "REST MockService" tests/HPECP-REST-API-SOAPUI.xml 
