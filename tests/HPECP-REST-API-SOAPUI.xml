@@ -121,7 +121,20 @@ if( requestBody.contains("some data") )
       }
     ]
   }
-}</con:responseContent></con:response><con:response name="Role by ID 1 = success" id="0b2fe989-4997-47bd-a6f8-b582752d56f4" httpResponseStatus="200"><con:settings/><con:responseContent/></con:response><con:response name="Role by ID 99 = not found" id="4f40757f-fb4e-4480-b915-90e19dead7d3" httpResponseStatus="404" mediaType="application/json"><con:settings/><con:responseContent/></con:response></con:restMockAction><con:restMockAction name="/api/v1/login" method="POST" resourcePath="/api/v1/login" id="94c2c60a-16e6-4fc9-b320-6d05001cf054"><con:settings/><con:defaultResponse xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/><con:dispatchStyle>SCRIPT</con:dispatchStyle><con:dispatchPath>def queryString = mockRequest.getRequest().getQueryString()
+}</con:responseContent></con:response><con:response name="Role by ID 1 = success" id="0b2fe989-4997-47bd-a6f8-b582752d56f4" httpResponseStatus="200" mediaType="application/json"><con:settings/><con:responseContent>{
+  "_links": {
+    "self": {
+      "href": "/api/v1/role/1"
+    },
+    "all_roles": {
+      "href": "/api/v1/role"
+    }
+  },
+  "label": {
+    "name": "Site Admin",
+    "description": "Role for Site Admin"
+  }
+}</con:responseContent></con:response><con:response name="Role by ID 99 = not found" id="4f40757f-fb4e-4480-b915-90e19dead7d3" httpResponseStatus="404" mediaType="application/json"><con:settings/><con:responseContent/></con:response></con:restMockAction><con:restMockAction name="/api/v1/login" method="POST" resourcePath="/api/v1/login" id="94c2c60a-16e6-4fc9-b320-6d05001cf054"><con:settings/><con:defaultResponse xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/><con:dispatchStyle>SCRIPT</con:dispatchStyle><con:dispatchPath>def queryString = mockRequest.getRequest().getQueryString()
 log.info "QueryString: " + queryString
 
 def requestBody = mockRequest.getRequestContent()
