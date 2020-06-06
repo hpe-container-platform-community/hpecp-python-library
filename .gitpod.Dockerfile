@@ -25,5 +25,10 @@ RUN pyenv install 3.7.7
 
 # Allow pytest to discover tests
 RUN echo 'PYTHONPATH=/workspace/hpecp-python-library:$PYTHONPATH' > ~/.bashrc.d/40-pythonpath
+
+RUN \
+    wget https://s3.amazonaws.com/downloads.eviware/soapuios/5.5.0/SoapUI-5.5.0-linux-bin.tar.gz \
+    && sudo tar -xzf SoapUI-5.5.0-linux-bin.tar.gz -C /opt/ \
+    && rm SoapUI-5.5.0-linux-bin.tar.gz
 #
 # More information: https://www.gitpod.io/docs/config-docker/
