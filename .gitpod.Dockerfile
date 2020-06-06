@@ -29,6 +29,10 @@ RUN echo 'PYTHONPATH=/workspace/hpecp-python-library:$PYTHONPATH' > ~/.bashrc.d/
 RUN \
     wget https://s3.amazonaws.com/downloads.eviware/soapuios/5.5.0/SoapUI-5.5.0-linux-bin.tar.gz \
     && sudo tar -xzf SoapUI-5.5.0-linux-bin.tar.gz -C /opt/ \
-    && rm SoapUI-5.5.0-linux-bin.tar.gz
+    && rm SoapUI-5.5.0-linux-bin.tar.gz \
+    && wget https://dl.bintray.com/groovy/maven/apache-groovy-binary-2.4.19.zip \
+    && unzip apache-groovy-binary-2.4.19.zip \
+    && rm /opt/SoapUI-5.5.0/lib/groovy-all-2.4.4.jar \
+    && cp groovy-2.4.19/embeddable/groovy-all-2.4.19.jar /opt/SoapUI-5.5.0/lib/
 #
 # More information: https://www.gitpod.io/docs/config-docker/
