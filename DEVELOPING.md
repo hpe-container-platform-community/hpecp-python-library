@@ -10,6 +10,49 @@ source <(hpecp autocomplete bash) # setup autocompletion
 hpecp configure-cli
 ```
 
+#### Mock Rest Service
+
+- First, open a terminal, then run:
+
+```
+/opt/SoapUI-5.5.0/bin/mockservicerunner.sh -m "REST MockService" tests/HPECP-REST-API-SOAPUI.xml 
+```
+
+- Open another terminal and install the CLI (see instructions above)
+- Configure the cli:
+
+```
+cat > ~/.hpecp.conf <<EOF
+[default]
+api_host = localhost
+api_port = 8080
+use_ssl = False
+verify_ssl = False
+warn_ssl = False
+username = admin
+password = admin123
+EOF
+```
+
+- Run the cli: 
+
+```
+hpecp license platform-id
+```
+
+- You can check the log in the SOAP UI terminal window, e.g.
+
+```
+...
+14:33:30,558 INFO  [SoapUIMockServiceRunner] Handled request 1; [/api/v1] with [Login Success] in [0ms] at [2020-06-06 14:33:29.807]
+14:33:30,565 INFO  [SoapUIMockServiceRunner] Handled request 2; [/api/v1] with [License] in [0ms] at [2020-06-06 14:33:30.563]
+```
+
+- The following mock responses have been defined:
+  - `POST /api/v1/login` (create session)
+  - `GET /api/v1/license`
+
+
 #### BUILDING DOCS
 
 In the Gitpod Terminal:
