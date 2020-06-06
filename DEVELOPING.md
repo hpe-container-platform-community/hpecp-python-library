@@ -32,6 +32,7 @@ warn_ssl = False
 username = admin
 password = admin123
 EOF
+```
 
 - Run the cli: 
 
