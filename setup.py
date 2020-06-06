@@ -18,7 +18,7 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-from setuptools import setup, find_packages
+from setuptools import setup
 import os
 import shutil
 
@@ -50,7 +50,7 @@ setup(
     test_suite="nose.collector",
     tests_require=["nose", "mock"],
     classifiers=[
-        "License :: OSI Approved :: Apache Software License",
+        "License :: OSI Approved :: MIT",
         "Programming Language :: Python",
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3.5",
