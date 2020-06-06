@@ -52,6 +52,8 @@ hpecp license platform-id
   - `POST /api/v1/login` (create session)
   - `GET /api/v1/license` (list licenses)
   - `GET /api/v1/role` (list roles)
+  - `GET /api/v1/role/1` (returns role 1)
+  - `GET /api/v1/role/99` (returns HTTP 404 - not found)
 
 
 #### BUILDING DOCS
