@@ -30,9 +30,12 @@ RUN \
     wget https://s3.amazonaws.com/downloads.eviware/soapuios/5.5.0/SoapUI-5.5.0-linux-bin.tar.gz \
     && sudo tar -xzf SoapUI-5.5.0-linux-bin.tar.gz -C /opt/ \
     && rm SoapUI-5.5.0-linux-bin.tar.gz \
-    && wget -P /tmp/ https://dl.bintray.com/groovy/maven/apache-groovy-binary-2.4.19.zip \
-    && unzip /tmp/apache-groovy-binary-2.4.19.zip \
     && sudo rm /opt/SoapUI-5.5.0/lib/groovy-all-2.4.4.jar \
-    && sudo cp /tmp/groovy-2.4.19/embeddable/groovy-all-2.4.19.jar /opt/SoapUI-5.5.0/lib/
+    && ( \
+       cd /tmp \
+       && wget https://dl.bintray.com/groovy/maven/apache-groovy-binary-2.4.19.zip \
+       && unzip /tmp/apache-groovy-binary-2.4.19.zip \
+       && sudo cp groovy-2.4.19/embeddable/groovy-all-2.4.19.jar /opt/SoapUI-5.5.0/lib/ \
+       )
 #
 # More information: https://www.gitpod.io/docs/config-docker/
