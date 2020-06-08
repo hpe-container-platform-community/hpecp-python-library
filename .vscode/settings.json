@@ -25,5 +25,6 @@
     "python.pythonPath": "/bin/python3",
     "python.envFile": "${workspaceFolder}/gitpod.env",
     "editor.formatOnSave": true,
-    "files.insertFinalNewline": true
+    "files.insertFinalNewline": true,
+    "git.alwaysSignOff": true
 }
