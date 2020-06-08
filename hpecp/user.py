@@ -20,22 +20,12 @@
 
 from __future__ import absolute_import
 
-from .logger import Logger
-from .exceptions import (
-    ContainerPlatformClientException,
-    APIException,
-    APIItemNotFoundException,
-    APIItemConflictException,
-)
-
-import json
-from operator import attrgetter
-from tabulate import tabulate
-from enum import Enum
-import polling
 import re
-import six
-import sys
+from operator import attrgetter
+
+from tabulate import tabulate
+
+from .exceptions import APIItemNotFoundException
 
 try:
     basestring
@@ -46,9 +36,11 @@ except NameError:
 class UserController:
     """This is the main class that users will interact get the li .
 
-    An instance of this class is available in the client.ContainerPlatformClient with the attribute name
-    :py:attr:`user <.client.ContainerPlatformClient.user>`.  The methods of this class can be 
-    invoked using `client.user.method()`.  See the example below:
+    An instance of this class is available in the
+    client.ContainerPlatformClient with the attribute name
+    :py:attr:`user <.client.ContainerPlatformClient.user>`.  The methods of
+    this class can be invoked using `client.user.method()`.  See the example
+    below:
 
     Example::
 
@@ -92,7 +84,7 @@ class UserController:
 
         Returns:
             User: object representing User
-            
+
         Raises:
             APIException
         """
@@ -116,8 +108,29 @@ class UserController:
         return User(response.json())
 
     def delete(self, user_id):
-        """Not Implemented yet"""
-        raise NotImplementedError()
+        """Delete a user.
+
+        Args:
+            user_id: str
+                The User ID - format: '/api/v1/user/[0-9]+'
+
+        Raises:
+            APIException
+        """
+        assert isinstance(
+            user_id, str
+        ), "'user_id' must be provided and must be a string"
+        assert re.match(
+            r"\/api\/v1\/user\/[0-9]+", user_id
+        ), "'user_id' must have format '/api/v1/user/[0-9]+'"
+
+        # Check if host is actually a user
+        # Raises APIItemNotFoundException() if user not found
+        self.get(user_id)
+
+        self.client._request(
+            url=user_id, http_method="delete", description="user/delete"
+        )
 
     def wait_for_delete(self, user_id, timeout_secs=1200):
         """Not Implemented yet"""
@@ -162,16 +175,17 @@ class UserController:
 
 
 class User:
-    """Create an instance of User from json data returned from the HPE Container Platform API.
+    """Create an instance of User from json data returned from the HPE
 
-    Users of this library are not expected to create an instance of this class.
+    Container Platform API. Users of this library are not expected to create an
+    instance of this class.
 
     Parameters:
         json : str
             The json returned by the API representing a User.
 
     Returns:
-        User: 
+        User:
             An instance of User
     """
 
@@ -183,7 +197,8 @@ class User:
         "default_tenant",
         "is_siteadmin",
     ]
-    """All of the fields of User objects as returned by the HPE Container Platform API"""
+    # All of the fields of User objects as returned by the HPE Container
+    # Platform API
 
     default_display_fields = ["label", "is_service_account", "is_siteadmin"]
     """These fields are displayed by default, e.g. in tabulate()"""
@@ -212,7 +227,9 @@ class User:
         return len(dir(self))
 
     def set_display_columns(self, columns):
-        """Set the columns this instance should have when the instance is used with :py:meth:`.User.tabulate`
+        """Set the columns this instance should have when the instance is used
+
+        with :py:meth:`.User.tabulate`
 
         Parameters:
             columns : list[str]
@@ -224,7 +241,10 @@ class User:
 
     @property
     def id(self):
-        """@Field: from json['_links']['self']['href'] - id format: '/api/v1/user/[0-9]+'"""
+        """@Field: from json['_links']['self']['href'] -
+
+        id format: '/api/v1/user/[0-9]+'
+        """
         return self.json["_links"]["self"]["href"]
 
     @property
@@ -270,7 +290,8 @@ class UserList:
 
     Parameters:
         json : str
-            json data returned from the HPE Container Platform API get request to /api/v1/user
+            json data returned from the HPE Container Platform API get request
+            to /api/v1/user
     """
 
     def __init__(self, json):
@@ -314,7 +335,8 @@ class UserList:
 
         Parameters:
             columns : list[str]
-                list of columns to return in the table - default :py:attr:`.User.default_display_fields`
+                list of columns to return in the table - default
+                :py:attr:`.User.default_display_fields`
             style: str
                 See: https://github.com/astanin/python-tabulate#table-format
 

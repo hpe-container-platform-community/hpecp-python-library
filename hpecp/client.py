@@ -24,13 +24,14 @@ This module is the main module that users of this library will interact with.
 
 from __future__ import absolute_import
 
+import configparser
 import json
 import os
-import requests
-import configparser
 
+import requests
 from six import raise_from
 
+from .catalog import CatalogController
 from .config import ConfigController
 from .exceptions import (
     APIException,
@@ -43,10 +44,9 @@ from .k8s_cluster import K8sClusterController
 from .k8s_worker import K8sWorkerController
 from .license import LicenseController
 from .lock import LockController
-from .user import UserController
 from .logger import Logger
 from .tenant import TenantController
-from .catalog import CatalogController
+from .user import UserController
 
 try:
     basestring
@@ -351,7 +351,9 @@ class ContainerPlatformClient(object):
         self._catalog = CatalogController(self)
 
     def create_session(self):
-        """Create a session with the HPE CP controller defined in the object :py:class:`ContainerPlatformClient`.
+        """Create a session with the HPE CP controller defined in the object
+
+        :py:class:`ContainerPlatformClient`.
 
         Returns:
             ContainerPlatformClient:
@@ -382,9 +384,11 @@ class ContainerPlatformClient(object):
             self.log.debug(
                 "RES: {} : {} {} {}".format("Login", "post", url, str(e))
             )
+            msg = ("Could not connect to controller - set LOG_LEVEL=DEBUG to "
+                   "see more detail.")
             raise_from(
                 APIException(
-                    message="Could not connect to controller - set LOG_LEVEL=DEBUG to see more detail.",
+                    message=msg,
                     request_method="post",
                     request_url=url,
                 ),

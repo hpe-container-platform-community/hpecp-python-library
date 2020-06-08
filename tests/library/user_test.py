@@ -19,16 +19,12 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 
 from unittest import TestCase
-from mock import Mock, patch
 
-import sys
-import tempfile
-import os
-import json
 import requests
-from requests.exceptions import RequestException
+from mock import patch
+
 from hpecp import ContainerPlatformClient
-from hpecp.k8s_worker import WorkerK8sStatus
+from hpecp.exceptions import APIItemNotFoundException
 
 
 class MockResponse:
@@ -55,6 +51,18 @@ class MockResponse:
 
     def json(self):
         return self.json_data
+
+
+def get_client():
+    client = ContainerPlatformClient(
+        username="admin",
+        password="admin123",
+        api_host="127.0.0.1",
+        api_port=8080,
+        use_ssl=True,
+    )
+    client.create_session()
+    return client
 
 
 class TestUsers(TestCase):
@@ -129,7 +137,6 @@ class TestUsers(TestCase):
     @patch("requests.get", side_effect=mocked_requests_get)
     @patch("requests.post", side_effect=mocked_requests_post)
     def test_get_users(self, mock_get, mock_post):
-
         client = ContainerPlatformClient(
             username="admin",
             password="admin123",
@@ -148,8 +155,77 @@ class TestUsers(TestCase):
         assert users[0].json is not None
 
         # Test UserList subscriptable access and property setters
-        assert users[0].is_service_account == False
-        assert users[0].is_siteadmin == False
+        assert users[0].is_service_account is False
+        assert users[0].is_siteadmin is False
         assert users[0].default_tenant == ""
-        assert users[0].is_external == False
-        assert users[0].is_group_added_user == False
+        assert users[0].is_external is False
+        assert users[0].is_group_added_user is False
+
+
+class TestDeleteUser(TestCase):
+    # pylint: disable=no-method-argument
+    def mocked_requests_get(*args, **kwargs):
+        if args[0] == "https://127.0.0.1:8080/api/v1/user/123":
+            return MockResponse(
+                json_data={
+                    "_links": {"self": {"href": "/api/v1/user/123"}},
+                    "purpose": "proxy",
+                },
+                status_code=200,
+                headers={},
+            )
+        if args[0] == "https://127.0.0.1:8080/api/v1/user/999":
+            return MockResponse(
+                text_data="Not found.",
+                json_data={},
+                status_code=404,
+                raise_for_status_flag=True,
+                headers={},
+            )
+        raise RuntimeError("Unhandle GET request: " + args[0])
+
+    # pylint: disable=no-method-argument
+    def mocked_requests_delete(*args, **kwargs):
+        if args[0] == "https://127.0.0.1:8080/api/v1/user/999":
+            return MockResponse(
+                text_data="Not found.",
+                json_data={},
+                status_code=404,
+                raise_for_status_flag=True,
+                headers={},
+            )
+        if args[0] == "https://127.0.0.1:8080/api/v1/user/123":
+            return MockResponse(json_data={}, status_code=200, headers={},)
+        raise RuntimeError("Unhandle GET request: " + args[0])
+
+    def mocked_requests_post(*args, **kwargs):
+        if args[0] == "https://127.0.0.1:8080/api/v1/login":
+            return MockResponse(
+                json_data={},
+                status_code=200,
+                headers={
+                    "location": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                },
+            )
+        raise RuntimeError("Unhandle POST request: " + args[0])
+
+    # delete() does a get() request to check the worker has 'purpose':'proxy'
+    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.delete", side_effect=mocked_requests_delete)
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_delete_user(self, mock_get, mock_post, mock_delete):
+        with self.assertRaisesRegexp(
+            AssertionError, "'user_id' must be provided and must be a string",
+        ):
+            get_client().user.delete(user_id=999)
+
+        with self.assertRaisesRegexp(
+            AssertionError,
+            "'user_id' must have format " + r"'\/api\/v1\/user\/\[0-9\]\+'",
+        ):
+            get_client().user.delete(user_id="garbage")
+
+        with self.assertRaises(APIItemNotFoundException):
+            get_client().user.delete(user_id="/api/v1/user/999")
+
+        get_client().user.delete(user_id="/api/v1/user/123")

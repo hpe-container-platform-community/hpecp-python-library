@@ -19,22 +19,15 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import absolute_import
-from .logger import Logger
-from .exceptions import (
-    ContainerPlatformClientException,
-    APIException,
-    APIItemNotFoundException,
-    APIItemConflictException,
-)
 
-import json
-from operator import attrgetter
-from tabulate import tabulate
-from enum import Enum
-import polling
 import re
-import six
-import sys
+from enum import Enum
+from operator import attrgetter
+
+import polling
+from tabulate import tabulate
+
+from .exceptions import APIItemNotFoundException
 
 try:
     basestring
@@ -43,11 +36,13 @@ except NameError:
 
 
 class GatewayController:
-    """This is the main class that users will interact with to work with Gateways.
+    """This is the main class that users will interact with to work with
 
-    An instance of this class is available in the client.ContainerPlatformClient with the attribute name
-    :py:attr:`gateway <.client.ContainerPlatformClient.gateway>`.  The methods of this class can be
-    invoked using `client.gateway.method()`.  See the example below:
+    Gateways. An instance of this class is available in the
+    client.ContainerPlatformClient with the attribute name
+    :py:attr:`gateway <.client.ContainerPlatformClient.gateway>`. The methods
+    of this class can be invoked using `client.gateway.method()`. See the
+    example below:
 
     Example::
 
@@ -66,13 +61,17 @@ class GatewayController:
     def create_with_ssh_key(
         self, ip, proxy_node_hostname, ssh_key_data, tags=[]
     ):
-        """Create a gateway instance using SSH key credentials to access the host
+        """Create a gateway instance using SSH key credentials to access the
+
+        host.
 
         Args:
             ip: str
-                The IP address of the proxy host.  Used for internal communication.
+                The IP address of the proxy host.  Used for internal
+                communication.
             proxy_node_hostname: str
-                Clients will access cluster services will be accessed using this name.
+                Clients will access cluster services will be accessed using
+                this name.
             ssh_key_data: str
                 The ssh key data as a string.
             tags: list
@@ -161,7 +160,8 @@ class GatewayController:
     def delete(self, gateway_id):
         """Delete a Gateway.
 
-        You can use :py:meth:`wait_for_status` to check for the gateway state/existence.
+        You can use :py:meth:`wait_for_status` to check for the gateway
+        state/existence.
 
         Args:
             gateway_id: str
@@ -177,7 +177,8 @@ class GatewayController:
             r"\/api\/v1\/workers\/[0-9]+", gateway_id
         ), "'gateway_id' must have format '/api/v1/workers/[0-9]+'"
 
-        # check if host is actually a gateway - raises APIItemNotFoundException() if gateway not found
+        # Check if host is actually a gateway
+        # Raises APIItemNotFoundException() if gateway not found
         self.get(gateway_id)
 
         self.client._request(
@@ -191,7 +192,8 @@ class GatewayController:
             gateway_id: str
                 The gateway ID - format: '/api/v1/workers/[0-9]+'
             timeout_secs: int
-                How long to wait for the status(es) before raising an exception.
+                How long to wait for the status(es) before raising an
+                exception.
 
         Returns:
             bool: True if gateway was deleted before timeout, otherwise False
@@ -204,15 +206,18 @@ class GatewayController:
             gateway_id: str
                 The gateway ID - format: '/api/v1/workers/[0-9]+'
             status: list[:py:class:`GatewayStatus`]
-                Status(es) to wait for.  Use an empty array if you want to wait for a cluster's existence to cease.
+                Status(es) to wait for.  Use an empty array if you want to wait
+                for a cluster's existence to cease.
             timeout_secs: int
-                How long to wait for the status(es) before raising an exception.
+                How long to wait for the status(es) before raising an
+                exception.
 
         Returns:
             bool: True if status was found before timeout, otherwise False
 
         Raises:
-            APIItemNotFoundException: if the item is not found and state is not empty
+            APIItemNotFoundException: if the item is not found and state is not
+            empty
             APIException: if a generic API exception occurred
         """
         assert isinstance(
@@ -250,7 +255,8 @@ class GatewayController:
             except polling.TimeoutException:
                 return False
 
-        # if state is not empty return success when gateway current state is in desired state
+        # If state is not empty return success when gateway current state is in
+        # desired state
         else:
             try:
                 polling.poll(
@@ -273,7 +279,8 @@ class GatewayStatus(Enum):
     **Note:**
 
     The integer values do not have a meaning outside of this library.
-    The API uses a string identifier with the status name rather than an integer value.
+    The API uses a string identifier with the status name rather than an
+    integer value.
     """
 
     bundle = 1
@@ -293,9 +300,10 @@ class GatewayStatus(Enum):
 
 
 class Gateway:
-    """Create an instance of Gateway from json data returned from the HPE Container Platform API.
+    """Create an instance of Gateway from json data returned from the HPE
 
-    Users of this library are not expected to create an instance of this class.
+    Container Platform API. Users of this library are not expected to create an
+    instance of this class.
 
     Parameters:
         json : str
@@ -306,6 +314,8 @@ class Gateway:
             An instance of Gateway
     """
 
+    # All of the fields of Gateway objects as returned by the HPE Container
+    # Platform API
     all_fields = [
         "id",
         "hacapable",
@@ -321,8 +331,8 @@ class Gateway:
         "sysinfo",
         "tags",
     ]
-    """All of the fields of Gateway objects as returned by the HPE Container Platform API"""
 
+    # These fields are displayed by default, e.g. in tabulate()
     default_display_fields = [
         "id",
         "ip",
@@ -333,7 +343,6 @@ class Gateway:
         "purpose",
         "tags",
     ]
-    """These fields are displayed by default, e.g. in tabulate()"""
 
     def __init__(self, json):
         self.json = json
@@ -355,7 +364,9 @@ class Gateway:
         return len(dir(self))
 
     def set_display_columns(self, columns):
-        """Set the columns this instance should have when the instance is used with :py:meth:`.GatewayList.tabulate`
+        """Set the columns this instance should have when the instance is used
+
+        with :py:meth:`.GatewayList.tabulate`
 
         Parameters:
             columns : list[str]
@@ -367,7 +378,9 @@ class Gateway:
 
     @property
     def id(self):
-        """@Field: from json['_links']['self']['href'] - id format: '/api/v1/workers/[0-9]+'"""
+        """@Field: from json['_links']['self']['href'] -
+
+        id format: '/api/v1/workers/[0-9]+'"""
         return self.json["_links"]["self"]["href"]
 
     @property
@@ -443,7 +456,8 @@ class GatewayList:
 
     Parameters:
         json : str
-            json data returned from the HPE Container Platform API get request to /api/v1/Gateway
+            json data returned from the HPE Container Platform API get request
+            to /api/v1/Gateway
     """
 
     def __init__(self, json):
@@ -490,7 +504,8 @@ class GatewayList:
 
         Parameters:
             columns : list[str]
-                list of columns to return in the table - default :py:attr:`.Gateway.default_display_fields`
+                list of columns to return in the table -
+                default :py:attr:`.Gateway.default_display_fields`
             style: str
                 See: https://github.com/astanin/python-tabulate#table-format
 
