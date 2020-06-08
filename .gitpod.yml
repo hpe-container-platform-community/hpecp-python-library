@@ -7,7 +7,7 @@ tasks:
   - command: /bin/python3 -m pip install -U pytest tox mock awscli black flake8 -r ./requirements.txt --user && exit
 
   # - command: /home/gitpod/.pyenv/versions/3.9-dev/bin/python3 -m pip install -U pytest tox mock awscli black flake8 -r ./requirements.txt --user && exit
-  - command: cd docs && make html && cd build/html && python3 -m http.server 8080
+  - command: cd docs && make html && cd build/html && python3 -m http.server 9090
   - command: echo "Welcome"
     name: Static Server
 image:
