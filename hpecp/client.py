@@ -47,6 +47,7 @@ from .user import UserController
 from .logger import Logger
 from .tenant import TenantController
 from .catalog import CatalogController
+from .role import RoleController
 
 try:
     basestring
@@ -349,6 +350,7 @@ class ContainerPlatformClient(object):
         self._lock = LockController(self)
         self._user = UserController(self)
         self._catalog = CatalogController(self)
+        self._role = RoleController(self)
 
     def create_session(self):
         """Create a session with the HPE CP controller defined in the object :py:class:`ContainerPlatformClient`.
@@ -716,7 +718,7 @@ class ContainerPlatformClient(object):
         """
         This attribute is a reference to an object of type `.user.UserController`.
 
-        See the class :py:class:`.lock.UserController` for the methods available.
+        See the class :py:class:`.user.UserController` for the methods available.
 
         Example::
 
@@ -724,7 +726,7 @@ class ContainerPlatformClient(object):
             client.create_session()
             client.user.get()
 
-        This example calls the method :py:meth:`get() <.user.UserController.list>` in :py:class:`.user.UserController`.
+        This example calls the method :py:meth:`get() <.user.UserController.get>` in :py:class:`.user.UserController`.
         """
 
         return self._user
@@ -746,3 +748,21 @@ class ContainerPlatformClient(object):
         """
 
         return self._catalog
+
+    @property
+    def role(self):
+        """
+        This attribute is a reference to an object of type `.role.RoleController`.
+
+        See the class :py:class:`.role.RoleController` for the methods available.
+
+        Example::
+
+            client = ContainerPlatformClient(...)
+            client.create_session()
+            client.role.get()
+
+        This example calls the method :py:meth:`get() <.role.RoleController.get>` in :py:class:`.role.RoleController`.
+        """
+
+        return self._role
