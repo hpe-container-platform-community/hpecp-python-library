@@ -20,14 +20,10 @@
 
 from __future__ import absolute_import
 
-from .logger import Logger
-
-import textwrap
+import re
 from operator import attrgetter
+
 from tabulate import tabulate
-import requests
-import json
-import sys
 
 try:
     basestring
@@ -41,12 +37,12 @@ class Tenant:
         return ["id", "name", "description", "tenant_type"]
 
     def __repr__(self):
-        return "<Tenant id:{} name:{} description:{}>".format(
+        return "<Tenant id:{} name:{} description:{} type:{}>".format(
             self.id, self.name, self.description, self.tenant_type
         )
 
     def __str__(self):
-        return "Tenant(id={}, name={}, description={})".format(
+        return "Tenant(id={}, name={}, description={}, type:{})".format(
             self.id, self.name, self.description, self.tenant_type
         )
 
@@ -129,13 +125,32 @@ class TenantList:
 
 
 class TenantController:
-    """[summary]
+    """This class allows a user to retrieve and interact with tenant information
+
+    An instance of this class is available in `client.ContainerPlatformClient`
+    with the attribute name
+    :py:attr:`tenant <.client.ContainerPlatformClient.tenant>`. The methods of
+    this class can be invoked using `client.tenant.method()`. See the example
+    below.
+
+    Example::
+
+        client = ContainerPlatformClient(...).create_session()
+        client.tenant.list()
     """
 
     def __init__(self, client):
         self.client = client
 
     def list(self):
+        """Retrieve a list of available tenants
+
+        Returns:
+            TenantList: list of tenants
+
+        Raises:
+            APIException
+        """
         response = self.client._request(
             url="/api/v1/tenant", http_method="get", description="tenant/list"
         )
@@ -181,7 +196,17 @@ class TenantController:
         return response.headers["Location"]
 
     def get(self, tenant_id):
+        """Retrieve a Tenant by ID.
 
+        Args:
+            tenant_id (str): The tenant ID - format: '/api/v1/tenant/[0-9]+'
+
+        Returns:
+            Tenat: object representing the Tenant
+
+        Raises:
+            APIException
+        """
         self.client.log.warning(
             "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
         )
@@ -191,6 +216,13 @@ class TenantController:
         self.client.log.warning(
             "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
         )
+
+        assert isinstance(
+            tenant_id, str
+        ), "'tenant_id' must be provided and must be string"
+        assert re.match(
+            r"\/api\/v1\/tenant\/[0-9]+", tenant_id
+        ), "'tenant_id' must have format '/api/v1/tenant/[0-9]+'"
 
         response = self.client._request(
             url=tenant_id, http_method="get", description="tenant/get"
@@ -208,19 +240,72 @@ class TenantController:
 
         Example::
 
-            data =  {"external_user_groups":[
-                {
-                    "role":"/api/v1/role/2", # 2 = Admins
-                    "group":"CN=DemoTenantAdmins,CN=Users,DC=samdom,DC=example,DC=com"
-                },
-                { 
-                    "role":"/api/v1/role/3", # 3 = Members
-                    "group":"CN=DemoTenantUsers,CN=Users,DC=samdom,DC=example,DC=com"
-                }]}
+            data: {
+                "external_user_groups": [
+                    {
+                        "role": "/api/v1/role/2", # 2 = Admins
+                        "group":"CN=DemoTenantAdmins,CN=Users,DC=samdom,DC=example,DC=com"
+                    },
+                    {
+                        "role": "/api/v1/role/3", # 3 = Members
+                        "group": "CN=DemoTenantUsers,CN=Users,DC=samdom,DC=example,DC=com"
+                    }
+                ]
+            }
         """
         self.client._request(
             url="/api/v1/tenant/{}?external_user_groups".format(tenant_id),
             http_method="put",
             data=data,
             description="epic_tenant_auth",
+        )
+
+    def assign_user_to_role(self, tenant_id, role_id, user_id):
+        """Assign a user to a given role using the tenant
+
+        Args:
+            tenant_id (str): The tenant ID - format: '/api/v1/tenant/[0-9]+'
+            role_id (str): The role ID - format: '/api/v1/role/[0-9]+'
+            user_id (str): The role ID - format: '/api/v1/user/[0-9]+'
+
+        Raises:
+            APIItemNotFoundException
+            APIItemConflictException
+            APIException
+        """
+        # FIXME: Assuming this functionality is experimental like others.
+        self.client.log.warning(
+            "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+        )
+        self.client.log.warning(
+            "!!!! The method `tenant.get()` is experimental !!!!"
+        )
+        self.client.log.warning(
+            "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+        )
+
+        # Ensure that the tenant is valid and exists
+        self.get(tenant_id)
+
+        # Ensure that the role is valid and exists
+        # FIXME: Uncomment this after the role is available with the client
+        # self.client.role.get(role_id)
+
+        # Ensure that the user is valid and exists
+        self.client.user.get(user_id)
+
+        # Build the request payload
+        data = {
+            "operation": "assign",
+            "role": role_id,
+            "user": user_id,
+        }
+        url = tenant_id + "?user"
+
+        # Make the request
+        self.client._request(
+            url=url,
+            http_method="put",
+            data=data,
+            description="assign_user_to_role",
         )
