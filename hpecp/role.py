@@ -56,6 +56,7 @@ class RoleController:
         client.role.get()
 
     """
+
     def __init__(self, client):
         self.client = client
 
@@ -155,4 +156,3 @@ class Role:
     def description(self):
         """@Field: from json['label']['description']"""
         return self.json["label"]["description"]
-
