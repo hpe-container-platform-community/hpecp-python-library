@@ -906,6 +906,7 @@ class UserProxy:
         else:
             print(get_client().user.list().json)
 
+
 class RoleProxy(object):
     def get(
         self, role_id, output="yaml",
@@ -1107,7 +1108,6 @@ class CLI(object):
         self.role = RoleProxy()
         self.autocomplete = AutoComplete()
         self.configure_cli = configure_cli
-
 
 
 if __name__ == "__main__":
