@@ -66,14 +66,10 @@
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
 
-<span class="kn">from</span> <span class="nn">.logger</span> <span class="kn">import</span> <span class="n">Logger</span>
-
-<span class="kn">import</span> <span class="nn">textwrap</span>
+<span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">attrgetter</span>
+
 <span class="kn">from</span> <span class="nn">tabulate</span> <span class="kn">import</span> <span class="n">tabulate</span>
-<span class="kn">import</span> <span class="nn">requests</span>
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">sys</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="n">basestring</span>
@@ -87,12 +83,12 @@
         <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">,</span> <span class="s2">&quot;tenant_type&quot;</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;&lt;Tenant id:</span><span class="si">{}</span><span class="s2"> name:</span><span class="si">{}</span><span class="s2"> description:</span><span class="si">{}</span><span class="s2">&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="k">return</span> <span class="s2">&quot;&lt;Tenant id:</span><span class="si">{}</span><span class="s2"> name:</span><span class="si">{}</span><span class="s2"> description:</span><span class="si">{}</span><span class="s2"> type:</span><span class="si">{}</span><span class="s2">&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tenant_type</span>
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;Tenant(id=</span><span class="si">{}</span><span class="s2">, name=</span><span class="si">{}</span><span class="s2">, description=</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="k">return</span> <span class="s2">&quot;Tenant(id=</span><span class="si">{}</span><span class="s2">, name=</span><span class="si">{}</span><span class="s2">, description=</span><span class="si">{}</span><span class="s2">, type:</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tenant_type</span>
         <span class="p">)</span>
 
@@ -175,13 +171,32 @@
 
 
 <div class="viewcode-block" id="TenantController"><a class="viewcode-back" href="../../hpecp.tenant.html#hpecp.tenant.TenantController">[docs]</a><span class="k">class</span> <span class="nc">TenantController</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;[summary]</span>
+    <span class="sd">&quot;&quot;&quot;This class allows a user to retrieve and interact with tenant information</span>
+
+<span class="sd">    An instance of this class is available in `client.ContainerPlatformClient`</span>
+<span class="sd">    with the attribute name</span>
+<span class="sd">    :py:attr:`tenant &lt;.client.ContainerPlatformClient.tenant&gt;`. The methods of</span>
+<span class="sd">    this class can be invoked using `client.tenant.method()`. See the example</span>
+<span class="sd">    below.</span>
+
+<span class="sd">    Example::</span>
+
+<span class="sd">        client = ContainerPlatformClient(...).create_session()</span>
+<span class="sd">        client.tenant.list()</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">client</span>
 
 <div class="viewcode-block" id="TenantController.list"><a class="viewcode-back" href="../../hpecp.tenant.html#hpecp.tenant.TenantController.list">[docs]</a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve a list of available tenants</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            TenantList: list of tenants</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            APIException</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
             <span class="n">url</span><span class="o">=</span><span class="s2">&quot;/api/v1/tenant&quot;</span><span class="p">,</span> <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;tenant/list&quot;</span>
         <span class="p">)</span>
@@ -227,7 +242,17 @@
         <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;Location&quot;</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="TenantController.get"><a class="viewcode-back" href="../../hpecp.tenant.html#hpecp.tenant.TenantController.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tenant_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve a Tenant by ID.</span>
 
+<span class="sd">        Args:</span>
+<span class="sd">            tenant_id (str): The tenant ID - format: &#39;/api/v1/tenant/[0-9]+&#39;</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tenat: object representing the Tenant</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            APIException</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
             <span class="s2">&quot;!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!&quot;</span>
         <span class="p">)</span>
@@ -237,6 +262,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
             <span class="s2">&quot;!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!&quot;</span>
         <span class="p">)</span>
+
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
+            <span class="n">tenant_id</span><span class="p">,</span> <span class="nb">str</span>
+        <span class="p">),</span> <span class="s2">&quot;&#39;tenant_id&#39; must be provided and must be string&quot;</span>
+        <span class="k">assert</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+            <span class="sa">r</span><span class="s2">&quot;\/api\/v1\/tenant\/[0-9]+&quot;</span><span class="p">,</span> <span class="n">tenant_id</span>
+        <span class="p">),</span> <span class="s2">&quot;&#39;tenant_id&#39; must have format &#39;/api/v1/tenant/[0-9]+&#39;&quot;</span>
 
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
             <span class="n">url</span><span class="o">=</span><span class="n">tenant_id</span><span class="p">,</span> <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;tenant/get&quot;</span>
@@ -254,21 +286,74 @@
 
 <span class="sd">        Example::</span>
 
-<span class="sd">            data =  {&quot;external_user_groups&quot;:[</span>
-<span class="sd">                {</span>
-<span class="sd">                    &quot;role&quot;:&quot;/api/v1/role/2&quot;, # 2 = Admins</span>
-<span class="sd">                    &quot;group&quot;:&quot;CN=DemoTenantAdmins,CN=Users,DC=samdom,DC=example,DC=com&quot;</span>
-<span class="sd">                },</span>
-<span class="sd">                { </span>
-<span class="sd">                    &quot;role&quot;:&quot;/api/v1/role/3&quot;, # 3 = Members</span>
-<span class="sd">                    &quot;group&quot;:&quot;CN=DemoTenantUsers,CN=Users,DC=samdom,DC=example,DC=com&quot;</span>
-<span class="sd">                }]}</span>
+<span class="sd">            data: {</span>
+<span class="sd">                &quot;external_user_groups&quot;: [</span>
+<span class="sd">                    {</span>
+<span class="sd">                        &quot;role&quot;: &quot;/api/v1/role/2&quot;, # 2 = Admins</span>
+<span class="sd">                        &quot;group&quot;:&quot;CN=DemoTenantAdmins,CN=Users,DC=samdom,DC=example,DC=com&quot;</span>
+<span class="sd">                    },</span>
+<span class="sd">                    {</span>
+<span class="sd">                        &quot;role&quot;: &quot;/api/v1/role/3&quot;, # 3 = Members</span>
+<span class="sd">                        &quot;group&quot;: &quot;CN=DemoTenantUsers,CN=Users,DC=samdom,DC=example,DC=com&quot;</span>
+<span class="sd">                    }</span>
+<span class="sd">                ]</span>
+<span class="sd">            }</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
             <span class="n">url</span><span class="o">=</span><span class="s2">&quot;/api/v1/tenant/</span><span class="si">{}</span><span class="s2">?external_user_groups&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tenant_id</span><span class="p">),</span>
             <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;put&quot;</span><span class="p">,</span>
             <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;epic_tenant_auth&quot;</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="TenantController.assign_user_to_role"><a class="viewcode-back" href="../../hpecp.tenant.html#hpecp.tenant.TenantController.assign_user_to_role">[docs]</a>    <span class="k">def</span> <span class="nf">assign_user_to_role</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tenant_id</span><span class="p">,</span> <span class="n">role_id</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Assign a user to a given role using the tenant</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            tenant_id (str): The tenant ID - format: &#39;/api/v1/tenant/[0-9]+&#39;</span>
+<span class="sd">            role_id (str): The role ID - format: &#39;/api/v1/role/[0-9]+&#39;</span>
+<span class="sd">            user_id (str): The role ID - format: &#39;/api/v1/user/[0-9]+&#39;</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            APIItemNotFoundException</span>
+<span class="sd">            APIItemConflictException</span>
+<span class="sd">            APIException</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># FIXME: Assuming this functionality is experimental like others.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s2">&quot;!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s2">&quot;!!!! The method `tenant.get()` is experimental !!!!&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s2">&quot;!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!&quot;</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Ensure that the tenant is valid and exists</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">tenant_id</span><span class="p">)</span>
+
+        <span class="c1"># Ensure that the role is valid and exists</span>
+        <span class="c1"># FIXME: Uncomment this after the role is available with the client</span>
+        <span class="c1"># self.client.role.get(role_id)</span>
+
+        <span class="c1"># Ensure that the user is valid and exists</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
+
+        <span class="c1"># Build the request payload</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;operation&quot;</span><span class="p">:</span> <span class="s2">&quot;assign&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="n">role_id</span><span class="p">,</span>
+            <span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="n">user_id</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">tenant_id</span> <span class="o">+</span> <span class="s2">&quot;?user&quot;</span>
+
+        <span class="c1"># Make the request</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
+            <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
+            <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;put&quot;</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;assign_user_to_role&quot;</span><span class="p">,</span>
         <span class="p">)</span></div></div>
 </pre></div>
 
