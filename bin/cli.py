@@ -866,6 +866,23 @@ class HttpClientProxy(object):
             url, http_method="post", data=data, description="CLI HTTP POST",
         )
         print(response.text)
+        
+    def put(
+        self, url, json_file="",
+    ):
+        """Make HTTP PUT request
+
+            Example:
+            
+            hpecp httpclient put /api/v2/config/auth --json-file my.json
+        """
+        with open(json_file, "r",) as f:
+            data = json.load(f)
+
+        response = get_client()._request(
+            url, http_method="put", data=data, description="CLI HTTP PUT",
+        )
+        print(response.text)
 
 
 class UserProxy:
