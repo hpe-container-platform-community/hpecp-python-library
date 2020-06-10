@@ -19,18 +19,13 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 
 from unittest import TestCase
-from mock import Mock, patch
 
-import sys
-import tempfile
-import os
-import json
 import requests
-from requests.exceptions import RequestException
+from mock import patch
+
 from hpecp import (
-    ContainerPlatformClient,
-    APIException,
     APIItemNotFoundException,
+    ContainerPlatformClient,
 )
 from hpecp.gateway import GatewayStatus
 
@@ -1111,7 +1106,6 @@ class TestWaitForGatewayStatus(TestCase):
 
 
 class TestDeleteGateway(TestCase):
-
     # pylint: disable=no-method-argument
     def mocked_requests_get(*args, **kwargs):
         if args[0] == "https://127.0.0.1:8080/api/v1/workers/123":
