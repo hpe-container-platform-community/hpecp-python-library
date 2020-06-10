@@ -5,6 +5,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>hpecp.k8s_cluster module &#8212; HPE Container Platform Python Library  documentation</title>
     <link rel="stylesheet" href="_static/bizstyle.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -40,58 +41,10 @@
           <a href="hpecp.gateway.html" title="hpecp.gateway module"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">HPE Container Platform Python Library  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="hpecp.html" accesskey="U">API Docs</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="hpecp.html" accesskey="U">API Docs</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">hpecp.k8s_cluster module</a></li> 
       </ul>
-    </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h3><a href="index.html">Table of Contents</a></h3>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="hpecp.html">API Docs</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="hpecp.client.html">hpecp.client module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hpecp.license.html">hpecp.license module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hpecp.lock.html">hpecp.lock module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hpecp.gateway.html">hpecp.gateway module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">hpecp.k8s_cluster module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hpecp.k8s_worker.html">hpecp.k8s_worker module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hpecp.config.html">hpecp.config module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hpecp.tag.html">hpecp.tag module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hpecp.tenant.html">hpecp.tenant module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hpecp.exceptions.html">hpecp.exceptions module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hpecp.html#logging">Logging</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="cli.html">CLI Docs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="github.html">Source Repository</a></li>
-<li class="toctree-l1"><a class="reference internal" href="license.html">Apache License</a></li>
-</ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="hpecp.gateway.html"
-                        title="previous chapter">hpecp.gateway module</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="hpecp.k8s_worker.html"
-                        title="next chapter">hpecp.k8s_worker module</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/hpecp.k8s_cluster.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
-        </div>
-      </div>
+    </div>  
 
     <div class="document">
       <div class="documentwrapper">
@@ -240,7 +193,7 @@ Returns:</p>
 
 <dl class="py class">
 <dt id="hpecp.k8s_cluster.K8sClusterStatus">
-<em class="property">class </em><code class="sig-prename descclassname">hpecp.k8s_cluster.</code><code class="sig-name descname">K8sClusterStatus</code><a class="reference internal" href="_modules/hpecp/k8s_cluster.html#K8sClusterStatus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_cluster.K8sClusterStatus" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">hpecp.k8s_cluster.</code><code class="sig-name descname">K8sClusterStatus</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_cluster.html#K8sClusterStatus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_cluster.K8sClusterStatus" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: enum.Enum</p>
 <p>The statuses for a K8S Cluster</p>
 <p><strong>Note:</strong></p>
@@ -498,7 +451,57 @@ The API uses a string identifier with the status name rather than an integer val
 </div>
 
 
+            <div class="clearer"></div>
           </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="index.html">Table of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="hpecp.html">API Docs</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="hpecp.client.html">hpecp.client module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hpecp.license.html">hpecp.license module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hpecp.lock.html">hpecp.lock module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hpecp.gateway.html">hpecp.gateway module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">hpecp.k8s_cluster module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hpecp.k8s_worker.html">hpecp.k8s_worker module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hpecp.config.html">hpecp.config module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hpecp.tag.html">hpecp.tag module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hpecp.tenant.html">hpecp.tenant module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hpecp.exceptions.html">hpecp.exceptions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hpecp.html#logging">Logging</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">CLI Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="github.html">Source Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">Apache License</a></li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="hpecp.gateway.html"
+                        title="previous chapter">hpecp.gateway module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="hpecp.k8s_worker.html"
+                        title="next chapter">hpecp.k8s_worker module</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/hpecp.k8s_cluster.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -519,12 +522,13 @@ The API uses a string identifier with the status name rather than an integer val
           <a href="hpecp.gateway.html" title="hpecp.gateway module"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">HPE Container Platform Python Library  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="hpecp.html" >API Docs</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="hpecp.html" >API Docs</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">hpecp.k8s_cluster module</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Chris Snow.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.4.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.0.
     </div>
   </body>
 </html>

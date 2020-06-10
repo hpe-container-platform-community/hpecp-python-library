@@ -5,6 +5,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>hpecp.gateway module &#8212; HPE Container Platform Python Library  documentation</title>
     <link rel="stylesheet" href="_static/bizstyle.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -40,58 +41,10 @@
           <a href="hpecp.lock.html" title="hpecp.lock module"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">HPE Container Platform Python Library  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="hpecp.html" accesskey="U">API Docs</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="hpecp.html" accesskey="U">API Docs</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">hpecp.gateway module</a></li> 
       </ul>
-    </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h3><a href="index.html">Table of Contents</a></h3>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="hpecp.html">API Docs</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="hpecp.client.html">hpecp.client module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hpecp.license.html">hpecp.license module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hpecp.lock.html">hpecp.lock module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">hpecp.gateway module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hpecp.k8s_cluster.html">hpecp.k8s_cluster module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hpecp.k8s_worker.html">hpecp.k8s_worker module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hpecp.config.html">hpecp.config module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hpecp.tag.html">hpecp.tag module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hpecp.tenant.html">hpecp.tenant module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hpecp.exceptions.html">hpecp.exceptions module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hpecp.html#logging">Logging</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="cli.html">CLI Docs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="github.html">Source Repository</a></li>
-<li class="toctree-l1"><a class="reference internal" href="license.html">Apache License</a></li>
-</ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="hpecp.lock.html"
-                        title="previous chapter">hpecp.lock module</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="hpecp.k8s_cluster.html"
-                        title="next chapter">hpecp.k8s_cluster module</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/hpecp.gateway.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
-        </div>
-      </div>
+    </div>  
 
     <div class="document">
       <div class="documentwrapper">
@@ -104,10 +57,12 @@
 <dt id="hpecp.gateway.GatewayController">
 <em class="property">class </em><code class="sig-prename descclassname">hpecp.gateway.</code><code class="sig-name descname">GatewayController</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">client</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayController"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.gateway.GatewayController" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>This is the main class that users will interact with to work with Gateways.</p>
-<p>An instance of this class is available in the client.ContainerPlatformClient with the attribute name
-<a class="reference internal" href="hpecp.client.html#hpecp.client.ContainerPlatformClient.gateway" title="hpecp.client.ContainerPlatformClient.gateway"><code class="xref py py-attr docutils literal notranslate"><span class="pre">gateway</span></code></a>.  The methods of this class can be
-invoked using <cite>client.gateway.method()</cite>.  See the example below:</p>
+<p>This is the main class that users will interact with to work with</p>
+<p>Gateways. An instance of this class is available in the
+client.ContainerPlatformClient with the attribute name
+<a class="reference internal" href="hpecp.client.html#hpecp.client.ContainerPlatformClient.gateway" title="hpecp.client.ContainerPlatformClient.gateway"><code class="xref py py-attr docutils literal notranslate"><span class="pre">gateway</span></code></a>. The methods
+of this class can be invoked using <cite>client.gateway.method()</cite>. See the
+example below:</p>
 <p>Example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">client</span> <span class="o">=</span> <span class="n">ContainerPlatformClient</span><span class="p">(</span><span class="o">...</span><span class="p">)</span><span class="o">.</span><span class="n">create_session</span><span class="p">()</span>
 <span class="n">client</span><span class="o">.</span><span class="n">gateway</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
@@ -122,12 +77,15 @@ invoked using <cite>client.gateway.method()</cite>.  See the example below:</p>
 <dl class="py method">
 <dt id="hpecp.gateway.GatewayController.create_with_ssh_key">
 <code class="sig-name descname">create_with_ssh_key</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ip</span></em>, <em class="sig-param"><span class="n">proxy_node_hostname</span></em>, <em class="sig-param"><span class="n">ssh_key_data</span></em>, <em class="sig-param"><span class="n">tags</span><span class="o">=</span><span class="default_value">[]</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayController.create_with_ssh_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.gateway.GatewayController.create_with_ssh_key" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a gateway instance using SSH key credentials to access the host</p>
+<dd><p>Create a gateway instance using SSH key credentials to access the</p>
+<p>host.</p>
 <dl class="simple">
 <dt>Args:</dt><dd><dl class="simple">
-<dt>ip: str</dt><dd><p>The IP address of the proxy host.  Used for internal communication.</p>
+<dt>ip: str</dt><dd><p>The IP address of the proxy host.  Used for internal
+communication.</p>
 </dd>
-<dt>proxy_node_hostname: str</dt><dd><p>Clients will access cluster services will be accessed using this name.</p>
+<dt>proxy_node_hostname: str</dt><dd><p>Clients will access cluster services will be accessed using
+this name.</p>
 </dd>
 <dt>ssh_key_data: str</dt><dd><p>The ssh key data as a string.</p>
 </dd>
@@ -172,7 +130,8 @@ invoked using <cite>client.gateway.method()</cite>.  See the example below:</p>
 <dt id="hpecp.gateway.GatewayController.delete">
 <code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gateway_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayController.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.gateway.GatewayController.delete" title="Permalink to this definition">¶</a></dt>
 <dd><p>Delete a Gateway.</p>
-<p>You can use <code class="xref py py-meth docutils literal notranslate"><span class="pre">wait_for_status()</span></code> to check for the gateway state/existence.</p>
+<p>You can use <code class="xref py py-meth docutils literal notranslate"><span class="pre">wait_for_status()</span></code> to check for the gateway
+state/existence.</p>
 <dl class="simple">
 <dt>Args:</dt><dd><dl class="simple">
 <dt>gateway_id: str</dt><dd><p>The Gateway ID - format: ‘/api/v1/workers/[0-9]+’</p>
@@ -192,7 +151,8 @@ invoked using <cite>client.gateway.method()</cite>.  See the example below:</p>
 <dt>Args:</dt><dd><dl class="simple">
 <dt>gateway_id: str</dt><dd><p>The gateway ID - format: ‘/api/v1/workers/[0-9]+’</p>
 </dd>
-<dt>timeout_secs: int</dt><dd><p>How long to wait for the status(es) before raising an exception.</p>
+<dt>timeout_secs: int</dt><dd><p>How long to wait for the status(es) before raising an
+exception.</p>
 </dd>
 </dl>
 </dd>
@@ -209,15 +169,18 @@ invoked using <cite>client.gateway.method()</cite>.  See the example below:</p>
 <dt>Args:</dt><dd><dl class="simple">
 <dt>gateway_id: str</dt><dd><p>The gateway ID - format: ‘/api/v1/workers/[0-9]+’</p>
 </dd>
-<dt>status: list[<a class="reference internal" href="#hpecp.gateway.GatewayStatus" title="hpecp.gateway.GatewayStatus"><code class="xref py py-class docutils literal notranslate"><span class="pre">GatewayStatus</span></code></a>]</dt><dd><p>Status(es) to wait for.  Use an empty array if you want to wait for a cluster’s existence to cease.</p>
+<dt>status: list[<a class="reference internal" href="#hpecp.gateway.GatewayStatus" title="hpecp.gateway.GatewayStatus"><code class="xref py py-class docutils literal notranslate"><span class="pre">GatewayStatus</span></code></a>]</dt><dd><p>Status(es) to wait for.  Use an empty array if you want to wait
+for a cluster’s existence to cease.</p>
 </dd>
-<dt>timeout_secs: int</dt><dd><p>How long to wait for the status(es) before raising an exception.</p>
+<dt>timeout_secs: int</dt><dd><p>How long to wait for the status(es) before raising an
+exception.</p>
 </dd>
 </dl>
 </dd>
 <dt>Returns:</dt><dd><p>bool: True if status was found before timeout, otherwise False</p>
 </dd>
-<dt>Raises:</dt><dd><p>APIItemNotFoundException: if the item is not found and state is not empty
+<dt>Raises:</dt><dd><p>APIItemNotFoundException: if the item is not found and state is not
+empty
 APIException: if a generic API exception occurred</p>
 </dd>
 </dl>
@@ -227,13 +190,14 @@ APIException: if a generic API exception occurred</p>
 
 <dl class="py class">
 <dt id="hpecp.gateway.GatewayStatus">
-<em class="property">class </em><code class="sig-prename descclassname">hpecp.gateway.</code><code class="sig-name descname">GatewayStatus</code><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayStatus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.gateway.GatewayStatus" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">hpecp.gateway.</code><code class="sig-name descname">GatewayStatus</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayStatus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.gateway.GatewayStatus" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
 <p>Bases: enum.Enum</p>
 <p>The statuses for a Gateway</p>
 <p><strong>Note:</strong></p>
 <p>The integer values do not have a meaning outside of this library.
-The API uses a string identifier with the status name rather than an integer value.</p>
+The API uses a string identifier with the status name rather than an
+integer value.</p>
 <dl class="py attribute">
 <dt id="hpecp.gateway.GatewayStatus.bundle">
 <code class="sig-name descname">bundle</code><em class="property"> = 1</em><a class="headerlink" href="#hpecp.gateway.GatewayStatus.bundle" title="Permalink to this definition">¶</a></dt>
@@ -310,8 +274,9 @@ The API uses a string identifier with the status name rather than an integer val
 <dt id="hpecp.gateway.Gateway">
 <em class="property">class </em><code class="sig-prename descclassname">hpecp.gateway.</code><code class="sig-name descname">Gateway</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">json</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#Gateway"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.gateway.Gateway" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Create an instance of Gateway from json data returned from the HPE Container Platform API.</p>
-<p>Users of this library are not expected to create an instance of this class.</p>
+<p>Create an instance of Gateway from json data returned from the HPE</p>
+<p>Container Platform API. Users of this library are not expected to create an
+instance of this class.</p>
 <dl class="simple">
 <dt>Parameters:</dt><dd><dl class="simple">
 <dt>json<span class="classifier">str</span></dt><dd><p>The json returned by the API representing a Gateway.</p>
@@ -327,19 +292,18 @@ The API uses a string identifier with the status name rather than an integer val
 <dl class="py attribute">
 <dt id="hpecp.gateway.Gateway.all_fields">
 <code class="sig-name descname">all_fields</code><em class="property"> = ['id', 'hacapable', 'propinfo', 'approved_worker_pubkey', 'schedule', 'ip', 'proxy_nodes_hostname', 'hostname', 'state', 'status_info', 'purpose', 'sysinfo', 'tags']</em><a class="headerlink" href="#hpecp.gateway.Gateway.all_fields" title="Permalink to this definition">¶</a></dt>
-<dd><p>All of the fields of Gateway objects as returned by the HPE Container Platform API</p>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hpecp.gateway.Gateway.default_display_fields">
 <code class="sig-name descname">default_display_fields</code><em class="property"> = ['id', 'ip', 'proxy_nodes_hostname', 'hostname', 'state', 'status_info', 'purpose', 'tags']</em><a class="headerlink" href="#hpecp.gateway.Gateway.default_display_fields" title="Permalink to this definition">¶</a></dt>
-<dd><p>These fields are displayed by default, e.g. in tabulate()</p>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt id="hpecp.gateway.Gateway.set_display_columns">
 <code class="sig-name descname">set_display_columns</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">columns</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#Gateway.set_display_columns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.gateway.Gateway.set_display_columns" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the columns this instance should have when the instance is used with <a class="reference internal" href="#hpecp.gateway.GatewayList.tabulate" title="hpecp.gateway.GatewayList.tabulate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">GatewayList.tabulate()</span></code></a></p>
+<dd><p>Set the columns this instance should have when the instance is used</p>
+<p>with <a class="reference internal" href="#hpecp.gateway.GatewayList.tabulate" title="hpecp.gateway.GatewayList.tabulate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">GatewayList.tabulate()</span></code></a></p>
 <dl class="simple">
 <dt>Parameters:</dt><dd><dl class="simple">
 <dt>columns<span class="classifier">list[str]</span></dt><dd><p>Set the list of colums to return</p>
@@ -353,7 +317,8 @@ The API uses a string identifier with the status name rather than an integer val
 <dl class="py method">
 <dt id="hpecp.gateway.Gateway.id">
 <em class="property">property </em><code class="sig-name descname">id</code><a class="headerlink" href="#hpecp.gateway.Gateway.id" title="Permalink to this definition">¶</a></dt>
-<dd><p>&#64;Field: from json[‘_links’][‘self’][‘href’] - id format: ‘/api/v1/workers/[0-9]+’</p>
+<dd><p>&#64;Field: from json[‘_links’][‘self’][‘href’] -</p>
+<p>id format: ‘/api/v1/workers/[0-9]+’</p>
 </dd></dl>
 
 <dl class="py method">
@@ -438,7 +403,8 @@ The API uses a string identifier with the status name rather than an integer val
 <p>This class is not expected to be instantiated by users.</p>
 <dl class="simple">
 <dt>Parameters:</dt><dd><dl class="simple">
-<dt>json<span class="classifier">str</span></dt><dd><p>json data returned from the HPE Container Platform API get request to /api/v1/Gateway</p>
+<dt>json<span class="classifier">str</span></dt><dd><p>json data returned from the HPE Container Platform API get request
+to /api/v1/Gateway</p>
 </dd>
 </dl>
 </dd>
@@ -449,7 +415,8 @@ The API uses a string identifier with the status name rather than an integer val
 <dd><p>Provide a tabular represenation of the list of Gateways</p>
 <dl class="simple">
 <dt>Parameters:</dt><dd><dl class="simple">
-<dt>columns<span class="classifier">list[str]</span></dt><dd><p>list of columns to return in the table - default <a class="reference internal" href="#hpecp.gateway.Gateway.default_display_fields" title="hpecp.gateway.Gateway.default_display_fields"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Gateway.default_display_fields</span></code></a></p>
+<dt>columns<span class="classifier">list[str]</span></dt><dd><p>list of columns to return in the table -
+default <a class="reference internal" href="#hpecp.gateway.Gateway.default_display_fields" title="hpecp.gateway.Gateway.default_display_fields"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Gateway.default_display_fields</span></code></a></p>
 </dd>
 <dt>style: str</dt><dd><p>See: <a class="reference external" href="https://github.com/astanin/python-tabulate#table-format">https://github.com/astanin/python-tabulate#table-format</a></p>
 </dd>
@@ -473,7 +440,57 @@ The API uses a string identifier with the status name rather than an integer val
 </div>
 
 
+            <div class="clearer"></div>
           </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="index.html">Table of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="hpecp.html">API Docs</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="hpecp.client.html">hpecp.client module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hpecp.license.html">hpecp.license module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hpecp.lock.html">hpecp.lock module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">hpecp.gateway module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hpecp.k8s_cluster.html">hpecp.k8s_cluster module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hpecp.k8s_worker.html">hpecp.k8s_worker module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hpecp.config.html">hpecp.config module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hpecp.tag.html">hpecp.tag module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hpecp.tenant.html">hpecp.tenant module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hpecp.exceptions.html">hpecp.exceptions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hpecp.html#logging">Logging</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">CLI Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="github.html">Source Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">Apache License</a></li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="hpecp.lock.html"
+                        title="previous chapter">hpecp.lock module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="hpecp.k8s_cluster.html"
+                        title="next chapter">hpecp.k8s_cluster module</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/hpecp.gateway.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -494,12 +511,13 @@ The API uses a string identifier with the status name rather than an integer val
           <a href="hpecp.lock.html" title="hpecp.lock module"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">HPE Container Platform Python Library  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="hpecp.html" >API Docs</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="hpecp.html" >API Docs</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">hpecp.gateway module</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Chris Snow.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.4.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.0.
     </div>
   </body>
 </html>

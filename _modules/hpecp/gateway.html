@@ -5,6 +5,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>hpecp.gateway &#8212; HPE Container Platform Python Library  documentation</title>
     <link rel="stylesheet" href="../../_static/bizstyle.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -32,32 +33,10 @@
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">HPE Container Platform Python Library  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">hpecp.gateway</a></li> 
       </ul>
-    </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h3><a href="../../index.html">Table of Contents</a></h3>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../hpecp.html">API Docs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../cli.html">CLI Docs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../github.html">Source Repository</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../license.html">Apache License</a></li>
-</ul>
-
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
-        </div>
-      </div>
+    </div>  
 
     <div class="document">
       <div class="documentwrapper">
@@ -86,22 +65,15 @@
 <span class="c1"># OTHER DEALINGS IN THE SOFTWARE.</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
-<span class="kn">from</span> <span class="nn">.logger</span> <span class="kn">import</span> <span class="n">Logger</span>
-<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">ContainerPlatformClientException</span><span class="p">,</span>
-    <span class="n">APIException</span><span class="p">,</span>
-    <span class="n">APIItemNotFoundException</span><span class="p">,</span>
-    <span class="n">APIItemConflictException</span><span class="p">,</span>
-<span class="p">)</span>
 
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">attrgetter</span>
-<span class="kn">from</span> <span class="nn">tabulate</span> <span class="kn">import</span> <span class="n">tabulate</span>
-<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
-<span class="kn">import</span> <span class="nn">polling</span>
 <span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">six</span>
-<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">attrgetter</span>
+
+<span class="kn">import</span> <span class="nn">polling</span>
+<span class="kn">from</span> <span class="nn">tabulate</span> <span class="kn">import</span> <span class="n">tabulate</span>
+
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">APIItemNotFoundException</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="n">basestring</span>
@@ -110,11 +82,13 @@
 
 
 <div class="viewcode-block" id="GatewayController"><a class="viewcode-back" href="../../hpecp.gateway.html#hpecp.gateway.GatewayController">[docs]</a><span class="k">class</span> <span class="nc">GatewayController</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;This is the main class that users will interact with to work with Gateways.</span>
+    <span class="sd">&quot;&quot;&quot;This is the main class that users will interact with to work with</span>
 
-<span class="sd">    An instance of this class is available in the client.ContainerPlatformClient with the attribute name</span>
-<span class="sd">    :py:attr:`gateway &lt;.client.ContainerPlatformClient.gateway&gt;`.  The methods of this class can be</span>
-<span class="sd">    invoked using `client.gateway.method()`.  See the example below:</span>
+<span class="sd">    Gateways. An instance of this class is available in the</span>
+<span class="sd">    client.ContainerPlatformClient with the attribute name</span>
+<span class="sd">    :py:attr:`gateway &lt;.client.ContainerPlatformClient.gateway&gt;`. The methods</span>
+<span class="sd">    of this class can be invoked using `client.gateway.method()`. See the</span>
+<span class="sd">    example below:</span>
 
 <span class="sd">    Example::</span>
 
@@ -133,13 +107,17 @@
 <div class="viewcode-block" id="GatewayController.create_with_ssh_key"><a class="viewcode-back" href="../../hpecp.gateway.html#hpecp.gateway.GatewayController.create_with_ssh_key">[docs]</a>    <span class="k">def</span> <span class="nf">create_with_ssh_key</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="n">proxy_node_hostname</span><span class="p">,</span> <span class="n">ssh_key_data</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[]</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Create a gateway instance using SSH key credentials to access the host</span>
+        <span class="sd">&quot;&quot;&quot;Create a gateway instance using SSH key credentials to access the</span>
+
+<span class="sd">        host.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            ip: str</span>
-<span class="sd">                The IP address of the proxy host.  Used for internal communication.</span>
+<span class="sd">                The IP address of the proxy host.  Used for internal</span>
+<span class="sd">                communication.</span>
 <span class="sd">            proxy_node_hostname: str</span>
-<span class="sd">                Clients will access cluster services will be accessed using this name.</span>
+<span class="sd">                Clients will access cluster services will be accessed using</span>
+<span class="sd">                this name.</span>
 <span class="sd">            ssh_key_data: str</span>
 <span class="sd">                The ssh key data as a string.</span>
 <span class="sd">            tags: list</span>
@@ -228,7 +206,8 @@
 <div class="viewcode-block" id="GatewayController.delete"><a class="viewcode-back" href="../../hpecp.gateway.html#hpecp.gateway.GatewayController.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gateway_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Delete a Gateway.</span>
 
-<span class="sd">        You can use :py:meth:`wait_for_status` to check for the gateway state/existence.</span>
+<span class="sd">        You can use :py:meth:`wait_for_status` to check for the gateway</span>
+<span class="sd">        state/existence.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            gateway_id: str</span>
@@ -244,7 +223,8 @@
             <span class="sa">r</span><span class="s2">&quot;\/api\/v1\/workers\/[0-9]+&quot;</span><span class="p">,</span> <span class="n">gateway_id</span>
         <span class="p">),</span> <span class="s2">&quot;&#39;gateway_id&#39; must have format &#39;/api/v1/workers/[0-9]+&#39;&quot;</span>
 
-        <span class="c1"># check if host is actually a gateway - raises APIItemNotFoundException() if gateway not found</span>
+        <span class="c1"># Check if host is actually a gateway</span>
+        <span class="c1"># Raises APIItemNotFoundException() if gateway not found</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">gateway_id</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
@@ -258,7 +238,8 @@
 <span class="sd">            gateway_id: str</span>
 <span class="sd">                The gateway ID - format: &#39;/api/v1/workers/[0-9]+&#39;</span>
 <span class="sd">            timeout_secs: int</span>
-<span class="sd">                How long to wait for the status(es) before raising an exception.</span>
+<span class="sd">                How long to wait for the status(es) before raising an</span>
+<span class="sd">                exception.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            bool: True if gateway was deleted before timeout, otherwise False</span>
@@ -271,15 +252,18 @@
 <span class="sd">            gateway_id: str</span>
 <span class="sd">                The gateway ID - format: &#39;/api/v1/workers/[0-9]+&#39;</span>
 <span class="sd">            status: list[:py:class:`GatewayStatus`]</span>
-<span class="sd">                Status(es) to wait for.  Use an empty array if you want to wait for a cluster&#39;s existence to cease.</span>
+<span class="sd">                Status(es) to wait for.  Use an empty array if you want to wait</span>
+<span class="sd">                for a cluster&#39;s existence to cease.</span>
 <span class="sd">            timeout_secs: int</span>
-<span class="sd">                How long to wait for the status(es) before raising an exception.</span>
+<span class="sd">                How long to wait for the status(es) before raising an</span>
+<span class="sd">                exception.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            bool: True if status was found before timeout, otherwise False</span>
 
 <span class="sd">        Raises:</span>
-<span class="sd">            APIItemNotFoundException: if the item is not found and state is not empty</span>
+<span class="sd">            APIItemNotFoundException: if the item is not found and state is not</span>
+<span class="sd">            empty</span>
 <span class="sd">            APIException: if a generic API exception occurred</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
@@ -317,7 +301,8 @@
             <span class="k">except</span> <span class="n">polling</span><span class="o">.</span><span class="n">TimeoutException</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">False</span>
 
-        <span class="c1"># if state is not empty return success when gateway current state is in desired state</span>
+        <span class="c1"># If state is not empty return success when gateway current state is in</span>
+        <span class="c1"># desired state</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">polling</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span>
@@ -340,7 +325,8 @@
 <span class="sd">    **Note:**</span>
 
 <span class="sd">    The integer values do not have a meaning outside of this library.</span>
-<span class="sd">    The API uses a string identifier with the status name rather than an integer value.</span>
+<span class="sd">    The API uses a string identifier with the status name rather than an</span>
+<span class="sd">    integer value.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">bundle</span> <span class="o">=</span> <span class="mi">1</span>
@@ -360,9 +346,10 @@
 
 
 <div class="viewcode-block" id="Gateway"><a class="viewcode-back" href="../../hpecp.gateway.html#hpecp.gateway.Gateway">[docs]</a><span class="k">class</span> <span class="nc">Gateway</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Create an instance of Gateway from json data returned from the HPE Container Platform API.</span>
+    <span class="sd">&quot;&quot;&quot;Create an instance of Gateway from json data returned from the HPE</span>
 
-<span class="sd">    Users of this library are not expected to create an instance of this class.</span>
+<span class="sd">    Container Platform API. Users of this library are not expected to create an</span>
+<span class="sd">    instance of this class.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        json : str</span>
@@ -373,6 +360,8 @@
 <span class="sd">            An instance of Gateway</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="c1"># All of the fields of Gateway objects as returned by the HPE Container</span>
+    <span class="c1"># Platform API</span>
     <span class="n">all_fields</span> <span class="o">=</span> <span class="p">[</span>
         <span class="s2">&quot;id&quot;</span><span class="p">,</span>
         <span class="s2">&quot;hacapable&quot;</span><span class="p">,</span>
@@ -388,8 +377,8 @@
         <span class="s2">&quot;sysinfo&quot;</span><span class="p">,</span>
         <span class="s2">&quot;tags&quot;</span><span class="p">,</span>
     <span class="p">]</span>
-    <span class="sd">&quot;&quot;&quot;All of the fields of Gateway objects as returned by the HPE Container Platform API&quot;&quot;&quot;</span>
 
+    <span class="c1"># These fields are displayed by default, e.g. in tabulate()</span>
     <span class="n">default_display_fields</span> <span class="o">=</span> <span class="p">[</span>
         <span class="s2">&quot;id&quot;</span><span class="p">,</span>
         <span class="s2">&quot;ip&quot;</span><span class="p">,</span>
@@ -400,7 +389,6 @@
         <span class="s2">&quot;purpose&quot;</span><span class="p">,</span>
         <span class="s2">&quot;tags&quot;</span><span class="p">,</span>
     <span class="p">]</span>
-    <span class="sd">&quot;&quot;&quot;These fields are displayed by default, e.g. in tabulate()&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">json</span> <span class="o">=</span> <span class="n">json</span>
@@ -422,7 +410,9 @@
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="nb">dir</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
 
 <div class="viewcode-block" id="Gateway.set_display_columns"><a class="viewcode-back" href="../../hpecp.gateway.html#hpecp.gateway.Gateway.set_display_columns">[docs]</a>    <span class="k">def</span> <span class="nf">set_display_columns</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">columns</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Set the columns this instance should have when the instance is used with :py:meth:`.GatewayList.tabulate`</span>
+        <span class="sd">&quot;&quot;&quot;Set the columns this instance should have when the instance is used</span>
+
+<span class="sd">        with :py:meth:`.GatewayList.tabulate`</span>
 
 <span class="sd">        Parameters:</span>
 <span class="sd">            columns : list[str]</span>
@@ -434,7 +424,9 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;@Field: from json[&#39;_links&#39;][&#39;self&#39;][&#39;href&#39;] - id format: &#39;/api/v1/workers/[0-9]+&#39;&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;@Field: from json[&#39;_links&#39;][&#39;self&#39;][&#39;href&#39;] -</span>
+
+<span class="sd">        id format: &#39;/api/v1/workers/[0-9]+&#39;&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;_links&quot;</span><span class="p">][</span><span class="s2">&quot;self&quot;</span><span class="p">][</span><span class="s2">&quot;href&quot;</span><span class="p">]</span>
 
     <span class="nd">@property</span>
@@ -510,7 +502,8 @@
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        json : str</span>
-<span class="sd">            json data returned from the HPE Container Platform API get request to /api/v1/Gateway</span>
+<span class="sd">            json data returned from the HPE Container Platform API get request</span>
+<span class="sd">            to /api/v1/Gateway</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json</span><span class="p">):</span>
@@ -557,7 +550,8 @@
 
 <span class="sd">        Parameters:</span>
 <span class="sd">            columns : list[str]</span>
-<span class="sd">                list of columns to return in the table - default :py:attr:`.Gateway.default_display_fields`</span>
+<span class="sd">                list of columns to return in the table -</span>
+<span class="sd">                default :py:attr:`.Gateway.default_display_fields`</span>
 <span class="sd">            style: str</span>
 <span class="sd">                See: https://github.com/astanin/python-tabulate#table-format</span>
 
@@ -592,7 +586,31 @@
             <span class="k">return</span> <span class="n">tabulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tablefmt</span><span class="o">=</span><span class="n">style</span><span class="p">)</span></div></div>
 </pre></div>
 
+            <div class="clearer"></div>
           </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../index.html">Table of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hpecp.html">API Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cli.html">CLI Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../github.html">Source Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">Apache License</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -607,12 +625,13 @@
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">HPE Container Platform Python Library  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">hpecp.gateway</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Chris Snow.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.4.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.0.
     </div>
   </body>
 </html>

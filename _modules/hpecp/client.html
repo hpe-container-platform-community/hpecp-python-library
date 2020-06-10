@@ -5,6 +5,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>hpecp.client &#8212; HPE Container Platform Python Library  documentation</title>
     <link rel="stylesheet" href="../../_static/bizstyle.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -32,32 +33,10 @@
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">HPE Container Platform Python Library  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">hpecp.client</a></li> 
       </ul>
-    </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h3><a href="../../index.html">Table of Contents</a></h3>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../hpecp.html">API Docs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../cli.html">CLI Docs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../github.html">Source Repository</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../license.html">Apache License</a></li>
-</ul>
-
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
-        </div>
-      </div>
+    </div>  
 
     <div class="document">
       <div class="documentwrapper">
@@ -91,13 +70,14 @@
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
 
+<span class="kn">import</span> <span class="nn">configparser</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">requests</span>
-<span class="kn">import</span> <span class="nn">configparser</span>
 
+<span class="kn">import</span> <span class="nn">requests</span>
 <span class="kn">from</span> <span class="nn">six</span> <span class="kn">import</span> <span class="n">raise_from</span>
 
+<span class="kn">from</span> <span class="nn">.catalog</span> <span class="kn">import</span> <span class="n">CatalogController</span>
 <span class="kn">from</span> <span class="nn">.config</span> <span class="kn">import</span> <span class="n">ConfigController</span>
 <span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">APIException</span><span class="p">,</span>
@@ -110,10 +90,9 @@
 <span class="kn">from</span> <span class="nn">.k8s_worker</span> <span class="kn">import</span> <span class="n">K8sWorkerController</span>
 <span class="kn">from</span> <span class="nn">.license</span> <span class="kn">import</span> <span class="n">LicenseController</span>
 <span class="kn">from</span> <span class="nn">.lock</span> <span class="kn">import</span> <span class="n">LockController</span>
-<span class="kn">from</span> <span class="nn">.user</span> <span class="kn">import</span> <span class="n">UserController</span>
 <span class="kn">from</span> <span class="nn">.logger</span> <span class="kn">import</span> <span class="n">Logger</span>
 <span class="kn">from</span> <span class="nn">.tenant</span> <span class="kn">import</span> <span class="n">TenantController</span>
-<span class="kn">from</span> <span class="nn">.catalog</span> <span class="kn">import</span> <span class="n">CatalogController</span>
+<span class="kn">from</span> <span class="nn">.user</span> <span class="kn">import</span> <span class="n">UserController</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="n">basestring</span>
@@ -138,7 +117,7 @@
 <span class="sd">        use_ssl : bool:</span>
 <span class="sd">            Connect to HPECP using SSL: True|False</span>
 <span class="sd">        verify_ssl : bool|str</span>
-<span class="sd">            See https://requests.readthedocs.io/en/master/user/advanced/#ssl-cert-verification</span>
+<span class="sd">            See &quot;https://requests.readthedocs.io/en/master/user/advanced/#ssl-cert-verification&quot;</span>
 <span class="sd">        warn_ssl : bool</span>
 <span class="sd">            Disable ssl warnings</span>
 
@@ -384,7 +363,10 @@
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">verify_ssl</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
             <span class="nb">isinstance</span><span class="p">(</span><span class="n">verify_ssl</span><span class="p">,</span> <span class="n">basestring</span><span class="p">)</span>
             <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">access</span><span class="p">(</span><span class="n">verify_ssl</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">R_OK</span><span class="p">)</span>
-        <span class="p">),</span> <span class="s2">&quot;&#39;verify_ssl&#39; parameter must be of type bool or point to a certificate file&quot;</span>
+        <span class="p">),</span> <span class="p">(</span>
+            <span class="s2">&quot;&#39;verify_ssl&#39; parameter must be of type bool or point to a &quot;</span>
+            <span class="s2">&quot;certificate file&quot;</span>
+        <span class="p">)</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
             <span class="n">warn_ssl</span><span class="p">,</span> <span class="nb">bool</span>
         <span class="p">),</span> <span class="s2">&quot;&#39;warn_ssl&#39; parameter must be of type bool&quot;</span>
@@ -406,7 +388,8 @@
             <span class="n">scheme</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_host</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_port</span>
         <span class="p">)</span>
 
-        <span class="c1"># register endpoint modules - see @property definitions at end of file for each module</span>
+        <span class="c1"># Register endpoint modules - see @property definitions at end of file</span>
+        <span class="c1"># for each module</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_tenant</span> <span class="o">=</span> <span class="n">TenantController</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="n">ConfigController</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_gateway</span> <span class="o">=</span> <span class="n">GatewayController</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -418,7 +401,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_catalog</span> <span class="o">=</span> <span class="n">CatalogController</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ContainerPlatformClient.create_session"><a class="viewcode-back" href="../../hpecp.client.html#hpecp.client.ContainerPlatformClient.create_session">[docs]</a>    <span class="k">def</span> <span class="nf">create_session</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Create a session with the HPE CP controller defined in the object :py:class:`ContainerPlatformClient`.</span>
+        <span class="sd">&quot;&quot;&quot;Create a session with the HPE CP controller defined in the object</span>
+
+<span class="sd">        :py:class:`ContainerPlatformClient`.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            ContainerPlatformClient:</span>
@@ -449,11 +434,13 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
                 <span class="s2">&quot;RES: </span><span class="si">{}</span><span class="s2"> : </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;Login&quot;</span><span class="p">,</span> <span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
             <span class="p">)</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="s2">&quot;Could not connect to controller - set LOG_LEVEL=DEBUG to &quot;</span>
+                <span class="s2">&quot;see more detail.&quot;</span>
+            <span class="p">)</span>
             <span class="n">raise_from</span><span class="p">(</span>
                 <span class="n">APIException</span><span class="p">(</span>
-                    <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Could not connect to controller - set LOG_LEVEL=DEBUG to see more detail.&quot;</span><span class="p">,</span>
-                    <span class="n">request_method</span><span class="o">=</span><span class="s2">&quot;post&quot;</span><span class="p">,</span>
-                    <span class="n">request_url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
+                    <span class="n">message</span><span class="o">=</span><span class="n">msg</span><span class="p">,</span> <span class="n">request_method</span><span class="o">=</span><span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="n">request_url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
                 <span class="p">),</span>
                 <span class="kc">None</span><span class="p">,</span>
             <span class="p">)</span>
@@ -549,13 +536,14 @@
         <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">RequestException</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">response_info</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-            <span class="k">except</span><span class="p">:</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
                 <span class="n">response_info</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">response_info</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 
             <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">404</span><span class="p">:</span>
-                <span class="c1"># This is expected for some method calls so do not log as an error</span>
+                <span class="c1"># This is expected for some method calls so do not log as an</span>
+                <span class="c1"># error</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
                     <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> : </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> REQ: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                         <span class="n">description</span><span class="p">,</span> <span class="n">http_method</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
@@ -568,7 +556,8 @@
                     <span class="n">request_data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">),</span>
                 <span class="p">)</span>
             <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">409</span><span class="p">:</span>
-                <span class="c1"># This is expected for some method calls so do not log as an error</span>
+                <span class="c1"># This is expected for some method calls so do not log as an</span>
+                <span class="c1"># error</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
                     <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> : </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> REQ: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                         <span class="n">description</span><span class="p">,</span> <span class="n">http_method</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
@@ -618,10 +607,10 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">tenant</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This attribute is a reference to an object of type `.tenant.TenantController`.</span>
+        <span class="sd">&quot;&quot;&quot;This attribute is a reference to an object of type</span>
 
-<span class="sd">        See the class :py:class:`.tenant.TenantController` for the methods available.</span>
+<span class="sd">        `.tenant.TenantController`. See the class</span>
+<span class="sd">        :py:class:`.tenant.TenantController` for the methods available.</span>
 
 <span class="sd">        Example::</span>
 
@@ -629,17 +618,19 @@
 <span class="sd">            client.create_session()</span>
 <span class="sd">            client.tenant.list()</span>
 
-<span class="sd">        This example calls the method :py:meth:`list() &lt;.tenant.TenantController.list&gt;` in :py:class:`.tenant.TenantController`.</span>
+<span class="sd">        This example calls the method</span>
+<span class="sd">        :py:meth:`list() &lt;.tenant.TenantController.list&gt;` in</span>
+<span class="sd">        :py:class:`.tenant.TenantController`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tenant</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This attribute is a reference to an object of type `.config.ConfigController`.</span>
+        <span class="sd">&quot;&quot;&quot;This attribute is a reference to an object of type</span>
 
-<span class="sd">        See the class :py:class:`.config.ConfigController` for the methods available.</span>
+<span class="sd">        `.config.ConfigController`. See the class</span>
+<span class="sd">        :py:class:`.config.ConfigController` for the methods available.</span>
 
 <span class="sd">        Example::</span>
 
@@ -662,17 +653,20 @@
 <span class="sd">                }</span>
 <span class="sd">            )</span>
 
-<span class="sd">        This example calls the method :py:meth:`auth() &lt;.config.ConfigController.auth&gt;` in :py:class:`.config.ConfigController`.</span>
+<span class="sd">        This example calls the method</span>
+<span class="sd">        :py:meth:`auth() &lt;.config.ConfigController.auth&gt;` in</span>
+<span class="sd">        :py:class:`.config.ConfigController`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">k8s_cluster</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This attribute is a reference to an object of type `.k8s_cluster.K8sClusterController`.</span>
+        <span class="sd">&quot;&quot;&quot;This attribute is a reference to an object of type</span>
 
-<span class="sd">        See the class :py:class:`.k8s_cluster.K8sClusterController` for the methods available.</span>
+<span class="sd">        `.k8s_cluster.K8sClusterController`. See the class</span>
+<span class="sd">        :py:class:`.k8s_cluster.K8sClusterController` for the methods</span>
+<span class="sd">        available.</span>
 
 <span class="sd">        Example::</span>
 
@@ -680,17 +674,19 @@
 <span class="sd">            client.create_session()</span>
 <span class="sd">            client.k8s_cluster.list()</span>
 
-<span class="sd">        This example calls the method :py:meth:`list() &lt;.k8s_cluster.K8sClusterController.list&gt;` in :py:class:`.k8s_cluster.K8sClusterController`.</span>
+<span class="sd">        This example calls the method</span>
+<span class="sd">        :py:meth:`list() &lt;.k8s_cluster.K8sClusterController.list&gt;` in</span>
+<span class="sd">        :py:class:`.k8s_cluster.K8sClusterController`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_k8s_cluster</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">k8s_worker</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This attribute is a reference to an object of type `.k8s_worker.K8sWorkerController`.</span>
+        <span class="sd">&quot;&quot;&quot;This attribute is a reference to an object of type</span>
 
-<span class="sd">        See the class :py:class:`.k8s_worker.K8sWorkerController` for the methods available.</span>
+<span class="sd">        `.k8s_worker.K8sWorkerController`. See the class</span>
+<span class="sd">        :py:class:`.k8s_worker.K8sWorkerController` for the methods available.</span>
 
 <span class="sd">        Example::</span>
 
@@ -698,17 +694,19 @@
 <span class="sd">            client.create_session()</span>
 <span class="sd">            client.k8s_worker.list()</span>
 
-<span class="sd">        This example calls the method :py:meth:`list() &lt;.k8s_worker.K8sWorkerController.list&gt;` in :py:class:`.k8s_worker.K8sWorkerController`.</span>
+<span class="sd">        This example calls the method</span>
+<span class="sd">        :py:meth:`list() &lt;.k8s_worker.K8sWorkerController.list&gt;` in</span>
+<span class="sd">        :py:class:`.k8s_worker.K8sWorkerController`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_k8s_worker</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">gateway</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This attribute is a reference to an object of type `.gateway.GatewayController`.</span>
+        <span class="sd">&quot;&quot;&quot;This attribute is a reference to an object of type</span>
 
-<span class="sd">        See the class :py:class:`.gateway.GatewayController` for the methods available.</span>
+<span class="sd">        `.gateway.GatewayController`. See the class</span>
+<span class="sd">        :py:class:`.gateway.GatewayController` for the methods available.</span>
 
 <span class="sd">        Example::</span>
 
@@ -716,17 +714,19 @@
 <span class="sd">            client.create_session()</span>
 <span class="sd">            client.gateway.list()</span>
 
-<span class="sd">        This example calls the method :py:meth:`list() &lt;.gateway.GatewayController.list&gt;` in :py:class:`.gateway.GatewayController`.</span>
+<span class="sd">        This example calls the method</span>
+<span class="sd">        :py:meth:`list() &lt;.gateway.GatewayController.list&gt;` in</span>
+<span class="sd">        :py:class:`.gateway.GatewayController`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gateway</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">license</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This attribute is a reference to an object of type `.license.LicenseController`.</span>
+        <span class="sd">&quot;&quot;&quot;This attribute is a reference to an object of type</span>
 
-<span class="sd">        See the class :py:class:`.license.LicenseController` for the methods available.</span>
+<span class="sd">        `.license.LicenseController`. See the class</span>
+<span class="sd">        :py:class:`.license.LicenseController` for the methods available.</span>
 
 <span class="sd">        Example::</span>
 
@@ -734,17 +734,19 @@
 <span class="sd">            client.create_session()</span>
 <span class="sd">            client.license.list()</span>
 
-<span class="sd">        This example calls the method :py:meth:`list() &lt;.license.LicenseController.list&gt;` in :py:class:`.license.LicenseController`.</span>
+<span class="sd">        This example calls the method</span>
+<span class="sd">        :py:meth:`list() &lt;.license.LicenseController.list&gt;` in</span>
+<span class="sd">        :py:class:`.license.LicenseController`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_license</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">lock</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This attribute is a reference to an object of type `.lock.LockController`.</span>
+        <span class="sd">&quot;&quot;&quot;This attribute is a reference to an object of type</span>
 
-<span class="sd">        See the class :py:class:`.lock.LockController` for the methods available.</span>
+<span class="sd">        `.lock.LockController`. See the class</span>
+<span class="sd">        :py:class:`.lock.LockController` for the methods available.</span>
 
 <span class="sd">        Example::</span>
 
@@ -752,16 +754,19 @@
 <span class="sd">            client.create_session()</span>
 <span class="sd">            client.lock.get()</span>
 
-<span class="sd">        This example calls the method :py:meth:`get() &lt;.lock.LockController.list&gt;` in :py:class:`.lock.LockController`.</span>
+<span class="sd">        This example calls the method</span>
+<span class="sd">        :py:meth:`get() &lt;.lock.LockController.list&gt;` in</span>
+<span class="sd">        :py:class:`.lock.LockController`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This attribute is a reference to :py:class:`.logger.Logger`.  The log function can be called from controller objects</span>
-<span class="sd">        via the `client` parameter passed in during instantiation of the controller.</span>
+        <span class="sd">&quot;&quot;&quot;This attribute is a reference to :py:class:`.logger.Logger`.</span>
+
+<span class="sd">        The log function can be called from controller objects via the `client`</span>
+<span class="sd">        parameter passed in during instantiation of the controller.</span>
 
 <span class="sd">        Example::</span>
 
@@ -780,10 +785,10 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This attribute is a reference to an object of type `.user.UserController`.</span>
+        <span class="sd">&quot;&quot;&quot;This attribute is a reference to an object of type</span>
 
-<span class="sd">        See the class :py:class:`.lock.UserController` for the methods available.</span>
+<span class="sd">        `.user.UserController`. See the class :py:class:`.lock.UserController`</span>
+<span class="sd">        for the methods available.</span>
 
 <span class="sd">        Example::</span>
 
@@ -791,17 +796,19 @@
 <span class="sd">            client.create_session()</span>
 <span class="sd">            client.user.get()</span>
 
-<span class="sd">        This example calls the method :py:meth:`get() &lt;.user.UserController.list&gt;` in :py:class:`.user.UserController`.</span>
+<span class="sd">        This example calls the method</span>
+<span class="sd">        :py:meth:`get() &lt;.user.UserController.list&gt;` in</span>
+<span class="sd">        :py:class:`.user.UserController`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_user</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">catalog</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This attribute is a reference to an object of type `.catalog.CatalogController`.</span>
+        <span class="sd">&quot;&quot;&quot;This attribute is a reference to an object of type</span>
 
-<span class="sd">        See the class :py:class:`.catalog.CatalogController` for the methods available.</span>
+<span class="sd">        `.catalog.CatalogController`. See the class</span>
+<span class="sd">        :py:class:`.catalog.CatalogController` for the methods available.</span>
 
 <span class="sd">        Example::</span>
 
@@ -809,13 +816,39 @@
 <span class="sd">            client.create_session()</span>
 <span class="sd">            client.catalog.create()</span>
 
-<span class="sd">        This example calls the method :py:meth:`create() &lt;.catalog.CatalogController.create&gt;` in :py:class:`.catalog.CatalogController`.</span>
+<span class="sd">        This example calls the method</span>
+<span class="sd">        :py:meth:`create() &lt;.catalog.CatalogController.create&gt;` in</span>
+<span class="sd">        :py:class:`.catalog.CatalogController`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_catalog</span></div>
 </pre></div>
 
+            <div class="clearer"></div>
           </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../index.html">Table of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hpecp.html">API Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cli.html">CLI Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../github.html">Source Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">Apache License</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -830,12 +863,13 @@
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">HPE Container Platform Python Library  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">hpecp.client</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Chris Snow.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.4.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.0.
     </div>
   </body>
 </html>
