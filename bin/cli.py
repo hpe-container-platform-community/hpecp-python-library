@@ -866,7 +866,7 @@ class HttpClientProxy(object):
             url, http_method="post", data=data, description="CLI HTTP POST",
         )
         print(response.text)
-        
+
     def put(
         self, url, json_file="",
     ):
