@@ -19,23 +19,9 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import absolute_import
-from .logger import Logger
-from .exceptions import (
-    ContainerPlatformClientException,
-    APIException,
-    APIItemNotFoundException,
-    APIItemConflictException,
-)
+from .exceptions import APIItemNotFoundException
 
-import json
-from operator import attrgetter
-
-# from tabulate import tabulate
-# from enum import Enum
-# import polling
 import re
-import six
-import sys
 
 try:
     basestring
@@ -46,8 +32,10 @@ except NameError:
 class RoleController:
     """This is the main class that users will interact with to work with roles.
 
-    An instance of this class is available in the client.ContainerPlatformClient with the attribute name
-    :py:attr:`role <.client.ContainerPlatformClient.role>`.  The methods of this class can be
+    An instance of this class is available in the
+    client.ContainerPlatformClient with the attribute name
+    :py:attr:`role <.client.ContainerPlatformClient.role>`.  The methods of
+    this class can be
     invoked using `client.role.method()`.  See the example below:
 
     Example::
@@ -94,7 +82,8 @@ class RoleController:
 
 
 class Role:
-    """Create an instance of Role from json data returned from the HPE Container Platform API.
+    """Create an instance of Role from json data returned from the HPE
+    Container Platform API.
 
     Users of this library are not expected to create an instance of this class.
 
@@ -112,7 +101,8 @@ class Role:
         "name",
         "description",
     ]
-    """All of the fields of Role objects as returned by the HPE Container Platform API"""
+    """All of the fields of Role objects as returned by the HPE Container
+    Platform API"""
 
     default_display_fields = [
         "id",
@@ -144,7 +134,8 @@ class Role:
 
     @property
     def id(self):
-        """@Field: from json['_links']['self']['href'] - id format: '/api/v1/role/[0-9]+'"""
+        """@Field: from json['_links']['self']['href'] - id format:
+        '/api/v1/role/[0-9]+'"""
         return self.json["_links"]["self"]["href"]
 
     @property

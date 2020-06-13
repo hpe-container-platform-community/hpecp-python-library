@@ -20,18 +20,6 @@
 
 from __future__ import absolute_import
 
-from .logger import Logger
-
-from datetime import datetime, timedelta
-import time
-import requests
-import json
-
-try:
-    from urllib import quote  # Python 2.X
-except ImportError:
-    from urllib.parse import quote  # Python 3+
-
 
 class ConfigController:
     def __init__(self, client):
@@ -40,8 +28,7 @@ class ConfigController:
     def auth(self, data):
         """
         Example::
-        
-            data = { 
+            data = {
                 "external_identity_server":  {
                     "bind_pwd":"5ambaPwd@",
                     "user_attribute":"sAMAccountName",
@@ -52,7 +39,7 @@ class ConfigController:
                     "base_dn":"CN=Users,DC=samdom,DC=example,DC=com",
                     "verify_peer": False,
                     "type":"Active Directory",
-                    "port":636 
+                    "port":636
                 }
             }
         """
