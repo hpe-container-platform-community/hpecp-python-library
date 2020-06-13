@@ -1035,7 +1035,7 @@ def configure_cli():
         controller_password = config_reader.password
 
     sys.stdout.write("Controller API Host [{}]: ".format(controller_api_host))
-    tmp = input()
+    tmp = raw_input()
     if tmp != "":
         controller_api_host = tmp
 
@@ -1068,12 +1068,12 @@ def configure_cli():
         controller_warn_ssl = tmp
 
     sys.stdout.write("Controller Username [{}]: ".format(controller_username))
-    tmp = input()
+    tmp = raw_input()
     if tmp != "":
         controller_username = tmp
 
     sys.stdout.write("Controller Password [{}]: ".format(controller_password))
-    tmp = input()
+    tmp = raw_input()
     if tmp != "":
         controller_password = tmp
 
