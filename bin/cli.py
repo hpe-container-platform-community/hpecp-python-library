@@ -81,7 +81,7 @@ else:
 
 
 def get_client():
-    """Utility function to retrieve an authenticated client object."""
+    """Retrieve a reference to an authenticated client object."""
     try:
         client = ContainerPlatformClient.create_from_config_file(
             config_file=HPECP_CONFIG_FILE, profile=PROFILE,
@@ -97,13 +97,16 @@ def get_client():
 
 
 class CatalogProxy(object):
+    """Proxy object to :py:attr:`<hpecp.client.catalog>`."""
+
     def list(self):
-        """Retrieve the list of Catalog Images
-        """
+        """Retrieve the list of Catalog Images."""
         print(get_client().catalog.list())
 
 
 class GatewayProxy(object):
+    """Proxy object to :py:attr:`<hpecp.client.gateway>`."""
+
     def create_with_ssh_key(
         self,
         ip,
@@ -112,19 +115,26 @@ class GatewayProxy(object):
         ssh_key_file=None,
         tags=[],
     ):
-        """Create a Gateway using SSH key authentication
+        """Create a Gateway using SSH key authentication.
 
-        :param ip: The IP address of the proxy host.  Used for internal
-                    communication.
-        :param proxy_node_hostname: Clients will access cluster services will
-            be accessed using this name.
-        :param ssh_key: The ssh key data as a string.  Alternatively, use the
+        Parameters
+        ----------
+        ip : string
+            The IP address of the proxy host.  Used for internal
+            communication.
+        proxy_node_hostname: string
+            Clients will access cluster services will be accessed
+            using this name.
+        ssh_key: string
+            The ssh key data as a string.  Alternatively, use the
             ssh_key_file parameter.
-        :param ssh_key_file: The file path to the ssh key.  Alternatively, use
-            the ssh_key parameter.
-        :param tags: Tags to use, e.g. "{ 'tag1': 'foo', 'tag2', 'bar' }".
+        ssh_key_file: string
+            The file path to the ssh key.  Alternatively, use the
+            ssh_key parameter.
+        tags: string
+            Tags to add to the gateway, for example:
+            "{ 'tag1': 'foo', 'tag2', 'bar' }".
         """
-
         if ssh_key is None and ssh_key_file is None:
             print("Either ssh_key or ssh_key_file must be provided")
             sys.exit(1)
@@ -150,17 +160,18 @@ class GatewayProxy(object):
             sys.exit(1)
 
     def create_with_ssh_password(self,):
-        """Not yet implemented"""
+        """Not yet implemented."""
         raise NotImplementedError("Not yet implemented")
 
     def get(
         self, gateway_id, output="yaml",
     ):
-        """Retrieve a Gateway by Id
+        """Retrieve a Gateway by ID.
 
-        :param gateway_id: the id of the gateway with format:
-            '/api/v1/workers/[0-9]+'
-        :param output: how to display the output ['yaml'|'json']
+        gateway_id: string
+            the id of the gateway with format: '/api/v1/workers/[0-9]+'
+        output: string
+            how to display the output, either 'yaml' or 'json'
         """
         response = get_client().gateway.get(gateway_id)
         if output == "yaml":
@@ -177,8 +188,7 @@ class GatewayProxy(object):
     def list(
         self, output="table", columns=Gateway.default_display_fields, query={}
     ):
-
-        """Retrieve the list of Gateways
+        """Retrieve the list of Gateways.
 
         :param output: how to display the output [text|table|json]
         :param query: jmespath (https://jmespath.org/) query

@@ -113,6 +113,12 @@ Aim for 100% test coverage to ensure library will work with all specified python
 coverage erase && coverage run --source hpecp,bin setup.py test && coverage report -m
 ```
 
+### CODE QUALITY
+
+```
+pip3 install flake8 flake8-docstrings
+flake8 --docstring-convention numpy bin/ hpecp/ tests/
+```
 
 ### FORMATTING
 
