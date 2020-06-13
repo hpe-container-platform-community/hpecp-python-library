@@ -101,7 +101,10 @@ class TestTentants(TestCase):
                                 "tenant_enforcements": [],
                                 "label": {
                                     "name": "Site Admin",
-                                    "description": "Site Admin Tenant for BlueData clusters",
+                                    "description": (
+                                        "Site Admin Tenant"
+                                        " for BlueData clusters"
+                                    ),
                                 },
                                 "constraints_supported": False,
                                 "tenant_storage_quota_supported": False,
@@ -133,7 +136,9 @@ class TestTentants(TestCase):
                                 "tenant_enforcements": [],
                                 "label": {
                                     "name": "Demo Tenant",
-                                    "description": "Demo Tenant for BlueData Clusters",
+                                    "description": (
+                                        "Demo Tenant for BlueData Clusters"
+                                    ),
                                 },
                                 "constraints_supported": True,
                                 "tenant_storage_quota_supported": True,
@@ -173,7 +178,9 @@ class TestTentants(TestCase):
                     "tenant_enforcements": [],
                     "label": {
                         "name": "Site Admin",
-                        "description": "Site Admin Tenant for BlueData clusters",
+                        "description": (
+                            "Site Admin Tenant for BlueData clusters"
+                        ),
                     },
                     "constraints_supported": False,
                     "tenant_storage_quota_supported": False,
@@ -223,7 +230,10 @@ class TestTentants(TestCase):
                 json_data={},
                 status_code=200,
                 headers={
-                    "location": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    "location": (
+                        "/api/v1/session/"
+                        "df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    )
                 },
             )
         raise RuntimeError("Unhandle POST request: " + args[0])

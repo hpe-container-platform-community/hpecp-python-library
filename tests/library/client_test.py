@@ -19,15 +19,11 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 
 from unittest import TestCase
-from mock import Mock, patch, mock_open
+from mock import patch
 
 from textwrap import dedent
-import sys
 import tempfile
-import os
-import json
 import requests
-from requests.exceptions import RequestException
 from hpecp import ContainerPlatformClient
 
 
@@ -98,7 +94,9 @@ class TestAuth(TestCase):
                 json_data={},
                 status_code=200,
                 headers={
-                    "location": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    "location": (
+                        "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    )
                 },
             )
         raise RuntimeError("Unhandle POST request: " + args[0])
@@ -135,7 +133,9 @@ class TestAuth(TestCase):
                 json_data={},
                 status_code=200,
                 headers={
-                    "location": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    "location": (
+                        "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    )
                 },
             )
         raise RuntimeError("Unhandle POST request: " + args[0])

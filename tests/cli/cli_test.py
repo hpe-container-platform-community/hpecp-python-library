@@ -27,9 +27,6 @@ from unittest import TestCase
 import requests
 from mock import patch
 
-sys.path.insert(0, os.path.abspath("../../"))
-from bin import cli
-
 
 class MockResponse:
     def __init__(
@@ -66,7 +63,9 @@ class TestCLI(TestCase):
                 json_data={},
                 status_code=200,
                 headers={
-                    "location": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    "location": (
+                        "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    )
                 },
             )
         raise RuntimeError("Unhandle POST request: " + args[0])
@@ -120,10 +119,7 @@ class TestCLI(TestCase):
             )
         raise RuntimeError("Unhandle GET request: " + args[0])
 
-    @patch("requests.post", side_effect=mocked_requests_post)
-    @patch("requests.get", side_effect=mocked_requests_get)
-    def test_example(self, mock_post, mock_get):
-
+    def setUp(self):
         file_data = dedent(
             """[default]
                         api_host = 127.0.0.1
@@ -135,17 +131,28 @@ class TestCLI(TestCase):
                         password = admin123"""
         )
 
-        tmp = tempfile.NamedTemporaryFile(delete=True)
-        try:
-            tmp.write(file_data.encode("utf-8"))
-            tmp.flush()
+        self.tmpFile = tempfile.NamedTemporaryFile(delete=True)
+        self.tmpFile.write(file_data.encode("utf-8"))
+        self.tmpFile.flush()
 
-            cli.HPECP_CONFIG_FILE = tmp.name
+        sys.path.insert(0, os.path.abspath("../../"))
+        from bin import cli
 
-            hpecp = cli.CLI()
-            hpecp.k8scluster.list()
+        self.cli = cli
+        self.cli.HPECP_CONFIG_FILE = self.tmpFile.name
 
-            self.assertTrue(True)
+    def tearDown(self):
+        self.tmpFile.close()
 
-        finally:
-            tmp.close()
+    def test_autocomplete_bash(self):
+
+        hpecp = self.cli.CLI()
+        hpecp.autocomplete.bash()
+
+    # TODO move this to tests/library/k8s_cluster_test.py
+    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=mocked_requests_get)
+    def test_k8scluster_list(self, mock_post, mock_get):
+
+        hpecp = self.cli.CLI()
+        hpecp.k8scluster.list()

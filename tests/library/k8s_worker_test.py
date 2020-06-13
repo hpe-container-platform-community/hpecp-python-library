@@ -1,12 +1,7 @@
 from unittest import TestCase
-from mock import Mock, patch
+from mock import patch
 
-import sys
-import tempfile
-import os
-import json
 import requests
-from requests.exceptions import RequestException
 from hpecp import ContainerPlatformClient
 from hpecp.k8s_worker import WorkerK8sStatus
 
@@ -52,9 +47,15 @@ class TestWorkers(TestCase):
                                 },
                                 "approved_worker_pubkey": [],
                                 "tags": [],
-                                "hostname": "ip-10-1-0-238.eu-west-2.compute.internal",
+                                "hostname": (
+                                    "ip-10-1-0-238.eu-west-2.compute.internal"
+                                ),
                                 "ipaddr": "10.1.0.238",
-                                "setup_log": "/var/log/bluedata/install/k8shost_setup_10.1.0.238-2020-4-26-18-41-16",
+                                "setup_log": (
+                                    "/var/log/bluedata/install/"
+                                    "k8shost_setup_10.1.0.238-"
+                                    "2020-4-26-18-41-16"
+                                ),
                                 "_links": {
                                     "self": {
                                         "href": "/api/v2/worker/k8shost/4"
@@ -63,7 +64,9 @@ class TestWorkers(TestCase):
                                 "sysinfo": {
                                     "network": [],
                                     "keys": {
-                                        "reported_worker_public_key": "ssh-rsa ...== server\n"
+                                        "reported_worker_public_key": (
+                                            "ssh-rsa ...== server\n"
+                                        )
                                     },
                                     "storage": [],
                                     "swap": {"swap_total": 0},
@@ -84,7 +87,11 @@ class TestWorkers(TestCase):
                                 "tags": [],
                                 "hostname": "",
                                 "ipaddr": "10.1.0.186",
-                                "setup_log": "/var/log/bluedata/install/k8shost_setup_10.1.0.186-2020-4-26-18-49-10",
+                                "setup_log": (
+                                    "/var/log/bluedata/install/"
+                                    "k8shost_setup_10.1.0.186-"
+                                    "2020-4-26-18-49-10"
+                                ),
                                 "_links": {
                                     "self": {
                                         "href": "/api/v2/worker/k8shost/5"
@@ -105,7 +112,9 @@ class TestWorkers(TestCase):
                 json_data={},
                 status_code=200,
                 headers={
-                    "location": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    "location": (
+                        "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    )
                 },
             )
         raise RuntimeError("Unhandle POST request: " + args[0])

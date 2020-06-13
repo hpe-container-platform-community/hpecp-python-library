@@ -67,7 +67,6 @@ def get_client():
 
 class TestUsers(TestCase):
     def mocked_requests_get(*args, **kwargs):
-        print(args[0])
         if args[0] == "https://127.0.0.1:8080/api/v1/user/":
             return MockResponse(
                 json_data={
@@ -128,7 +127,9 @@ class TestUsers(TestCase):
                 json_data={},
                 status_code=200,
                 headers={
-                    "location": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    "location": (
+                        "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    )
                 },
             )
         else:
@@ -204,7 +205,9 @@ class TestDeleteUser(TestCase):
                 json_data={},
                 status_code=200,
                 headers={
-                    "location": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    "location": (
+                        "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    )
                 },
             )
         raise RuntimeError("Unhandle POST request: " + args[0])
