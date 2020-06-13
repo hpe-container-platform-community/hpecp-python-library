@@ -20,13 +20,6 @@
 
 from __future__ import absolute_import
 
-from .logger import Logger
-
-from datetime import datetime, timedelta
-import time
-import requests
-import json
-import urllib
 import polling
 import re
 
@@ -76,7 +69,8 @@ class LockController:
         Arguments:
 
             lock_id: str
-                The lock id as retrieved with `get()`  Format: '/api/v1/lock/[0-9]+'
+                The lock id as retrieved with `get()`  Format:
+                '/api/v1/lock/[0-9]+'
 
         Raises:
 
@@ -100,7 +94,8 @@ class LockController:
         Arguments:
 
             timeout_secs: int
-                How long to wait for internal locks (note these need to be cleared before external locks can be deleted)
+                How long to wait for internal locks (note these need to be
+                cleared before external locks can be deleted)
 
         Raises:
 

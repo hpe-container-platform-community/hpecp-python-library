@@ -244,11 +244,13 @@ class TenantController:
                 "external_user_groups": [
                     {
                         "role": "/api/v1/role/2", # 2 = Admins
-                        "group":"CN=DemoTenantAdmins,CN=Users,DC=samdom,DC=example,DC=com"
+                        "group":"CN=DemoTenantAdmins,CN=Users,DC=samdom
+                        ,DC=example,DC=com"
                     },
                     {
                         "role": "/api/v1/role/3", # 3 = Members
-                        "group": "CN=DemoTenantUsers,CN=Users,DC=samdom,DC=example,DC=com"
+                        "group": "CN=DemoTenantUsers,CN=Users,DC=samdom
+                        ,DC=example,DC=com"
                     }
                 ]
             }

@@ -20,12 +20,7 @@
 
 from __future__ import absolute_import
 
-from .logger import Logger
 
-from datetime import datetime, timedelta
-import time
-import requests
-import json
 import urllib
 
 
@@ -59,36 +54,40 @@ class LicenseController:
         ssh_key_data=None,
         base64enc_license="",
     ):
-        """Not implemented yet! 
+        """Not implemented yet!
 
-        Workaround: 
+        Workaround:
          - scp your license to '/srv/bluedata/license/' on the controller
          - run client.license.register(server_filename) to register the license
         """
         raise Exception(
-            "Not implemented yet! Workaround: scp your license to '/srv/bluedata/license/'"
+            "Not implemented yet! Workaround: scp your license to"
+            " '/srv/bluedata/license/'"
         )
 
     def upload_with_ssh_pass(
         self, server_filename, ssh_username, ssh_password, base64enc_license=""
     ):
-        """Not implemented yet! 
+        """Not implemented yet!
 
-        Workaround: 
+        Workaround:
          - scp your license to '/srv/bluedata/license/' on the controller
          - run client.license.register(server_filename) to register the license
         """
         raise Exception(
-            "Not implemented yet! Workaround: scp your license to '/srv/bluedata/license/'"
+            "Not implemented yet! Workaround: scp your license to"
+            "'/srv/bluedata/license/'"
         )
 
     def register(self, server_filename):
-        """Register a license that has been uploaded to '/srv/bluedata/license/' on the controller.
+        """Register a license that has been uploaded to
+        '/srv/bluedata/license/' on the controller.
 
         Arguments:
 
             server_filename: str
-                Filepath to the license on the server, e.g. '/srv/bluedata/license/LICENSE-1.txt'
+                Filepath to the license on the server, e.g.
+                '/srv/bluedata/license/LICENSE-1.txt'
 
         Raises:
 
@@ -104,7 +103,7 @@ class LicenseController:
 
     def delete(self, license_key):
         """Delete a license by LicenseKey
-        
+
         Arguments:
 
             license_key: str
@@ -117,7 +116,7 @@ class LicenseController:
 
         try:
             lic = urllib.parse.quote(license_key)  # python 2
-        except:
+        except Exception:
             lic = urllib.pathname2url(license_key)  # python 3
 
         return self.client._request(

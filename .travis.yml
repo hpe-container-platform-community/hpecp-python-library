@@ -29,7 +29,7 @@ jobs:
       install:
         - pip3 install flake8 # TODO: install 'flake8-docstrings'
       script:
-        - flake8 bin/ # TODO: add docstring 'flake8 --docstring-convention numpy hpecp/ bin/ tests/'
+        - flake8 bin/ hpecp/ # TODO: add docstring 'flake8 --docstring-convention numpy hpecp/ bin/ tests/'
     - stage: format
       name: "Check code formatting"
       python: 3.8

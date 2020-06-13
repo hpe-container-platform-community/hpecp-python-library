@@ -128,7 +128,8 @@ class WorkerK8sList:
         return len(self.tenants)
 
     def tabulate(self, columns=None):
-        # FIXME columns is ignored, see GatewayController.list().tabulate() for an example implementation
+        # FIXME columns is ignored, see GatewayController.list().tabulate()
+        # for an example implementation
         return tabulate(
             self, headers=WorkerK8s.__class_dir__(), tablefmt="pretty"
         )
@@ -147,7 +148,8 @@ class K8sWorkerController:
 
         Args:
             ip: str
-                The IP address of the proxy host.  Used for internal communication.
+                The IP address of the proxy host.  Used for internal
+                communication.
             ssh_key_data: str
                 The ssh key data as a string.
             tags: list
@@ -182,7 +184,8 @@ class K8sWorkerController:
 
     def list(self):
         """
-        See: https://<<controller_ip>>/apidocs/site-admin-api.html for the schema of the  response object
+        See: https://<<controller_ip>>/apidocs/site-admin-api.html for the
+        schema of the  response object
         """
         response = self.client._request(
             url="/api/v2/worker/k8shost/",
@@ -194,7 +197,8 @@ class K8sWorkerController:
 
     def get(self, worker_id):
         """
-        See: https://<<controller_ip>>/apidocs/site-admin-api.html for the schema of the  response object
+        See: https://<<controller_ip>>/apidocs/site-admin-api.html for the
+        schema of the  response object
         """
         response = self.client._request(
             url=worker_id, http_method="get", description="worker/get_k8shosts"
@@ -204,7 +208,8 @@ class K8sWorkerController:
 
     def delete(self, worker_id):
         """
-        See: https://<<controller_ip>>/apidocs/site-admin-api.html for the schema of the  response object
+        See: https://<<controller_ip>>/apidocs/site-admin-api.html for the
+        schema of the  response object
         """
         self.client._request(
             url=worker_id,
@@ -220,15 +225,18 @@ class K8sWorkerController:
             worker_id: str
                 The worker ID - format: '/api/v1/workers/[0-9]+'
             status: list[:py:class:`WorkerK8sStatus`]
-                Status(es) to wait for.  Use an empty array if you want to wait for a cluster's existence to cease.
+                Status(es) to wait for.  Use an empty array if you want to
+                wait for a cluster's existence to cease.
             timeout_secs: int
-                How long to wait for the status(es) before raising an exception.
+                How long to wait for the status(es) before raising an
+                exception.
 
         Returns:
             bool: True if status was found before timeout, otherwise False
 
         Raises:
-            APIItemNotFoundException: if the item is not found and status is not empty
+            APIItemNotFoundException: if the item is not found and status is
+            not empty
             APIException: if a generic API exception occurred
         """
         assert isinstance(
@@ -266,7 +274,8 @@ class K8sWorkerController:
             except polling.TimeoutException:
                 return False
 
-        # if state is not empty return success when gateway current state is in desired state
+        # if state is not empty return success when gateway current state is
+        # in desired state
         else:
             try:
                 polling.poll(
@@ -284,8 +293,10 @@ class K8sWorkerController:
         """Set Storage
 
         :param k8sworker_id: the worker ID
-        :param persistent_disks: a comma separated list of zero or more persistent disks, e.g. "/dev/nvme2n1"
-        :param ephemeral_disks: a comma separated list of zero or more ephemeral_disks disks, e.g. "/dev/nvme1n1"
+        :param persistent_disks: a comma separated list of zero or more
+        persistent disks, e.g. "/dev/nvme2n1"
+        :param ephemeral_disks: a comma separated list of zero or more
+        ephemeral_disks disks, e.g. "/dev/nvme1n1"
         """
 
         # TODO: id is valid

@@ -72,7 +72,8 @@ class ContainerPlatformClient(object):
         use_ssl : bool:
             Connect to HPECP using SSL: True|False
         verify_ssl : bool|str
-            See "https://requests.readthedocs.io/en/master/user/advanced/#ssl-cert-verification"
+            See "https://requests.readthedocs.io/en/master/user/advanced/
+            #ssl-cert-verification"
         warn_ssl : bool
             Disable ssl warnings
 
@@ -244,25 +245,25 @@ class ContainerPlatformClient(object):
         """
 
         if "HPECP_USERNAME" in os.environ:
-            HPECP_USERNAME = os.environ[HPECP_USERNAME]
+            HPECP_USERNAME = os.environ["HPECP_USERNAME"]
 
         if "HPECP_PASSWORD" in os.environ:
-            HPECP_PASSWORD = os.environ[HPECP_PASSWORD]
+            HPECP_PASSWORD = os.environ["HPECP_PASSWORD"]
 
         if "HPECP_API_HOST" in os.environ:
-            HPECP_API_HOST = os.environ[HPECP_API_HOST]
+            HPECP_API_HOST = os.environ["HPECP_API_HOST"]
 
         if "HPECP_API_PORT" in os.environ:
-            HPECP_API_PORT = os.environ[HPECP_API_PORT]
+            HPECP_API_PORT = os.environ["HPECP_API_PORT"]
 
         if "HPECP_USE_SSL" in os.environ:
-            HPECP_USE_SSL = os.environ[HPECP_USE_SSL]
+            HPECP_USE_SSL = os.environ["HPECP_USE_SSL"]
 
         if "HPECP_VERIFY_SSL" in os.environ:
-            HPECP_VERIFY_SSL = os.environ[HPECP_VERIFY_SSL]
+            HPECP_VERIFY_SSL = os.environ["HPECP_VERIFY_SSL"]
 
-        if "HPECP_warn_ssl" in os.environ:
-            HPECP_warn_ssl = os.environ[HPECP_warn_ssl]
+        if "HPECP_WARN_SSL" in os.environ:
+            HPECP_WARN_SSL = os.environ["HPECP_WARN_SSL"]
 
         return cls(
             username=HPECP_USERNAME,
@@ -271,7 +272,7 @@ class ContainerPlatformClient(object):
             api_port=HPECP_API_PORT,
             use_ssl=HPECP_USE_SSL,
             verify_ssl=HPECP_VERIFY_SSL,
-            warn_ssl=HPECP_warn_ssl,
+            warn_ssl=HPECP_WARN_SSL,
         )
 
     def __init__(
@@ -781,9 +782,11 @@ class ContainerPlatformClient(object):
     @property
     def role(self):
         """
-        This attribute is a reference to an object of type `.role.RoleController`.
+        This attribute is a reference to an object of type
+        `.role.RoleController`.
 
-        See the class :py:class:`.role.RoleController` for the methods available.
+        See the class :py:class:`.role.RoleController` for the methods
+        available.
 
         Example::
 
@@ -791,7 +794,9 @@ class ContainerPlatformClient(object):
             client.create_session()
             client.role.get()
 
-        This example calls the method :py:meth:`get() <.role.RoleController.get>` in :py:class:`.role.RoleController`.
+        This example calls the method :py:meth:`get()
+        <.role.RoleController.get>`
+        in :py:class:`.role.RoleController`.
         """
 
         return self._role

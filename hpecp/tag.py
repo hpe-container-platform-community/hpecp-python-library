@@ -19,7 +19,6 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import absolute_import
-from .logger import Logger
 
 
 class TagController:

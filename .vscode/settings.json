@@ -20,6 +20,9 @@
     "python.testing.nosetestsEnabled": false,
     "python.linting.pylintEnabled": false,
     "python.linting.flake8Enabled": true,
+    "python.linting.flake8Args": [
+        "per-file-ignores=hpecp/__init__.py:F401"
+    ],
     "python.linting.enabled": true,
     "python.formatting.provider": "black",
     "python.pythonPath": "/bin/python3",
