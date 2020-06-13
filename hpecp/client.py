@@ -45,8 +45,8 @@ from .k8s_worker import K8sWorkerController
 from .license import LicenseController
 from .lock import LockController
 from .logger import Logger
-from .tenant import TenantController
 from .role import RoleController
+from .tenant import TenantController
 from .user import UserController
 
 try:
