@@ -18,7 +18,11 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
+
+import os
+import sys
 import unittest
+from textwrap import dedent
 
 import requests
 from mock import patch
@@ -26,6 +30,7 @@ from mock import patch
 from hpecp import ContainerPlatformClient
 from hpecp.catalog import CatalogList
 from hpecp.exceptions import APIItemNotFoundException
+import tempfile
 
 
 class MockResponse:
@@ -142,67 +147,68 @@ class TestCatalogGet(unittest.TestCase):
             get_client().catalog.get("/api/v1/catalog/100")
 
 
+catalog_list_json = {
+    "_links": {
+        "self": {"href": "/api/v1/catalog/"},
+        "feedlog": {"href": "/api/v1/catalog/feedlog"},
+        "feed": [
+            {
+                "href": "http://127.0.0.1:8080/api/v1/feed/local",
+                "name": "Feed generated from local bundles.",
+            },
+            {
+                "href": "https://s3.amazonaws.com/bluedata-catalog/bundles/catalog/external/docker/EPIC-5.0/feeds/feed.json",
+                "name": "BlueData EPIC-5.0 catalog feed for docker",
+            },
+        ],
+    },
+    "catalog_api_version": 6,
+    "feeds_refresh_period_seconds": 86400,
+    "feeds_read_counter": 5,
+    "catalog_write_counter": 5,
+    "_embedded": {
+        "independent_catalog_entries": [
+            {
+                "_links": {
+                    "self": {"href": "/api/v1/catalog/29"},
+                    "feed": [
+                        {
+                            "href": "https://s3.amazonaws.com/bluedata-catalog/bundles/catalog/external/docker/EPIC-5.0/feeds/feed.json",
+                            "name": "BlueData EPIC-5.0 catalog feed for docker",
+                        }
+                    ],
+                },
+                "distro_id": "bluedata/spark240juphub7xssl",
+                "label": {
+                    "name": "Spark240",
+                    "description": "Spark240 multirole with Jupyter Notebook, Jupyterhub with SSL and gateway node",
+                },
+                "version": "2.8",
+                "timestamp": 0,
+                "isdebug": False,
+                "osclass": ["centos"],
+                "logo": {
+                    "checksum": "1471eb59356066ed4a06130566764ea6",
+                    "url": "http://10.1.0.53/catalog/logos/bluedata-spark240juphub7xssl-2.8",
+                },
+                "documentation": {
+                    "checksum": "52f53f1b2845463b9e370d17fb80bea6",
+                    "mimetype": "text/markdown",
+                    "file": "/opt/bluedata/catalog/documentation/bluedata-spark240juphub7xssl-2.8",
+                },
+                "state": "initialized",
+                "state_info": "",
+            }
+        ]
+    },
+}
+
+
 class TestCatalogList(unittest.TestCase):
     def mocked_requests_get(*args, **kwargs):
         if args[0] == "https://127.0.0.1:8080/api/v1/catalog/":
             return MockResponse(
-                json_data={
-                    "_links": {
-                        "self": {"href": "/api/v1/catalog/"},
-                        "feedlog": {"href": "/api/v1/catalog/feedlog"},
-                        "feed": [
-                            {
-                                "href": "http://127.0.0.1:8080/api/v1/feed/local",
-                                "name": "Feed generated from local bundles.",
-                            },
-                            {
-                                "href": "https://s3.amazonaws.com/bluedata-catalog/bundles/catalog/external/docker/EPIC-5.0/feeds/feed.json",
-                                "name": "BlueData EPIC-5.0 catalog feed for docker",
-                            },
-                        ],
-                    },
-                    "catalog_api_version": 6,
-                    "feeds_refresh_period_seconds": 86400,
-                    "feeds_read_counter": 5,
-                    "catalog_write_counter": 5,
-                    "_embedded": {
-                        "independent_catalog_entries": [
-                            {
-                                "_links": {
-                                    "self": {"href": "/api/v1/catalog/29"},
-                                    "feed": [
-                                        {
-                                            "href": "https://s3.amazonaws.com/bluedata-catalog/bundles/catalog/external/docker/EPIC-5.0/feeds/feed.json",
-                                            "name": "BlueData EPIC-5.0 catalog feed for docker",
-                                        }
-                                    ],
-                                },
-                                "distro_id": "bluedata/spark240juphub7xssl",
-                                "label": {
-                                    "name": "Spark240",
-                                    "description": "Spark240 multirole with Jupyter Notebook, Jupyterhub with SSL and gateway node",
-                                },
-                                "version": "2.8",
-                                "timestamp": 0,
-                                "isdebug": False,
-                                "osclass": ["centos"],
-                                "logo": {
-                                    "checksum": "1471eb59356066ed4a06130566764ea6",
-                                    "url": "http://10.1.0.53/catalog/logos/bluedata-spark240juphub7xssl-2.8",
-                                },
-                                "documentation": {
-                                    "checksum": "52f53f1b2845463b9e370d17fb80bea6",
-                                    "mimetype": "text/markdown",
-                                    "file": "/opt/bluedata/catalog/documentation/bluedata-spark240juphub7xssl-2.8",
-                                },
-                                "state": "initialized",
-                                "state_info": "",
-                            }
-                        ]
-                    },
-                },
-                status_code=200,
-                headers=dict(),
+                json_data=catalog_list_json, status_code=200, headers=dict(),
             )
         raise RuntimeError("Unhandle GET request: " + args[0])
 
@@ -212,3 +218,45 @@ class TestCatalogList(unittest.TestCase):
 
         catalogList = get_client().catalog.list()
         self.assertIsInstance(catalogList, CatalogList)
+
+
+class TestCLI(unittest.TestCase):
+    def mocked_requests_get(*args, **kwargs):
+        if args[0] == "https://127.0.0.1:8080/api/v1/catalog/":
+            return MockResponse(
+                json_data=catalog_list_json, status_code=200, headers=dict(),
+            )
+        raise RuntimeError("Unhandle GET request: " + args[0])
+
+    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=mocked_requests_get)
+    def test_cli(self, mock_post, mock_get):
+
+        sys.path.insert(0, os.path.abspath("../../"))
+        from bin import cli
+
+        file_data = dedent(
+            """[default]
+                        api_host = 127.0.0.1
+                        api_port = 8080
+                        use_ssl = True
+                        verify_ssl = False
+                        warn_ssl = True
+                        username = admin
+                        password = admin123"""
+        )
+
+        tmp = tempfile.NamedTemporaryFile(delete=True)
+        try:
+            tmp.write(file_data.encode("utf-8"))
+            tmp.flush()
+
+            cli.HPECP_CONFIG_FILE = tmp.name
+
+            hpecp = cli.CLI()
+            hpecp.catalog.list()
+
+            self.assertTrue(True)
+
+        finally:
+            tmp.close()

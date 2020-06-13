@@ -96,6 +96,13 @@ def get_client():
         sys.exit(1)
 
 
+class CatalogProxy(object):
+    def list(self):
+        """Retrieve the list of Catalog Images
+        """
+        print(get_client().catalog.list())
+
+
 class GatewayProxy(object):
     def create_with_ssh_key(
         self,
@@ -1093,6 +1100,7 @@ def configure_cli():
 
 class CLI(object):
     def __init__(self,):
+        self.catalog = CatalogProxy()
         self.k8sworker = K8sWorkerProxy()
         self.k8scluster = K8sClusterProxy()
         self.gateway = GatewayProxy()
