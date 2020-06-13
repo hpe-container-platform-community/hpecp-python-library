@@ -260,11 +260,9 @@ class TestCLI(unittest.TestCase):
 
         self.cli = cli
         self.cli.HPECP_CONFIG_FILE = self.tmpFile.name
-        return super().setUp()
 
     def tearDown(self):
         self.tmpFile.close()
-        return super().tearDown()
 
     def mocked_requests_get(*args, **kwargs):
         if args[0] == "https://127.0.0.1:8080/api/v1/catalog/":
