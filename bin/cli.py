@@ -924,6 +924,28 @@ class UserProxy:
             print(get_client().user.list().json)
 
 
+class RoleProxy(object):
+    def get(
+        self, role_id, output="yaml",
+    ):
+        """Retrieve a Role by Id
+
+        :param role_id: the id of the role with format: '/api/v1/role/[0-9]+'
+        :param output: how to display the output ['yaml'|'json']
+        """
+        response = get_client().role.get(role_id)
+        if output == "yaml":
+            print(
+                yaml.dump(
+                    yaml.load(
+                        json.dumps(response.json), Loader=yaml.FullLoader,
+                    )
+                )
+            )
+        else:
+            print(response.json)
+
+
 class AutoComplete:
     """Example Usage:
 
@@ -1100,6 +1122,7 @@ class CLI(object):
         self.license = LicenseProxy()
         self.httpclient = HttpClientProxy()
         self.user = UserProxy()
+        self.role = RoleProxy()
         self.autocomplete = AutoComplete()
         self.configure_cli = configure_cli
 
