@@ -24,13 +24,14 @@ This module is the main module that users of this library will interact with.
 
 from __future__ import absolute_import
 
+import configparser
 import json
 import os
-import requests
-import configparser
 
+import requests
 from six import raise_from
 
+from .catalog import CatalogController
 from .config import ConfigController
 from .exceptions import (
     APIException,
@@ -43,11 +44,10 @@ from .k8s_cluster import K8sClusterController
 from .k8s_worker import K8sWorkerController
 from .license import LicenseController
 from .lock import LockController
-from .user import UserController
 from .logger import Logger
 from .tenant import TenantController
-from .catalog import CatalogController
 from .role import RoleController
+from .user import UserController
 
 try:
     basestring
@@ -72,7 +72,7 @@ class ContainerPlatformClient(object):
         use_ssl : bool:
             Connect to HPECP using SSL: True|False
         verify_ssl : bool|str
-            See https://requests.readthedocs.io/en/master/user/advanced/#ssl-cert-verification
+            See "https://requests.readthedocs.io/en/master/user/advanced/#ssl-cert-verification"
         warn_ssl : bool
             Disable ssl warnings
 
@@ -318,7 +318,10 @@ class ContainerPlatformClient(object):
         assert isinstance(verify_ssl, bool) or (
             isinstance(verify_ssl, basestring)
             and os.access(verify_ssl, os.R_OK)
-        ), "'verify_ssl' parameter must be of type bool or point to a certificate file"
+        ), (
+            "'verify_ssl' parameter must be of type bool or point to a "
+            "certificate file"
+        )
         assert isinstance(
             warn_ssl, bool
         ), "'warn_ssl' parameter must be of type bool"
@@ -340,7 +343,8 @@ class ContainerPlatformClient(object):
             scheme, self.api_host, self.api_port
         )
 
-        # register endpoint modules - see @property definitions at end of file for each module
+        # Register endpoint modules - see @property definitions at end of file
+        # for each module
         self._tenant = TenantController(self)
         self._config = ConfigController(self)
         self._gateway = GatewayController(self)
@@ -353,7 +357,9 @@ class ContainerPlatformClient(object):
         self._role = RoleController(self)
 
     def create_session(self):
-        """Create a session with the HPE CP controller defined in the object :py:class:`ContainerPlatformClient`.
+        """Create a session with the HPE CP controller defined in the object
+
+        :py:class:`ContainerPlatformClient`.
 
         Returns:
             ContainerPlatformClient:
@@ -384,11 +390,13 @@ class ContainerPlatformClient(object):
             self.log.debug(
                 "RES: {} : {} {} {}".format("Login", "post", url, str(e))
             )
+            msg = (
+                "Could not connect to controller - set LOG_LEVEL=DEBUG to "
+                "see more detail."
+            )
             raise_from(
                 APIException(
-                    message="Could not connect to controller - set LOG_LEVEL=DEBUG to see more detail.",
-                    request_method="post",
-                    request_url=url,
+                    message=msg, request_method="post", request_url=url,
                 ),
                 None,
             )
@@ -484,13 +492,14 @@ class ContainerPlatformClient(object):
         except requests.exceptions.RequestException:
             try:
                 response_info = response.json()
-            except:
+            except Exception:
                 response_info = response.text
             else:
                 response_info = ""
 
             if response.status_code == 404:
-                # This is expected for some method calls so do not log as an error
+                # This is expected for some method calls so do not log as an
+                # error
                 self.log.debug(
                     "{} : {} {} REQ: {}".format(
                         description, http_method, url, json.dumps(data)
@@ -503,7 +512,8 @@ class ContainerPlatformClient(object):
                     request_data=json.dumps(data),
                 )
             if response.status_code == 409:
-                # This is expected for some method calls so do not log as an error
+                # This is expected for some method calls so do not log as an
+                # error
                 self.log.debug(
                     "{} : {} {} REQ: {}".format(
                         description, http_method, url, json.dumps(data)
@@ -553,10 +563,10 @@ class ContainerPlatformClient(object):
 
     @property
     def tenant(self):
-        """
-        This attribute is a reference to an object of type `.tenant.TenantController`.
+        """This attribute is a reference to an object of type
 
-        See the class :py:class:`.tenant.TenantController` for the methods available.
+        `.tenant.TenantController`. See the class
+        :py:class:`.tenant.TenantController` for the methods available.
 
         Example::
 
@@ -564,17 +574,19 @@ class ContainerPlatformClient(object):
             client.create_session()
             client.tenant.list()
 
-        This example calls the method :py:meth:`list() <.tenant.TenantController.list>` in :py:class:`.tenant.TenantController`.
+        This example calls the method
+        :py:meth:`list() <.tenant.TenantController.list>` in
+        :py:class:`.tenant.TenantController`.
         """
 
         return self._tenant
 
     @property
     def config(self):
-        """
-        This attribute is a reference to an object of type `.config.ConfigController`.
+        """This attribute is a reference to an object of type
 
-        See the class :py:class:`.config.ConfigController` for the methods available.
+        `.config.ConfigController`. See the class
+        :py:class:`.config.ConfigController` for the methods available.
 
         Example::
 
@@ -597,17 +609,20 @@ class ContainerPlatformClient(object):
                 }
             )
 
-        This example calls the method :py:meth:`auth() <.config.ConfigController.auth>` in :py:class:`.config.ConfigController`.
+        This example calls the method
+        :py:meth:`auth() <.config.ConfigController.auth>` in
+        :py:class:`.config.ConfigController`.
         """
 
         return self._config
 
     @property
     def k8s_cluster(self):
-        """
-        This attribute is a reference to an object of type `.k8s_cluster.K8sClusterController`.
+        """This attribute is a reference to an object of type
 
-        See the class :py:class:`.k8s_cluster.K8sClusterController` for the methods available.
+        `.k8s_cluster.K8sClusterController`. See the class
+        :py:class:`.k8s_cluster.K8sClusterController` for the methods
+        available.
 
         Example::
 
@@ -615,17 +630,19 @@ class ContainerPlatformClient(object):
             client.create_session()
             client.k8s_cluster.list()
 
-        This example calls the method :py:meth:`list() <.k8s_cluster.K8sClusterController.list>` in :py:class:`.k8s_cluster.K8sClusterController`.
+        This example calls the method
+        :py:meth:`list() <.k8s_cluster.K8sClusterController.list>` in
+        :py:class:`.k8s_cluster.K8sClusterController`.
         """
 
         return self._k8s_cluster
 
     @property
     def k8s_worker(self):
-        """
-        This attribute is a reference to an object of type `.k8s_worker.K8sWorkerController`.
+        """This attribute is a reference to an object of type
 
-        See the class :py:class:`.k8s_worker.K8sWorkerController` for the methods available.
+        `.k8s_worker.K8sWorkerController`. See the class
+        :py:class:`.k8s_worker.K8sWorkerController` for the methods available.
 
         Example::
 
@@ -633,17 +650,19 @@ class ContainerPlatformClient(object):
             client.create_session()
             client.k8s_worker.list()
 
-        This example calls the method :py:meth:`list() <.k8s_worker.K8sWorkerController.list>` in :py:class:`.k8s_worker.K8sWorkerController`.
+        This example calls the method
+        :py:meth:`list() <.k8s_worker.K8sWorkerController.list>` in
+        :py:class:`.k8s_worker.K8sWorkerController`.
         """
 
         return self._k8s_worker
 
     @property
     def gateway(self):
-        """
-        This attribute is a reference to an object of type `.gateway.GatewayController`.
+        """This attribute is a reference to an object of type
 
-        See the class :py:class:`.gateway.GatewayController` for the methods available.
+        `.gateway.GatewayController`. See the class
+        :py:class:`.gateway.GatewayController` for the methods available.
 
         Example::
 
@@ -651,17 +670,19 @@ class ContainerPlatformClient(object):
             client.create_session()
             client.gateway.list()
 
-        This example calls the method :py:meth:`list() <.gateway.GatewayController.list>` in :py:class:`.gateway.GatewayController`.
+        This example calls the method
+        :py:meth:`list() <.gateway.GatewayController.list>` in
+        :py:class:`.gateway.GatewayController`.
         """
 
         return self._gateway
 
     @property
     def license(self):
-        """
-        This attribute is a reference to an object of type `.license.LicenseController`.
+        """This attribute is a reference to an object of type
 
-        See the class :py:class:`.license.LicenseController` for the methods available.
+        `.license.LicenseController`. See the class
+        :py:class:`.license.LicenseController` for the methods available.
 
         Example::
 
@@ -669,17 +690,19 @@ class ContainerPlatformClient(object):
             client.create_session()
             client.license.list()
 
-        This example calls the method :py:meth:`list() <.license.LicenseController.list>` in :py:class:`.license.LicenseController`.
+        This example calls the method
+        :py:meth:`list() <.license.LicenseController.list>` in
+        :py:class:`.license.LicenseController`.
         """
 
         return self._license
 
     @property
     def lock(self):
-        """
-        This attribute is a reference to an object of type `.lock.LockController`.
+        """This attribute is a reference to an object of type
 
-        See the class :py:class:`.lock.LockController` for the methods available.
+        `.lock.LockController`. See the class
+        :py:class:`.lock.LockController` for the methods available.
 
         Example::
 
@@ -687,16 +710,19 @@ class ContainerPlatformClient(object):
             client.create_session()
             client.lock.get()
 
-        This example calls the method :py:meth:`get() <.lock.LockController.list>` in :py:class:`.lock.LockController`.
+        This example calls the method
+        :py:meth:`get() <.lock.LockController.list>` in
+        :py:class:`.lock.LockController`.
         """
 
         return self._lock
 
     @property
     def log(self):
-        """
-        This attribute is a reference to :py:class:`.logger.Logger`.  The log function can be called from controller objects
-        via the `client` parameter passed in during instantiation of the controller.
+        """This attribute is a reference to :py:class:`.logger.Logger`.
+
+        The log function can be called from controller objects via the `client`
+        parameter passed in during instantiation of the controller.
 
         Example::
 
@@ -715,10 +741,9 @@ class ContainerPlatformClient(object):
 
     @property
     def user(self):
-        """
-        This attribute is a reference to an object of type `.user.UserController`.
-
-        See the class :py:class:`.user.UserController` for the methods available.
+        """This attribute is a reference to an object of type
+        `.user.UserController`. See the class :py:class:`.lock.UserController`
+        for the methods available.
 
         Example::
 
@@ -726,17 +751,19 @@ class ContainerPlatformClient(object):
             client.create_session()
             client.user.get()
 
-        This example calls the method :py:meth:`get() <.user.UserController.get>` in :py:class:`.user.UserController`.
+        This example calls the method
+        :py:meth:`get() <.user.UserController.get>` in
+        :py:class:`.user.UserController`.
         """
 
         return self._user
 
     @property
     def catalog(self):
-        """
-        This attribute is a reference to an object of type `.catalog.CatalogController`.
+        """This attribute is a reference to an object of type
 
-        See the class :py:class:`.catalog.CatalogController` for the methods available.
+        `.catalog.CatalogController`. See the class
+        :py:class:`.catalog.CatalogController` for the methods available.
 
         Example::
 
@@ -744,7 +771,9 @@ class ContainerPlatformClient(object):
             client.create_session()
             client.catalog.create()
 
-        This example calls the method :py:meth:`create() <.catalog.CatalogController.create>` in :py:class:`.catalog.CatalogController`.
+        This example calls the method
+        :py:meth:`create() <.catalog.CatalogController.create>` in
+        :py:class:`.catalog.CatalogController`.
         """
 
         return self._catalog

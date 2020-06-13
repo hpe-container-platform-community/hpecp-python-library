@@ -18,16 +18,14 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-from unittest import TestCase
-from mock import Mock, patch, mock_open
-
-from textwrap import dedent
+import os
 import sys
 import tempfile
-import os
-import json
+from textwrap import dedent
+from unittest import TestCase
+
 import requests
-from requests.exceptions import RequestException
+from mock import patch
 
 sys.path.insert(0, os.path.abspath("../../"))
 from bin import cli

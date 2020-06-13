@@ -18,16 +18,13 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-from unittest import TestCase
-from mock import Mock, patch
+from unittest import TestCase, skip
 
-import sys
-import tempfile
-import os
-import json
 import requests
-from requests.exceptions import RequestException
+from mock import patch
+
 from hpecp import ContainerPlatformClient
+from hpecp.exceptions import APIItemNotFoundException
 
 
 class MockResponse:
@@ -56,11 +53,25 @@ class MockResponse:
         return self.json_data
 
 
+def get_client():
+    client = ContainerPlatformClient(
+        username="admin",
+        password="admin123",
+        api_host="127.0.0.1",
+        api_port=8080,
+        use_ssl=True,
+    )
+    client.create_session()
+    return client
+
+
 class TestTentants(TestCase):
     def mocked_requests_get(*args, **kwargs):
+        print(args[0])
         if args[0] == "https://127.0.0.1:8080/api/v1/tenant":
             return MockResponse(
-                #  This json data was captured from calling the /tenants api on a clean HPECP 5.0 installation.
+                # This json data was captured from calling the /tenants api on
+                # a clean HPECP 5.0 installation.
                 json_data={
                     "_embedded": {
                         "tenants": [
@@ -135,7 +146,76 @@ class TestTentants(TestCase):
                 status_code=200,
                 headers={},
             )
-        raise RuntimeError("Unhandle GET request: " + args[0])
+        if args[0] == "https://127.0.0.1:8080/api/v1/tenant/1":
+            # TODO: Get live data for individual tenants
+            return MockResponse(
+                json_data={
+                    "status": "ready",
+                    "features": {
+                        "ml_project": False,
+                        "kubernetes_access": False,
+                    },
+                    "persistent_supported": True,
+                    "member_key_available": "all_admins",
+                    "quota": {},
+                    "cluster_isolation_supported": True,
+                    "inusequota": {
+                        "disk": 0,
+                        "cores": 0,
+                        "memory": 0,
+                        "persistent": 0,
+                        "gpus": 0,
+                    },
+                    "external_user_groups": [],
+                    "gpu_usage_supported": True,
+                    "_links": {"self": {"href": "/api/v1/tenant/1"}},
+                    "filesystem_mount_supported": True,
+                    "tenant_enforcements": [],
+                    "label": {
+                        "name": "Site Admin",
+                        "description": "Site Admin Tenant for BlueData clusters",
+                    },
+                    "constraints_supported": False,
+                    "tenant_storage_quota_supported": False,
+                }
+            )
+        if args[0] == "https://127.0.0.1:8080/api/v1/tenant/2":
+            # TODO: Get live data for individual tenants
+            return MockResponse(
+                json_data={
+                    "status": "ready",
+                    "tenant_type": "docker",
+                    "features": {
+                        "ml_project": False,
+                        "kubernetes_access": False,
+                    },
+                    "persistent_supported": True,
+                    "member_key_available": "all_admins",
+                    "quota": {},
+                    "cluster_isolation_supported": True,
+                    "inusequota": {
+                        "disk": 0,
+                        "cores": 0,
+                        "memory": 0,
+                        "persistent": 0,
+                        "gpus": 0,
+                    },
+                    "external_user_groups": [],
+                    "gpu_usage_supported": True,
+                    "_links": {"self": {"href": "/api/v1/tenant/2"}},
+                    "filesystem_mount_supported": True,
+                    "tenant_enforcements": [],
+                    "label": {
+                        "name": "Demo Tenant",
+                        "description": "Demo Tenant for BlueData Clusters",
+                    },
+                    "constraints_supported": True,
+                    "tenant_storage_quota_supported": True,
+                    "qos_multiplier": 1,
+                },
+            )
+
+        raise RuntimeError("Unhandled GET request: " + args[0])
 
     def mocked_requests_post(*args, **kwargs):
         if args[0] == "https://127.0.0.1:8080/api/v1/login":
@@ -152,16 +232,7 @@ class TestTentants(TestCase):
     @patch("requests.post", side_effect=mocked_requests_post)
     def test_tenant_list(self, mock_get, mock_post):
 
-        client = ContainerPlatformClient(
-            username="admin",
-            password="admin123",
-            api_host="127.0.0.1",
-            api_port=8080,
-            use_ssl=True,
-        )
-
-        # Makes POST Request: https://127.0.0.1:8080/api/v1/login
-        client.create_session()
+        client = get_client()
 
         # Makes GET Request: https://127.0.0.1:8080/api/v1/tenant
         tenants = client.tenant.list()
@@ -182,3 +253,39 @@ class TestTentants(TestCase):
             [tenant.id for tenant in client.tenant.list()],
             ["/api/v1/tenant/1", "/api/v1/tenant/2"],
         )
+
+    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_get_tenant_id_format(self, mock_get, mock_post):
+        client = get_client()
+
+        with self.assertRaisesRegexp(
+            AssertionError,
+            "'tenant_id' must have format "
+            + r"'\/api\/v1\/tenant\/\[0-9\]\+'",
+        ):
+            client.tenant.get("garbage")
+
+        with self.assertRaisesRegexp(
+            AssertionError,
+            "'tenant_id' must have format "
+            + r"'\/api\/v1\/tenant\/\[0-9\]\+'",
+        ):
+            client.tenant.get("/api/v1/tenant/some_id")
+
+    @skip("This does not work yet!")
+    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_get_tenant(self, mock_get, mock_post):
+        tenant = get_client().tenant.get("/api/v1/tenant/1")
+        self.assertEqual(tenant.id, "/api/v1/tenant/1")
+
+        tenant = get_client().tenant.get("/api/v1/tenant/1")
+        self.assertEqual(tenant.id, "/api/v1/tenant/2")
+
+        # TODO: test other property accessors
+        with self.assertRaisesRegexp(
+            APIItemNotFoundException,
+            "'tenant not found with id: /api/v1/tenant/100'",
+        ):
+            get_client().tenant.get("/api/v1/tenant/100")
