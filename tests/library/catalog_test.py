@@ -157,7 +157,10 @@ catalog_list_json = {
                 "name": "Feed generated from local bundles.",
             },
             {
-                "href": "https://s3.amazonaws.com/bluedata-catalog/bundles/catalog/external/docker/EPIC-5.0/feeds/feed.json",
+                "href": (
+                    "https://s3.amazonaws.com/bluedata-catalog/bundles/"
+                    "catalog/external/docker/EPIC-5.0/feeds/feed.json"
+                ),
                 "name": "BlueData EPIC-5.0 catalog feed for docker",
             },
         ],
@@ -173,15 +176,24 @@ catalog_list_json = {
                     "self": {"href": "/api/v1/catalog/29"},
                     "feed": [
                         {
-                            "href": "https://s3.amazonaws.com/bluedata-catalog/bundles/catalog/external/docker/EPIC-5.0/feeds/feed.json",
-                            "name": "BlueData EPIC-5.0 catalog feed for docker",
+                            "href": (
+                                "https://s3.amazonaws.com/bluedata-catalog/"
+                                "bundles/catalog/external/docker/EPIC-5.0/"
+                                "feeds/feed.json"
+                            ),
+                            "name": (
+                                "BlueData EPIC-5.0 catalog feed for docker"
+                            ),
                         }
                     ],
                 },
                 "distro_id": "bluedata/spark240juphub7xssl",
                 "label": {
                     "name": "Spark240",
-                    "description": "Spark240 multirole with Jupyter Notebook, Jupyterhub with SSL and gateway node",
+                    "description": (
+                        "Spark240 multirole with Jupyter Notebook, Jupyterhub"
+                        " with SSL and gateway node"
+                    ),
                 },
                 "version": "2.8",
                 "timestamp": 0,
@@ -189,12 +201,18 @@ catalog_list_json = {
                 "osclass": ["centos"],
                 "logo": {
                     "checksum": "1471eb59356066ed4a06130566764ea6",
-                    "url": "http://10.1.0.53/catalog/logos/bluedata-spark240juphub7xssl-2.8",
+                    "url": (
+                        "http://10.1.0.53/catalog/logos/"
+                        "bluedata-spark240juphub7xssl-2.8"
+                    ),
                 },
                 "documentation": {
                     "checksum": "52f53f1b2845463b9e370d17fb80bea6",
                     "mimetype": "text/markdown",
-                    "file": "/opt/bluedata/catalog/documentation/bluedata-spark240juphub7xssl-2.8",
+                    "file": (
+                        "/opt/bluedata/catalog/documentation/"
+                        "bluedata-spark240juphub7xssl-2.8"
+                    ),
                 },
                 "state": "initialized",
                 "state_info": "",
@@ -263,4 +281,3 @@ class TestCLI(unittest.TestCase):
         hpecp.catalog.list()
 
         self.assertTrue(True)
-
