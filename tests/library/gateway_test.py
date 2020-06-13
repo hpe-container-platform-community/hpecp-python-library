@@ -93,7 +93,9 @@ class TestGatewayGet(TestCase):
                     "approved_worker_pubkey": [],
                     "schedule": False,
                     "ip": "10.1.0.37",
-                    "proxy_nodes_hostname": "ec2-35-165-137-87.us-west-2.compute.amazonaws.com",
+                    "proxy_nodes_hostname": (
+                        "ec2-35-165-137-87.us-west-2.compute.amazonaws.com"
+                    ),
                     "hostname": "ip-10-1-0-37.us-west-2.compute.internal",
                     "state": "installed",
                     "_links": {"self": {"href": "/api/v1/workers/99"}},
@@ -319,7 +321,25 @@ class TestGatewayGet(TestCase):
                             },
                         ],
                         "keys": {
-                            "reported_worker_public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDKonffu4vtTSINNpBwvLd367941fhPyEuVfh7KrohdIUSVEh/pX8FDAO9fi9pH979AzdDVWeUclTmktm63vQ39TVIJQ+rqdoZUhtH8rSYFoTFzxUQxONviNJJGTiYYMo4kJsLO1Hk/b9Lz8sxUJWD+e5r2UTM5cDSYT3wBHUCDr/MXAxNC9FAgkpuME5utC1dd1aHj2zgLUP61REjnhy1zVVJnbh/T/y3p8Z5z0ubAQy7pYaMTuWgdVMH6kA/RWzOB2JRj8vFKYp9fysFe7L/nj+C2LkDr4dmMLNL9ffTvpnMOj5qPgAO8bay5hAgVykUaRInLjuL7p5/nFATm9uI4A2a28m4HO9csywNXpm5TBDWPDxW7Wh7Sdkx0xHwZenXXy/em+4Q4Fk4Oc6YwYcKOJVsst0qGeCFkhLjzvFHu2ceYf5Q1gg5FlBiX+LsWngjArsd0sdh+3piH/xFuHdubqHfOFpOlZsQsMX5V/LUA71Wqv/cxMsoD5jybQOUS8o34JjkCZlavuJcIeU4hWlWEliZU5SmppuNkHdosXup20/TyBgg0qYlzc+FKZ/8vlQSjT5WgCNffPgXR94KPF1817RW1YSbR+1oiNg6FXgQrKM/1DiqyQ5D8DjhZWgg33hJ7K/fKCL3qPyWCJEMQ64iLQ4QtSeU46l+aO490A89u6w== server\n"
+                            "reported_worker_public_key": (
+                                "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDKonff"
+                                "u4vtTSINNpBwvLd367941fhPyEuVfh7KrohdIUSVEh/p"
+                                "X8FDAO9fi9pH979AzdDVWeUclTmktm63vQ39TVIJQ+rq"
+                                "doZUhtH8rSYFoTFzxUQxONviNJJGTiYYMo4kJsLO1Hk/"
+                                "b9Lz8sxUJWD+e5r2UTM5cDSYT3wBHUCDr/MXAxNC9FAg"
+                                "kpuME5utC1dd1aHj2zgLUP61REjnhy1zVVJnbh/T/y3p"
+                                "8Z5z0ubAQy7pYaMTuWgdVMH6kA/RWzOB2JRj8vFKYp9f"
+                                "ysFe7L/nj+C2LkDr4dmMLNL9ffTvpnMOj5qPgAO8bay5"
+                                "hAgVykUaRInLjuL7p5/nFATm9uI4A2a28m4HO9csywNX"
+                                "pm5TBDWPDxW7Wh7Sdkx0xHwZenXXy/em+4Q4Fk4Oc6Yw"
+                                "YcKOJVsst0qGeCFkhLjzvFHu2ceYf5Q1gg5FlBiX+LsW"
+                                "ngjArsd0sdh+3piH/xFuHdubqHfOFpOlZsQsMX5V/LUA"
+                                "71Wqv/cxMsoD5jybQOUS8o34JjkCZlavuJcIeU4hWlWE"
+                                "liZU5SmppuNkHdosXup20/TyBgg0qYlzc+FKZ/8vlQSj"
+                                "T5WgCNffPgXR94KPF1817RW1YSbR+1oiNg6FXgQrKM/1"
+                                "DiqyQ5D8DjhZWgg33hJ7K/fKCL3qPyWCJEMQ64iLQ4Qt"
+                                "SeU46l+aO490A89u6w== server\n"
+                            )
                         },
                         "storage": [
                             {
@@ -368,7 +388,9 @@ class TestGatewayGet(TestCase):
                     "approved_worker_pubkey": [],
                     "schedule": False,
                     "ip": "10.1.0.37",
-                    "proxy_nodes_hostname": "ec2-35-165-137-87.us-west-2.compute.amazonaws.com",
+                    "proxy_nodes_hostname": (
+                        "ec2-35-165-137-87.us-west-2.compute.amazonaws.com"
+                    ),
                     "hostname": "ip-10-1-0-37.us-west-2.compute.internal",
                     "state": "installed",
                     "_links": {"self": {"href": "/api/v1/workers/99"}},
@@ -594,7 +616,25 @@ class TestGatewayGet(TestCase):
                             },
                         ],
                         "keys": {
-                            "reported_worker_public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDKonffu4vtTSINNpBwvLd367941fhPyEuVfh7KrohdIUSVEh/pX8FDAO9fi9pH979AzdDVWeUclTmktm63vQ39TVIJQ+rqdoZUhtH8rSYFoTFzxUQxONviNJJGTiYYMo4kJsLO1Hk/b9Lz8sxUJWD+e5r2UTM5cDSYT3wBHUCDr/MXAxNC9FAgkpuME5utC1dd1aHj2zgLUP61REjnhy1zVVJnbh/T/y3p8Z5z0ubAQy7pYaMTuWgdVMH6kA/RWzOB2JRj8vFKYp9fysFe7L/nj+C2LkDr4dmMLNL9ffTvpnMOj5qPgAO8bay5hAgVykUaRInLjuL7p5/nFATm9uI4A2a28m4HO9csywNXpm5TBDWPDxW7Wh7Sdkx0xHwZenXXy/em+4Q4Fk4Oc6YwYcKOJVsst0qGeCFkhLjzvFHu2ceYf5Q1gg5FlBiX+LsWngjArsd0sdh+3piH/xFuHdubqHfOFpOlZsQsMX5V/LUA71Wqv/cxMsoD5jybQOUS8o34JjkCZlavuJcIeU4hWlWEliZU5SmppuNkHdosXup20/TyBgg0qYlzc+FKZ/8vlQSjT5WgCNffPgXR94KPF1817RW1YSbR+1oiNg6FXgQrKM/1DiqyQ5D8DjhZWgg33hJ7K/fKCL3qPyWCJEMQ64iLQ4QtSeU46l+aO490A89u6w== server\n"
+                            "reported_worker_public_key": (
+                                "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDKonff"
+                                "u4vtTSINNpBwvLd367941fhPyEuVfh7KrohdIUSVEh/p"
+                                "X8FDAO9fi9pH979AzdDVWeUclTmktm63vQ39TVIJQ+rq"
+                                "oZUhtH8rSYFoTFzxUQxONviNJJGTiYYMo4kJsLO1Hk/b"
+                                "9Lz8sxUJWD+e5r2UTM5cDSYT3wBHUCDr/MXAxNC9FAgk"
+                                "puME5utC1dd1aHj2zgLUP61REjnhy1zVVJnbh/T/y3p8"
+                                "Z5z0ubAQy7pYaMTuWgdVMH6kA/RWzOB2JRj8vFKYp9fy"
+                                "sFe7L/nj+C2LkDr4dmMLNL9ffTvpnMOj5qPgAO8bay5h"
+                                "AgVykUaRInLjuL7p5/nFATm9uI4A2a28m4HO9csywNXp"
+                                "m5TBDWPDxW7Wh7Sdkx0xHwZenXXy/em+4Q4Fk4Oc6YwY"
+                                "cKOJVsst0qGeCFkhLjzvFHu2ceYf5Q1gg5FlBiX+LsWn"
+                                "gjArsd0sdh+3piH/xFuHdubqHfOFpOlZsQsMX5V/LUA7"
+                                "1Wqv/cxMsoD5jybQOUS8o34JjkCZlavuJcIeU4hWlWEl"
+                                "iZU5SmppuNkHdosXup20/TyBgg0qYlzc+FKZ/8vlQSjT"
+                                "5WgCNffPgXR94KPF1817RW1YSbR+1oiNg6FXgQrKM/1D"
+                                "iqyQ5D8DjhZWgg33hJ7K/fKCL3qPyWCJEMQ64iLQ4QtS"
+                                "eU46l+aO490A89u6w== server\n"
+                            )
                         },
                         "storage": [
                             {
@@ -652,7 +692,10 @@ class TestGatewayGet(TestCase):
         # pylint: disable=anomalous-backslash-in-string
         with self.assertRaisesRegexp(
             AssertionError,
-            "'gateway_id' must have format '\/api\/v1\/workers\/\[0-9\]\+'",
+            (
+                "'gateway_id' must have format"
+                " '\/api\/v1\/workers\/\[0-9\]\+'"  # noqa: W605
+            ),
         ):
             get_client().gateway.get("garbage")
 
@@ -666,7 +709,8 @@ class TestGatewayGet(TestCase):
 
         # TODO test other property accessors
 
-        # /api/v1/workers/100 has "'purpose': 'controller'" so it isn't a gateway
+        # /api/v1/workers/100 has "'purpose': 'controller'" so it
+        #  isn't a gateway
         with self.assertRaisesRegexp(
             APIItemNotFoundException,
             "'gateway not found with id: /api/v1/workers/100'",
@@ -724,7 +768,9 @@ class TestWaitForGatewayStatus(TestCase):
                     "approved_worker_pubkey": [],
                     "schedule": False,
                     "ip": "10.1.0.37",
-                    "proxy_nodes_hostname": "ec2-35-165-137-87.us-west-2.compute.amazonaws.com",
+                    "proxy_nodes_hostname": (
+                        "ec2-35-165-137-87.us-west-2.compute.amazonaws.com"
+                    ),
                     "hostname": "ip-10-1-0-37.us-west-2.compute.internal",
                     "state": "installed",
                     "_links": {"self": {"href": "/api/v1/workers/123"}},
@@ -950,7 +996,25 @@ class TestWaitForGatewayStatus(TestCase):
                             },
                         ],
                         "keys": {
-                            "reported_worker_public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDKonffu4vtTSINNpBwvLd367941fhPyEuVfh7KrohdIUSVEh/pX8FDAO9fi9pH979AzdDVWeUclTmktm63vQ39TVIJQ+rqdoZUhtH8rSYFoTFzxUQxONviNJJGTiYYMo4kJsLO1Hk/b9Lz8sxUJWD+e5r2UTM5cDSYT3wBHUCDr/MXAxNC9FAgkpuME5utC1dd1aHj2zgLUP61REjnhy1zVVJnbh/T/y3p8Z5z0ubAQy7pYaMTuWgdVMH6kA/RWzOB2JRj8vFKYp9fysFe7L/nj+C2LkDr4dmMLNL9ffTvpnMOj5qPgAO8bay5hAgVykUaRInLjuL7p5/nFATm9uI4A2a28m4HO9csywNXpm5TBDWPDxW7Wh7Sdkx0xHwZenXXy/em+4Q4Fk4Oc6YwYcKOJVsst0qGeCFkhLjzvFHu2ceYf5Q1gg5FlBiX+LsWngjArsd0sdh+3piH/xFuHdubqHfOFpOlZsQsMX5V/LUA71Wqv/cxMsoD5jybQOUS8o34JjkCZlavuJcIeU4hWlWEliZU5SmppuNkHdosXup20/TyBgg0qYlzc+FKZ/8vlQSjT5WgCNffPgXR94KPF1817RW1YSbR+1oiNg6FXgQrKM/1DiqyQ5D8DjhZWgg33hJ7K/fKCL3qPyWCJEMQ64iLQ4QtSeU46l+aO490A89u6w== server\n"
+                            "reported_worker_public_key": (
+                                "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDKonff"
+                                "u4vtTSINNpBwvLd367941fhPyEuVfh7KrohdIUSVEh/p"
+                                "X8FDAO9fi9pH979AzdDVWeUclTmktm63vQ39TVIJQ+rq"
+                                "oZUhtH8rSYFoTFzxUQxONviNJJGTiYYMo4kJsLO1Hk/b"
+                                "9Lz8sxUJWD+e5r2UTM5cDSYT3wBHUCDr/MXAxNC9FAgk"
+                                "puME5utC1dd1aHj2zgLUP61REjnhy1zVVJnbh/T/y3p8"
+                                "Z5z0ubAQy7pYaMTuWgdVMH6kA/RWzOB2JRj8vFKYp9fy"
+                                "sFe7L/nj+C2LkDr4dmMLNL9ffTvpnMOj5qPgAO8bay5h"
+                                "AgVykUaRInLjuL7p5/nFATm9uI4A2a28m4HO9csywNXp"
+                                "m5TBDWPDxW7Wh7Sdkx0xHwZenXXy/em+4Q4Fk4Oc6YwY"
+                                "cKOJVsst0qGeCFkhLjzvFHu2ceYf5Q1gg5FlBiX+LsWn"
+                                "gjArsd0sdh+3piH/xFuHdubqHfOFpOlZsQsMX5V/LUA7"
+                                "1Wqv/cxMsoD5jybQOUS8o34JjkCZlavuJcIeU4hWlWEl"
+                                "iZU5SmppuNkHdosXup20/TyBgg0qYlzc+FKZ/8vlQSjT"
+                                "5WgCNffPgXR94KPF1817RW1YSbR+1oiNg6FXgQrKM/1D"
+                                "iqyQ5D8DjhZWgg33hJ7K/fKCL3qPyWCJEMQ64iLQ4QtS"
+                                "eU46l+aO490A89u6w== server\n"
+                            )
                         },
                         "storage": [
                             {
@@ -1003,7 +1067,9 @@ class TestWaitForGatewayStatus(TestCase):
                 json_data={},
                 status_code=200,
                 headers={
-                    "location": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    "location": (
+                        "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    )
                 },
             )
         raise RuntimeError("Unhandle POST request: " + args[0])
@@ -1024,7 +1090,10 @@ class TestWaitForGatewayStatus(TestCase):
         # pylint: disable=anomalous-backslash-in-string
         with self.assertRaisesRegexp(
             AssertionError,
-            "'gateway_id' must have format '\/api\/v1\/workers\/\[0-9\]\+'",
+            (
+                "'gateway_id' must have format"
+                " '\/api\/v1\/workers\/\[0-9\]\+'"  # noqa: W605
+            ),
         ):
             get_client().gateway.wait_for_state(
                 gateway_id="garbage",
@@ -1097,7 +1166,8 @@ class TestWaitForGatewayStatus(TestCase):
                 state=[GatewayStatus.installed],
             )
 
-        # Get the status of a Cluster ID that doesn't exist - without providing a status
+        # Get the status of a Cluster ID that doesn't
+        # exist - without providing a status
         self.assertTrue(
             get_client().gateway.wait_for_state(
                 gateway_id="/api/v1/workers/999", timeout_secs=1, state=[]
@@ -1147,7 +1217,9 @@ class TestDeleteGateway(TestCase):
                 json_data={},
                 status_code=200,
                 headers={
-                    "location": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    "location": (
+                        "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    )
                 },
             )
         raise RuntimeError("Unhandle POST request: " + args[0])
@@ -1161,7 +1233,10 @@ class TestDeleteGateway(TestCase):
         # pylint: disable=anomalous-backslash-in-string
         with self.assertRaisesRegexp(
             AssertionError,
-            "'gateway_id' must have format '\/api\/v1\/workers\/\[0-9\]\+'",
+            (
+                "'gateway_id' must have format"
+                " '\/api\/v1\/workers\/\[0-9\]\+'"  # noqa: W605
+            ),
         ):
             get_client().gateway.delete(gateway_id="garbage")
 

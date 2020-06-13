@@ -19,14 +19,10 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 
 from unittest import TestCase
-from mock import Mock, patch
+from mock import patch
 
 import sys
-import tempfile
-import os
-import json
 import requests
-from requests.exceptions import RequestException
 from hpecp import (
     ContainerPlatformClient,
     APIException,
@@ -130,7 +126,9 @@ class TestClusterList(TestCase):
                 json_data={},
                 status_code=200,
                 headers={
-                    "location": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    "location": (
+                        "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    )
                 },
             )
         raise RuntimeError("Unhandle POST request: " + args[0])
@@ -168,9 +166,9 @@ class TestClusterList(TestCase):
         self.assertEqual(
             clusters[0].dashboard_endpoint_access, "dashboard:1234"
         )
-        self.assertIsNone(
-            clusters[0].cert_data
-        )  # The cluster wasn't created with certs - TODO: need a test with this value set
+        # The cluster wasn't created with certs
+        # TODO: need a test with this value set
+        self.assertIsNone(clusters[0].cert_data)
         self.assertEqual(clusters[0].status, "ready")
         self.assertEqual(clusters[0].status_message, "really ready")
         self.assertDictEqual(
@@ -187,17 +185,20 @@ class TestClusterList(TestCase):
         ):
             get_client().k8s_cluster.list().tabulate(columns="garbage")
 
-        # FIXME: This test doesn't work on 2.x or 3.5 - maybe just a string comparision issue?
+        # FIXME: This test doesn't work on 2.x or 3.5
+        # maybe just a string comparision issue?
         if sys.version_info[0] == 3 and sys.version_info[1] >= 6:
             self.maxDiff = None
             self.assertEqual(
                 get_client().k8s_cluster.list().tabulate(),
-                "+-----------------------+------+-------------+-------------+--------------------+----------------------+--------------+------------------------------------------------------------------------------------------------------------------+-------------------+-----------------+---------------------+---------------------------+-----------+--------+----------------+---------------------------------------------+\n"
-                + "|          id           | name | description | k8s_version | created_by_user_id | created_by_user_name | created_time |                                                 k8shosts_config                                                  | admin_kube_config | dashboard_token | api_endpoint_access | dashboard_endpoint_access | cert_data | status | status_message |                   _links                    |\n"
-                + "+-----------------------+------+-------------+-------------+--------------------+----------------------+--------------+------------------------------------------------------------------------------------------------------------------+-------------------+-----------------+---------------------+---------------------------+-----------+--------+----------------+---------------------------------------------+\n"
-                + "| /api/v2/k8scluster/20 | def  | my cluster  |   1.17.0    |   /api/v1/user/5   |        admin         |  1588260014  | [{'node': '/api/v2/worker/k8shost/4', 'role': 'worker'}, {'node': '/api/v2/worker/k8shost/5', 'role': 'master'}] |       xyz==       |      abc==      |      api:1234       |      dashboard:1234       |           | ready  |  really ready  | {'self': {'href': '/api/v2/k8scluster/20'}} |\n"
-                + "+-----------------------+------+-------------+-------------+--------------------+----------------------+--------------+------------------------------------------------------------------------------------------------------------------+-------------------+-----------------+---------------------+---------------------------+-----------+--------+----------------+---------------------------------------------+",
-            )
+                (
+                    "+-----------------------+------+-------------+-------------+--------------------+----------------------+--------------+------------------------------------------------------------------------------------------------------------------+-------------------+-----------------+---------------------+---------------------------+-----------+--------+----------------+---------------------------------------------+\n"  # noqa: E501
+                    "|          id           | name | description | k8s_version | created_by_user_id | created_by_user_name | created_time |                                                 k8shosts_config                                                  | admin_kube_config | dashboard_token | api_endpoint_access | dashboard_endpoint_access | cert_data | status | status_message |                   _links                    |\n"  # noqa: E501
+                    "+-----------------------+------+-------------+-------------+--------------------+----------------------+--------------+------------------------------------------------------------------------------------------------------------------+-------------------+-----------------+---------------------+---------------------------+-----------+--------+----------------+---------------------------------------------+\n"  # noqa: E501
+                    "| /api/v2/k8scluster/20 | def  | my cluster  |   1.17.0    |   /api/v1/user/5   |        admin         |  1588260014  | [{'node': '/api/v2/worker/k8shost/4', 'role': 'worker'}, {'node': '/api/v2/worker/k8shost/5', 'role': 'master'}] |       xyz==       |      abc==      |      api:1234       |      dashboard:1234       |           | ready  |  really ready  | {'self': {'href': '/api/v2/k8scluster/20'}} |\n"  # noqa: E501
+                    "+-----------------------+------+-------------+-------------+--------------------+----------------------+--------------+------------------------------------------------------------------------------------------------------------------+-------------------+-----------------+---------------------+---------------------------+-----------+--------+----------------+---------------------------------------------+"  # noqa: E501
+                ),
+            )  # noqa: E501
 
         self.assertEqual(
             get_client().k8s_cluster.list().tabulate(["description", "id"]),
@@ -218,7 +219,9 @@ class TestCreateCluster(TestCase):
                 json_data={},
                 status_code=200,
                 headers={
-                    "location": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    "location": (
+                        "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    )
                 },
             )
         elif args[0] == "https://127.0.0.1:8080/api/v2/k8scluster":
@@ -296,14 +299,18 @@ class TestCreateCluster(TestCase):
         # pylint: disable=anomalous-backslash-in-string
         with self.assertRaisesRegexp(
             AssertionError,
-            "'node' must have format '\/api\/v2\/worker\/k8shost\/\[0-9\]\+'",
+            (
+                "'node' must have format"
+                " '\/api\/v2\/worker\/k8shost\/\[0-9\]\+'"  # noqa: W605
+            ),
         ):
             get_client().k8s_cluster.create(
                 name="a", k8shosts_config=[K8sClusterHostConfig("a", "b")]
             )
 
         with self.assertRaisesRegexp(
-            AssertionError, "'role' must one of \['master, worker'\]"
+            AssertionError,
+            "'role' must one of \['master, worker'\]",  # noqa: W605
         ):
             get_client().k8s_cluster.create(
                 name="a",
@@ -327,7 +334,9 @@ class TestCreateCluster(TestCase):
                 json_data={},
                 status_code=200,
                 headers={
-                    "location": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    "location": (
+                        "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    )
                 },
             )
         elif args[0] == "https://127.0.0.1:8080/api/v2/k8scluster":
@@ -397,7 +406,9 @@ class TestGetCluster(TestCase):
                 json_data={},
                 status_code=200,
                 headers={
-                    "location": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    "location": (
+                        "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    )
                 },
             )
         raise RuntimeError("Unhandle POST request: " + args[0])
@@ -464,7 +475,9 @@ class TestWaitForClusterStatus(TestCase):
                 json_data={},
                 status_code=200,
                 headers={
-                    "location": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    "location": (
+                        "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    )
                 },
             )
         raise RuntimeError("Unhandle POST request: " + args[0])
@@ -487,7 +500,10 @@ class TestWaitForClusterStatus(TestCase):
         # pylint: disable=anomalous-backslash-in-string
         with self.assertRaisesRegexp(
             AssertionError,
-            "'k8scluster_id' must have format '\/api\/v2\/worker\/k8scluster\/\[0-9\]\+'",
+            (
+                "'k8scluster_id' must have format"
+                " '\/api\/v2\/worker\/k8scluster\/\[0-9\]\+'"  # noqa: W605
+            ),
         ):
             get_client().k8s_cluster.wait_for_status(
                 k8scluster_id="garbage",
@@ -562,7 +578,8 @@ class TestWaitForClusterStatus(TestCase):
                 status=[K8sClusterStatus.ready],
             )
 
-        # Get the status of a Cluster ID that doesn't exist - without providing a status
+        # Get the status of a Cluster ID that doesn't exist
+        # without providing a status
         with self.assertRaises(APIItemNotFoundException):
             get_client().k8s_cluster.wait_for_status(
                 k8scluster_id="/api/v2/k8scluster/999",
@@ -617,7 +634,9 @@ class TestDeleteCluster(TestCase):
                 json_data={},
                 status_code=200,
                 headers={
-                    "location": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    "location": (
+                        "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    )
                 },
             )
         raise RuntimeError("Unhandle POST request: " + args[0])
@@ -629,7 +648,10 @@ class TestDeleteCluster(TestCase):
         # pylint: disable=anomalous-backslash-in-string
         with self.assertRaisesRegexp(
             AssertionError,
-            "'k8scluster_id' must have format '\/api\/v2\/worker\/k8scluster\/\[0-9\]\+'",
+            (
+                "'k8scluster_id' must have format"
+                " '\/api\/v2\/worker\/k8scluster\/\[0-9\]\+'"  # noqa: W605
+            ),
         ):
             get_client().k8s_cluster.delete(k8scluster_id="garbage")
 
@@ -660,31 +682,46 @@ class TestK8sSupportVersions(TestCase):
                         "1.14.10": {
                             "_version": "1.0",
                             "min_upgrade_version": "1.13.0",
-                            "relnote_url": "https://v1-14.docs.kubernetes.io/docs/setup/release/notes/",
+                            "relnote_url": (
+                                "https://v1-14.docs.kubernetes.io/docs/setup"
+                                "/release/notes/"
+                            ),
                             "hpecsi": "1.14",
                         },
                         "1.15.7": {
                             "_version": "1.0",
                             "min_upgrade_version": "1.14.0",
-                            "relnote_url": "https://v1-15.docs.kubernetes.io/docs/setup/release/notes/",
+                            "relnote_url": (
+                                "https://v1-15.docs.kubernetes.io/docs/setup"
+                                "/release/notes/"
+                            ),
                             "hpecsi": "1.15",
                         },
                         "1.16.4": {
                             "_version": "1.0",
                             "min_upgrade_version": "1.15.0",
-                            "relnote_url": "https://v1-16.docs.kubernetes.io/docs/setup/release/notes/",
+                            "relnote_url": (
+                                "https://v1-16.docs.kubernetes.io/docs/setup"
+                                "/release/notes/"
+                            ),
                             "hpecsi": "1.16",
                         },
                         "1.17.0": {
                             "_version": "1.0",
                             "min_upgrade_version": "1.16.0",
-                            "relnote_url": "https://v1-17.docs.kubernetes.io/docs/setup/release/notes/",
+                            "relnote_url": (
+                                "https://v1-17.docs.kubernetes.io/docs/setup"
+                                "/release/notes/"
+                            ),
                             "hpecsi": "1.17",
                         },
                         "1.18.0": {
                             "_version": "1.0",
                             "min_upgrade_version": "1.17.0",
-                            "relnote_url": "https://kubernetes.io/docs/setup/release/notes/",
+                            "relnote_url": (
+                                "https://kubernetes.io/docs/setup"
+                                "/release/notes/"
+                            ),
                             "hpecsi": "1.18",
                         },
                     },
@@ -700,7 +737,10 @@ class TestK8sSupportVersions(TestCase):
                 json_data={},
                 status_code=200,
                 headers={
-                    "location": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    "location": (
+                        "/api/v1/session/"
+                        "df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    )
                 },
             )
         raise RuntimeError("Unhandle POST request: " + args[0])

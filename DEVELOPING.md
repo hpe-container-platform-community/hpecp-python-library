@@ -110,7 +110,7 @@ tox -e py27 -- tests/library/client_test.py:TestCreateFromProperties.test_create
 Aim for 100% test coverage to ensure library will work with all specified python versions.
 
 ```
-coverage erase && coverage run --source hpecp setup.py test && coverage report -m
+coverage erase && coverage run --source hpecp,bin setup.py test && coverage report -m
 ```
 
 
