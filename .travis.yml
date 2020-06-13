@@ -38,6 +38,7 @@ jobs:
       script:
         - black --check hpecp/ tests/ bin/
     - stage: deploy
+      if: branch = master
       python: 3.8
       install:
         - pip install tox-travis
