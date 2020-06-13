@@ -6,7 +6,7 @@ python:
   - "3.7"
   - "3.8"
   - "3.9-dev"
-install: 
+install:
   - pip install tox-travis
   - pip install python-coveralls
   - pip install coverage==4.5.4
@@ -23,18 +23,23 @@ after_success:
 
 jobs:
   include:
+    - stage: flake8
+      name: "Flake8 code checks"
+      python: 3.8
+      install:
+        - pip3 install flake8
+      script:
+        - flake8 hpecp/ bin/ tests/
     - stage: format
       name: "Check code formatting"
       python: 3.8
-      install: 
+      install:
         - pip3 install black
       script:
-        - black --check hpecp/
-        - black --check tests/
-        - black --check bin/
+        - black --check hpecp/ tests/ bin/
     - stage: deploy
       python: 3.8
-      install: 
+      install:
         - pip install tox-travis
         - pip install python-coveralls
         - pip install coverage==4.5.4
@@ -47,11 +52,11 @@ jobs:
         - make html
         - touch ./build/html/.nojekyll
       deploy:
-         provider: pages
-         skip_cleanup: true
-         github_token:
-           secure: h+fqasd4ZOdm0IxVRQVl3IKmENIB3AB5IeVSNK7J35LMG+/QzaZD26naD0CVfa7RbGeKv9EpV91f3SHR/SikY0l+IA2OT0607SWdDYxFYrbrPzEwG8N72UwwcCCO2hfscE68krRYt2zDoWY7chZeJsAHTcL0l5ap2k34AYiDnBUW1PffgAGoVLbBH1dcTRi3pYCx0rbsQYv06D3wkuGF/Yin04uuxFaE+aLIfKxJVAeeiKcsPEzVyZHDOI08r6lzRjtjT+p1HOgnPH08pLcHdpRC0lP9RK/xCPvbhj5zS0PnDqcbYjpWpLK1Jg8MzLaHTo3223ygMmiNLXZptb6anfuulLBpzYLetgLF4QZsQYQfkY/IdtGVR2oWtq+0v54qFeSOH88SQPqOtyKTj0WlBT343y+DoVbhLNKvSmxiWFE/fr2b7VXYqF/gllZHZdQ2WQfI1F/lHeWZtScZaRK5sq7ofyecCpNy+Hw55F2i1Q+YTdJD8VtD/Zmz3j+OTW6uMUKPxnBrHnK6hjrrTg/t+mVhP7Ui4voEuiv5SSdTwGd4iYLdFpOchmduGW0mRzAeES+TOExpWmLnYKkKgQ1XiZ4rX6woZNIVAk0wTHzl2DpYaCpDHYwhNlzIyLD0j4gmwdlE4JD5Ut1YLr+gnMcoLMxPLY96vMohRI0WML+38O0=
-         keep-history: true
-         on:
-           branch: master
-         local_dir: docs/build/html
+        provider: pages
+        skip_cleanup: true
+        github_token:
+          secure: h+fqasd4ZOdm0IxVRQVl3IKmENIB3AB5IeVSNK7J35LMG+/QzaZD26naD0CVfa7RbGeKv9EpV91f3SHR/SikY0l+IA2OT0607SWdDYxFYrbrPzEwG8N72UwwcCCO2hfscE68krRYt2zDoWY7chZeJsAHTcL0l5ap2k34AYiDnBUW1PffgAGoVLbBH1dcTRi3pYCx0rbsQYv06D3wkuGF/Yin04uuxFaE+aLIfKxJVAeeiKcsPEzVyZHDOI08r6lzRjtjT+p1HOgnPH08pLcHdpRC0lP9RK/xCPvbhj5zS0PnDqcbYjpWpLK1Jg8MzLaHTo3223ygMmiNLXZptb6anfuulLBpzYLetgLF4QZsQYQfkY/IdtGVR2oWtq+0v54qFeSOH88SQPqOtyKTj0WlBT343y+DoVbhLNKvSmxiWFE/fr2b7VXYqF/gllZHZdQ2WQfI1F/lHeWZtScZaRK5sq7ofyecCpNy+Hw55F2i1Q+YTdJD8VtD/Zmz3j+OTW6uMUKPxnBrHnK6hjrrTg/t+mVhP7Ui4voEuiv5SSdTwGd4iYLdFpOchmduGW0mRzAeES+TOExpWmLnYKkKgQ1XiZ4rX6woZNIVAk0wTHzl2DpYaCpDHYwhNlzIyLD0j4gmwdlE4JD5Ut1YLr+gnMcoLMxPLY96vMohRI0WML+38O0=
+        keep-history: true
+        on:
+          branch: master
+        local_dir: docs/build/html
