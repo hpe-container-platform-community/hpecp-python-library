@@ -13,7 +13,7 @@ install:
 
 script:
   - tox
-  - coverage run --source hpecp setup.py test
+  - coverage run --source hpecp,bin setup.py test
   - coverage report -m
   - python --version 2>&1 | grep '2.7' || python setup.py install # (don't run on 2.7)
   - python --version 2>&1 | grep '2.7' || echo q | ./bin/hpecp --help # check cli outputs help and doesn't return an error (don't run on 2.7)
@@ -30,8 +30,8 @@ jobs:
         - pip3 install coverage
       script:
         - coverage erase
-        - coverage run --source hpecp/ setup.py test
-        - coverage report -m
+        - coverage run --source hpecp setup.py test
+        - coverage report -m --fail-under 68
     - stage: coverage_cli
       name: "Code coverage CLI (./bin)"
       python: 3.8
@@ -39,8 +39,8 @@ jobs:
         - pip3 install coverage
       script:
         - coverage erase
-        - coverage run --source bin/ setup.py test
-        - coverage report -m
+        - coverage run --source bin setup.py test
+        - coverage report -m --fail-under 32
     - stage: flake8
       name: "Flake8 code checks"
       python: 3.8
