@@ -221,20 +221,7 @@ class TestCatalogList(unittest.TestCase):
 
 
 class TestCLI(unittest.TestCase):
-    def mocked_requests_get(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v1/catalog/":
-            return MockResponse(
-                json_data=catalog_list_json, status_code=200, headers=dict(),
-            )
-        raise RuntimeError("Unhandle GET request: " + args[0])
-
-    @patch("requests.post", side_effect=mocked_requests_post)
-    @patch("requests.get", side_effect=mocked_requests_get)
-    def test_cli(self, mock_post, mock_get):
-
-        sys.path.insert(0, os.path.abspath("../../"))
-        from bin import cli
-
+    def setUp(self):
         file_data = dedent(
             """[default]
                         api_host = 127.0.0.1
@@ -246,17 +233,34 @@ class TestCLI(unittest.TestCase):
                         password = admin123"""
         )
 
-        tmp = tempfile.NamedTemporaryFile(delete=True)
-        try:
-            tmp.write(file_data.encode("utf-8"))
-            tmp.flush()
+        self.tmpFile = tempfile.NamedTemporaryFile(delete=True)
+        self.tmpFile.write(file_data.encode("utf-8"))
+        self.tmpFile.flush()
 
-            cli.HPECP_CONFIG_FILE = tmp.name
+        sys.path.insert(0, os.path.abspath("../../"))
+        from bin import cli
 
-            hpecp = cli.CLI()
-            hpecp.catalog.list()
+        self.cli = cli
+        self.cli.HPECP_CONFIG_FILE = self.tmpFile.name
+        return super().setUp()
 
-            self.assertTrue(True)
+    def tearDown(self):
+        self.tmpFile.close()
+        return super().tearDown()
 
-        finally:
-            tmp.close()
+    def mocked_requests_get(*args, **kwargs):
+        if args[0] == "https://127.0.0.1:8080/api/v1/catalog/":
+            return MockResponse(
+                json_data=catalog_list_json, status_code=200, headers=dict(),
+            )
+        raise RuntimeError("Unhandle GET request: " + args[0])
+
+    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=mocked_requests_get)
+    def test_cli(self, mock_post, mock_get):
+
+        hpecp = self.cli.CLI()
+        hpecp.catalog.list()
+
+        self.assertTrue(True)
+
