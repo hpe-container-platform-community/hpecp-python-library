@@ -66,13 +66,6 @@
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
 
-<span class="kn">from</span> <span class="nn">.logger</span> <span class="kn">import</span> <span class="n">Logger</span>
-
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
-<span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">requests</span>
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">urllib</span>
 <span class="kn">import</span> <span class="nn">polling</span>
 <span class="kn">import</span> <span class="nn">re</span>
 
@@ -122,7 +115,8 @@
 <span class="sd">        Arguments:</span>
 
 <span class="sd">            lock_id: str</span>
-<span class="sd">                The lock id as retrieved with `get()`  Format: &#39;/api/v1/lock/[0-9]+&#39;</span>
+<span class="sd">                The lock id as retrieved with `get()`  Format:</span>
+<span class="sd">                &#39;/api/v1/lock/[0-9]+&#39;</span>
 
 <span class="sd">        Raises:</span>
 
@@ -146,7 +140,8 @@
 <span class="sd">        Arguments:</span>
 
 <span class="sd">            timeout_secs: int</span>
-<span class="sd">                How long to wait for internal locks (note these need to be cleared before external locks can be deleted)</span>
+<span class="sd">                How long to wait for internal locks (note these need to be</span>
+<span class="sd">                cleared before external locks can be deleted)</span>
 
 <span class="sd">        Raises:</span>
 

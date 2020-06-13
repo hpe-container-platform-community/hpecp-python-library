@@ -66,12 +66,7 @@
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
 
-<span class="kn">from</span> <span class="nn">.logger</span> <span class="kn">import</span> <span class="n">Logger</span>
 
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
-<span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">requests</span>
-<span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">urllib</span>
 
 
@@ -105,36 +100,40 @@
         <span class="n">ssh_key_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">base64enc_license</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Not implemented yet! </span>
+        <span class="sd">&quot;&quot;&quot;Not implemented yet!</span>
 
-<span class="sd">        Workaround: </span>
+<span class="sd">        Workaround:</span>
 <span class="sd">         - scp your license to &#39;/srv/bluedata/license/&#39; on the controller</span>
 <span class="sd">         - run client.license.register(server_filename) to register the license</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-            <span class="s2">&quot;Not implemented yet! Workaround: scp your license to &#39;/srv/bluedata/license/&#39;&quot;</span>
+            <span class="s2">&quot;Not implemented yet! Workaround: scp your license to&quot;</span>
+            <span class="s2">&quot; &#39;/srv/bluedata/license/&#39;&quot;</span>
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="LicenseController.upload_with_ssh_pass"><a class="viewcode-back" href="../../hpecp.license.html#hpecp.license.LicenseController.upload_with_ssh_pass">[docs]</a>    <span class="k">def</span> <span class="nf">upload_with_ssh_pass</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">server_filename</span><span class="p">,</span> <span class="n">ssh_username</span><span class="p">,</span> <span class="n">ssh_password</span><span class="p">,</span> <span class="n">base64enc_license</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Not implemented yet! </span>
+        <span class="sd">&quot;&quot;&quot;Not implemented yet!</span>
 
-<span class="sd">        Workaround: </span>
+<span class="sd">        Workaround:</span>
 <span class="sd">         - scp your license to &#39;/srv/bluedata/license/&#39; on the controller</span>
 <span class="sd">         - run client.license.register(server_filename) to register the license</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-            <span class="s2">&quot;Not implemented yet! Workaround: scp your license to &#39;/srv/bluedata/license/&#39;&quot;</span>
+            <span class="s2">&quot;Not implemented yet! Workaround: scp your license to&quot;</span>
+            <span class="s2">&quot;&#39;/srv/bluedata/license/&#39;&quot;</span>
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="LicenseController.register"><a class="viewcode-back" href="../../hpecp.license.html#hpecp.license.LicenseController.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server_filename</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Register a license that has been uploaded to &#39;/srv/bluedata/license/&#39; on the controller.</span>
+        <span class="sd">&quot;&quot;&quot;Register a license that has been uploaded to</span>
+<span class="sd">        &#39;/srv/bluedata/license/&#39; on the controller.</span>
 
 <span class="sd">        Arguments:</span>
 
 <span class="sd">            server_filename: str</span>
-<span class="sd">                Filepath to the license on the server, e.g. &#39;/srv/bluedata/license/LICENSE-1.txt&#39;</span>
+<span class="sd">                Filepath to the license on the server, e.g.</span>
+<span class="sd">                &#39;/srv/bluedata/license/LICENSE-1.txt&#39;</span>
 
 <span class="sd">        Raises:</span>
 
@@ -150,7 +149,7 @@
 
 <div class="viewcode-block" id="LicenseController.delete"><a class="viewcode-back" href="../../hpecp.license.html#hpecp.license.LicenseController.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">license_key</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Delete a license by LicenseKey</span>
-<span class="sd">        </span>
+
 <span class="sd">        Arguments:</span>
 
 <span class="sd">            license_key: str</span>
@@ -163,7 +162,7 @@
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">lic</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">license_key</span><span class="p">)</span>  <span class="c1"># python 2</span>
-        <span class="k">except</span><span class="p">:</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="n">lic</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">pathname2url</span><span class="p">(</span><span class="n">license_key</span><span class="p">)</span>  <span class="c1"># python 3</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>

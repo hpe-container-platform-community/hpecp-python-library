@@ -65,9 +65,7 @@
 <span class="c1"># OTHER DEALINGS IN THE SOFTWARE.</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
-<span class="kn">from</span> <span class="nn">.logger</span> <span class="kn">import</span> <span class="n">Logger</span>
 
-<span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">attrgetter</span>
 <span class="kn">from</span> <span class="nn">tabulate</span> <span class="kn">import</span> <span class="n">tabulate</span>
 <span class="kn">import</span> <span class="nn">polling</span>
@@ -81,11 +79,14 @@
 
 
 <div class="viewcode-block" id="K8sClusterController"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController">[docs]</a><span class="k">class</span> <span class="nc">K8sClusterController</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;This is the main class that users will interact with to work with K8S Clusters.</span>
+    <span class="sd">&quot;&quot;&quot;This is the main class that users will interact with to work with K8S</span>
+<span class="sd">    Clusters.</span>
 
-<span class="sd">    An instance of this class is available in the client.ContainerPlatformClient with the attribute name</span>
-<span class="sd">    :py:attr:`k8s_cluster &lt;.client.ContainerPlatformClient.k8s_cluster&gt;`.  The methods of this class can be </span>
-<span class="sd">    invoked using `client.k8s_cluster.method()`.  See the example below:</span>
+<span class="sd">    An instance of this class is available in the</span>
+<span class="sd">    client.ContainerPlatformClient with the attribute name</span>
+<span class="sd">    :py:attr:`k8s_cluster &lt;.client.ContainerPlatformClient.k8s_cluster&gt;`.  The</span>
+<span class="sd">    methods of this class can be invoked using `client.k8s_cluster.method()`.</span>
+<span class="sd">    See the example below:</span>
 
 <span class="sd">    Example::</span>
 
@@ -109,31 +110,40 @@
         <span class="n">persistent_storage_nimble_csi</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">k8shosts_config</span><span class="o">=</span><span class="p">[],</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Send an API request to create a K8s Cluster.  The cluster creation will be asynchronous - use </span>
-<span class="sd">        the :py:meth:`wait_for_status` method to wait for the cluster to be created.</span>
+        <span class="sd">&quot;&quot;&quot;Send an API request to create a K8s Cluster.  The cluster creation</span>
+<span class="sd">        will be asynchronous - use the :py:meth:`wait_for_status` method to</span>
+<span class="sd">        wait for the cluster to be created.</span>
 
 <span class="sd">        For the lis of statuses see :py:class:`K8sClusterStatus`</span>
 
 <span class="sd">        Arguments:</span>
 
-<span class="sd">            name: str </span>
-<span class="sd">                Cluster name - required parameter.  Name must be at least 1 characters</span>
+<span class="sd">            name: str</span>
+<span class="sd">                Cluster name - required parameter.  Name must be at least 1</span>
+<span class="sd">                character</span>
 <span class="sd">            description: str</span>
 <span class="sd">                Cluster description - defaults to empty string if not provided</span>
 <span class="sd">            k8s_version: str</span>
-<span class="sd">                Kubernetes version to configure. If not specified defaults to the latest version as supported by the rpms.</span>
+<span class="sd">                Kubernetes version to configure. If not specified defaults to</span>
+<span class="sd">                the latest version as supported by the rpms.</span>
 <span class="sd">            pod_network_range: str</span>
-<span class="sd">                Network range to be used for kubernetes pods. Defaults to `10.192.0.0/12`</span>
+<span class="sd">                Network range to be used for kubernetes pods. Defaults to</span>
+<span class="sd">                `10.192.0.0/12`</span>
 <span class="sd">            service_network_range: str</span>
-<span class="sd">                Network range to be used for kubernetes services that are exposed with Cluster IP. Defaults to `10.96.0.0/12`</span>
+<span class="sd">                Network range to be used for kubernetes services that are</span>
+<span class="sd">                exposed with Cluster IP. Defaults to `10.96.0.0/12`</span>
 <span class="sd">            pod_dns_domain: str</span>
-<span class="sd">                DNS Domain to be used for kubernetes pods. Defaults to `cluster.local`</span>
+<span class="sd">                DNS Domain to be used for kubernetes pods. Defaults to</span>
+<span class="sd">                `cluster.local`</span>
 <span class="sd">            persistent_storage_local: str</span>
-<span class="sd">                Enables local host storage to be available in the kubernetes cluster</span>
+<span class="sd">                Enables local host storage to be available in the kubernetes</span>
+<span class="sd">                cluster</span>
 <span class="sd">            persistent_storage_nimble_csi: bool</span>
-<span class="sd">                Set to True to installs the Nimble CSI plugin for Nimble storage to be available in the kubernetes cluster</span>
+<span class="sd">                Set to True to installs the Nimble CSI plugin for Nimble</span>
+<span class="sd">                storage to be available in the kubernetes cluster</span>
 <span class="sd">            k8shosts_config: list[K8sClusterHostConfig]</span>
-<span class="sd">                list of :py:class:`K8sClusterHostConfig` objects determining which hosts to add and their role (master or worker)</span>
+<span class="sd">                list of :py:class:`K8sClusterHostConfig` objects determining</span>
+<span class="sd">                which hosts to add and their role (master or worker)</span>
 
 <span class="sd">        Returns:</span>
 
@@ -175,11 +185,10 @@
             <span class="nb">len</span><span class="p">(</span><span class="n">k8shosts_config</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
         <span class="p">),</span> <span class="s2">&quot;&#39;k8shosts_config&#39; must have at least one item&quot;</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">conf</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">k8shosts_config</span><span class="p">):</span>
-            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
-                <span class="n">conf</span><span class="p">,</span> <span class="n">K8sClusterHostConfig</span>
-            <span class="p">),</span> <span class="s2">&quot;&#39;k8shosts_config&#39; item &#39;</span><span class="si">{}</span><span class="s2">&#39; is not of type K8sClusterHostConfig&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">i</span>
-            <span class="p">)</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conf</span><span class="p">,</span> <span class="n">K8sClusterHostConfig</span><span class="p">),</span> <span class="p">(</span>
+                <span class="s2">&quot;&#39;k8shosts_config&#39; item &#39;</span><span class="si">{}</span><span class="s2">&#39; is not of&quot;</span>
+                <span class="s2">&quot; type K8sClusterHostConfig&quot;</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
 
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">},</span>
@@ -211,7 +220,7 @@
 <span class="sd">        Returns:</span>
 
 <span class="sd">            :py:class:`K8sClusterList` List of K8s Clusters</span>
-<span class="sd">            </span>
+
 <span class="sd">        Raises:</span>
 
 <span class="sd">            APIException</span>
@@ -229,12 +238,12 @@
 <span class="sd">        Args:</span>
 <span class="sd">            k8scluster_id: str</span>
 <span class="sd">                The K8S cluster ID - format: &#39;/api/v2/k8scluster/[0-9]+&#39;</span>
-<span class="sd">            setup_log: (bool) </span>
+<span class="sd">            setup_log: (bool)</span>
 <span class="sd">                Set to True to return the cluster setup log</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            K8sCluster: object representing K8S Cluster</span>
-<span class="sd">            </span>
+
 <span class="sd">        Raises:</span>
 <span class="sd">            APIException</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -245,7 +254,7 @@
             <span class="sa">r</span><span class="s2">&quot;\/api\/v2\/k8scluster\/[0-9]+&quot;</span><span class="p">,</span> <span class="n">k8scluster_id</span>
         <span class="p">),</span> <span class="s2">&quot;&#39;k8scluster_id&#39; must have format &#39;/api/v2/k8scluster/[0-9]+&#39;&quot;</span>
 
-        <span class="k">if</span> <span class="n">setup_log</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">setup_log</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
             <span class="n">params</span> <span class="o">=</span> <span class="s2">&quot;?setup_log&quot;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">params</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -264,13 +273,15 @@
 <span class="sd">            k8scluster_id: str</span>
 <span class="sd">                The K8S cluster ID - format: &#39;/api/v2/k8scluster/[0-9]+&#39;</span>
 <span class="sd">            status: list[:py:class:`K8sClusterStatus`]</span>
-<span class="sd">                Status(es) to wait for.  Use an empty array if you want to wait for a cluster&#39;s existence to cease.</span>
+<span class="sd">                Status(es) to wait for.  Use an empty array if you want to</span>
+<span class="sd">                wait for a cluster&#39;s existence to cease.</span>
 <span class="sd">            timeout_secs: int</span>
-<span class="sd">                How long to wait for the status(es) before raising an exception.</span>
+<span class="sd">                How long to wait for the status(es) before raising an</span>
+<span class="sd">                exception.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            bool: True if status was found before timeout, otherwise False</span>
-<span class="sd">            </span>
+
 <span class="sd">        Raises:</span>
 <span class="sd">            APIItemNotFoundException: if the item is not found</span>
 <span class="sd">            APIException: if a generic API exception occurred</span>
@@ -279,9 +290,11 @@
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
             <span class="n">k8scluster_id</span><span class="p">,</span> <span class="n">basestring</span>
         <span class="p">),</span> <span class="s2">&quot;&#39;k8scluster_id&#39; must be a string&quot;</span>
-        <span class="k">assert</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
-            <span class="sa">r</span><span class="s2">&quot;\/api\/v2\/k8scluster\/[0-9]+&quot;</span><span class="p">,</span> <span class="n">k8scluster_id</span>
-        <span class="p">),</span> <span class="s2">&quot;&#39;k8scluster_id&#39; must have format &#39;/api/v2/worker/k8scluster/[0-9]+&#39;&quot;</span>
+        <span class="k">assert</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\/api\/v2\/k8scluster\/[0-9]+&quot;</span><span class="p">,</span> <span class="n">k8scluster_id</span><span class="p">),</span> <span class="p">(</span>
+            <span class="s2">&quot;&#39;k8scluster_id&#39; must have format&quot;</span>
+            <span class="s2">&quot; &#39;/api/v2/worker/k8scluster/[0-9]+&#39;&quot;</span>
+        <span class="p">)</span>
+
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span> <span class="s2">&quot;&#39;status&#39; must be a list&quot;</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">status</span><span class="p">):</span>
             <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
@@ -305,21 +318,23 @@
 <div class="viewcode-block" id="K8sClusterController.delete"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k8scluster_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Delete a K8S Cluster.</span>
 
-<span class="sd">        You can use :py:meth:`wait_for_status` to check for the cluster state/existence.</span>
+<span class="sd">        You can use :py:meth:`wait_for_status` to check for the cluster</span>
+<span class="sd">        state/existence.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            k8scluster_id: str</span>
 <span class="sd">                The K8S cluster ID - format: &#39;/api/v2/k8scluster/[0-9]+&#39;</span>
-<span class="sd">            </span>
+
 <span class="sd">        Raises:</span>
 <span class="sd">            APIException</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
             <span class="n">k8scluster_id</span><span class="p">,</span> <span class="nb">str</span>
         <span class="p">),</span> <span class="s2">&quot;&#39;k8scluster_id&#39; must be provided and must be a string&quot;</span>
-        <span class="k">assert</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
-            <span class="sa">r</span><span class="s2">&quot;\/api\/v2\/k8scluster\/[0-9]+&quot;</span><span class="p">,</span> <span class="n">k8scluster_id</span>
-        <span class="p">),</span> <span class="s2">&quot;&#39;k8scluster_id&#39; must have format &#39;/api/v2/worker/k8scluster/[0-9]+&#39;&quot;</span>
+        <span class="k">assert</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\/api\/v2\/k8scluster\/[0-9]+&quot;</span><span class="p">,</span> <span class="n">k8scluster_id</span><span class="p">),</span> <span class="p">(</span>
+            <span class="s2">&quot;&#39;k8scluster_id&#39; must have format&quot;</span>
+            <span class="s2">&quot; &#39;/api/v2/worker/k8scluster/[0-9]+&#39;&quot;</span>
+        <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
             <span class="n">url</span><span class="o">=</span><span class="n">k8scluster_id</span><span class="p">,</span>
@@ -328,8 +343,6 @@
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="K8sClusterController.k8s_supported_versions"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.k8s_supported_versions">[docs]</a>    <span class="k">def</span> <span class="nf">k8s_supported_versions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># &quot;&quot;&quot;Not yet implemented - see https://github.com/hpe-container-platform-community/hpecp-python-library/issues/3&quot;&quot;&quot;</span>
-        <span class="c1"># raise NotImplementedError()</span>
         <span class="sd">&quot;&quot;&quot;Retrieve list of K8S Supported Versions.</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            List of K8s Supported Versions</span>
@@ -347,13 +360,14 @@
 
 <div class="viewcode-block" id="K8sClusterStatus"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterStatus">[docs]</a><span class="k">class</span> <span class="nc">K8sClusterStatus</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Bases: enum.Enum</span>
-<span class="sd">    </span>
+
 <span class="sd">    The statuses for a K8S Cluster</span>
 
-<span class="sd">    **Note:** </span>
-<span class="sd">    </span>
-<span class="sd">    The integer values do not have a meaning outside of this library.  </span>
-<span class="sd">    The API uses a string identifier with the status name rather than an integer value.</span>
+<span class="sd">    **Note:**</span>
+
+<span class="sd">    The integer values do not have a meaning outside of this library.</span>
+<span class="sd">    The API uses a string identifier with the status name rather than an</span>
+<span class="sd">    integer value.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">ready</span> <span class="o">=</span> <span class="mi">1</span>
@@ -366,7 +380,8 @@
 
 
 <div class="viewcode-block" id="K8sCluster"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sCluster">[docs]</a><span class="k">class</span> <span class="nc">K8sCluster</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Create an instance of K8sCluster from json data returned from the HPE Container Platform API.</span>
+    <span class="sd">&quot;&quot;&quot;Create an instance of K8sCluster from json data returned from the HPE</span>
+<span class="sd">    Container Platform API.</span>
 
 <span class="sd">    Users of this library are not expected to create an instance of this class.</span>
 
@@ -375,7 +390,7 @@
 <span class="sd">            The json returned by the API representing a K8sCluster.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        K8sCluster: </span>
+<span class="sd">        K8sCluster:</span>
 <span class="sd">            An instance of K8sCluster</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -397,7 +412,8 @@
         <span class="s2">&quot;status_message&quot;</span><span class="p">,</span>
         <span class="s2">&quot;_links&quot;</span><span class="p">,</span>
     <span class="p">]</span>
-    <span class="sd">&quot;&quot;&quot;All of the fields of a K8s Cluster objects that are returned by the HPE Container Platform API&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;All of the fields of a K8s Cluster objects that are returned by the HPE</span>
+<span class="sd">    Container Platform API&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">json</span> <span class="o">=</span> <span class="n">json</span>
@@ -420,7 +436,8 @@
         <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__dir__</span><span class="p">()[</span><span class="n">item</span><span class="p">])</span>
 
 <div class="viewcode-block" id="K8sCluster.set_display_columns"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sCluster.set_display_columns">[docs]</a>    <span class="k">def</span> <span class="nf">set_display_columns</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">columns</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Set the columns this instance should have when the instance is used with :py:meth:`.K8sClusterList.tabulate`</span>
+        <span class="sd">&quot;&quot;&quot;Set the columns this instance should have when the instance is used</span>
+<span class="sd">        with :py:meth:`.K8sClusterList.tabulate`</span>
 
 <span class="sd">        Parameters:</span>
 <span class="sd">            columns : list[str]</span>
@@ -432,7 +449,8 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;@Field: from json[&#39;_links&#39;][&#39;self&#39;][&#39;href&#39;] - id format: &#39;/api/v2/k8scluster/[0-9]+&#39;&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;@Field: from json[&#39;_links&#39;][&#39;self&#39;][&#39;href&#39;] - id format:</span>
+<span class="sd">        &#39;/api/v2/k8scluster/[0-9]+&#39;&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;_links&quot;</span><span class="p">][</span><span class="s2">&quot;self&quot;</span><span class="p">][</span><span class="s2">&quot;href&quot;</span><span class="p">]</span>
 
     <span class="nd">@property</span>
@@ -539,7 +557,8 @@
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        json : str</span>
-<span class="sd">            json data returned from the HPE Container Platform API get request to /api/v2/k8scluster</span>
+<span class="sd">            json data returned from the HPE Container Platform API get request</span>
+<span class="sd">            to /api/v2/k8scluster</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json</span><span class="p">):</span>
@@ -580,7 +599,8 @@
 
 <span class="sd">        Parameters:</span>
 <span class="sd">            columns : list[str]</span>
-<span class="sd">                list of columns to return in the table - default :py:attr:`.K8sCluster.all_fields`</span>
+<span class="sd">                list of columns to return in the table - default</span>
+<span class="sd">                :py:attr:`.K8sCluster.all_fields`</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            str : table output</span>
@@ -591,7 +611,8 @@
 <span class="sd">            print(hpeclient.cluster.list().tabulate())</span>
 
 <span class="sd">            # Print the cluster list with a subset of the fields</span>
-<span class="sd">            print(hpeclient.cluster.list().tabulate(columns=[&#39;id&#39;, &#39;name&#39;, &#39;description&#39;]))</span>
+<span class="sd">            print(hpeclient.cluster.list().tabulate(columns=[&#39;id&#39;, &#39;name&#39;,</span>
+<span class="sd">            &#39;description&#39;]))</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">columns</span> <span class="o">!=</span> <span class="n">K8sCluster</span><span class="o">.</span><span class="n">all_fields</span><span class="p">:</span>
             <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
@@ -609,7 +630,8 @@
 
 
 <div class="viewcode-block" id="K8sClusterHostConfig"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterHostConfig">[docs]</a><span class="k">class</span> <span class="nc">K8sClusterHostConfig</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Object to represent a pair of `host node` and the `role` of the host - `master` or `worker`.</span>
+    <span class="sd">&quot;&quot;&quot;Object to represent a pair of `host node` and the `role` of the host</span>
+<span class="sd">    - `master` or `worker`.</span>
 
 <span class="sd">    Arguments:</span>
 
@@ -622,12 +644,13 @@
 <div class="viewcode-block" id="K8sClusterHostConfig.create_from_list"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterHostConfig.create_from_list">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">create_from_list</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">noderole</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Factory method to create K8sClusterHostConfig from a list.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Arguments:</span>
 <span class="sd">            noderole: list</span>
 <span class="sd">                the noderole must only have two values: [ node, role ]</span>
-<span class="sd">        </span>
-<span class="sd">        See :py:meth:`K8sClusterHostConfig` for the allowed node and role values.</span>
+
+<span class="sd">        See :py:meth:`K8sClusterHostConfig` for the allowed node and role</span>
+<span class="sd">        values.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">assert</span> <span class="p">(</span>
@@ -655,9 +678,8 @@
 <span class="sd">            dict</span>
 
 <span class="sd">        Example::</span>
-
-<span class="sd">            { </span>
-<span class="sd">                &#39;node&#39;: &#39;/api/v2/worker/k8shost/12&#39;, </span>
+<span class="sd">            {</span>
+<span class="sd">                &#39;node&#39;: &#39;/api/v2/worker/k8shost/12&#39;,</span>
 <span class="sd">                &#39;role&#39;: &#39;master&#39;</span>
 <span class="sd">            }</span>
 <span class="sd">        &quot;&quot;&quot;</span>

@@ -193,7 +193,8 @@
 <dd><p>Create a gateway instance using SSH key credentials to access the host</p>
 <dl class="simple">
 <dt>Args:</dt><dd><dl class="simple">
-<dt>ip: str</dt><dd><p>The IP address of the proxy host.  Used for internal communication.</p>
+<dt>ip: str</dt><dd><p>The IP address of the proxy host.  Used for internal
+communication.</p>
 </dd>
 <dt>ssh_key_data: str</dt><dd><p>The ssh key data as a string.</p>
 </dd>
@@ -208,19 +209,22 @@
 <dl class="py method">
 <dt id="hpecp.k8s_worker.K8sWorkerController.list">
 <code class="sig-name descname">list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_worker.html#K8sWorkerController.list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_worker.K8sWorkerController.list" title="Permalink to this definition">¶</a></dt>
-<dd><p>See: <a class="reference external" href="https:/">https:/</a>/&lt;&lt;controller_ip&gt;&gt;/apidocs/site-admin-api.html for the schema of the  response object</p>
+<dd><p>See: <a class="reference external" href="https:/">https:/</a>/&lt;&lt;controller_ip&gt;&gt;/apidocs/site-admin-api.html for the
+schema of the  response object</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="hpecp.k8s_worker.K8sWorkerController.get">
 <code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">worker_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_worker.html#K8sWorkerController.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_worker.K8sWorkerController.get" title="Permalink to this definition">¶</a></dt>
-<dd><p>See: <a class="reference external" href="https:/">https:/</a>/&lt;&lt;controller_ip&gt;&gt;/apidocs/site-admin-api.html for the schema of the  response object</p>
+<dd><p>See: <a class="reference external" href="https:/">https:/</a>/&lt;&lt;controller_ip&gt;&gt;/apidocs/site-admin-api.html for the
+schema of the  response object</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="hpecp.k8s_worker.K8sWorkerController.delete">
 <code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">worker_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_worker.html#K8sWorkerController.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_worker.K8sWorkerController.delete" title="Permalink to this definition">¶</a></dt>
-<dd><p>See: <a class="reference external" href="https:/">https:/</a>/&lt;&lt;controller_ip&gt;&gt;/apidocs/site-admin-api.html for the schema of the  response object</p>
+<dd><p>See: <a class="reference external" href="https:/">https:/</a>/&lt;&lt;controller_ip&gt;&gt;/apidocs/site-admin-api.html for the
+schema of the  response object</p>
 </dd></dl>
 
 <dl class="py method">
@@ -231,15 +235,18 @@
 <dt>Args:</dt><dd><dl class="simple">
 <dt>worker_id: str</dt><dd><p>The worker ID - format: ‘/api/v1/workers/[0-9]+’</p>
 </dd>
-<dt>status: list[<a class="reference internal" href="#hpecp.k8s_worker.WorkerK8sStatus" title="hpecp.k8s_worker.WorkerK8sStatus"><code class="xref py py-class docutils literal notranslate"><span class="pre">WorkerK8sStatus</span></code></a>]</dt><dd><p>Status(es) to wait for.  Use an empty array if you want to wait for a cluster’s existence to cease.</p>
+<dt>status: list[<a class="reference internal" href="#hpecp.k8s_worker.WorkerK8sStatus" title="hpecp.k8s_worker.WorkerK8sStatus"><code class="xref py py-class docutils literal notranslate"><span class="pre">WorkerK8sStatus</span></code></a>]</dt><dd><p>Status(es) to wait for.  Use an empty array if you want to
+wait for a cluster’s existence to cease.</p>
 </dd>
-<dt>timeout_secs: int</dt><dd><p>How long to wait for the status(es) before raising an exception.</p>
+<dt>timeout_secs: int</dt><dd><p>How long to wait for the status(es) before raising an
+exception.</p>
 </dd>
 </dl>
 </dd>
 <dt>Returns:</dt><dd><p>bool: True if status was found before timeout, otherwise False</p>
 </dd>
-<dt>Raises:</dt><dd><p>APIItemNotFoundException: if the item is not found and status is not empty
+<dt>Raises:</dt><dd><p>APIItemNotFoundException: if the item is not found and status is
+not empty
 APIException: if a generic API exception occurred</p>
 </dd>
 </dl>
@@ -253,11 +260,13 @@ APIException: if a generic API exception occurred</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>k8sworker_id</strong> – the worker ID</p></li>
-<li><p><strong>persistent_disks</strong> – a comma separated list of zero or more persistent disks, e.g. “/dev/nvme2n1”</p></li>
-<li><p><strong>ephemeral_disks</strong> – a comma separated list of zero or more ephemeral_disks disks, e.g. “/dev/nvme1n1”</p></li>
+<li><p><strong>persistent_disks</strong> – a comma separated list of zero or more</p></li>
 </ul>
 </dd>
 </dl>
+<p>persistent disks, e.g. “/dev/nvme2n1”
+:param ephemeral_disks: a comma separated list of zero or more
+ephemeral_disks disks, e.g. “/dev/nvme1n1”</p>
 </dd></dl>
 
 </dd></dl>

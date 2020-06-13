@@ -174,7 +174,8 @@
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tenants</span><span class="p">)</span>
 
 <div class="viewcode-block" id="WorkerK8sList.tabulate"><a class="viewcode-back" href="../../hpecp.k8s_worker.html#hpecp.k8s_worker.WorkerK8sList.tabulate">[docs]</a>    <span class="k">def</span> <span class="nf">tabulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="c1"># FIXME columns is ignored, see GatewayController.list().tabulate() for an example implementation</span>
+        <span class="c1"># FIXME columns is ignored, see GatewayController.list().tabulate()</span>
+        <span class="c1"># for an example implementation</span>
         <span class="k">return</span> <span class="n">tabulate</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">WorkerK8s</span><span class="o">.</span><span class="n">__class_dir__</span><span class="p">(),</span> <span class="n">tablefmt</span><span class="o">=</span><span class="s2">&quot;pretty&quot;</span>
         <span class="p">)</span></div></div>
@@ -193,7 +194,8 @@
 
 <span class="sd">        Args:</span>
 <span class="sd">            ip: str</span>
-<span class="sd">                The IP address of the proxy host.  Used for internal communication.</span>
+<span class="sd">                The IP address of the proxy host.  Used for internal</span>
+<span class="sd">                communication.</span>
 <span class="sd">            ssh_key_data: str</span>
 <span class="sd">                The ssh key data as a string.</span>
 <span class="sd">            tags: list</span>
@@ -228,7 +230,8 @@
 
 <div class="viewcode-block" id="K8sWorkerController.list"><a class="viewcode-back" href="../../hpecp.k8s_worker.html#hpecp.k8s_worker.K8sWorkerController.list">[docs]</a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        See: https://&lt;&lt;controller_ip&gt;&gt;/apidocs/site-admin-api.html for the schema of the  response object</span>
+<span class="sd">        See: https://&lt;&lt;controller_ip&gt;&gt;/apidocs/site-admin-api.html for the</span>
+<span class="sd">        schema of the  response object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
             <span class="n">url</span><span class="o">=</span><span class="s2">&quot;/api/v2/worker/k8shost/&quot;</span><span class="p">,</span>
@@ -240,7 +243,8 @@
 
 <div class="viewcode-block" id="K8sWorkerController.get"><a class="viewcode-back" href="../../hpecp.k8s_worker.html#hpecp.k8s_worker.K8sWorkerController.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">worker_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        See: https://&lt;&lt;controller_ip&gt;&gt;/apidocs/site-admin-api.html for the schema of the  response object</span>
+<span class="sd">        See: https://&lt;&lt;controller_ip&gt;&gt;/apidocs/site-admin-api.html for the</span>
+<span class="sd">        schema of the  response object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
             <span class="n">url</span><span class="o">=</span><span class="n">worker_id</span><span class="p">,</span> <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;worker/get_k8shosts&quot;</span>
@@ -250,7 +254,8 @@
 
 <div class="viewcode-block" id="K8sWorkerController.delete"><a class="viewcode-back" href="../../hpecp.k8s_worker.html#hpecp.k8s_worker.K8sWorkerController.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">worker_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        See: https://&lt;&lt;controller_ip&gt;&gt;/apidocs/site-admin-api.html for the schema of the  response object</span>
+<span class="sd">        See: https://&lt;&lt;controller_ip&gt;&gt;/apidocs/site-admin-api.html for the</span>
+<span class="sd">        schema of the  response object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
             <span class="n">url</span><span class="o">=</span><span class="n">worker_id</span><span class="p">,</span>
@@ -266,15 +271,18 @@
 <span class="sd">            worker_id: str</span>
 <span class="sd">                The worker ID - format: &#39;/api/v1/workers/[0-9]+&#39;</span>
 <span class="sd">            status: list[:py:class:`WorkerK8sStatus`]</span>
-<span class="sd">                Status(es) to wait for.  Use an empty array if you want to wait for a cluster&#39;s existence to cease.</span>
+<span class="sd">                Status(es) to wait for.  Use an empty array if you want to</span>
+<span class="sd">                wait for a cluster&#39;s existence to cease.</span>
 <span class="sd">            timeout_secs: int</span>
-<span class="sd">                How long to wait for the status(es) before raising an exception.</span>
+<span class="sd">                How long to wait for the status(es) before raising an</span>
+<span class="sd">                exception.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            bool: True if status was found before timeout, otherwise False</span>
 
 <span class="sd">        Raises:</span>
-<span class="sd">            APIItemNotFoundException: if the item is not found and status is not empty</span>
+<span class="sd">            APIItemNotFoundException: if the item is not found and status is</span>
+<span class="sd">            not empty</span>
 <span class="sd">            APIException: if a generic API exception occurred</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
@@ -312,7 +320,8 @@
             <span class="k">except</span> <span class="n">polling</span><span class="o">.</span><span class="n">TimeoutException</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">False</span>
 
-        <span class="c1"># if state is not empty return success when gateway current state is in desired state</span>
+        <span class="c1"># if state is not empty return success when gateway current state is</span>
+        <span class="c1"># in desired state</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">polling</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span>
@@ -330,8 +339,10 @@
         <span class="sd">&quot;&quot;&quot;Set Storage</span>
 
 <span class="sd">        :param k8sworker_id: the worker ID</span>
-<span class="sd">        :param persistent_disks: a comma separated list of zero or more persistent disks, e.g. &quot;/dev/nvme2n1&quot;</span>
-<span class="sd">        :param ephemeral_disks: a comma separated list of zero or more ephemeral_disks disks, e.g. &quot;/dev/nvme1n1&quot;</span>
+<span class="sd">        :param persistent_disks: a comma separated list of zero or more</span>
+<span class="sd">        persistent disks, e.g. &quot;/dev/nvme2n1&quot;</span>
+<span class="sd">        :param ephemeral_disks: a comma separated list of zero or more</span>
+<span class="sd">        ephemeral_disks disks, e.g. &quot;/dev/nvme1n1&quot;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># TODO: id is valid</span>
