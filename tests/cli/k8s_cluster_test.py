@@ -19,18 +19,16 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 
 from unittest import TestCase
-from mock import Mock, patch, mock_open
+from mock import patch
 
 from textwrap import dedent
 import sys
 import tempfile
 import os
-import json
 import requests
-from requests.exceptions import RequestException
 
 sys.path.insert(0, os.path.abspath("../../"))
-from bin import cli
+from bin import cli  # noqa: E402
 
 
 class MockResponse:
@@ -68,7 +66,9 @@ class TestCLI(TestCase):
                 json_data={},
                 status_code=200,
                 headers={
-                    "location": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    "location": (
+                        "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    )
                 },
             )
         raise RuntimeError("Unhandle POST request: " + args[0])
@@ -90,31 +90,46 @@ class TestCLI(TestCase):
                         "1.14.10": {
                             "_version": "1.0",
                             "min_upgrade_version": "1.13.0",
-                            "relnote_url": "https://v1-14.docs.kubernetes.io/docs/setup/release/notes/",
+                            "relnote_url": (
+                                "https://v1-14.docs.kubernetes.io/docs/setup"
+                                "/release/notes/"
+                            ),
                             "hpecsi": "1.14",
                         },
                         "1.15.7": {
                             "_version": "1.0",
                             "min_upgrade_version": "1.14.0",
-                            "relnote_url": "https://v1-15.docs.kubernetes.io/docs/setup/release/notes/",
+                            "relnote_url": (
+                                "https://v1-15.docs.kubernetes.io/docs/setup"
+                                "/release/notes/"
+                            ),
                             "hpecsi": "1.15",
                         },
                         "1.16.4": {
                             "_version": "1.0",
                             "min_upgrade_version": "1.15.0",
-                            "relnote_url": "https://v1-16.docs.kubernetes.io/docs/setup/release/notes/",
+                            "relnote_url": (
+                                "https://v1-16.docs.kubernetes.io/docs/setup"
+                                "/release/notes/"
+                            ),
                             "hpecsi": "1.16",
                         },
                         "1.17.0": {
                             "_version": "1.0",
                             "min_upgrade_version": "1.16.0",
-                            "relnote_url": "https://v1-17.docs.kubernetes.io/docs/setup/release/notes/",
+                            "relnote_url": (
+                                "https://v1-17.docs.kubernetes.io/docs/setup"
+                                "/release/notes/"
+                            ),
                             "hpecsi": "1.17",
                         },
                         "1.18.0": {
                             "_version": "1.0",
                             "min_upgrade_version": "1.17.0",
-                            "relnote_url": "https://kubernetes.io/docs/setup/release/notes/",
+                            "relnote_url": (
+                                "https://kubernetes.io/docs/setup"
+                                "/release/notes/"
+                            ),
                             "hpecsi": "1.18",
                         },
                     },

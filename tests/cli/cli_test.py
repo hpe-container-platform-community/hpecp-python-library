@@ -27,9 +27,6 @@ from unittest import TestCase
 import requests
 from mock import patch
 
-sys.path.insert(0, os.path.abspath("../../"))
-from bin import cli
-
 
 class MockResponse:
     def __init__(
@@ -66,7 +63,9 @@ class TestCLI(TestCase):
                 json_data={},
                 status_code=200,
                 headers={
-                    "location": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    "location": (
+                        "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    )
                 },
             )
         raise RuntimeError("Unhandle POST request: " + args[0])
@@ -157,4 +156,3 @@ class TestCLI(TestCase):
 
         hpecp = self.cli.CLI()
         hpecp.k8scluster.list()
-
