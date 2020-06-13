@@ -137,7 +137,7 @@ class TestUsers(TestCase):
 
     @patch("requests.get", side_effect=mocked_requests_get)
     @patch("requests.post", side_effect=mocked_requests_post)
-    def test_get_users(mock_get, mock_post):
+    def test_get_users(self, mock_get, mock_post):
         client = ContainerPlatformClient(
             username="admin",
             password="admin123",
