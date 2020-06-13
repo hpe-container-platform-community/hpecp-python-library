@@ -23,7 +23,7 @@ from unittest import TestCase
 import requests
 from mock import patch
 
-from hpecp import APIItemNotFoundException, ContainerPlatformClient
+from hpecp import ContainerPlatformClient
 
 
 class MockResponse:
