@@ -1,4 +1,4 @@
-Installing on HPE CP Centos/Redhat Hosts
+Installing the CLI on HPE Container Platform Centos/Redhat Hosts
 ---
 
 There is an [issue](https://github.com/hpe-container-platform-community/hpecp-python-library/issues/45)
