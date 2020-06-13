@@ -27,9 +27,9 @@ jobs:
       name: "Flake8 code checks"
       python: 3.8
       install:
-        - pip3 install flake8
+        - pip3 install flake8 # TODO: install 'flake8-docstrings'
       script:
-        - flake8 hpecp/ bin/ tests/
+        - flake8 bin/ # TODO: add docstring 'flake8 --docstring-convention numpy hpecp/ bin/ tests/'
     - stage: format
       name: "Check code formatting"
       python: 3.8
