@@ -31,6 +31,8 @@ See:
 
 ## Installation
 
+To install on HPE CP Centos/Redhat 7.7 hosts, see [here](./docs/README-INSTALL-HPECP-HOSTS.md)
+
 ```shell
 # ensure you have an up-to-date pip
 pip3 install -U pip
