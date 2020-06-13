@@ -23,8 +23,6 @@ from operator import attrgetter
 
 from tabulate import tabulate
 
-from hpecp.exceptions import APIItemNotFoundException
-
 
 class CatalogController:
     """This is the main class that users will interact with to talk to catalogs.
@@ -86,12 +84,6 @@ class CatalogController:
         response = self.client._request(
             url=catalog_id, http_method="get", description="catalog/get"
         )
-        if response.json()["purpose"] != "proxy":
-            raise APIItemNotFoundException(
-                message="catalog not found with id: " + catalog_id,
-                request_method="get",
-                request_url=catalog_id,
-            )
 
         return Catalog(response.json())
 
@@ -205,10 +197,9 @@ class CatalogList:
     """
 
     def __init__(self, json):
-        self.json = [g for g in json if g["purpose"] == "proxy"]
+        self.json = json
         self.catalogs = sorted(
-            [Catalog(g) for g in json if g["purpose"] == "proxy"],
-            key=attrgetter("id"),
+            [Catalog(g) for g in json], key=attrgetter("id"),
         )
         self.display_columns = Catalog.default_display_fields
 
