@@ -67,21 +67,21 @@ _log.debug(
 if "HPECP_CONFIG_FILE" in os.environ:
     HPECP_CONFIG_FILE = os.getenv("HPECP_CONFIG_FILE")
     _log.debug(
-        "HPECP_CONFIG_FILE envirionment variable exists with value '{}'".format(
+        "HPECP_CONFIG_FILE env variable exists with value '{}'".format(
             HPECP_CONFIG_FILE
         )
     )
 else:
     HPECP_CONFIG_FILE = "~/.hpecp.conf"
     _log.debug(
-        "HPECP_CONFIG_FILE envirionment variable not found, setting to '{}'".format(
+        "HPECP_CONFIG_FILE env variable not found, setting to '{}'".format(
             HPECP_CONFIG_FILE
         )
     )
 
 
 def get_client():
-    """Utility function to retrieve an authenticated client object"""
+    """Utility function to retrieve an authenticated client object."""
     try:
         client = ContainerPlatformClient.create_from_config_file(
             config_file=HPECP_CONFIG_FILE, profile=PROFILE,
@@ -114,10 +114,14 @@ class GatewayProxy(object):
     ):
         """Create a Gateway using SSH key authentication
 
-        :param ip: The IP address of the proxy host.  Used for internal communication.
-        :param proxy_node_hostname: Clients will access cluster services will be accessed using this name.
-        :param ssh_key: The ssh key data as a string.  Alternatively, use the ssh_key_file parameter.
-        :param ssh_key_file: The file path to the ssh key.  Alternatively, use the ssh_key parameter.
+        :param ip: The IP address of the proxy host.  Used for internal
+                    communication.
+        :param proxy_node_hostname: Clients will access cluster services will
+            be accessed using this name.
+        :param ssh_key: The ssh key data as a string.  Alternatively, use the
+            ssh_key_file parameter.
+        :param ssh_key_file: The file path to the ssh key.  Alternatively, use
+            the ssh_key parameter.
         :param tags: Tags to use, e.g. "{ 'tag1': 'foo', 'tag2', 'bar' }".
         """
 
@@ -154,7 +158,8 @@ class GatewayProxy(object):
     ):
         """Retrieve a Gateway by Id
 
-        :param gateway_id: the id of the gateway with format: '/api/v1/workers/[0-9]+'
+        :param gateway_id: the id of the gateway with format:
+            '/api/v1/workers/[0-9]+'
         :param output: how to display the output ['yaml'|'json']
         """
         response = get_client().gateway.get(gateway_id)
@@ -172,6 +177,7 @@ class GatewayProxy(object):
     def list(
         self, output="table", columns=Gateway.default_display_fields, query={}
     ):
+
         """Retrieve the list of Gateways
 
         :param output: how to display the output [text|table|json]
@@ -180,12 +186,15 @@ class GatewayProxy(object):
         Example::
 
         > hpecp gateway list --output json --query '[0].ip'
+
         10.1.0.185
-        
-        > hpecp gateway list --output json --query '[*].[ip, purpose, state, hostname]'
-        [['10.1.0.185', 'proxy', 'installed', 'ip-10-1-0-185.us-west-2.compute.internal']]
-        
-        """
+
+        > hpecp gateway list --output json --query
+            '[*].[ip, purpose, state, hostname]'
+
+        [['10.1.0.185', 'proxy', 'installed',
+            'ip-10-1-0-185.us-west-2.compute.internal']]
+        """  # noqa: W293
         if output == "table":
             print(get_client().gateway.list().tabulate(columns=columns))
         elif output == "text":
@@ -208,8 +217,10 @@ class GatewayProxy(object):
     ):
         """Retrieve a Gateway by Id
 
-        :param gateway_id: the id of the gateway with format: '/api/v1/workers/[0-9]+'
-        :param wait_for_delete_secs: if 0 return immediately after calling delete
+        :param gateway_id: the id of the gateway with format:
+            '/api/v1/workers/[0-9]+'
+        :param wait_for_delete_secs: if 0 return immediately after calling
+            delete
 
         wait_for_delete_secs > 0 `calls wait_for_delete()`
         """
@@ -243,9 +254,11 @@ class GatewayProxy(object):
         """
         Wait for Gateway to have one or more statuses
         :param gateway_id: Cluster id with format: /api/v1/workers/[0-9]+
-        :param status: status(es) to wait for with format: ['status1', 'status2', 'statusn'] - set to [] to wait for item to be deleted
+        :param status: status(es) to wait for with format: ['status1',
+            'status2', 'statusn'] - set to [] to wait for item to be deleted
         :param timeout_secs: how many secs to wait before exiting
-        :returns True/False if status was found within timeout_secs. May raise APIException.
+        :returns True/False if status was found within timeout_secs. May raise
+            APIException.
 
         See also: `hpecp gateway states`
         """
@@ -277,9 +290,12 @@ class K8sWorkerProxy(object):
     ):
         """Create a K8s Worker using SSH key authentication
 
-        :param ip: The IP address of the host.  Used for internal communication.
-        :param ssh_key: The ssh key data as a string.  Alternatively, use the ssh_key_file parameter.
-        :param ssh_key_file: The file path to the ssh key.  Alternatively, use the ssh_key parameter.
+        :param ip: The IP address of the host.  Used for internal
+            communication.
+        :param ssh_key: The ssh key data as a string.  Alternatively, use the
+            ssh_key_file parameter.
+        :param ssh_key_file: The file path to the ssh key.  Alternatively, use
+            the ssh_key parameter.
         :param tags: Tags to use, e.g. "{ 'tag1': 'foo', 'tag2', 'bar' }".
         """
         if ssh_key is None and ssh_key_file is None:
@@ -326,16 +342,20 @@ class K8sWorkerProxy(object):
         > hpecp k8sworker list --output json --query '[0].ip'
         10.1.0.185
         
-        > hpecp k8sworker list --output json --query "[*].[status, hostname, ipaddr]"
-        [['configured', 'ip-10-1-0-72.us-west-2.compute.internal', '10.1.0.72'], 
-        ['configured', 'ip-10-1-0-238.us-west-2.compute.internal', '10.1.0.238']]
+        > hpecp k8sworker list --output json --query "[*].[status, hostname,
+            ipaddr]"
+
+        [['configured', 'ip-10-1-0-72.us-west-2.compute.internal', '10.1.0.72']
+            ,['configured', 'ip-10-1-0-238.us-west-2.compute.internal',
+            '10.1.0.238']]
 
         # Using jq to convert the json output to a table
-        > hpecp k8sworker list --output json --query "[*].[status, hostname, ipaddr]" | jq -r '.[] | @csv'
+        > hpecp k8sworker list --output json --query "[*].[status, hostname,
+            ipaddr]" | jq -r '.[] | @csv'
         "configured","ip-10-1-0-72.us-west-2.compute.internal","10.1.0.72"
         "configured","ip-10-1-0-238.us-west-2.compute.internal","10.1.0.238"
 
-        """
+        """  # noqa: W293
         if output == "table":
             print(get_client().k8s_worker.list().tabulate(columns=columns))
         elif output == "text":
@@ -380,8 +400,10 @@ class K8sWorkerProxy(object):
         """Set Storage
 
         :param k8sworker_id: the worker ID
-        :param persistent_disks: a comma separated list of zero or more persistent disks, e.g. "/dev/nvme2n1"
-        :param ephemeral_disks: a comma separated list of zero or more ephemeral_disks disks, e.g. "/dev/nvme1n1"
+        :param persistent_disks: a comma separated list of zero or more
+            persistent disks, e.g. "/dev/nvme2n1"
+        :param ephemeral_disks: a comma separated list of zero or more
+            ephemeral_disks disks, e.g. "/dev/nvme1n1"
         """
 
         p_disks = persistent_disks.split(",")
@@ -399,9 +421,11 @@ class K8sWorkerProxy(object):
         """
         Wait for Worker to have one or more statuses
         :param worker_id: Worker id with format: /api/v1/workers/[0-9]+
-        :param status: status(es) to wait for with format: ['status1', 'status2', 'statusn'] - set to [] to wait for item to be deleted
+        :param status: status(es) to wait for with format: ['status1',
+            'status2', 'statusn'] - set to [] to wait for item to be deleted
         :param timeout_secs: how many secs to wait before exiting
-        :returns True/False if status was found within timeout_secs. May raise APIException.
+        :returns True/False if status was found within timeout_secs. May raise
+            APIException.
 
         See also: `hpecp k8sworker states`
         """
@@ -447,11 +471,14 @@ class K8sClusterProxy(object):
         """Create a K8s Cluster
 
         :param name: the cluster name
-        :param k8shosts_config: k8s host ids and roles 'id1:master|worker,id2:master|worker,...'
+        :param k8shosts_config: k8s host ids and roles 'id1:master|worker,id2:
+            master|worker,...'
         :param description: the cluster descripton
         :param k8s_version: e.g. 1.17.0
-        :param pod_network_range: the pod network range, default='10.192.0.0/12'
-        :param service_network_range: the service network range, default='10.96.0.0/12'
+        :param pod_network_range: the pod network range,
+            default='10.192.0.0/12'
+        :param service_network_range: the service network range,
+            default='10.96.0.0/12'
         :param pod_dns_domain: the pod dns domain, default='cluster.local'
         :param persistent_storage_local: True/False
         :param persistent_storage_nimble_csi: True/False
@@ -570,9 +597,11 @@ class K8sClusterProxy(object):
         """
         Wait for K8s Cluster to have one or more statuses
         :param k8scluster_id: Cluster id with format: /api/v2/k8scluster/[0-9]+
-        :param status: status(es) to wait for with format: ['status1', 'status2', 'statusn']
+        :param status: status(es) to wait for with format:
+            ['status1', 'status2', 'statusn']
         :param timeout_secs: how many secs to wait before exiting
-        :returns True/False if status was found within timeout_secs. May raise APIException.
+        :returns True/False if status was found within timeout_secs. May
+            raise APIException.
         """
         cluster_status = [K8sClusterStatus[s] for s in status]
 
@@ -582,7 +611,7 @@ class K8sClusterProxy(object):
                 status=cluster_status,
                 timeout_secs=timeout_secs,
             )
-        except:
+        except Exception:
             success = False
 
         if not success:
@@ -614,7 +643,8 @@ class K8sClusterProxy(object):
 
         Example::
 
-        hpecp k8scluster k8s_supported_versions --major-filter 1 --minor-filter 17
+        hpecp k8scluster k8s_supported_versions --major-filter 1
+            --minor-filter 17
         """
         assert output in [
             "json",
@@ -739,7 +769,8 @@ class LicenseProxy(object):
     ):
         """Register a license
 
-        :param server_filename: Filepath to the license on the server, e.g. '/srv/bluedata/license/LICENSE-1.txt'
+        :param server_filename: Filepath to the license on the server, e.g.
+            '/srv/bluedata/license/LICENSE-1.txt'
         """
         get_client().license.register(server_filename=server_filename)
         print("Done.")
@@ -763,7 +794,8 @@ class LicenseProxy(object):
          - run client.license.register(server_filename) to register the license
         """
         raise Exception(
-            "Not implemented yet! Workaround: scp your license to '/srv/bluedata/license/'"
+            "Not implemented yet! Workaround: scp your license to"
+            "'/srv/bluedata/license/'"
         )
 
     def upload_with_ssh_pass(
@@ -785,7 +817,8 @@ class LicenseProxy(object):
          - run client.license.register(server_filename) to register the license
         """
         raise Exception(
-            "Not implemented yet! Workaround: scp your license to '/srv/bluedata/license/'"
+            "Not implemented yet! Workaround: scp your license to"
+            "'/srv/bluedata/license/'"
         )
 
     def delete(
@@ -793,9 +826,11 @@ class LicenseProxy(object):
     ):
         """Delete a license by LicenseKey
 
-        :param license_key: The license key, e.g. '1234 1234 ... 1234 "SOMETEXT"'
+        :param license_key: The license key, e.g. '1234 1234 ... 1234
+            "SOMETEXT"'
 
-        TIP: use `hpecp license list --license_key_only True` to get the license key
+        TIP: use `hpecp license list --license_key_only True` to get the
+            license key
         """
         get_client().license.delete(license_key=license_key)
         print("Delete submitted - verify with: `hpecp license list`")
@@ -882,7 +917,7 @@ class HttpClientProxy(object):
             Example:
             
             hpecp httpclient put /api/v2/config/auth --json-file my.json
-        """
+        """  # noqa: W293
         with open(json_file, "r",) as f:
             data = json.load(f)
 
@@ -1037,7 +1072,7 @@ class AutoComplete:
 
 } &&
 complete -F _hpecp_complete hpecp
-        """
+        """  # noqa: E501
         )
 
 
@@ -1062,6 +1097,9 @@ def configure_cli():
         controller_warn_ssl = config_reader.warn_ssl
         controller_username = config_reader.username
         controller_password = config_reader.password
+
+    if sys.version_info[0] >= 3:
+        raw_input = input
 
     sys.stdout.write("Controller API Host [{}]: ".format(controller_api_host))
     tmp = raw_input()
