@@ -23,6 +23,13 @@ after_success:
 
 jobs:
   include:
+    - stage: flake8
+      name: "Flake8 code checks"
+      python: 3.8
+      install:
+        - pip3 install flake8 flake8-docstrings flake8-per-file-ignores
+      script:
+        - flake8 --config ${TRAVIS_BUILD_DIR}/setup.cfg --docstring-convention numpy bin/ hpecp/ tests/
     - stage: coverage_library
       name: "Code coverage LIBRARY (./hpecp)"
       python: 3.8
@@ -41,13 +48,6 @@ jobs:
         - coverage erase
         - coverage run --source bin setup.py test
         - coverage report -m --fail-under 32
-    - stage: flake8
-      name: "Flake8 code checks"
-      python: 3.8
-      install:
-        - pip3 install flake8 flake8-docstrings flake8-per-file-ignores
-      script:
-        - flake8 --config ${TRAVIS_BUILD_DIR}/setup.cfg --docstring-convention numpy bin/ hpecp/ tests/
     - stage: format
       name: "Check code formatting"
       python: 3.8
