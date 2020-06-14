@@ -1,7 +1,3 @@
-"""
-This module is the main module that users of this library will interact with.
-"""
-
 # (C) Copyright [2020] Hewlett Packard Enterprise Development LP
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
@@ -56,41 +52,44 @@ except NameError:
 
 
 class ContainerPlatformClient(object):
-    """The ContainerPlatformClient object is the central object that users of
+    """Client object for HPE Container Platform.  This is the central object
+    that users of this library work with.
 
-    this library work with.
+    Parameters
+    ----------
+    username : str
+        HPECP username
+    password : str
+        HPECP password
+    api_host : str
+        HPECP api_host
+    api_port : int
+        HPECP api_port
+    use_ssl : bool:
+        Connect to HPECP using SSL: True|False
+    verify_ssl : bool|str
+        See "https://requests.readthedocs.io/en/master/user/advanced/
+        #ssl-cert-verification"
+    warn_ssl : bool
+        Disable ssl warnings
 
-    Parameters:
-        username : str
-            HPECP username
-        password : str
-            HPECP password
-        api_host : str
-            HPECP api_host
-        api_port : int
-            HPECP api_port
-        use_ssl : bool:
-            Connect to HPECP using SSL: True|False
-        verify_ssl : bool|str
-            See "https://requests.readthedocs.io/en/master/user/advanced/
-            #ssl-cert-verification"
-        warn_ssl : bool
-            Disable ssl warnings
+    Returns
+    -------
+    ContainerPlatformClient:
+        An instance of ContainerPlatformClient
 
-    Returns:
-        ContainerPlatformClient:
-            An instance of ContainerPlatformClient
+    Notes
+    -----
+    Instantiating the ContainerPlatformClient does not make any connection
+    to the HPE Container Platform API. The initial connection would be made
+    by calling the method :py:meth:`create_session`.
 
-    Notes:
-        Instantiating the ContainerPlatformClient does not make any connection
-        to the HPE Container Platform API. The initial connection would be made
-        by calling the method :py:meth:`create_session`.
-
-    See also:
-        :py:meth:`create_from_config_file` for an alternative way to create a
-        ContainerPlatformClient instance
-        :py:meth:`create_from_env` for an alternative way to create a
-        ContainerPlatformClient instance
+    See Also
+    --------
+    :py:meth:`create_from_config_file` for an alternative way to create a
+    ContainerPlatformClient instance
+    :py:meth:`create_from_env` for an alternative way to create a
+    ContainerPlatformClient instance
     """
 
     @classmethod
@@ -99,29 +98,33 @@ class ContainerPlatformClient(object):
     ):
         """Create a ContainerPlatformClient object from a configuration file.
 
-        Parameters:
-            config_file : str
-                The configuration filename and path
-            profile : str
-                If the configuration file has multiple profile sections, you
-                can select the profile to use.
+        Parameters
+        ----------
+        config_file : str
+            The configuration filename and path
+        profile : str
+            If the configuration file has multiple profile sections, you
+            can select the profile to use.
 
-        Returns:
-            ContainerPlatformClient:
-                An instance of ContainerPlatformClient is returned.
+        Returns
+        -------
+        ContainerPlatformClient:
+            An instance of ContainerPlatformClient is returned.
 
-        Example config_file::
+        Example
+        -------
+        Below is an example configuration file.
 
-            [default]
-            api_host = 127.0.0.1
-            api_port = 8080
-            use_ssl = True
-            verify_ssl = False
-            warn_ssl = False
+        [default]
+        api_host = 127.0.0.1
+        api_port = 8080
+        use_ssl = True
+        verify_ssl = False
+        warn_ssl = False
 
-            [demoserver]
-            username = admin
-            password = admin123
+        [demoserver]
+        username = admin
+        password = admin123
         """
 
         if profile is None:
@@ -362,15 +365,17 @@ class ContainerPlatformClient(object):
 
         :py:class:`ContainerPlatformClient`.
 
-        Returns:
-            ContainerPlatformClient:
-                An instance of ContainerPlatformClient is returned.
+        Returns
+        -------
+        ContainerPlatformClient:
+            An instance of ContainerPlatformClient is returned.
 
-        Raises:
-            APIException
-                for connection error to the HPE CP controller
+        Raises
+        ------
+        APIException
+            for connection error to the HPE CP controller
             requests.exceptions.RequestException
-                for exceptions that are not a connection error
+            for exceptions that are not a connection error
         """
 
         url = self.base_url + "/api/v1/login"
@@ -564,239 +569,217 @@ class ContainerPlatformClient(object):
 
     @property
     def tenant(self):
-        """This attribute is a reference to an object of type
+        """Reference  to an object of type `.tenant.TenantController`. See
+        the class :py:class:`.tenant.TenantController` for the methods
+        available.
 
-        `.tenant.TenantController`. See the class
-        :py:class:`.tenant.TenantController` for the methods available.
-
-        Example::
-
-            client = ContainerPlatformClient(...)
-            client.create_session()
-            client.tenant.list()
-
+        Example
+        -------
         This example calls the method
         :py:meth:`list() <.tenant.TenantController.list>` in
         :py:class:`.tenant.TenantController`.
-        """
 
+        >>> client = ContainerPlatformClient(...)
+        >>> client.create_session()
+        >>> client.tenant.list()
+        """
         return self._tenant
 
     @property
     def config(self):
-        """This attribute is a reference to an object of type
+        """Reference to an object of type `.config.ConfigController`. See
+        the class :py:class:`.config.ConfigController` for the methods
+        available.
 
-        `.config.ConfigController`. See the class
-        :py:class:`.config.ConfigController` for the methods available.
-
-        Example::
-
-            client = ContainerPlatformClient(...)
-            client.create_session()
-            client.config.auth(
-                {
-                    "external_identity_server":  {
-                        "bind_pwd":"5ambaPwd@",
-                        "user_attribute":"sAMAccountName",
-                        "bind_type":"search_bind",
-                        "bind_dn":"cn=Administrator,CN=Users,DC=samdom,DC=example,DC=com",
-                        "host":"10.1.0.77",
-                        "security_protocol":"ldaps",
-                        "base_dn":"CN=Users,DC=samdom,DC=example,DC=com",
-                        "verify_peer": False,
-                        "type":"Active Directory",
-                        "port":636
-                    }
-                }
-            )
-
+        Example
+        -------
         This example calls the method
         :py:meth:`auth() <.config.ConfigController.auth>` in
         :py:class:`.config.ConfigController`.
-        """
+
+        >>> client = ContainerPlatformClient(...)
+        >>> client.create_session()
+        >>> client.config.auth(
+        ...        {
+        ...            "external_identity_server":  {
+        ...               "bind_pwd":"5ambaPwd@",
+        ...                "user_attribute":"sAMAccountName",
+        ...                "bind_type":"search_bind",
+        ...                "bind_dn": (
+        ...                     "cn=Administrator,CN=Users,DC=samdom,"
+        ...                     "DC=example,DC=com"
+        ...                     ),
+        ...                "host":"10.1.0.77",
+        ...                "security_protocol":"ldaps",
+        ...                "base_dn":"CN=Users,DC=samdom,DC=example,DC=com",
+        ...                "verify_peer": False,
+        ...                "type":"Active Directory",
+        ...                "port":636
+        ...            }
+        ...        }
+        ...    )
+        """  # noqa: E501
 
         return self._config
 
     @property
     def k8s_cluster(self):
-        """This attribute is a reference to an object of type
+        """Reference to an object of type `.k8s_cluster.K8sClusterController`.
+        See the class :py:class:`.k8s_cluster.K8sClusterController` for the
+        methods available.
 
-        `.k8s_cluster.K8sClusterController`. See the class
-        :py:class:`.k8s_cluster.K8sClusterController` for the methods
-        available.
-
-        Example::
-
-            client = ContainerPlatformClient(...)
-            client.create_session()
-            client.k8s_cluster.list()
-
+        Example
+        -------
         This example calls the method
         :py:meth:`list() <.k8s_cluster.K8sClusterController.list>` in
         :py:class:`.k8s_cluster.K8sClusterController`.
-        """
 
+        >>> client = ContainerPlatformClient(...)
+        >>> client.create_session()
+        >>> client.k8s_cluster.list()
+        """
         return self._k8s_cluster
 
     @property
     def k8s_worker(self):
-        """This attribute is a reference to an object of type
+        """Reference to an object of type `.k8s_worker.K8sWorkerController`.
+        See the class :py:class:`.k8s_worker.K8sWorkerController` for the
+        methods available.
 
-        `.k8s_worker.K8sWorkerController`. See the class
-        :py:class:`.k8s_worker.K8sWorkerController` for the methods available.
-
-        Example::
-
-            client = ContainerPlatformClient(...)
-            client.create_session()
-            client.k8s_worker.list()
-
+        Example
+        -------
         This example calls the method
         :py:meth:`list() <.k8s_worker.K8sWorkerController.list>` in
         :py:class:`.k8s_worker.K8sWorkerController`.
-        """
 
+        >>> client = ContainerPlatformClient(...)
+        >>> client.create_session()
+        >>> client.k8s_worker.list()
+        """
         return self._k8s_worker
 
     @property
     def gateway(self):
-        """This attribute is a reference to an object of type
+        """Reference to an object of type `.gateway.GatewayController`. See
+        the class :py:class:`.gateway.GatewayController` for the methods
+        available.
 
-        `.gateway.GatewayController`. See the class
-        :py:class:`.gateway.GatewayController` for the methods available.
-
-        Example::
-
-            client = ContainerPlatformClient(...)
-            client.create_session()
-            client.gateway.list()
-
+        Example
+        -------
         This example calls the method
         :py:meth:`list() <.gateway.GatewayController.list>` in
         :py:class:`.gateway.GatewayController`.
-        """
 
+        >>> client = ContainerPlatformClient(...)
+        >>> client.create_session()
+        >>> client.gateway.list()
+        """
         return self._gateway
 
     @property
     def license(self):
-        """This attribute is a reference to an object of type
+        """Reference to an object of type `.license.LicenseController`. See
+        the class :py:class:`.license.LicenseController` for the methods
+        available.
 
-        `.license.LicenseController`. See the class
-        :py:class:`.license.LicenseController` for the methods available.
-
-        Example::
-
-            client = ContainerPlatformClient(...)
-            client.create_session()
-            client.license.list()
-
+        Example
+        -------
         This example calls the method
         :py:meth:`list() <.license.LicenseController.list>` in
         :py:class:`.license.LicenseController`.
-        """
 
+        >>> client = ContainerPlatformClient(...)
+        >>> client.create_session()
+        >>> client.license.list()
+        """
         return self._license
 
     @property
     def lock(self):
-        """This attribute is a reference to an object of type
+        """Reference to an object of type `.lock.LockController`. See the
+        class :py:class:`.lock.LockController` for the methods available.
 
-        `.lock.LockController`. See the class
-        :py:class:`.lock.LockController` for the methods available.
-
-        Example::
-
-            client = ContainerPlatformClient(...)
-            client.create_session()
-            client.lock.get()
-
+        Example
+        -------
         This example calls the method
         :py:meth:`get() <.lock.LockController.list>` in
         :py:class:`.lock.LockController`.
-        """
 
+        >>> client = ContainerPlatformClient(...)
+        >>> client.create_session()
+        >>> client.lock.get()
+        """
         return self._lock
 
     @property
     def log(self):
-        """This attribute is a reference to :py:class:`.logger.Logger`.
+        """Reference to :py:class:`.logger.Logger`. The log function can be
+        called from controller objects via the `client` parameter passed in
+        during instantiation of the controller.
 
-        The log function can be called from controller objects via the `client`
-        parameter passed in during instantiation of the controller.
+        Example
+        -------
+        class K8sClusterController:
+            ...
 
-        Example::
+            def __init__(self, client):
+                self.client = client
 
-            class K8sClusterController:
+            def some_method(self):
                 ...
-
-                def __init__(self, client):
-                    self.client = client
-
-                def some_method(self):
-                    ...
-                    self.client.log.error("Some Error")
+                self.client.log.error("Some Error")
         """
 
         return self._log
 
     @property
     def user(self):
-        """This attribute is a reference to an object of type
-        `.user.UserController`. See the class :py:class:`.lock.UserController`
-        for the methods available.
+        """Reference to an object of type `.user.UserController`. See the
+        class :py:class:`.lock.UserController` for the methods available.
 
-        Example::
-
-            client = ContainerPlatformClient(...)
-            client.create_session()
-            client.user.get()
-
+        Example
+        -------
         This example calls the method
         :py:meth:`get() <.user.UserController.get>` in
         :py:class:`.user.UserController`.
-        """
 
+        >>> client = ContainerPlatformClient(...)
+        >>> client.create_session()
+        >>> client.user.get()
+        """
         return self._user
 
     @property
     def catalog(self):
-        """This attribute is a reference to an object of type
+        """Reference to an object of type `.catalog.CatalogController`. See
+        the class :py:class:`.catalog.CatalogController` for the methods
+        available.
 
-        `.catalog.CatalogController`. See the class
-        :py:class:`.catalog.CatalogController` for the methods available.
-
-        Example::
-
-            client = ContainerPlatformClient(...)
-            client.create_session()
-            client.catalog.create()
-
+        Example
+        -------
         This example calls the method
         :py:meth:`create() <.catalog.CatalogController.create>` in
         :py:class:`.catalog.CatalogController`.
-        """
 
+        >>> client = ContainerPlatformClient(...)
+        >>> client.create_session()
+        >>> client.catalog.create()
+        """
         return self._catalog
 
     @property
     def role(self):
-        """
-        This attribute is a reference to an object of type
-        `.role.RoleController`.
+        """Reference to an object of type `.role.RoleController`. See the
+        class :py:class:`.role.RoleController` for the methods available.
 
-        See the class :py:class:`.role.RoleController` for the methods
-        available.
-
-        Example::
-
-            client = ContainerPlatformClient(...)
-            client.create_session()
-            client.role.get()
-
+        Example
+        -------
         This example calls the method :py:meth:`get()
         <.role.RoleController.get>`
         in :py:class:`.role.RoleController`.
-        """
 
+        >>> client = ContainerPlatformClient(...)
+        >>> client.create_session()
+        >>> client.role.get()
+        """
         return self._role
