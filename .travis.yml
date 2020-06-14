@@ -1,11 +1,11 @@
 language: python
 python:
   - "2.7"
-  - "3.5"
-  - "3.6"
-  - "3.7"
-  - "3.8"
-  - "3.9-dev"
+  #-  "3.5"
+  #-  "3.6"
+  #-  "3.7"
+  #-  "3.8"
+  #-  "3.9-dev"
 install:
   - pip install tox-travis
   - pip install python-coveralls
@@ -23,13 +23,20 @@ after_success:
 
 jobs:
   include:
-    - stage: flake8
+    - stage: flake8code
       name: "Flake8 code checks"
+      python: 3.8
+      install:
+        - pip3 install flake8 flake8-per-file-ignores
+      script:
+        - flake8 bin/ hpecp/ tests/
+    - stage: flake8docs
+      name: "Flake8 doc checks"
       python: 3.8
       install:
         - pip3 install flake8 flake8-docstrings flake8-per-file-ignores
       script:
-        - flake8 --config ${TRAVIS_BUILD_DIR}/setup.cfg --docstring-convention numpy bin/ hpecp/ tests/
+        - flake8 --exclude hpecp/client.py,hpecp/catalog.py,hpecp/config.py,hpecp/gateway.py,hpecp/logger.py,hpecp/lock.py,hpecp/k8s_cluster.py,hpecp/k8s_worker.py,hpecp/license.py,hpecp/exceptions.py,hpecp/user.py,hpecp/tenant.py,hpecp/role.py --docstring-convention numpy bin/ hpecp/
     - stage: coverage_library
       name: "Code coverage LIBRARY (./hpecp)"
       python: 3.8

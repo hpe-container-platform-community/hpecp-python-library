@@ -29,6 +29,10 @@ from hpecp import (
     APIItemNotFoundException,
 )
 from hpecp.k8s_cluster import K8sClusterHostConfig, K8sClusterStatus
+import tempfile
+from textwrap import dedent
+import os
+from io import StringIO
 
 
 class MockResponse:
@@ -753,3 +757,188 @@ class TestK8sSupportVersions(TestCase):
             get_client().k8s_cluster.k8s_supported_versions(),
             ["1.14.10", "1.15.7", "1.16.4", "1.17.0", "1.18.0"],
         )
+
+
+class TestCLI(TestCase):
+
+    # pylint: disable=no-method-argument
+    def mocked_requests_post(*args, **kwargs):
+        if args[0] == "https://127.0.0.1:8080/api/v1/login":
+            return MockResponse(
+                json_data={},
+                status_code=200,
+                headers={
+                    "location": (
+                        "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    )
+                },
+            )
+        raise RuntimeError("Unhandle POST request: " + args[0])
+
+    # pylint: disable=no-method-argument
+    def mocked_requests_get(*args, **kwargs):
+        if args[0] == "https://127.0.0.1:8080/api/v2/k8scluster":
+            return MockResponse(
+                json_data={
+                    "_links": {"self": {"href": "/api/v2/k8scluster"}},
+                    "_embedded": {
+                        "k8sclusters": [
+                            {
+                                "_links": {
+                                    "self": {"href": "/api/v2/k8scluster/20"}
+                                },
+                                "label": {
+                                    "name": "def",
+                                    "description": "my cluster",
+                                },
+                                "k8s_version": "1.17.0",
+                                "pod_network_range": "10.192.0.0/12",
+                                "service_network_range": "10.96.0.0/12",
+                                "pod_dns_domain": "cluster.local",
+                                "created_by_user_id": "/api/v1/user/5",
+                                "created_by_user_name": "admin",
+                                "created_time": 1588260014,
+                                "k8shosts_config": [
+                                    {
+                                        "node": "/api/v2/worker/k8shost/4",
+                                        "role": "worker",
+                                    },
+                                    {
+                                        "node": "/api/v2/worker/k8shost/5",
+                                        "role": "master",
+                                    },
+                                ],
+                                "status": "ready",
+                                "status_message": "really ready",
+                                "api_endpoint_access": "api:1234",
+                                "dashboard_endpoint_access": "dashboard:1234",
+                                "admin_kube_config": "xyz==",
+                                "dashboard_token": "abc==",
+                                "persistent_storage": {"nimble_csi": False},
+                            }
+                        ]
+                    },
+                },
+                status_code=200,
+                headers={},
+            )
+        if args[0] == "https://127.0.0.1:8080/api/v2/k8smanifest":
+            return MockResponse(
+                json_data={
+                    "_version": "1.0",
+                    "supported_versions": [
+                        "1.14.10",
+                        "1.15.7",
+                        "1.16.4",
+                        "1.17.0",
+                        "1.18.0",
+                    ],
+                    "version_info": {
+                        "1.14.10": {
+                            "_version": "1.0",
+                            "min_upgrade_version": "1.13.0",
+                            "relnote_url": (
+                                "https://v1-14.docs.kubernetes.io/docs/setup"
+                                "/release/notes/"
+                            ),
+                            "hpecsi": "1.14",
+                        },
+                        "1.15.7": {
+                            "_version": "1.0",
+                            "min_upgrade_version": "1.14.0",
+                            "relnote_url": (
+                                "https://v1-15.docs.kubernetes.io/docs/setup"
+                                "/release/notes/"
+                            ),
+                            "hpecsi": "1.15",
+                        },
+                        "1.16.4": {
+                            "_version": "1.0",
+                            "min_upgrade_version": "1.15.0",
+                            "relnote_url": (
+                                "https://v1-16.docs.kubernetes.io/docs/setup"
+                                "/release/notes/"
+                            ),
+                            "hpecsi": "1.16",
+                        },
+                        "1.17.0": {
+                            "_version": "1.0",
+                            "min_upgrade_version": "1.16.0",
+                            "relnote_url": (
+                                "https://v1-17.docs.kubernetes.io/docs/setup"
+                                "/release/notes/"
+                            ),
+                            "hpecsi": "1.17",
+                        },
+                        "1.18.0": {
+                            "_version": "1.0",
+                            "min_upgrade_version": "1.17.0",
+                            "relnote_url": (
+                                "https://kubernetes.io/docs/setup"
+                                "/release/notes/"
+                            ),
+                            "hpecsi": "1.18",
+                        },
+                    },
+                },
+                status_code=200,
+                headers={},
+            )
+        raise RuntimeError("Unhandle GET request: " + args[0])
+
+    def setUp(self):
+        file_data = dedent(
+            """[default]
+                        api_host = 127.0.0.1
+                        api_port = 8080
+                        use_ssl = True
+                        verify_ssl = False
+                        warn_ssl = True
+                        username = admin
+                        password = admin123"""
+        )
+
+        self.tmpFile = tempfile.NamedTemporaryFile(delete=True)
+        self.tmpFile.write(file_data.encode("utf-8"))
+        self.tmpFile.flush()
+
+        self.saved_stdout = sys.stdout
+        self.out = StringIO()
+        sys.stdout = self.out
+
+        sys.path.insert(0, os.path.abspath("../../"))
+        from bin import cli
+
+        self.cli = cli
+        self.cli.HPECP_CONFIG_FILE = self.tmpFile.name
+
+    def tearDown(self):
+        self.tmpFile.close()
+        sys.stdout = self.saved_stdout
+
+    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=mocked_requests_get)
+    def test_k8scluster_list(self, mock_post, mock_get):
+
+        hpecp = self.cli.CLI()
+        hpecp.k8scluster.list()
+
+        output = self.out.getvalue().strip()
+        print(output)
+        self.assertEqual(
+            output,
+            (
+                "+-----------------------+------+-------------+--------+\n"
+                "|          id           | name | description | status |\n"
+                "+-----------------------+------+-------------+--------+\n"
+                "| /api/v2/k8scluster/20 | def  | my cluster  | ready  |\n"
+                "+-----------------------+------+-------------+--------+"
+            ),
+        )
+
+    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=mocked_requests_get)
+    def test_k8s_supported_verions(self, mock_post, mock_get):
+
+        hpecp = self.cli.CLI()
+        hpecp.k8scluster.k8s_supported_versions()
