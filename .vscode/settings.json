@@ -29,5 +29,6 @@
     "python.envFile": "${workspaceFolder}/gitpod.env",
     "editor.formatOnSave": true,
     "files.insertFinalNewline": true,
-    "git.alwaysSignOff": true
+    "git.alwaysSignOff": true,
+    "autoDocstring.docstringFormat": "numpy"
 }
