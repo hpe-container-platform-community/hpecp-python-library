@@ -79,6 +79,7 @@ class CatalogController:
         Raises
         ------
         APIException
+        APIItemNotFoundException
         """
         assert isinstance(
             catalog_id, str
@@ -92,6 +93,33 @@ class CatalogController:
         )
 
         return Catalog(response.json())
+
+    def install(self, catalog_id):
+        """Install the specified catalog.
+
+        Parameters
+        ----------
+        catalog_id : str
+            The ID of the catalog - format /api/v1/catalog/[0-9]+
+
+        Raises
+        -------
+        APIItemNotFoundException
+        APIItemConflictException
+        APIException
+        """
+        # Make sure that the given catalog exists, other validations will also
+        # be taken care of.
+        self.get(catalog_id)
+
+        _data = {"action": "install"}
+
+        response = self.client._request(
+            url=catalog_id,
+            http_method="post",
+            description="catalog/post/install",
+            data=_data,
+        )
 
 
 class Catalog:
