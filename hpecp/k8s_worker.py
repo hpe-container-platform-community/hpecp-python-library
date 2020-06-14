@@ -144,18 +144,22 @@ class K8sWorkerController:
         raise NotImplementedError()
 
     def create_with_ssh_key(self, ip, ssh_key_data, tags=[]):
-        """Create a gateway instance using SSH key credentials to access the host
+        """Create a gateway instance using SSH key credentials to access the host.
 
-        Args:
-            ip: str
-                The IP address of the proxy host.  Used for internal
-                communication.
-            ssh_key_data: str
-                The ssh key data as a string.
-            tags: list
-                Tags to use, e.g. "{ 'tag1': 'foo', 'tag2', 'bar' }".
+        Parameters
+        ----------
+        ip: str
+            The IP address of the proxy host.  Used for internal
+            communication.
+        ssh_key_data: str
+            The ssh key data as a string.
+        tags: list
+            Tags to use, e.g. "{ 'tag1': 'foo', 'tag2', 'bar' }".
 
-        Returns: Worker ID
+        Returns
+        -------
+        string
+            Worker ID
         """
 
         assert isinstance(
@@ -221,22 +225,26 @@ class K8sWorkerController:
     def wait_for_status(self, worker_id, status=[], timeout_secs=1200):
         """Wait for K8S worker status.
 
-        Args:
-            worker_id: str
-                The worker ID - format: '/api/v1/workers/[0-9]+'
-            status: list[:py:class:`WorkerK8sStatus`]
-                Status(es) to wait for.  Use an empty array if you want to
-                wait for a cluster's existence to cease.
-            timeout_secs: int
-                How long to wait for the status(es) before raising an
-                exception.
+        Parameters
+        ----------
+        worker_id: str
+            The worker ID - format: '/api/v1/workers/[0-9]+'
+        status: list[:py:class:`WorkerK8sStatus`]
+            Status(es) to wait for.  Use an empty array if you want to
+            wait for a cluster's existence to cease.
+        timeout_secs: int
+            How long to wait for the status(es) before raising an
+            exception.
 
-        Returns:
-            bool: True if status was found before timeout, otherwise False
+        Returns
+        -------
+        bool
+            True if status was found before timeout, otherwise False
 
-        Raises:
-            APIItemNotFoundException: if the item is not found and status is
-            not empty
+        Raises
+        ------
+        APIItemNotFoundException
+            If the item is not found and status is not empty
             APIException: if a generic API exception occurred
         """
         assert isinstance(
