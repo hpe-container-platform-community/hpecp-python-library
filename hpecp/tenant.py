@@ -230,7 +230,7 @@ class TenantController:
         return Tenant(response.json())
 
     def auth_setup(self, tenant_id, data):
-        """summary
+        """Setup external autentication for the tenant.
 
         Parameters:
             tenant_id : type
