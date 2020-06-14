@@ -90,16 +90,16 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="LockController.create"><a class="viewcode-back" href="../../hpecp.lock.html#hpecp.lock.LockController.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Create a new lock</span>
+        <span class="sd">&quot;&quot;&quot;Create a new lock.</span>
 
-<span class="sd">        Arguments:</span>
+<span class="sd">        Arguments</span>
+<span class="sd">        ---------</span>
+<span class="sd">        reason: str</span>
+<span class="sd">            Provide a reason for the lock.</span>
 
-<span class="sd">            reason: str</span>
-<span class="sd">                Provide a reason for the lock</span>
-
-<span class="sd">        Raises:</span>
-
-<span class="sd">            APIException</span>
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        APIException</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="n">reason</span><span class="p">}</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
@@ -110,17 +110,17 @@
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="LockController.delete"><a class="viewcode-back" href="../../hpecp.lock.html#hpecp.lock.LockController.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lock_id</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Delete a lock</span>
+        <span class="sd">&quot;&quot;&quot;Delete a lock.</span>
 
-<span class="sd">        Arguments:</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        lock_id: str</span>
+<span class="sd">            The lock id as retrieved with `get()`  Format:</span>
+<span class="sd">            &#39;/api/v1/lock/[0-9]+&#39;</span>
 
-<span class="sd">            lock_id: str</span>
-<span class="sd">                The lock id as retrieved with `get()`  Format:</span>
-<span class="sd">                &#39;/api/v1/lock/[0-9]+&#39;</span>
-
-<span class="sd">        Raises:</span>
-
-<span class="sd">            APIException</span>
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        APIException</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
@@ -135,17 +135,17 @@
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="LockController.delete_all"><a class="viewcode-back" href="../../hpecp.lock.html#hpecp.lock.LockController.delete_all">[docs]</a>    <span class="k">def</span> <span class="nf">delete_all</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout_secs</span><span class="o">=</span><span class="mi">300</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Delete all locks</span>
+        <span class="sd">&quot;&quot;&quot;Delete all locks.</span>
 
-<span class="sd">        Arguments:</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        timeout_secs: int</span>
+<span class="sd">            How long to wait for internal locks (note these need to be</span>
+<span class="sd">            cleared before external locks can be deleted)</span>
 
-<span class="sd">            timeout_secs: int</span>
-<span class="sd">                How long to wait for internal locks (note these need to be</span>
-<span class="sd">                cleared before external locks can be deleted)</span>
-
-<span class="sd">        Raises:</span>
-
-<span class="sd">            APIException</span>
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        APIException</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">try</span><span class="p">:</span>

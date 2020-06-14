@@ -190,18 +190,22 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="K8sWorkerController.create_with_ssh_key"><a class="viewcode-back" href="../../hpecp.k8s_worker.html#hpecp.k8s_worker.K8sWorkerController.create_with_ssh_key">[docs]</a>    <span class="k">def</span> <span class="nf">create_with_ssh_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="n">ssh_key_data</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[]):</span>
-        <span class="sd">&quot;&quot;&quot;Create a gateway instance using SSH key credentials to access the host</span>
+        <span class="sd">&quot;&quot;&quot;Create a gateway instance using SSH key credentials to access the host.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            ip: str</span>
-<span class="sd">                The IP address of the proxy host.  Used for internal</span>
-<span class="sd">                communication.</span>
-<span class="sd">            ssh_key_data: str</span>
-<span class="sd">                The ssh key data as a string.</span>
-<span class="sd">            tags: list</span>
-<span class="sd">                Tags to use, e.g. &quot;{ &#39;tag1&#39;: &#39;foo&#39;, &#39;tag2&#39;, &#39;bar&#39; }&quot;.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ip: str</span>
+<span class="sd">            The IP address of the proxy host.  Used for internal</span>
+<span class="sd">            communication.</span>
+<span class="sd">        ssh_key_data: str</span>
+<span class="sd">            The ssh key data as a string.</span>
+<span class="sd">        tags: list</span>
+<span class="sd">            Tags to use, e.g. &quot;{ &#39;tag1&#39;: &#39;foo&#39;, &#39;tag2&#39;, &#39;bar&#39; }&quot;.</span>
 
-<span class="sd">        Returns: Worker ID</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        string</span>
+<span class="sd">            Worker ID</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
@@ -267,22 +271,26 @@
 <div class="viewcode-block" id="K8sWorkerController.wait_for_status"><a class="viewcode-back" href="../../hpecp.k8s_worker.html#hpecp.k8s_worker.K8sWorkerController.wait_for_status">[docs]</a>    <span class="k">def</span> <span class="nf">wait_for_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">worker_id</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="p">[],</span> <span class="n">timeout_secs</span><span class="o">=</span><span class="mi">1200</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Wait for K8S worker status.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            worker_id: str</span>
-<span class="sd">                The worker ID - format: &#39;/api/v1/workers/[0-9]+&#39;</span>
-<span class="sd">            status: list[:py:class:`WorkerK8sStatus`]</span>
-<span class="sd">                Status(es) to wait for.  Use an empty array if you want to</span>
-<span class="sd">                wait for a cluster&#39;s existence to cease.</span>
-<span class="sd">            timeout_secs: int</span>
-<span class="sd">                How long to wait for the status(es) before raising an</span>
-<span class="sd">                exception.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        worker_id: str</span>
+<span class="sd">            The worker ID - format: &#39;/api/v1/workers/[0-9]+&#39;</span>
+<span class="sd">        status: list[:py:class:`WorkerK8sStatus`]</span>
+<span class="sd">            Status(es) to wait for.  Use an empty array if you want to</span>
+<span class="sd">            wait for a cluster&#39;s existence to cease.</span>
+<span class="sd">        timeout_secs: int</span>
+<span class="sd">            How long to wait for the status(es) before raising an</span>
+<span class="sd">            exception.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            bool: True if status was found before timeout, otherwise False</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">            True if status was found before timeout, otherwise False</span>
 
-<span class="sd">        Raises:</span>
-<span class="sd">            APIItemNotFoundException: if the item is not found and status is</span>
-<span class="sd">            not empty</span>
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        APIItemNotFoundException</span>
+<span class="sd">            If the item is not found and status is not empty</span>
 <span class="sd">            APIException: if a generic API exception occurred</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>

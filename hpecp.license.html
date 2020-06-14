@@ -98,37 +98,25 @@
 <dl class="py method">
 <dt id="hpecp.license.LicenseController.register">
 <code class="sig-name descname">register</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">server_filename</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/license.html#LicenseController.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.license.LicenseController.register" title="Permalink to this definition">¶</a></dt>
-<dd><p>Register a license that has been uploaded to
-‘/srv/bluedata/license/’ on the controller.</p>
-<p>Arguments:</p>
-<blockquote>
-<div><dl class="simple">
+<dd><p>Register a license. The license must have previously been uploaded
+to ‘/srv/bluedata/license/’ on the controller.</p>
+<dl class="simple">
 <dt>server_filename: str</dt><dd><p>Filepath to the license on the server, e.g.
 ‘/srv/bluedata/license/LICENSE-1.txt’</p>
 </dd>
 </dl>
-</div></blockquote>
-<p>Raises:</p>
-<blockquote>
-<div><p>APIException</p>
-</div></blockquote>
+<p>APIException</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="hpecp.license.LicenseController.delete">
 <code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">license_key</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/license.html#LicenseController.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.license.LicenseController.delete" title="Permalink to this definition">¶</a></dt>
-<dd><p>Delete a license by LicenseKey</p>
-<p>Arguments:</p>
-<blockquote>
-<div><dl class="simple">
+<dd><p>Delete a license by LicenseKey.</p>
+<dl class="simple">
 <dt>license_key: str</dt><dd><p>The license key, e.g. ‘1234 1234 … 1234 “SOMETEXT”’</p>
 </dd>
 </dl>
-</div></blockquote>
-<p>Raises:</p>
-<blockquote>
-<div><p>APIException</p>
-</div></blockquote>
+<p>APIException</p>
 </dd></dl>
 
 </dd></dl>

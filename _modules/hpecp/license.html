@@ -126,18 +126,18 @@
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="LicenseController.register"><a class="viewcode-back" href="../../hpecp.license.html#hpecp.license.LicenseController.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server_filename</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Register a license that has been uploaded to</span>
-<span class="sd">        &#39;/srv/bluedata/license/&#39; on the controller.</span>
+        <span class="sd">&quot;&quot;&quot;Register a license. The license must have previously been uploaded</span>
+<span class="sd">        to &#39;/srv/bluedata/license/&#39; on the controller.</span>
 
-<span class="sd">        Arguments:</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        server_filename: str</span>
+<span class="sd">            Filepath to the license on the server, e.g.</span>
+<span class="sd">            &#39;/srv/bluedata/license/LICENSE-1.txt&#39;</span>
 
-<span class="sd">            server_filename: str</span>
-<span class="sd">                Filepath to the license on the server, e.g.</span>
-<span class="sd">                &#39;/srv/bluedata/license/LICENSE-1.txt&#39;</span>
-
-<span class="sd">        Raises:</span>
-
-<span class="sd">            APIException</span>
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        APIException</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;hpelicense_file&quot;</span><span class="p">:</span> <span class="n">server_filename</span><span class="p">}</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
@@ -148,16 +148,16 @@
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="LicenseController.delete"><a class="viewcode-back" href="../../hpecp.license.html#hpecp.license.LicenseController.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">license_key</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Delete a license by LicenseKey</span>
+        <span class="sd">&quot;&quot;&quot;Delete a license by LicenseKey.</span>
 
-<span class="sd">        Arguments:</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        license_key: str</span>
+<span class="sd">            The license key, e.g. &#39;1234 1234 ... 1234 &quot;SOMETEXT&quot;&#39;</span>
 
-<span class="sd">            license_key: str</span>
-<span class="sd">                The license key, e.g. &#39;1234 1234 ... 1234 &quot;SOMETEXT&quot;&#39;</span>
-
-<span class="sd">        Raises:</span>
-
-<span class="sd">            APIException</span>
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        APIException</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">try</span><span class="p">:</span>

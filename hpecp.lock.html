@@ -72,54 +72,36 @@
 <dl class="py method">
 <dt id="hpecp.lock.LockController.create">
 <code class="sig-name descname">create</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">reason</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/lock.html#LockController.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.lock.LockController.create" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a new lock</p>
-<p>Arguments:</p>
-<blockquote>
-<div><dl class="simple">
-<dt>reason: str</dt><dd><p>Provide a reason for the lock</p>
+<dd><p>Create a new lock.</p>
+<dl class="simple">
+<dt>reason: str</dt><dd><p>Provide a reason for the lock.</p>
 </dd>
 </dl>
-</div></blockquote>
-<p>Raises:</p>
-<blockquote>
-<div><p>APIException</p>
-</div></blockquote>
+<p>APIException</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="hpecp.lock.LockController.delete">
 <code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lock_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/lock.html#LockController.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.lock.LockController.delete" title="Permalink to this definition">¶</a></dt>
-<dd><p>Delete a lock</p>
-<p>Arguments:</p>
-<blockquote>
-<div><dl class="simple">
+<dd><p>Delete a lock.</p>
+<dl class="simple">
 <dt>lock_id: str</dt><dd><p>The lock id as retrieved with <cite>get()</cite>  Format:
 ‘/api/v1/lock/[0-9]+’</p>
 </dd>
 </dl>
-</div></blockquote>
-<p>Raises:</p>
-<blockquote>
-<div><p>APIException</p>
-</div></blockquote>
+<p>APIException</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="hpecp.lock.LockController.delete_all">
 <code class="sig-name descname">delete_all</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">timeout_secs</span><span class="o">=</span><span class="default_value">300</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/lock.html#LockController.delete_all"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.lock.LockController.delete_all" title="Permalink to this definition">¶</a></dt>
-<dd><p>Delete all locks</p>
-<p>Arguments:</p>
-<blockquote>
-<div><dl class="simple">
+<dd><p>Delete all locks.</p>
+<dl class="simple">
 <dt>timeout_secs: int</dt><dd><p>How long to wait for internal locks (note these need to be
 cleared before external locks can be deleted)</p>
 </dd>
 </dl>
-</div></blockquote>
-<p>Raises:</p>
-<blockquote>
-<div><p>APIException</p>
-</div></blockquote>
+<p>APIException</p>
 </dd></dl>
 
 </dd></dl>
