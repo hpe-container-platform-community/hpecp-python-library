@@ -36,7 +36,7 @@ jobs:
       install:
         - pip3 install flake8 flake8-docstrings flake8-per-file-ignores
       script:
-        - flake8 --exclude hpecp/gateway.py,hpecp/logger.py,hpecp/lock.py,hpecp/k8s_cluster.py,hpecp/license.py,hpecp/user.py,hpecp/tenant.py,hpecp/role.py --docstring-convention numpy bin/ hpecp/
+        - flake8 --exclude hpecp/gateway.py,hpecp/logger.py,hpecp/k8s_cluster.py,hpecp/license.py,hpecp/user.py,hpecp/tenant.py,hpecp/role.py --docstring-convention numpy bin/ hpecp/
     - stage: coverage_library
       name: "Code coverage LIBRARY (./hpecp)"
       python: 3.8
