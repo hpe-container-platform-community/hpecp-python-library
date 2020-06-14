@@ -20,7 +20,7 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-"""Prototype for HPE Container Platform API."""
+"""HPE Container Platform CLI."""
 
 import base64
 import configparser
