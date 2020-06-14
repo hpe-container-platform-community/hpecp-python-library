@@ -33,11 +33,10 @@ class CatalogController:
     of this class can be invoked using `client.catalog.method()`. See the
     example below:
 
-    Example:
-
-        client = ContainerPlatformClient(...).create_session()
-        client.catalog.list()
-
+    Examples
+    --------
+    >>> client = ContainerPlatformClient(...).create_session()
+    >>> client.catalog.list()
     """
 
     def __init__(self, client):

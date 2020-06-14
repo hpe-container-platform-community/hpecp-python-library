@@ -1,4 +1,4 @@
-"""A python library for working with HPE Container Platform
+"""A python library for working with HPE Container Platform.
 
 .. moduleauthor:: Chris Snow <chsnow123@gmail.com>
 

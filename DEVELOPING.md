@@ -56,7 +56,15 @@ hpecp license platform-id
   - `GET /api/v1/role/99` (returns HTTP 404 - not found)
 
 
-#### BUILDING DOCS
+### DOCS
+
+#### format
+
+Numpy docstring format are required: https://numpydoc.readthedocs.io/en/latest/format.html#docstring-standard
+
+Docstring formatting is verified with flake8 as Travis build step.
+
+#### Building
 
 In the Gitpod Terminal:
 
@@ -113,6 +121,12 @@ Aim for 100% test coverage to ensure library will work with all specified python
 coverage erase && coverage run --source hpecp,bin setup.py test && coverage report -m
 ```
 
+### CODE QUALITY
+
+```
+pip3 install flake8 flake8-docstrings
+flake8 --docstring-convention numpy bin/ hpecp/ tests/
+```
 
 ### FORMATTING
 
