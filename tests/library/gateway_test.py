@@ -1329,8 +1329,8 @@ class TestCliCreate(TestCase):
     @patch("hpecp.gateway")
     def test_with_only_ssh_key_content_provided(self, mock_post, mock_gateway):
 
-        """Test that the ssh key content provided by the 'ssh_key' parameter is
-        passed to the library method 'create_with_ssh_key()'.
+        """Test that the ssh key content provided by the 'ssh_key' parameter
+        is passed to the library method 'create_with_ssh_key()'.
         """
 
         with patch.object(
