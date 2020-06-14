@@ -80,18 +80,18 @@ class LicenseController:
         )
 
     def register(self, server_filename):
-        """Register a license that has been uploaded to
-        '/srv/bluedata/license/' on the controller.
+        """Register a license. The license must have previously been uploaded
+        to '/srv/bluedata/license/' on the controller.
 
-        Arguments:
+        Parameters
+        ----------
+        server_filename: str
+            Filepath to the license on the server, e.g.
+            '/srv/bluedata/license/LICENSE-1.txt'
 
-            server_filename: str
-                Filepath to the license on the server, e.g.
-                '/srv/bluedata/license/LICENSE-1.txt'
-
-        Raises:
-
-            APIException
+        Raises
+        ------
+        APIException
         """
         data = {"hpelicense_file": server_filename}
         return self.client._request(
@@ -102,16 +102,16 @@ class LicenseController:
         )
 
     def delete(self, license_key):
-        """Delete a license by LicenseKey
+        """Delete a license by LicenseKey.
 
-        Arguments:
+        Parameters
+        ----------
+        license_key: str
+            The license key, e.g. '1234 1234 ... 1234 "SOMETEXT"'
 
-            license_key: str
-                The license key, e.g. '1234 1234 ... 1234 "SOMETEXT"'
-
-        Raises:
-
-            APIException
+        Raises
+        ------
+        APIException
         """
 
         try:
