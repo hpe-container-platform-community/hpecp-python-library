@@ -533,10 +533,9 @@ class K8sClusterProxy(object):
                 data = get_client().k8s_cluster.list().json
                 print(json.dumps(jmespath.search(str(query), data)))
             else:
-                output = (
+                print(
                     get_client().k8s_cluster.list().tabulate(columns=columns)
                 )
-                print(output)
 
     def get(
         self, k8scluster_id,

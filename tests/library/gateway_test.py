@@ -37,7 +37,8 @@ import six
 if six.PY2:
     from io import BytesIO as StringIO
 else:
-    from io import StringIO   
+    from io import StringIO
+
 
 class MockResponse:
     def __init__(
@@ -1333,7 +1334,9 @@ class TestCliCreate(TestCase):
         """
 
         with patch.object(
-            GatewayController, "create_with_ssh_key", return_value='/api/v1/workers/1'
+            GatewayController,
+            "create_with_ssh_key",
+            return_value="/api/v1/workers/1",
         ) as mock_create_with_ssh_key:
             hpecp = self.cli.CLI()
             hpecp.gateway.create_with_ssh_key(
@@ -1352,4 +1355,3 @@ class TestCliCreate(TestCase):
     def test_with_only_ssh_key_file_provided(self):
         # TODO
         pass
-
