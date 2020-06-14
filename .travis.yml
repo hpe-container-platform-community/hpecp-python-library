@@ -47,7 +47,7 @@ jobs:
       install:
         - pip3 install flake8 flake8-docstrings flake8-per-file-ignores
       script:
-        - flake8 --docstring-convention numpy bin/ hpecp/ tests/
+        - flake8 --config ${TRAVIS_BUILD_DIR}/setup.cfg --docstring-convention numpy bin/ hpecp/ tests/
     - stage: format
       name: "Check code formatting"
       python: 3.8
