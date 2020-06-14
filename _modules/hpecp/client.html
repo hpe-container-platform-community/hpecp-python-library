@@ -44,11 +44,7 @@
           <div class="body" role="main">
             
   <h1>Source code for hpecp.client</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">This module is the main module that users of this library will interact with.</span>
-<span class="sd">&quot;&quot;&quot;</span>
-
-<span class="c1"># (C) Copyright [2020] Hewlett Packard Enterprise Development LP</span>
+<span></span><span class="c1"># (C) Copyright [2020] Hewlett Packard Enterprise Development LP</span>
 <span class="c1">#</span>
 <span class="c1"># Permission is hereby granted, free of charge, to any person obtaining a</span>
 <span class="c1"># copy of this software and associated documentation files (the &quot;Software&quot;),</span>
@@ -102,41 +98,44 @@
 
 
 <div class="viewcode-block" id="ContainerPlatformClient"><a class="viewcode-back" href="../../hpecp.client.html#hpecp.client.ContainerPlatformClient">[docs]</a><span class="k">class</span> <span class="nc">ContainerPlatformClient</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The ContainerPlatformClient object is the central object that users of</span>
+    <span class="sd">&quot;&quot;&quot;Client object for HPE Container Platform.  This is the central object</span>
+<span class="sd">    that users of this library work with.</span>
 
-<span class="sd">    this library work with.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    username : str</span>
+<span class="sd">        HPECP username</span>
+<span class="sd">    password : str</span>
+<span class="sd">        HPECP password</span>
+<span class="sd">    api_host : str</span>
+<span class="sd">        HPECP api_host</span>
+<span class="sd">    api_port : int</span>
+<span class="sd">        HPECP api_port</span>
+<span class="sd">    use_ssl : bool:</span>
+<span class="sd">        Connect to HPECP using SSL: True|False</span>
+<span class="sd">    verify_ssl : bool|str</span>
+<span class="sd">        See &quot;https://requests.readthedocs.io/en/master/user/advanced/</span>
+<span class="sd">        #ssl-cert-verification&quot;</span>
+<span class="sd">    warn_ssl : bool</span>
+<span class="sd">        Disable ssl warnings</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        username : str</span>
-<span class="sd">            HPECP username</span>
-<span class="sd">        password : str</span>
-<span class="sd">            HPECP password</span>
-<span class="sd">        api_host : str</span>
-<span class="sd">            HPECP api_host</span>
-<span class="sd">        api_port : int</span>
-<span class="sd">            HPECP api_port</span>
-<span class="sd">        use_ssl : bool:</span>
-<span class="sd">            Connect to HPECP using SSL: True|False</span>
-<span class="sd">        verify_ssl : bool|str</span>
-<span class="sd">            See &quot;https://requests.readthedocs.io/en/master/user/advanced/</span>
-<span class="sd">            #ssl-cert-verification&quot;</span>
-<span class="sd">        warn_ssl : bool</span>
-<span class="sd">            Disable ssl warnings</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ContainerPlatformClient:</span>
+<span class="sd">        An instance of ContainerPlatformClient</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        ContainerPlatformClient:</span>
-<span class="sd">            An instance of ContainerPlatformClient</span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Instantiating the ContainerPlatformClient does not make any connection</span>
+<span class="sd">    to the HPE Container Platform API. The initial connection would be made</span>
+<span class="sd">    by calling the method :py:meth:`create_session`.</span>
 
-<span class="sd">    Notes:</span>
-<span class="sd">        Instantiating the ContainerPlatformClient does not make any connection</span>
-<span class="sd">        to the HPE Container Platform API. The initial connection would be made</span>
-<span class="sd">        by calling the method :py:meth:`create_session`.</span>
-
-<span class="sd">    See also:</span>
-<span class="sd">        :py:meth:`create_from_config_file` for an alternative way to create a</span>
-<span class="sd">        ContainerPlatformClient instance</span>
-<span class="sd">        :py:meth:`create_from_env` for an alternative way to create a</span>
-<span class="sd">        ContainerPlatformClient instance</span>
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :py:meth:`create_from_config_file` for an alternative way to create a</span>
+<span class="sd">    ContainerPlatformClient instance</span>
+<span class="sd">    :py:meth:`create_from_env` for an alternative way to create a</span>
+<span class="sd">    ContainerPlatformClient instance</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ContainerPlatformClient.create_from_config_file"><a class="viewcode-back" href="../../hpecp.client.html#hpecp.client.ContainerPlatformClient.create_from_config_file">[docs]</a>    <span class="nd">@classmethod</span>
@@ -145,29 +144,33 @@
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create a ContainerPlatformClient object from a configuration file.</span>
 
-<span class="sd">        Parameters:</span>
-<span class="sd">            config_file : str</span>
-<span class="sd">                The configuration filename and path</span>
-<span class="sd">            profile : str</span>
-<span class="sd">                If the configuration file has multiple profile sections, you</span>
-<span class="sd">                can select the profile to use.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        config_file : str</span>
+<span class="sd">            The configuration filename and path</span>
+<span class="sd">        profile : str</span>
+<span class="sd">            If the configuration file has multiple profile sections, you</span>
+<span class="sd">            can select the profile to use.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            ContainerPlatformClient:</span>
-<span class="sd">                An instance of ContainerPlatformClient is returned.</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ContainerPlatformClient:</span>
+<span class="sd">            An instance of ContainerPlatformClient is returned.</span>
 
-<span class="sd">        Example config_file::</span>
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        Below is an example configuration file.</span>
 
-<span class="sd">            [default]</span>
-<span class="sd">            api_host = 127.0.0.1</span>
-<span class="sd">            api_port = 8080</span>
-<span class="sd">            use_ssl = True</span>
-<span class="sd">            verify_ssl = False</span>
-<span class="sd">            warn_ssl = False</span>
+<span class="sd">        [default]</span>
+<span class="sd">        api_host = 127.0.0.1</span>
+<span class="sd">        api_port = 8080</span>
+<span class="sd">        use_ssl = True</span>
+<span class="sd">        verify_ssl = False</span>
+<span class="sd">        warn_ssl = False</span>
 
-<span class="sd">            [demoserver]</span>
-<span class="sd">            username = admin</span>
-<span class="sd">            password = admin123</span>
+<span class="sd">        [demoserver]</span>
+<span class="sd">        username = admin</span>
+<span class="sd">        password = admin123</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">profile</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -408,15 +411,17 @@
 
 <span class="sd">        :py:class:`ContainerPlatformClient`.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            ContainerPlatformClient:</span>
-<span class="sd">                An instance of ContainerPlatformClient is returned.</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ContainerPlatformClient:</span>
+<span class="sd">            An instance of ContainerPlatformClient is returned.</span>
 
-<span class="sd">        Raises:</span>
-<span class="sd">            APIException</span>
-<span class="sd">                for connection error to the HPE CP controller</span>
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        APIException</span>
+<span class="sd">            for connection error to the HPE CP controller</span>
 <span class="sd">            requests.exceptions.RequestException</span>
-<span class="sd">                for exceptions that are not a connection error</span>
+<span class="sd">            for exceptions that are not a connection error</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/api/v1/login&quot;</span>
@@ -610,241 +615,219 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">tenant</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;This attribute is a reference to an object of type</span>
+        <span class="sd">&quot;&quot;&quot;Reference  to an object of type `.tenant.TenantController`. See</span>
+<span class="sd">        the class :py:class:`.tenant.TenantController` for the methods</span>
+<span class="sd">        available.</span>
 
-<span class="sd">        `.tenant.TenantController`. See the class</span>
-<span class="sd">        :py:class:`.tenant.TenantController` for the methods available.</span>
-
-<span class="sd">        Example::</span>
-
-<span class="sd">            client = ContainerPlatformClient(...)</span>
-<span class="sd">            client.create_session()</span>
-<span class="sd">            client.tenant.list()</span>
-
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
 <span class="sd">        This example calls the method</span>
 <span class="sd">        :py:meth:`list() &lt;.tenant.TenantController.list&gt;` in</span>
 <span class="sd">        :py:class:`.tenant.TenantController`.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
 
+<span class="sd">        &gt;&gt;&gt; client = ContainerPlatformClient(...)</span>
+<span class="sd">        &gt;&gt;&gt; client.create_session()</span>
+<span class="sd">        &gt;&gt;&gt; client.tenant.list()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tenant</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;This attribute is a reference to an object of type</span>
+        <span class="sd">&quot;&quot;&quot;Reference to an object of type `.config.ConfigController`. See</span>
+<span class="sd">        the class :py:class:`.config.ConfigController` for the methods</span>
+<span class="sd">        available.</span>
 
-<span class="sd">        `.config.ConfigController`. See the class</span>
-<span class="sd">        :py:class:`.config.ConfigController` for the methods available.</span>
-
-<span class="sd">        Example::</span>
-
-<span class="sd">            client = ContainerPlatformClient(...)</span>
-<span class="sd">            client.create_session()</span>
-<span class="sd">            client.config.auth(</span>
-<span class="sd">                {</span>
-<span class="sd">                    &quot;external_identity_server&quot;:  {</span>
-<span class="sd">                        &quot;bind_pwd&quot;:&quot;5ambaPwd@&quot;,</span>
-<span class="sd">                        &quot;user_attribute&quot;:&quot;sAMAccountName&quot;,</span>
-<span class="sd">                        &quot;bind_type&quot;:&quot;search_bind&quot;,</span>
-<span class="sd">                        &quot;bind_dn&quot;:&quot;cn=Administrator,CN=Users,DC=samdom,DC=example,DC=com&quot;,</span>
-<span class="sd">                        &quot;host&quot;:&quot;10.1.0.77&quot;,</span>
-<span class="sd">                        &quot;security_protocol&quot;:&quot;ldaps&quot;,</span>
-<span class="sd">                        &quot;base_dn&quot;:&quot;CN=Users,DC=samdom,DC=example,DC=com&quot;,</span>
-<span class="sd">                        &quot;verify_peer&quot;: False,</span>
-<span class="sd">                        &quot;type&quot;:&quot;Active Directory&quot;,</span>
-<span class="sd">                        &quot;port&quot;:636</span>
-<span class="sd">                    }</span>
-<span class="sd">                }</span>
-<span class="sd">            )</span>
-
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
 <span class="sd">        This example calls the method</span>
 <span class="sd">        :py:meth:`auth() &lt;.config.ConfigController.auth&gt;` in</span>
 <span class="sd">        :py:class:`.config.ConfigController`.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+
+<span class="sd">        &gt;&gt;&gt; client = ContainerPlatformClient(...)</span>
+<span class="sd">        &gt;&gt;&gt; client.create_session()</span>
+<span class="sd">        &gt;&gt;&gt; client.config.auth(</span>
+<span class="sd">        ...        {</span>
+<span class="sd">        ...            &quot;external_identity_server&quot;:  {</span>
+<span class="sd">        ...               &quot;bind_pwd&quot;:&quot;5ambaPwd@&quot;,</span>
+<span class="sd">        ...                &quot;user_attribute&quot;:&quot;sAMAccountName&quot;,</span>
+<span class="sd">        ...                &quot;bind_type&quot;:&quot;search_bind&quot;,</span>
+<span class="sd">        ...                &quot;bind_dn&quot;: (</span>
+<span class="sd">        ...                     &quot;cn=Administrator,CN=Users,DC=samdom,&quot;</span>
+<span class="sd">        ...                     &quot;DC=example,DC=com&quot;</span>
+<span class="sd">        ...                     ),</span>
+<span class="sd">        ...                &quot;host&quot;:&quot;10.1.0.77&quot;,</span>
+<span class="sd">        ...                &quot;security_protocol&quot;:&quot;ldaps&quot;,</span>
+<span class="sd">        ...                &quot;base_dn&quot;:&quot;CN=Users,DC=samdom,DC=example,DC=com&quot;,</span>
+<span class="sd">        ...                &quot;verify_peer&quot;: False,</span>
+<span class="sd">        ...                &quot;type&quot;:&quot;Active Directory&quot;,</span>
+<span class="sd">        ...                &quot;port&quot;:636</span>
+<span class="sd">        ...            }</span>
+<span class="sd">        ...        }</span>
+<span class="sd">        ...    )</span>
+<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">k8s_cluster</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;This attribute is a reference to an object of type</span>
+        <span class="sd">&quot;&quot;&quot;Reference to an object of type `.k8s_cluster.K8sClusterController`.</span>
+<span class="sd">        See the class :py:class:`.k8s_cluster.K8sClusterController` for the</span>
+<span class="sd">        methods available.</span>
 
-<span class="sd">        `.k8s_cluster.K8sClusterController`. See the class</span>
-<span class="sd">        :py:class:`.k8s_cluster.K8sClusterController` for the methods</span>
-<span class="sd">        available.</span>
-
-<span class="sd">        Example::</span>
-
-<span class="sd">            client = ContainerPlatformClient(...)</span>
-<span class="sd">            client.create_session()</span>
-<span class="sd">            client.k8s_cluster.list()</span>
-
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
 <span class="sd">        This example calls the method</span>
 <span class="sd">        :py:meth:`list() &lt;.k8s_cluster.K8sClusterController.list&gt;` in</span>
 <span class="sd">        :py:class:`.k8s_cluster.K8sClusterController`.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
 
+<span class="sd">        &gt;&gt;&gt; client = ContainerPlatformClient(...)</span>
+<span class="sd">        &gt;&gt;&gt; client.create_session()</span>
+<span class="sd">        &gt;&gt;&gt; client.k8s_cluster.list()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_k8s_cluster</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">k8s_worker</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;This attribute is a reference to an object of type</span>
+        <span class="sd">&quot;&quot;&quot;Reference to an object of type `.k8s_worker.K8sWorkerController`.</span>
+<span class="sd">        See the class :py:class:`.k8s_worker.K8sWorkerController` for the</span>
+<span class="sd">        methods available.</span>
 
-<span class="sd">        `.k8s_worker.K8sWorkerController`. See the class</span>
-<span class="sd">        :py:class:`.k8s_worker.K8sWorkerController` for the methods available.</span>
-
-<span class="sd">        Example::</span>
-
-<span class="sd">            client = ContainerPlatformClient(...)</span>
-<span class="sd">            client.create_session()</span>
-<span class="sd">            client.k8s_worker.list()</span>
-
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
 <span class="sd">        This example calls the method</span>
 <span class="sd">        :py:meth:`list() &lt;.k8s_worker.K8sWorkerController.list&gt;` in</span>
 <span class="sd">        :py:class:`.k8s_worker.K8sWorkerController`.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
 
+<span class="sd">        &gt;&gt;&gt; client = ContainerPlatformClient(...)</span>
+<span class="sd">        &gt;&gt;&gt; client.create_session()</span>
+<span class="sd">        &gt;&gt;&gt; client.k8s_worker.list()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_k8s_worker</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">gateway</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;This attribute is a reference to an object of type</span>
+        <span class="sd">&quot;&quot;&quot;Reference to an object of type `.gateway.GatewayController`. See</span>
+<span class="sd">        the class :py:class:`.gateway.GatewayController` for the methods</span>
+<span class="sd">        available.</span>
 
-<span class="sd">        `.gateway.GatewayController`. See the class</span>
-<span class="sd">        :py:class:`.gateway.GatewayController` for the methods available.</span>
-
-<span class="sd">        Example::</span>
-
-<span class="sd">            client = ContainerPlatformClient(...)</span>
-<span class="sd">            client.create_session()</span>
-<span class="sd">            client.gateway.list()</span>
-
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
 <span class="sd">        This example calls the method</span>
 <span class="sd">        :py:meth:`list() &lt;.gateway.GatewayController.list&gt;` in</span>
 <span class="sd">        :py:class:`.gateway.GatewayController`.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
 
+<span class="sd">        &gt;&gt;&gt; client = ContainerPlatformClient(...)</span>
+<span class="sd">        &gt;&gt;&gt; client.create_session()</span>
+<span class="sd">        &gt;&gt;&gt; client.gateway.list()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gateway</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">license</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;This attribute is a reference to an object of type</span>
+        <span class="sd">&quot;&quot;&quot;Reference to an object of type `.license.LicenseController`. See</span>
+<span class="sd">        the class :py:class:`.license.LicenseController` for the methods</span>
+<span class="sd">        available.</span>
 
-<span class="sd">        `.license.LicenseController`. See the class</span>
-<span class="sd">        :py:class:`.license.LicenseController` for the methods available.</span>
-
-<span class="sd">        Example::</span>
-
-<span class="sd">            client = ContainerPlatformClient(...)</span>
-<span class="sd">            client.create_session()</span>
-<span class="sd">            client.license.list()</span>
-
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
 <span class="sd">        This example calls the method</span>
 <span class="sd">        :py:meth:`list() &lt;.license.LicenseController.list&gt;` in</span>
 <span class="sd">        :py:class:`.license.LicenseController`.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
 
+<span class="sd">        &gt;&gt;&gt; client = ContainerPlatformClient(...)</span>
+<span class="sd">        &gt;&gt;&gt; client.create_session()</span>
+<span class="sd">        &gt;&gt;&gt; client.license.list()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_license</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">lock</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;This attribute is a reference to an object of type</span>
+        <span class="sd">&quot;&quot;&quot;Reference to an object of type `.lock.LockController`. See the</span>
+<span class="sd">        class :py:class:`.lock.LockController` for the methods available.</span>
 
-<span class="sd">        `.lock.LockController`. See the class</span>
-<span class="sd">        :py:class:`.lock.LockController` for the methods available.</span>
-
-<span class="sd">        Example::</span>
-
-<span class="sd">            client = ContainerPlatformClient(...)</span>
-<span class="sd">            client.create_session()</span>
-<span class="sd">            client.lock.get()</span>
-
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
 <span class="sd">        This example calls the method</span>
 <span class="sd">        :py:meth:`get() &lt;.lock.LockController.list&gt;` in</span>
 <span class="sd">        :py:class:`.lock.LockController`.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
 
+<span class="sd">        &gt;&gt;&gt; client = ContainerPlatformClient(...)</span>
+<span class="sd">        &gt;&gt;&gt; client.create_session()</span>
+<span class="sd">        &gt;&gt;&gt; client.lock.get()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;This attribute is a reference to :py:class:`.logger.Logger`.</span>
+        <span class="sd">&quot;&quot;&quot;Reference to :py:class:`.logger.Logger`. The log function can be</span>
+<span class="sd">        called from controller objects via the `client` parameter passed in</span>
+<span class="sd">        during instantiation of the controller.</span>
 
-<span class="sd">        The log function can be called from controller objects via the `client`</span>
-<span class="sd">        parameter passed in during instantiation of the controller.</span>
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        class K8sClusterController:</span>
+<span class="sd">            ...</span>
 
-<span class="sd">        Example::</span>
+<span class="sd">            def __init__(self, client):</span>
+<span class="sd">                self.client = client</span>
 
-<span class="sd">            class K8sClusterController:</span>
+<span class="sd">            def some_method(self):</span>
 <span class="sd">                ...</span>
-
-<span class="sd">                def __init__(self, client):</span>
-<span class="sd">                    self.client = client</span>
-
-<span class="sd">                def some_method(self):</span>
-<span class="sd">                    ...</span>
-<span class="sd">                    self.client.log.error(&quot;Some Error&quot;)</span>
+<span class="sd">                self.client.log.error(&quot;Some Error&quot;)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_log</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;This attribute is a reference to an object of type</span>
-<span class="sd">        `.user.UserController`. See the class :py:class:`.lock.UserController`</span>
-<span class="sd">        for the methods available.</span>
+        <span class="sd">&quot;&quot;&quot;Reference to an object of type `.user.UserController`. See the</span>
+<span class="sd">        class :py:class:`.lock.UserController` for the methods available.</span>
 
-<span class="sd">        Example::</span>
-
-<span class="sd">            client = ContainerPlatformClient(...)</span>
-<span class="sd">            client.create_session()</span>
-<span class="sd">            client.user.get()</span>
-
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
 <span class="sd">        This example calls the method</span>
 <span class="sd">        :py:meth:`get() &lt;.user.UserController.get&gt;` in</span>
 <span class="sd">        :py:class:`.user.UserController`.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
 
+<span class="sd">        &gt;&gt;&gt; client = ContainerPlatformClient(...)</span>
+<span class="sd">        &gt;&gt;&gt; client.create_session()</span>
+<span class="sd">        &gt;&gt;&gt; client.user.get()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_user</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">catalog</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;This attribute is a reference to an object of type</span>
+        <span class="sd">&quot;&quot;&quot;Reference to an object of type `.catalog.CatalogController`. See</span>
+<span class="sd">        the class :py:class:`.catalog.CatalogController` for the methods</span>
+<span class="sd">        available.</span>
 
-<span class="sd">        `.catalog.CatalogController`. See the class</span>
-<span class="sd">        :py:class:`.catalog.CatalogController` for the methods available.</span>
-
-<span class="sd">        Example::</span>
-
-<span class="sd">            client = ContainerPlatformClient(...)</span>
-<span class="sd">            client.create_session()</span>
-<span class="sd">            client.catalog.create()</span>
-
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
 <span class="sd">        This example calls the method</span>
 <span class="sd">        :py:meth:`create() &lt;.catalog.CatalogController.create&gt;` in</span>
 <span class="sd">        :py:class:`.catalog.CatalogController`.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
 
+<span class="sd">        &gt;&gt;&gt; client = ContainerPlatformClient(...)</span>
+<span class="sd">        &gt;&gt;&gt; client.create_session()</span>
+<span class="sd">        &gt;&gt;&gt; client.catalog.create()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_catalog</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">role</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This attribute is a reference to an object of type</span>
-<span class="sd">        `.role.RoleController`.</span>
+        <span class="sd">&quot;&quot;&quot;Reference to an object of type `.role.RoleController`. See the</span>
+<span class="sd">        class :py:class:`.role.RoleController` for the methods available.</span>
 
-<span class="sd">        See the class :py:class:`.role.RoleController` for the methods</span>
-<span class="sd">        available.</span>
-
-<span class="sd">        Example::</span>
-
-<span class="sd">            client = ContainerPlatformClient(...)</span>
-<span class="sd">            client.create_session()</span>
-<span class="sd">            client.role.get()</span>
-
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
 <span class="sd">        This example calls the method :py:meth:`get()</span>
 <span class="sd">        &lt;.role.RoleController.get&gt;`</span>
 <span class="sd">        in :py:class:`.role.RoleController`.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
 
+<span class="sd">        &gt;&gt;&gt; client = ContainerPlatformClient(...)</span>
+<span class="sd">        &gt;&gt;&gt; client.create_session()</span>
+<span class="sd">        &gt;&gt;&gt; client.role.get()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_role</span></div>
 </pre></div>
 
