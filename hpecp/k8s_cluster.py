@@ -655,9 +655,9 @@ class K8sClusterHostConfig:
         Example
         -------
         >>> .to_dict()
-            {
-                'node': '/api/v2/worker/k8shost/12',
-                'role': 'master'
-            }
+        {
+            'node': '/api/v2/worker/k8shost/12',
+            'role': 'master'
+        }
         """
         return {"node": self.node, "role": self.role}
