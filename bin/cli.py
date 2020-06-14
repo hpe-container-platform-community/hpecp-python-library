@@ -225,14 +225,14 @@ class GatewayProxy(object):
     def delete(
         self, gateway_id, wait_for_delete_secs=0,
     ):
-        """Retrieve a Gateway by Id
+        """Retrieve a Gateway by ID.
 
-        :param gateway_id: the id of the gateway with format:
-            '/api/v1/workers/[0-9]+'
-        :param wait_for_delete_secs: if 0 return immediately after calling
-            delete
-
-        wait_for_delete_secs > 0 `calls wait_for_delete()`
+        gateway_id: string
+            The id of the gateway with format: '/api/v1/workers/[0-9]+'
+        wait_for_delete_secs: int
+            For many secs to wait for the delete to happen.
+            wait_for_delete_secs > 0 `calls wait_for_delete()`
+            If 0 return immediately after calling delete.
         """
         try:
             get_client().gateway.delete(gateway_id)
@@ -248,8 +248,8 @@ class GatewayProxy(object):
     def wait_for_delete(
         self, gateway_id, timeout_secs=1200,
     ):
-        """
-        Wait for Gateway to be deleted
+        """Wait for Gateway to be deleted.
+
         :param gateway_id: Cluster id with format: /api/v1/workers/[0-9]+
         :param timeout_secs: how many secs to wait before exiting
         :returns True if gateway was deleted within timeout_secs.
@@ -261,8 +261,8 @@ class GatewayProxy(object):
     def wait_for_state(
         self, gateway_id, states=[], timeout_secs=1200,
     ):
-        """
-        Wait for Gateway to have one or more statuses
+        """Wait for Gateway to have one or more statuses.
+
         :param gateway_id: Cluster id with format: /api/v1/workers/[0-9]+
         :param status: status(es) to wait for with format: ['status1',
             'status2', 'statusn'] - set to [] to wait for item to be deleted
@@ -290,15 +290,17 @@ class GatewayProxy(object):
             sys.exit(1)
 
     def states(self,):
-        """Return a list of valid states"""
+        """Return a list of valid states."""
         print([s.name for s in GatewayStatus])
 
 
 class K8sWorkerProxy(object):
+    """Proxy object to :py:attr:`<hpecp.client.k8s_worker>`."""
+
     def create_with_ssh_key(
         self, ip=None, ssh_key=None, ssh_key_file=None, tags=[],
     ):
-        """Create a K8s Worker using SSH key authentication
+        """Create a K8s Worker using SSH key authentication.
 
         :param ip: The IP address of the host.  Used for internal
             communication.
@@ -330,7 +332,7 @@ class K8sWorkerProxy(object):
             sys.exit(1)
 
     def create_with_ssh_password(self,):
-        """Not yet implemented"""
+        """Not yet implemented."""
         raise NotImplementedError("Not yet implemented")
 
     def list(
@@ -340,7 +342,7 @@ class K8sWorkerProxy(object):
         output="table",
         query={},
     ):
-        """Print a table of K8s Workers
+        """Display a table of K8s Workers.
 
         :param all_columns: (True/False) set to True to return all columns
         :param columns: (aaa) afadsfs
@@ -386,7 +388,7 @@ class K8sWorkerProxy(object):
     def get(
         self, k8sworker_id,
     ):
-        """Retrieve a K8s Worker
+        """Retrieve a K8s Worker.
 
         :param k8sworker_id: the worker ID
         """
@@ -398,7 +400,7 @@ class K8sWorkerProxy(object):
     def delete(
         self, k8sworker_id,
     ):
-        """Delete a K8s Worker
+        """Delete a K8s Worker.
 
         :param k8sworker_id: the worker ID
         """
@@ -407,7 +409,7 @@ class K8sWorkerProxy(object):
     def set_storage(
         self, k8sworker_id=None, persistent_disks=None, ephemeral_disks=None,
     ):
-        """Set Storage
+        """Set Storage for a K8S Worker.
 
         :param k8sworker_id: the worker ID
         :param persistent_disks: a comma separated list of zero or more
@@ -415,7 +417,6 @@ class K8sWorkerProxy(object):
         :param ephemeral_disks: a comma separated list of zero or more
             ephemeral_disks disks, e.g. "/dev/nvme1n1"
         """
-
         p_disks = persistent_disks.split(",")
         e_disks = ephemeral_disks.split(",")
 
@@ -428,8 +429,8 @@ class K8sWorkerProxy(object):
     def wait_for_status(
         self, worker_id, status=[], timeout_secs=1200,
     ):
-        """
-        Wait for Worker to have one or more statuses
+        """Wait for Worker to have one or more statuses.
+
         :param worker_id: Worker id with format: /api/v1/workers/[0-9]+
         :param status: status(es) to wait for with format: ['status1',
             'status2', 'statusn'] - set to [] to wait for item to be deleted
@@ -461,11 +462,13 @@ class K8sWorkerProxy(object):
             sys.exit(1)
 
     def statuses(self,):
-        """Return a list of valid statuses"""
+        """Return a list of valid statuses."""
         print([s.name for s in WorkerK8sStatus])
 
 
 class K8sClusterProxy(object):
+    """Proxy object to :py:attr:`<hpecp.client.k8s_cluster>`."""
+
     def create(
         self,
         name,
@@ -478,7 +481,7 @@ class K8sClusterProxy(object):
         persistent_storage_local=False,
         persistent_storage_nimble_csi=False,
     ):
-        """Create a K8s Cluster
+        """Create a K8s Cluster.
 
         :param name: the cluster name
         :param k8shosts_config: k8s host ids and roles 'id1:master|worker,id2:
@@ -493,7 +496,6 @@ class K8sClusterProxy(object):
         :param persistent_storage_local: True/False
         :param persistent_storage_nimble_csi: True/False
         """
-
         host_config = [
             K8sClusterHostConfig.create_from_list(h.split(":"))
             for h in k8shosts_config.split(",")
@@ -519,12 +521,11 @@ class K8sClusterProxy(object):
         columns=["id", "name", "description", "status"],
         query={},
     ):
-        """
-        Print a table of K8s Clusters
+        """Print a table of K8s Clusters.
+
         :param all_columns: (True/False) set to True to return all columns
         :param columns: (aaa) afadsfs
         """
-
         if all_columns:
             print(get_client().k8s_cluster.list().tabulate())
         else:
@@ -539,7 +540,7 @@ class K8sClusterProxy(object):
     def get(
         self, k8scluster_id,
     ):
-        """Retrieve a K8s Cluster
+        """Retrieve a K8s Cluster.
 
         :param k8scluster_id: the cluster ID
         """
@@ -553,7 +554,7 @@ class K8sClusterProxy(object):
     def admin_kube_config(
         self, k8scluster_id,
     ):
-        """Retrieve a K8s Cluster Admin Kube Config
+        """Retrieve a K8s Cluster Admin Kube Config.
 
         :param k8scluster_id: the cluster ID
         """
@@ -567,7 +568,7 @@ class K8sClusterProxy(object):
     def dashboard_url(
         self, k8scluster_id,
     ):
-        """Retrieve a K8s Cluster Dashboard URL
+        """Retrieve a K8s Cluster Dashboard URL.
 
         :param k8scluster_id: the cluster ID
         """
@@ -581,7 +582,7 @@ class K8sClusterProxy(object):
     def dashboard_token(
         self, k8scluster_id,
     ):
-        """Retrieve a K8s Cluster Dashboard Token
+        """Retrieve a K8s Cluster Dashboard Token.
 
         :param k8scluster_id: the cluster ID
         """
@@ -595,7 +596,7 @@ class K8sClusterProxy(object):
     def delete(
         self, k8scluster_id,
     ):
-        """Delete a K8s Cluster
+        """Delete a K8s Cluster.
 
         :param k8scluster_id: the cluster ID
         """
@@ -604,8 +605,8 @@ class K8sClusterProxy(object):
     def wait_for_status(
         self, k8scluster_id, status=[], timeout_secs=60,
     ):
-        """
-        Wait for K8s Cluster to have one or more statuses
+        """Wait for K8s Cluster to have one or more statuses.
+
         :param k8scluster_id: Cluster id with format: /api/v2/k8scluster/[0-9]+
         :param status: status(es) to wait for with format:
             ['status1', 'status2', 'statusn']
@@ -633,7 +634,7 @@ class K8sClusterProxy(object):
             sys.exit(1)
 
     def statuses(self,):
-        """Return a list of valid statuses"""
+        """Return a list of valid statuses."""
         print([s.name for s in K8sClusterStatus])
 
     def k8s_supported_versions(
@@ -643,8 +644,7 @@ class K8sClusterProxy(object):
         minor_filter=None,
         patch_filter=None,
     ):
-        """
-        Print a list of supported k8s versions
+        """Print a list of supported k8s versions.
 
         :param output: how to print the output, 'json' or 'text'
         :param major_filter: only return versions matching major_filter
@@ -698,10 +698,13 @@ class K8sClusterProxy(object):
 
 
 class LockProxy(object):
+    """Proxy object to :py:attr:`<hpecp.client.lock>`."""
+
     def get(
         self, output="yaml",
     ):
-        """Get the system and user locks
+        """Get the system and user locks.
+
         :param output: how to display the output ['yaml'|'json']
         """
         response = get_client().lock.get()
@@ -718,7 +721,8 @@ class LockProxy(object):
     def list(
         self, output="yaml",
     ):
-        """Get the system and user locks
+        """List the system and user locks.
+
         :param output: how to display the output ['yaml'|'json']
         """
         self.get(output=output)
@@ -726,33 +730,34 @@ class LockProxy(object):
     def create(
         self, reason,
     ):
-        """Create a lock"""
+        """Create a lock."""
         get_client().lock.create(reason)
         print("Done")
 
     def delete(
         self, lock_id,
     ):
-        """Delete a user lock"""
+        """Delete a user lock."""
         print(get_client().lock.delete(lock_id))
 
     def delete_all(
         self, timeout_secs=300,
     ):
-        """Delete all locks"""
+        """Delete all locks."""
         print(get_client().lock.delete_all(timeout_secs=300))
 
 
 class LicenseProxy(object):
+    """Proxy object to :py:attr:`<hpecp.client.license>`."""
+
     def platform_id(self,):
-        """Get the platform ID
-        """
+        """Get the platform ID."""
         print(get_client().license.platform_id())
 
     def list(
         self, output="yaml", license_key_only=False,
     ):
-        """Retrieve the list of licenses
+        """Retrieve the list of licenses.
 
         :param output: how to display the output ['yaml'|'json']
         """
@@ -777,7 +782,7 @@ class LicenseProxy(object):
     def register(
         self, server_filename,
     ):
-        """Register a license
+        """Register a license.
 
         :param server_filename: Filepath to the license on the server, e.g.
             '/srv/bluedata/license/LICENSE-1.txt'
@@ -793,7 +798,7 @@ class LicenseProxy(object):
         license_file=None,
         base64enc_license_data=None,
     ):
-        """Not implemented yet!
+        """Not implemented yet.
 
         TODO:
         assert ssh_key_file or ssh_key_data argument is provided
@@ -816,7 +821,7 @@ class LicenseProxy(object):
         license_file=None,
         base64enc_license_data=None,
     ):
-        """Not implemented yet!
+        """Not implemented yet.
 
         TODO:
         assert ssh_key_file or ssh_key_data argument is provided
@@ -834,7 +839,7 @@ class LicenseProxy(object):
     def delete(
         self, license_key,
     ):
-        """Delete a license by LicenseKey
+        """Delete a license by LicenseKey.
 
         :param license_key: The license key, e.g. '1234 1234 ... 1234
             "SOMETEXT"'
@@ -846,7 +851,7 @@ class LicenseProxy(object):
         print("Delete submitted - verify with: `hpecp license list`")
 
     def delete_all(self,):
-        """Delete all licenses"""
+        """Delete all licenses."""
         response = get_client().license.list()
         all_license_keys = [
             str(unicode(li["LicenseKey"])) for li in response["Licenses"]
@@ -857,14 +862,16 @@ class LicenseProxy(object):
 
 
 class HttpClientProxy(object):
+    """Proxy object to :py:attr:`<hpecp.client._request>`."""
+
     def get(
         self, url,
     ):
-        """Make HTTP GET request
+        """Make HTTP GET request.
 
-        Example:
-
-            hpecp httpclient get /api/v1/workers
+        Examples
+        --------
+        $ hpecp httpclient get /api/v1/workers
         """
         response = get_client()._request(
             url, http_method="get", description="CLI HTTP GET",
@@ -874,11 +881,11 @@ class HttpClientProxy(object):
     def delete(
         self, url,
     ):
-        """Make HTTP DELETE request
+        """Make HTTP DELETE request.
 
-        Example:
-
-            hpecp httpclient delete /api/v1/workers/1
+        Examples
+        --------
+        $ hpecp httpclient delete /api/v1/workers/1
         """
         response = get_client()._request(
             url, http_method="delete", description="CLI HTTP DELETE",
@@ -888,11 +895,11 @@ class HttpClientProxy(object):
     def post(
         self, url, json_file="",
     ):
-        """Make HTTP POST request
+        """Make HTTP POST request.
 
-        Example:
-
-            cat > my.json <<-EOF
+        Examples
+        --------
+        $ cat > my.json <<-EOF
             {
                 "external_identity_server":  {
                     "bind_pwd":"5ambaPwd@",
@@ -922,11 +929,11 @@ class HttpClientProxy(object):
     def put(
         self, url, json_file="",
     ):
-        """Make HTTP PUT request
+        """Make HTTP PUT request.
 
-            Example:
-            
-            hpecp httpclient put /api/v2/config/auth --json-file my.json
+        Examples
+        --------
+        $ hpecp httpclient put /api/v2/config/auth --json-file my.json
         """  # noqa: W293
         with open(json_file, "r",) as f:
             data = json.load(f)
@@ -938,10 +945,12 @@ class HttpClientProxy(object):
 
 
 class UserProxy:
+    """Proxy object to :py:attr:`<hpecp.client.user>`."""
+
     def create(
         self, name, description, is_external=False,
     ):
-        """Create a User
+        """Create a User.
 
         :param name: the user name
         :param description: the user descripton
@@ -959,7 +968,8 @@ class UserProxy:
     def list(
         self, output="table", columns=User.default_display_fields,
     ):
-        """Retrieve the list of Users
+        """Retrieve the list of Users.
+
         :param output: how to display the output [text|table|json]
         """
         if output == "table":
@@ -977,10 +987,12 @@ class UserProxy:
 
 
 class RoleProxy(object):
+    """Proxy object to :py:attr:`<hpecp.client.role>`."""
+
     def get(
         self, role_id, output="yaml",
     ):
-        """Retrieve a Role by Id
+        """Retrieve a Role by Id.
 
         :param role_id: the id of the role with format: '/api/v1/role/[0-9]+'
         :param output: how to display the output ['yaml'|'json']
@@ -999,12 +1011,15 @@ class RoleProxy(object):
 
 
 class AutoComplete:
-    """Example Usage:
+    """Shell autocompletion scripts.
+
+    Example Usage:
 
     hpecp autocomplete bash > hpecp-bash.sh && source hpecp-bash.sh
     """
 
     def bash(self,):
+        """Create autocompletion script for bash."""
         print(
             """_hpecp_complete()
 {
@@ -1087,7 +1102,7 @@ complete -F _hpecp_complete hpecp
 
 
 def configure_cli():
-
+    """Configure the CLI."""
     controller_api_host = None
     controller_api_port = None
     controller_use_ssl = None
@@ -1169,7 +1184,10 @@ def configure_cli():
 
 
 class CLI(object):
+    """Command Line Interface for the HPE Container Platform."""
+
     def __init__(self,):
+        """Create a CLI instance."""
         self.catalog = CatalogProxy()
         self.k8sworker = K8sWorkerProxy()
         self.k8scluster = K8sClusterProxy()
