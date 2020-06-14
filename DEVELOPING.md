@@ -56,7 +56,15 @@ hpecp license platform-id
   - `GET /api/v1/role/99` (returns HTTP 404 - not found)
 
 
-#### BUILDING DOCS
+### DOCS
+
+#### format
+
+Numpy docstring format are required: https://numpydoc.readthedocs.io/en/latest/format.html#docstring-standard
+
+Docstring formatting is verified with flake8 as Travis build step.
+
+#### Building
 
 In the Gitpod Terminal:
 
