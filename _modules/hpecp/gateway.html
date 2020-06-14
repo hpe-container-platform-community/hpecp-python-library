@@ -82,19 +82,17 @@
 
 
 <div class="viewcode-block" id="GatewayController"><a class="viewcode-back" href="../../hpecp.gateway.html#hpecp.gateway.GatewayController">[docs]</a><span class="k">class</span> <span class="nc">GatewayController</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;This is the main class that users will interact with to work with</span>
-
-<span class="sd">    Gateways. An instance of this class is available in the</span>
+    <span class="sd">&quot;&quot;&quot;Class that users will interact with to work with Gateways. An instance</span>
+<span class="sd">    of this class is available in the</span>
 <span class="sd">    client.ContainerPlatformClient with the attribute name</span>
 <span class="sd">    :py:attr:`gateway &lt;.client.ContainerPlatformClient.gateway&gt;`. The methods</span>
 <span class="sd">    of this class can be invoked using `client.gateway.method()`. See the</span>
 <span class="sd">    example below:</span>
 
-<span class="sd">    Example::</span>
-
-<span class="sd">        client = ContainerPlatformClient(...).create_session()</span>
-<span class="sd">        client.gateway.list()</span>
-
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; client = ContainerPlatformClient(...).create_session()</span>
+<span class="sd">    &gt;&gt;&gt; client.gateway.list()</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
@@ -108,22 +106,25 @@
         <span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="n">proxy_node_hostname</span><span class="p">,</span> <span class="n">ssh_key_data</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[]</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create a gateway instance using SSH key credentials to access the</span>
-
 <span class="sd">        host.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            ip: str</span>
-<span class="sd">                The IP address of the proxy host.  Used for internal</span>
-<span class="sd">                communication.</span>
-<span class="sd">            proxy_node_hostname: str</span>
-<span class="sd">                Clients will access cluster services will be accessed using</span>
-<span class="sd">                this name.</span>
-<span class="sd">            ssh_key_data: str</span>
-<span class="sd">                The ssh key data as a string.</span>
-<span class="sd">            tags: list</span>
-<span class="sd">                Tags to use, e.g. &quot;{ &#39;tag1&#39;: &#39;foo&#39;, &#39;tag2&#39;, &#39;bar&#39; }&quot;.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ip: str</span>
+<span class="sd">            The IP address of the proxy host.  Used for internal</span>
+<span class="sd">            communication.</span>
+<span class="sd">        proxy_node_hostname: str</span>
+<span class="sd">            Clients will access cluster services will be accessed using</span>
+<span class="sd">            this name.</span>
+<span class="sd">        ssh_key_data: str</span>
+<span class="sd">            The ssh key data as a string.</span>
+<span class="sd">        tags: list</span>
+<span class="sd">            Tags to use, e.g. &quot;{ &#39;tag1&#39;: &#39;foo&#39;, &#39;tag2&#39;, &#39;bar&#39; }&quot;.</span>
 
-<span class="sd">        Returns: gateway ID</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+<span class="sd">            gateway ID</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
@@ -156,13 +157,16 @@
         <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;location&quot;</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="GatewayController.list"><a class="viewcode-back" href="../../hpecp.gateway.html#hpecp.gateway.GatewayController.list">[docs]</a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Retrieve a list of Gateways</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve a list of Gateways.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            GatewayList: list of Gateways</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        GatewayList</span>
+<span class="sd">            list of Gateways</span>
 
-<span class="sd">        Raises:</span>
-<span class="sd">            APIException</span>
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        APIException</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
             <span class="n">url</span><span class="o">=</span><span class="s2">&quot;/api/v1/workers/&quot;</span><span class="p">,</span>
@@ -174,15 +178,19 @@
 <div class="viewcode-block" id="GatewayController.get"><a class="viewcode-back" href="../../hpecp.gateway.html#hpecp.gateway.GatewayController.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gateway_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Retrieve a Gateway by ID.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            gateway_id: str</span>
-<span class="sd">                The gateway ID - format: &#39;/api/v1/workers/[0-9]+&#39;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        gateway_id: str</span>
+<span class="sd">            The gateway ID - format: &#39;/api/v1/workers/[0-9]+&#39;</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            Gateway: object representing Gateway</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Gateway</span>
+<span class="sd">            object representing a Gateway</span>
 
-<span class="sd">        Raises:</span>
-<span class="sd">            APIException</span>
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        APIException</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
             <span class="n">gateway_id</span><span class="p">,</span> <span class="nb">str</span>
@@ -209,12 +217,14 @@
 <span class="sd">        You can use :py:meth:`wait_for_status` to check for the gateway</span>
 <span class="sd">        state/existence.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            gateway_id: str</span>
-<span class="sd">                The Gateway ID - format: &#39;/api/v1/workers/[0-9]+&#39;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        gateway_id: str</span>
+<span class="sd">            The Gateway ID - format: &#39;/api/v1/workers/[0-9]+&#39;</span>
 
-<span class="sd">        Raises:</span>
-<span class="sd">            APIException</span>
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        APIException</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
             <span class="n">gateway_id</span><span class="p">,</span> <span class="nb">str</span>
@@ -234,37 +244,45 @@
 <div class="viewcode-block" id="GatewayController.wait_for_delete"><a class="viewcode-back" href="../../hpecp.gateway.html#hpecp.gateway.GatewayController.wait_for_delete">[docs]</a>    <span class="k">def</span> <span class="nf">wait_for_delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gateway_id</span><span class="p">,</span> <span class="n">timeout_secs</span><span class="o">=</span><span class="mi">1200</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Wait for gateway to be deleted.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            gateway_id: str</span>
-<span class="sd">                The gateway ID - format: &#39;/api/v1/workers/[0-9]+&#39;</span>
-<span class="sd">            timeout_secs: int</span>
-<span class="sd">                How long to wait for the status(es) before raising an</span>
-<span class="sd">                exception.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        gateway_id: str</span>
+<span class="sd">            The gateway ID - format: &#39;/api/v1/workers/[0-9]+&#39;</span>
+<span class="sd">        timeout_secs: int</span>
+<span class="sd">            How long to wait for the status(es) before raising an</span>
+<span class="sd">            exception.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            bool: True if gateway was deleted before timeout, otherwise False</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">            True if gateway was deleted before timeout, otherwise False</span>
 <span class="sd">        &quot;&quot;&quot;</span></div>
 
 <div class="viewcode-block" id="GatewayController.wait_for_state"><a class="viewcode-back" href="../../hpecp.gateway.html#hpecp.gateway.GatewayController.wait_for_state">[docs]</a>    <span class="k">def</span> <span class="nf">wait_for_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gateway_id</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="p">[],</span> <span class="n">timeout_secs</span><span class="o">=</span><span class="mi">1200</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Wait for gateway state.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            gateway_id: str</span>
-<span class="sd">                The gateway ID - format: &#39;/api/v1/workers/[0-9]+&#39;</span>
-<span class="sd">            status: list[:py:class:`GatewayStatus`]</span>
-<span class="sd">                Status(es) to wait for.  Use an empty array if you want to wait</span>
-<span class="sd">                for a cluster&#39;s existence to cease.</span>
-<span class="sd">            timeout_secs: int</span>
-<span class="sd">                How long to wait for the status(es) before raising an</span>
-<span class="sd">                exception.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        gateway_id: str</span>
+<span class="sd">            The gateway ID - format: &#39;/api/v1/workers/[0-9]+&#39;</span>
+<span class="sd">        status: list[:py:class:`GatewayStatus`]</span>
+<span class="sd">            Status(es) to wait for.  Use an empty array if you want to wait</span>
+<span class="sd">            for a cluster&#39;s existence to cease.</span>
+<span class="sd">        timeout_secs: int</span>
+<span class="sd">            How long to wait for the status(es) before raising an</span>
+<span class="sd">            exception.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            bool: True if status was found before timeout, otherwise False</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">            True if status was found before timeout, otherwise False</span>
 
-<span class="sd">        Raises:</span>
-<span class="sd">            APIItemNotFoundException: if the item is not found and state is not</span>
-<span class="sd">            empty</span>
-<span class="sd">            APIException: if a generic API exception occurred</span>
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        APIItemNotFoundException</span>
+<span class="sd">            if the item is not found and state is not empty</span>
+<span class="sd">        APIException</span>
+<span class="sd">            if a generic API exception occurred</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
             <span class="n">gateway_id</span><span class="p">,</span> <span class="n">basestring</span>
@@ -351,13 +369,15 @@
 <span class="sd">    Container Platform API. Users of this library are not expected to create an</span>
 <span class="sd">    instance of this class.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        json : str</span>
-<span class="sd">            The json returned by the API representing a Gateway.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    json : str</span>
+<span class="sd">        The json returned by the API representing a Gateway.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        Gateway:</span>
-<span class="sd">            An instance of Gateway</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Gateway</span>
+<span class="sd">        An instance of Gateway</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># All of the fields of Gateway objects as returned by the HPE Container</span>
@@ -414,10 +434,13 @@
 
 <span class="sd">        with :py:meth:`.GatewayList.tabulate`</span>
 
-<span class="sd">        Parameters:</span>
-<span class="sd">            columns : list[str]</span>
-<span class="sd">                Set the list of colums to return</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        columns : list[str]</span>
+<span class="sd">            Set the list of colums to return</span>
 
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
 <span class="sd">        See :py:attr:`all_fields` for the complete list of field names.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">display_columns</span> <span class="o">=</span> <span class="n">columns</span></div>
@@ -496,17 +519,18 @@
 
 
 <div class="viewcode-block" id="GatewayList"><a class="viewcode-back" href="../../hpecp.gateway.html#hpecp.gateway.GatewayList">[docs]</a><span class="k">class</span> <span class="nc">GatewayList</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;List of :py:obj:`.Gateway` objects</span>
+    <span class="sd">&quot;&quot;&quot;List of :py:obj:`.Gateway` objects.&quot;&quot;&quot;</span>
 
-<span class="sd">    This class is not expected to be instantiated by users.</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a GatewayList.  This class is not expected to be</span>
+<span class="sd">        instantiated by users.</span>
 
-<span class="sd">    Parameters:</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
 <span class="sd">        json : str</span>
 <span class="sd">            json data returned from the HPE Container Platform API get request</span>
 <span class="sd">            to /api/v1/Gateway</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json</span><span class="p">):</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">json</span> <span class="o">=</span> <span class="p">[</span><span class="n">g</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">json</span> <span class="k">if</span> <span class="n">g</span><span class="p">[</span><span class="s2">&quot;purpose&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;proxy&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gateways</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
             <span class="p">[</span><span class="n">Gateway</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">json</span> <span class="k">if</span> <span class="n">g</span><span class="p">[</span><span class="s2">&quot;purpose&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;proxy&quot;</span><span class="p">],</span>
@@ -546,25 +570,28 @@
         <span class="n">style</span><span class="o">=</span><span class="s2">&quot;pretty&quot;</span><span class="p">,</span>
         <span class="n">display_headers</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Provide a tabular represenation of the list of Gateways</span>
+        <span class="sd">&quot;&quot;&quot;Provide a tabular represenation of the list of Gateways.</span>
 
-<span class="sd">        Parameters:</span>
-<span class="sd">            columns : list[str]</span>
-<span class="sd">                list of columns to return in the table -</span>
-<span class="sd">                default :py:attr:`.Gateway.default_display_fields`</span>
-<span class="sd">            style: str</span>
-<span class="sd">                See: https://github.com/astanin/python-tabulate#table-format</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        columns : list[str]</span>
+<span class="sd">            list of columns to return in the table -</span>
+<span class="sd">            default :py:attr:`.Gateway.default_display_fields`</span>
+<span class="sd">        style: str</span>
+<span class="sd">            See: https://github.com/astanin/python-tabulate#table-format</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            str : table output</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+<span class="sd">            table output</span>
 
-<span class="sd">        Example::</span>
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        Print the gateway list with all of the avaialble fields</span>
+<span class="sd">        &gt;&gt;&gt; print(hpeclient.gateway.list().tabulate())</span>
 
-<span class="sd">            # Print the gateway list with all of the avaialble fields</span>
-<span class="sd">            print(hpeclient.gateway.list().tabulate())</span>
-
-<span class="sd">            # Print the cluster list with a subset of the fields</span>
-<span class="sd">            print(hpeclient.gateway.list().tabulate(columns=[&#39;id&#39;, &#39;state&#39;]))</span>
+<span class="sd">        Print the cluster list with a subset of the fields</span>
+<span class="sd">        &gt;&gt;&gt; print(hpeclient.gateway.list().tabulate(columns=[&#39;id&#39;, &#39;state&#39;]))</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">columns</span> <span class="o">!=</span> <span class="n">Gateway</span><span class="o">.</span><span class="n">default_display_fields</span><span class="p">:</span>
             <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>

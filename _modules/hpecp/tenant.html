@@ -126,14 +126,16 @@
 
 
 <div class="viewcode-block" id="TenantList"><a class="viewcode-back" href="../../hpecp.tenant.html#hpecp.tenant.TenantList">[docs]</a><span class="k">class</span> <span class="nc">TenantList</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;[summary]</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Represents a list of HPE Container Platform tenants.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;[summary]</span>
+        <span class="sd">&quot;&quot;&quot;Create a TenantList.  This method is not expected to be called by</span>
+<span class="sd">        users directly.</span>
 
-<span class="sd">        Arguments:</span>
-<span class="sd">            json {[type]} -- [description]</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        json : str</span>
+<span class="sd">            The Json object returned from the HPE Container Platform API.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">json</span> <span class="o">=</span> <span class="n">json</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tenants</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">Tenant</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">json</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="n">attrgetter</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">))</span>
@@ -160,10 +162,12 @@
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tenants</span><span class="p">)</span>
 
 <div class="viewcode-block" id="TenantList.tabulate"><a class="viewcode-back" href="../../hpecp.tenant.html#hpecp.tenant.TenantList.tabulate">[docs]</a>    <span class="k">def</span> <span class="nf">tabulate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;[summary]</span>
+        <span class="sd">&quot;&quot;&quot;Output a tabular view of Tenants.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            [type] -- [description]</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+<span class="sd">            Tablular view of Tenants.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">tabulate</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">Tenant</span><span class="o">.</span><span class="n">__class_dir__</span><span class="p">(),</span> <span class="n">tablefmt</span><span class="o">=</span><span class="s2">&quot;pretty&quot;</span>
@@ -171,31 +175,34 @@
 
 
 <div class="viewcode-block" id="TenantController"><a class="viewcode-back" href="../../hpecp.tenant.html#hpecp.tenant.TenantController">[docs]</a><span class="k">class</span> <span class="nc">TenantController</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;This class allows a user to retrieve and interact with tenant information</span>
+    <span class="sd">&quot;&quot;&quot;Class that users will interact with to work with tenants.</span>
 
-<span class="sd">    An instance of this class is available in `client.ContainerPlatformClient`</span>
-<span class="sd">    with the attribute name</span>
+<span class="sd">    An instance of this class is available in</span>
+<span class="sd">    `client.ContainerPlatformClient` with the attribute name</span>
 <span class="sd">    :py:attr:`tenant &lt;.client.ContainerPlatformClient.tenant&gt;`. The methods of</span>
 <span class="sd">    this class can be invoked using `client.tenant.method()`. See the example</span>
 <span class="sd">    below.</span>
 
-<span class="sd">    Example::</span>
-
-<span class="sd">        client = ContainerPlatformClient(...).create_session()</span>
-<span class="sd">        client.tenant.list()</span>
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; client = ContainerPlatformClient(...).create_session()</span>
+<span class="sd">    &gt;&gt;&gt; client.tenant.list()</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">client</span>
 
 <div class="viewcode-block" id="TenantController.list"><a class="viewcode-back" href="../../hpecp.tenant.html#hpecp.tenant.TenantController.list">[docs]</a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Retrieve a list of available tenants</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve a list of the tenants.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            TenantList: list of tenants</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        TenantList</span>
+<span class="sd">            list of tenants</span>
 
-<span class="sd">        Raises:</span>
-<span class="sd">            APIException</span>
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        APIException</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
             <span class="n">url</span><span class="o">=</span><span class="s2">&quot;/api/v1/tenant&quot;</span><span class="p">,</span> <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;tenant/list&quot;</span>
@@ -244,14 +251,19 @@
 <div class="viewcode-block" id="TenantController.get"><a class="viewcode-back" href="../../hpecp.tenant.html#hpecp.tenant.TenantController.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tenant_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Retrieve a Tenant by ID.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            tenant_id (str): The tenant ID - format: &#39;/api/v1/tenant/[0-9]+&#39;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        tenant_id : str</span>
+<span class="sd">            The tenant ID - format: &#39;/api/v1/tenant/[0-9]+&#39;</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            Tenat: object representing the Tenant</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Tenant:</span>
+<span class="sd">            An object representing the Tenant</span>
 
-<span class="sd">        Raises:</span>
-<span class="sd">            APIException</span>
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        APIException</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
             <span class="s2">&quot;!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!&quot;</span>
@@ -278,28 +290,33 @@
 <div class="viewcode-block" id="TenantController.auth_setup"><a class="viewcode-back" href="../../hpecp.tenant.html#hpecp.tenant.TenantController.auth_setup">[docs]</a>    <span class="k">def</span> <span class="nf">auth_setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tenant_id</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Setup external autentication for the tenant.</span>
 
-<span class="sd">        Parameters:</span>
-<span class="sd">            tenant_id : type</span>
-<span class="sd">                description</span>
-<span class="sd">            data : type</span>
-<span class="sd">                description</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        tenant_id : str</span>
+<span class="sd">            The tenant ID</span>
+<span class="sd">        data : object</span>
+<span class="sd">            See below for an example.</span>
 
-<span class="sd">        Example::</span>
-
-<span class="sd">            data: {</span>
-<span class="sd">                &quot;external_user_groups&quot;: [</span>
-<span class="sd">                    {</span>
-<span class="sd">                        &quot;role&quot;: &quot;/api/v1/role/2&quot;, # 2 = Admins</span>
-<span class="sd">                        &quot;group&quot;:&quot;CN=DemoTenantAdmins,CN=Users,DC=samdom</span>
-<span class="sd">                        ,DC=example,DC=com&quot;</span>
-<span class="sd">                    },</span>
-<span class="sd">                    {</span>
-<span class="sd">                        &quot;role&quot;: &quot;/api/v1/role/3&quot;, # 3 = Members</span>
-<span class="sd">                        &quot;group&quot;: &quot;CN=DemoTenantUsers,CN=Users,DC=samdom</span>
-<span class="sd">                        ,DC=example,DC=com&quot;</span>
-<span class="sd">                    }</span>
-<span class="sd">                ]</span>
-<span class="sd">            }</span>
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; data = {</span>
+<span class="sd">        ...    &quot;external_user_groups&quot;: [</span>
+<span class="sd">        ...        {</span>
+<span class="sd">        ...            &quot;role&quot;: &quot;/api/v1/role/2&quot;, # 2 = Admins</span>
+<span class="sd">        ...            &quot;group&quot;:(</span>
+<span class="sd">        ...                 &quot;CN=DemoTenantAdmins,CN=Users,DC=samdom,&quot;</span>
+<span class="sd">        ...                 &quot;DC=example,DC=com&quot;</span>
+<span class="sd">        ...                 ),</span>
+<span class="sd">        ...        },</span>
+<span class="sd">        ...        {</span>
+<span class="sd">        ...            &quot;role&quot;: &quot;/api/v1/role/3&quot;, # 3 = Members</span>
+<span class="sd">        ...            &quot;group&quot;: (</span>
+<span class="sd">        ...                 &quot;CN=DemoTenantUsers,CN=Users,DC=samdom,&quot;</span>
+<span class="sd">        ...                 &quot;DC=example,DC=com&quot;</span>
+<span class="sd">        ...                 ),</span>
+<span class="sd">        ...        }</span>
+<span class="sd">        ...    ]</span>
+<span class="sd">        ... }</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
             <span class="n">url</span><span class="o">=</span><span class="s2">&quot;/api/v1/tenant/</span><span class="si">{}</span><span class="s2">?external_user_groups&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tenant_id</span><span class="p">),</span>
@@ -309,29 +326,23 @@
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="TenantController.assign_user_to_role"><a class="viewcode-back" href="../../hpecp.tenant.html#hpecp.tenant.TenantController.assign_user_to_role">[docs]</a>    <span class="k">def</span> <span class="nf">assign_user_to_role</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tenant_id</span><span class="p">,</span> <span class="n">role_id</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Assign a user to a given role using the tenant</span>
+        <span class="sd">&quot;&quot;&quot;Assign a user to a given role using the tenant.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            tenant_id (str): The tenant ID - format: &#39;/api/v1/tenant/[0-9]+&#39;</span>
-<span class="sd">            role_id (str): The role ID - format: &#39;/api/v1/role/[0-9]+&#39;</span>
-<span class="sd">            user_id (str): The role ID - format: &#39;/api/v1/user/[0-9]+&#39;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        tenant_id : str</span>
+<span class="sd">            The tenant ID - format: &#39;/api/v1/tenant/[0-9]+&#39;</span>
+<span class="sd">        role_id : str</span>
+<span class="sd">            The role ID - format: &#39;/api/v1/role/[0-9]+&#39;</span>
+<span class="sd">        user_id : str</span>
+<span class="sd">            The role ID - format: &#39;/api/v1/user/[0-9]+&#39;</span>
 
-<span class="sd">        Raises:</span>
-<span class="sd">            APIItemNotFoundException</span>
-<span class="sd">            APIItemConflictException</span>
-<span class="sd">            APIException</span>
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        APIItemNotFoundException</span>
+<span class="sd">        APIItemConflictException</span>
+<span class="sd">        APIException</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># FIXME: Assuming this functionality is experimental like others.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-            <span class="s2">&quot;!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!&quot;</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-            <span class="s2">&quot;!!!! The method `tenant.get()` is experimental !!!!&quot;</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-            <span class="s2">&quot;!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!&quot;</span>
-        <span class="p">)</span>
-
         <span class="c1"># Ensure that the tenant is valid and exists</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">tenant_id</span><span class="p">)</span>
 

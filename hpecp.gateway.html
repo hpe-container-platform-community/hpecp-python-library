@@ -57,15 +57,14 @@
 <dt id="hpecp.gateway.GatewayController">
 <em class="property">class </em><code class="sig-prename descclassname">hpecp.gateway.</code><code class="sig-name descname">GatewayController</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">client</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayController"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.gateway.GatewayController" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>This is the main class that users will interact with to work with</p>
-<p>Gateways. An instance of this class is available in the
+<p>Class that users will interact with to work with Gateways. An instance
+of this class is available in the
 client.ContainerPlatformClient with the attribute name
 <a class="reference internal" href="hpecp.client.html#hpecp.client.ContainerPlatformClient.gateway" title="hpecp.client.ContainerPlatformClient.gateway"><code class="xref py py-attr docutils literal notranslate"><span class="pre">gateway</span></code></a>. The methods
 of this class can be invoked using <cite>client.gateway.method()</cite>. See the
 example below:</p>
-<p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">client</span> <span class="o">=</span> <span class="n">ContainerPlatformClient</span><span class="p">(</span><span class="o">...</span><span class="p">)</span><span class="o">.</span><span class="n">create_session</span><span class="p">()</span>
-<span class="n">client</span><span class="o">.</span><span class="n">gateway</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">client</span> <span class="o">=</span> <span class="n">ContainerPlatformClient</span><span class="p">(</span><span class="o">...</span><span class="p">)</span><span class="o">.</span><span class="n">create_session</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">client</span><span class="o">.</span><span class="n">gateway</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
 </pre></div>
 </div>
 <dl class="py method">
@@ -77,10 +76,9 @@ example below:</p>
 <dl class="py method">
 <dt id="hpecp.gateway.GatewayController.create_with_ssh_key">
 <code class="sig-name descname">create_with_ssh_key</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ip</span></em>, <em class="sig-param"><span class="n">proxy_node_hostname</span></em>, <em class="sig-param"><span class="n">ssh_key_data</span></em>, <em class="sig-param"><span class="n">tags</span><span class="o">=</span><span class="default_value">[]</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayController.create_with_ssh_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.gateway.GatewayController.create_with_ssh_key" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a gateway instance using SSH key credentials to access the</p>
-<p>host.</p>
+<dd><p>Create a gateway instance using SSH key credentials to access the
+host.</p>
 <dl class="simple">
-<dt>Args:</dt><dd><dl class="simple">
 <dt>ip: str</dt><dd><p>The IP address of the proxy host.  Used for internal
 communication.</p>
 </dd>
@@ -92,21 +90,21 @@ this name.</p>
 <dt>tags: list</dt><dd><p>Tags to use, e.g. “{ ‘tag1’: ‘foo’, ‘tag2’, ‘bar’ }”.</p>
 </dd>
 </dl>
+<dl class="simple">
+<dt>str</dt><dd><p>gateway ID</p>
 </dd>
 </dl>
-<p>Returns: gateway ID</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="hpecp.gateway.GatewayController.list">
 <code class="sig-name descname">list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayController.list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.gateway.GatewayController.list" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieve a list of Gateways</p>
+<dd><p>Retrieve a list of Gateways.</p>
 <dl class="simple">
-<dt>Returns:</dt><dd><p>GatewayList: list of Gateways</p>
-</dd>
-<dt>Raises:</dt><dd><p>APIException</p>
+<dt>GatewayList</dt><dd><p>list of Gateways</p>
 </dd>
 </dl>
+<p>APIException</p>
 </dd></dl>
 
 <dl class="py method">
@@ -114,16 +112,14 @@ this name.</p>
 <code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gateway_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayController.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.gateway.GatewayController.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve a Gateway by ID.</p>
 <dl class="simple">
-<dt>Args:</dt><dd><dl class="simple">
 <dt>gateway_id: str</dt><dd><p>The gateway ID - format: ‘/api/v1/workers/[0-9]+’</p>
 </dd>
 </dl>
-</dd>
-<dt>Returns:</dt><dd><p>Gateway: object representing Gateway</p>
-</dd>
-<dt>Raises:</dt><dd><p>APIException</p>
+<dl class="simple">
+<dt>Gateway</dt><dd><p>object representing a Gateway</p>
 </dd>
 </dl>
+<p>APIException</p>
 </dd></dl>
 
 <dl class="py method">
@@ -133,14 +129,10 @@ this name.</p>
 <p>You can use <code class="xref py py-meth docutils literal notranslate"><span class="pre">wait_for_status()</span></code> to check for the gateway
 state/existence.</p>
 <dl class="simple">
-<dt>Args:</dt><dd><dl class="simple">
 <dt>gateway_id: str</dt><dd><p>The Gateway ID - format: ‘/api/v1/workers/[0-9]+’</p>
 </dd>
 </dl>
-</dd>
-<dt>Raises:</dt><dd><p>APIException</p>
-</dd>
-</dl>
+<p>APIException</p>
 </dd></dl>
 
 <dl class="py method">
@@ -148,15 +140,14 @@ state/existence.</p>
 <code class="sig-name descname">wait_for_delete</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gateway_id</span></em>, <em class="sig-param"><span class="n">timeout_secs</span><span class="o">=</span><span class="default_value">1200</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayController.wait_for_delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.gateway.GatewayController.wait_for_delete" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wait for gateway to be deleted.</p>
 <dl class="simple">
-<dt>Args:</dt><dd><dl class="simple">
 <dt>gateway_id: str</dt><dd><p>The gateway ID - format: ‘/api/v1/workers/[0-9]+’</p>
 </dd>
 <dt>timeout_secs: int</dt><dd><p>How long to wait for the status(es) before raising an
 exception.</p>
 </dd>
 </dl>
-</dd>
-<dt>Returns:</dt><dd><p>bool: True if gateway was deleted before timeout, otherwise False</p>
+<dl class="simple">
+<dt>bool</dt><dd><p>True if gateway was deleted before timeout, otherwise False</p>
 </dd>
 </dl>
 </dd></dl>
@@ -166,7 +157,6 @@ exception.</p>
 <code class="sig-name descname">wait_for_state</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gateway_id</span></em>, <em class="sig-param"><span class="n">state</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">timeout_secs</span><span class="o">=</span><span class="default_value">1200</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayController.wait_for_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.gateway.GatewayController.wait_for_state" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wait for gateway state.</p>
 <dl class="simple">
-<dt>Args:</dt><dd><dl class="simple">
 <dt>gateway_id: str</dt><dd><p>The gateway ID - format: ‘/api/v1/workers/[0-9]+’</p>
 </dd>
 <dt>status: list[<a class="reference internal" href="#hpecp.gateway.GatewayStatus" title="hpecp.gateway.GatewayStatus"><code class="xref py py-class docutils literal notranslate"><span class="pre">GatewayStatus</span></code></a>]</dt><dd><p>Status(es) to wait for.  Use an empty array if you want to wait
@@ -176,12 +166,14 @@ for a cluster’s existence to cease.</p>
 exception.</p>
 </dd>
 </dl>
+<dl class="simple">
+<dt>bool</dt><dd><p>True if status was found before timeout, otherwise False</p>
 </dd>
-<dt>Returns:</dt><dd><p>bool: True if status was found before timeout, otherwise False</p>
+</dl>
+<dl class="simple">
+<dt>APIItemNotFoundException</dt><dd><p>if the item is not found and state is not empty</p>
 </dd>
-<dt>Raises:</dt><dd><p>APIItemNotFoundException: if the item is not found and state is not
-empty
-APIException: if a generic API exception occurred</p>
+<dt>APIException</dt><dd><p>if a generic API exception occurred</p>
 </dd>
 </dl>
 </dd></dl>
@@ -278,15 +270,11 @@ integer value.</p>
 <p>Container Platform API. Users of this library are not expected to create an
 instance of this class.</p>
 <dl class="simple">
-<dt>Parameters:</dt><dd><dl class="simple">
 <dt>json<span class="classifier">str</span></dt><dd><p>The json returned by the API representing a Gateway.</p>
 </dd>
 </dl>
-</dd>
-<dt>Returns:</dt><dd><dl class="simple">
-<dt>Gateway:</dt><dd><p>An instance of Gateway</p>
-</dd>
-</dl>
+<dl class="simple">
+<dt>Gateway</dt><dd><p>An instance of Gateway</p>
 </dd>
 </dl>
 <dl class="py attribute">
@@ -305,10 +293,7 @@ instance of this class.</p>
 <dd><p>Set the columns this instance should have when the instance is used</p>
 <p>with <a class="reference internal" href="#hpecp.gateway.GatewayList.tabulate" title="hpecp.gateway.GatewayList.tabulate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">GatewayList.tabulate()</span></code></a></p>
 <dl class="simple">
-<dt>Parameters:</dt><dd><dl class="simple">
 <dt>columns<span class="classifier">list[str]</span></dt><dd><p>Set the list of colums to return</p>
-</dd>
-</dl>
 </dd>
 </dl>
 <p>See <a class="reference internal" href="#hpecp.gateway.Gateway.all_fields" title="hpecp.gateway.Gateway.all_fields"><code class="xref py py-attr docutils literal notranslate"><span class="pre">all_fields</span></code></a> for the complete list of field names.</p>
@@ -399,40 +384,26 @@ instance of this class.</p>
 <dt id="hpecp.gateway.GatewayList">
 <em class="property">class </em><code class="sig-prename descclassname">hpecp.gateway.</code><code class="sig-name descname">GatewayList</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">json</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.gateway.GatewayList" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>List of <a class="reference internal" href="#hpecp.gateway.Gateway" title="hpecp.gateway.Gateway"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Gateway</span></code></a> objects</p>
-<p>This class is not expected to be instantiated by users.</p>
-<dl class="simple">
-<dt>Parameters:</dt><dd><dl class="simple">
-<dt>json<span class="classifier">str</span></dt><dd><p>json data returned from the HPE Container Platform API get request
-to /api/v1/Gateway</p>
-</dd>
-</dl>
-</dd>
-</dl>
+<p>List of <a class="reference internal" href="#hpecp.gateway.Gateway" title="hpecp.gateway.Gateway"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Gateway</span></code></a> objects.</p>
 <dl class="py method">
 <dt id="hpecp.gateway.GatewayList.tabulate">
 <code class="sig-name descname">tabulate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">columns</span><span class="o">=</span><span class="default_value">['id', 'ip', 'proxy_nodes_hostname', 'hostname', 'state', 'status_info', 'purpose', 'tags']</span></em>, <em class="sig-param"><span class="n">style</span><span class="o">=</span><span class="default_value">'pretty'</span></em>, <em class="sig-param"><span class="n">display_headers</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayList.tabulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.gateway.GatewayList.tabulate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Provide a tabular represenation of the list of Gateways</p>
+<dd><p>Provide a tabular represenation of the list of Gateways.</p>
 <dl class="simple">
-<dt>Parameters:</dt><dd><dl class="simple">
 <dt>columns<span class="classifier">list[str]</span></dt><dd><p>list of columns to return in the table -
 default <a class="reference internal" href="#hpecp.gateway.Gateway.default_display_fields" title="hpecp.gateway.Gateway.default_display_fields"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Gateway.default_display_fields</span></code></a></p>
 </dd>
 <dt>style: str</dt><dd><p>See: <a class="reference external" href="https://github.com/astanin/python-tabulate#table-format">https://github.com/astanin/python-tabulate#table-format</a></p>
 </dd>
 </dl>
-</dd>
-<dt>Returns:</dt><dd><p>str : table output</p>
+<dl class="simple">
+<dt>str</dt><dd><p>table output</p>
 </dd>
 </dl>
-<p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Print the gateway list with all of the avaialble fields</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">hpeclient</span><span class="o">.</span><span class="n">gateway</span><span class="o">.</span><span class="n">list</span><span class="p">()</span><span class="o">.</span><span class="n">tabulate</span><span class="p">())</span>
-
-<span class="c1"># Print the cluster list with a subset of the fields</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">hpeclient</span><span class="o">.</span><span class="n">gateway</span><span class="o">.</span><span class="n">list</span><span class="p">()</span><span class="o">.</span><span class="n">tabulate</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;state&#39;</span><span class="p">]))</span>
-</pre></div>
-</div>
+<p>Print the gateway list with all of the avaialble fields
+&gt;&gt;&gt; print(hpeclient.gateway.list().tabulate())</p>
+<p>Print the cluster list with a subset of the fields
+&gt;&gt;&gt; print(hpeclient.gateway.list().tabulate(columns=[‘id’, ‘state’]))</p>
 </dd></dl>
 
 </dd></dl>

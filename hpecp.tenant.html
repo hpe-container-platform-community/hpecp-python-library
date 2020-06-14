@@ -88,7 +88,7 @@
 <dt id="hpecp.tenant.TenantList">
 <em class="property">class </em><code class="sig-prename descclassname">hpecp.tenant.</code><code class="sig-name descname">TenantList</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">json</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/tenant.html#TenantList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.tenant.TenantList" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>[summary]</p>
+<p>Represents a list of HPE Container Platform tenants.</p>
 <dl class="py method">
 <dt id="hpecp.tenant.TenantList.next">
 <code class="sig-name descname">next</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/tenant.html#TenantList.next"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.tenant.TenantList.next" title="Permalink to this definition">¶</a></dt>
@@ -97,9 +97,9 @@
 <dl class="py method">
 <dt id="hpecp.tenant.TenantList.tabulate">
 <code class="sig-name descname">tabulate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/tenant.html#TenantList.tabulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.tenant.TenantList.tabulate" title="Permalink to this definition">¶</a></dt>
-<dd><p>[summary]</p>
+<dd><p>Output a tabular view of Tenants.</p>
 <dl class="simple">
-<dt>Returns:</dt><dd><p>[type] – [description]</p>
+<dt>str</dt><dd><p>Tablular view of Tenants.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -110,27 +110,25 @@
 <dt id="hpecp.tenant.TenantController">
 <em class="property">class </em><code class="sig-prename descclassname">hpecp.tenant.</code><code class="sig-name descname">TenantController</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">client</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/tenant.html#TenantController"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.tenant.TenantController" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>This class allows a user to retrieve and interact with tenant information</p>
-<p>An instance of this class is available in <cite>client.ContainerPlatformClient</cite>
-with the attribute name
+<p>Class that users will interact with to work with tenants.</p>
+<p>An instance of this class is available in
+<cite>client.ContainerPlatformClient</cite> with the attribute name
 <a class="reference internal" href="hpecp.client.html#hpecp.client.ContainerPlatformClient.tenant" title="hpecp.client.ContainerPlatformClient.tenant"><code class="xref py py-attr docutils literal notranslate"><span class="pre">tenant</span></code></a>. The methods of
 this class can be invoked using <cite>client.tenant.method()</cite>. See the example
 below.</p>
-<p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">client</span> <span class="o">=</span> <span class="n">ContainerPlatformClient</span><span class="p">(</span><span class="o">...</span><span class="p">)</span><span class="o">.</span><span class="n">create_session</span><span class="p">()</span>
-<span class="n">client</span><span class="o">.</span><span class="n">tenant</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">client</span> <span class="o">=</span> <span class="n">ContainerPlatformClient</span><span class="p">(</span><span class="o">...</span><span class="p">)</span><span class="o">.</span><span class="n">create_session</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">client</span><span class="o">.</span><span class="n">tenant</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
 </pre></div>
 </div>
 <dl class="py method">
 <dt id="hpecp.tenant.TenantController.list">
 <code class="sig-name descname">list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/tenant.html#TenantController.list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.tenant.TenantController.list" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieve a list of available tenants</p>
+<dd><p>Retrieve a list of the tenants.</p>
 <dl class="simple">
-<dt>Returns:</dt><dd><p>TenantList: list of tenants</p>
-</dd>
-<dt>Raises:</dt><dd><p>APIException</p>
+<dt>TenantList</dt><dd><p>list of tenants</p>
 </dd>
 </dl>
+<p>APIException</p>
 </dd></dl>
 
 <dl class="py method">
@@ -143,13 +141,14 @@ below.</p>
 <code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tenant_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/tenant.html#TenantController.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.tenant.TenantController.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve a Tenant by ID.</p>
 <dl class="simple">
-<dt>Args:</dt><dd><p>tenant_id (str): The tenant ID - format: ‘/api/v1/tenant/[0-9]+’</p>
-</dd>
-<dt>Returns:</dt><dd><p>Tenat: object representing the Tenant</p>
-</dd>
-<dt>Raises:</dt><dd><p>APIException</p>
+<dt>tenant_id<span class="classifier">str</span></dt><dd><p>The tenant ID - format: ‘/api/v1/tenant/[0-9]+’</p>
 </dd>
 </dl>
+<dl class="simple">
+<dt>Tenant:</dt><dd><p>An object representing the Tenant</p>
+</dd>
+</dl>
+<p>APIException</p>
 </dd></dl>
 
 <dl class="py method">
@@ -157,29 +156,29 @@ below.</p>
 <code class="sig-name descname">auth_setup</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tenant_id</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/tenant.html#TenantController.auth_setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.tenant.TenantController.auth_setup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Setup external autentication for the tenant.</p>
 <dl class="simple">
-<dt>Parameters:</dt><dd><dl class="simple">
-<dt>tenant_id<span class="classifier">type</span></dt><dd><p>description</p>
+<dt>tenant_id<span class="classifier">str</span></dt><dd><p>The tenant ID</p>
 </dd>
-<dt>data<span class="classifier">type</span></dt><dd><p>description</p>
-</dd>
-</dl>
+<dt>data<span class="classifier">object</span></dt><dd><p>See below for an example.</p>
 </dd>
 </dl>
-<p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="p">:</span> <span class="p">{</span>
-    <span class="s2">&quot;external_user_groups&quot;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;/api/v1/role/2&quot;</span><span class="p">,</span> <span class="c1"># 2 = Admins</span>
-            <span class="s2">&quot;group&quot;</span><span class="p">:</span><span class="s2">&quot;CN=DemoTenantAdmins,CN=Users,DC=samdom</span>
-            <span class="p">,</span><span class="n">DC</span><span class="o">=</span><span class="n">example</span><span class="p">,</span><span class="n">DC</span><span class="o">=</span><span class="n">com</span><span class="s2">&quot;</span>
-        <span class="p">},</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;/api/v1/role/3&quot;</span><span class="p">,</span> <span class="c1"># 3 = Members</span>
-            <span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="s2">&quot;CN=DemoTenantUsers,CN=Users,DC=samdom</span>
-            <span class="p">,</span><span class="n">DC</span><span class="o">=</span><span class="n">example</span><span class="p">,</span><span class="n">DC</span><span class="o">=</span><span class="n">com</span><span class="s2">&quot;</span>
-        <span class="p">}</span>
-    <span class="p">]</span>
-<span class="p">}</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">... </span>   <span class="s2">&quot;external_user_groups&quot;</span><span class="p">:</span> <span class="p">[</span>
+<span class="gp">... </span>       <span class="p">{</span>
+<span class="gp">... </span>           <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;/api/v1/role/2&quot;</span><span class="p">,</span> <span class="c1"># 2 = Admins</span>
+<span class="gp">... </span>           <span class="s2">&quot;group&quot;</span><span class="p">:(</span>
+<span class="gp">... </span>                <span class="s2">&quot;CN=DemoTenantAdmins,CN=Users,DC=samdom,&quot;</span>
+<span class="gp">... </span>                <span class="s2">&quot;DC=example,DC=com&quot;</span>
+<span class="gp">... </span>                <span class="p">),</span>
+<span class="gp">... </span>       <span class="p">},</span>
+<span class="gp">... </span>       <span class="p">{</span>
+<span class="gp">... </span>           <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;/api/v1/role/3&quot;</span><span class="p">,</span> <span class="c1"># 3 = Members</span>
+<span class="gp">... </span>           <span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="p">(</span>
+<span class="gp">... </span>                <span class="s2">&quot;CN=DemoTenantUsers,CN=Users,DC=samdom,&quot;</span>
+<span class="gp">... </span>                <span class="s2">&quot;DC=example,DC=com&quot;</span>
+<span class="gp">... </span>                <span class="p">),</span>
+<span class="gp">... </span>       <span class="p">}</span>
+<span class="gp">... </span>   <span class="p">]</span>
+<span class="gp">... </span><span class="p">}</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -187,17 +186,18 @@ below.</p>
 <dl class="py method">
 <dt id="hpecp.tenant.TenantController.assign_user_to_role">
 <code class="sig-name descname">assign_user_to_role</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tenant_id</span></em>, <em class="sig-param"><span class="n">role_id</span></em>, <em class="sig-param"><span class="n">user_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/tenant.html#TenantController.assign_user_to_role"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.tenant.TenantController.assign_user_to_role" title="Permalink to this definition">¶</a></dt>
-<dd><p>Assign a user to a given role using the tenant</p>
+<dd><p>Assign a user to a given role using the tenant.</p>
 <dl class="simple">
-<dt>Args:</dt><dd><p>tenant_id (str): The tenant ID - format: ‘/api/v1/tenant/[0-9]+’
-role_id (str): The role ID - format: ‘/api/v1/role/[0-9]+’
-user_id (str): The role ID - format: ‘/api/v1/user/[0-9]+’</p>
+<dt>tenant_id<span class="classifier">str</span></dt><dd><p>The tenant ID - format: ‘/api/v1/tenant/[0-9]+’</p>
 </dd>
-<dt>Raises:</dt><dd><p>APIItemNotFoundException
-APIItemConflictException
-APIException</p>
+<dt>role_id<span class="classifier">str</span></dt><dd><p>The role ID - format: ‘/api/v1/role/[0-9]+’</p>
+</dd>
+<dt>user_id<span class="classifier">str</span></dt><dd><p>The role ID - format: ‘/api/v1/user/[0-9]+’</p>
 </dd>
 </dl>
+<p>APIItemNotFoundException
+APIItemConflictException
+APIException</p>
 </dd></dl>
 
 </dd></dl>
