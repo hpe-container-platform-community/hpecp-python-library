@@ -800,11 +800,8 @@ class LicenseProxy(object):
     ):
         """Not implemented yet.
 
-        TODO:
-        assert ssh_key_file or ssh_key_data argument is provided
-        assert license_file or base64enc_license_data argument is provided
-
         Workaround:
+        -----------
          - scp your license to '/srv/bluedata/license/' on the controller
          - run client.license.register(server_filename) to register the license
         """
@@ -823,11 +820,8 @@ class LicenseProxy(object):
     ):
         """Not implemented yet.
 
-        TODO:
-        assert ssh_key_file or ssh_key_data argument is provided
-        assert license_file or base64enc_license_data argument is provided
-
         Workaround:
+        -----------
          - scp your license to '/srv/bluedata/license/' on the controller
          - run client.license.register(server_filename) to register the license
         """
