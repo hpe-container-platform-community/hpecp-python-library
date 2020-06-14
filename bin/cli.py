@@ -145,13 +145,13 @@ class GatewayProxy(object):
 
         if ssh_key_file is not None:
             with open(ssh_key_file) as f:
-                ssh_key_data = f.read()
+                ssh_key = f.read()
 
         try:
             gateway_id = get_client().gateway.create_with_ssh_key(
                 ip=ip,
                 proxy_node_hostname=proxy_node_hostname,
-                ssh_key_data=ssh_key_data,
+                ssh_key_data=ssh_key,
                 tags=tags,
             )
             print(gateway_id)

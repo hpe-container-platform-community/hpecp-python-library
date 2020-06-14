@@ -27,7 +27,12 @@ from hpecp import (
     APIItemNotFoundException,
     ContainerPlatformClient,
 )
-from hpecp.gateway import GatewayStatus
+from hpecp.gateway import GatewayController, GatewayStatus
+from textwrap import dedent
+import tempfile
+import os
+import sys
+from io import StringIO
 
 
 class MockResponse:
@@ -1244,3 +1249,103 @@ class TestDeleteGateway(TestCase):
             get_client().gateway.delete(gateway_id="/api/v1/workers/999")
 
         get_client().gateway.delete(gateway_id="/api/v1/workers/123")
+
+
+class TestCliCreate(TestCase):
+    def setUp(self):
+        file_data = dedent(
+            """[default]
+                        api_host = 127.0.0.1
+                        api_port = 8080
+                        use_ssl = True
+                        verify_ssl = False
+                        warn_ssl = True
+                        username = admin
+                        password = admin123"""
+        )
+
+        self.tmpFile = tempfile.NamedTemporaryFile(delete=True)
+        self.tmpFile.write(file_data.encode("utf-8"))
+        self.tmpFile.flush()
+
+        sys.path.insert(0, os.path.abspath("../../"))
+        from bin import cli
+
+        self.cli = cli
+        self.cli.HPECP_CONFIG_FILE = self.tmpFile.name
+
+        self.saved_stdout = sys.stdout
+        self.out = StringIO()
+        sys.stdout = self.out
+
+    def tearDown(self):
+        self.tmpFile.close()
+        sys.stdout = self.saved_stdout
+
+    def test_key_or_keycontent_provided(self,):
+
+        hpecp = self.cli.CLI()
+        with self.assertRaises(SystemExit) as cm:
+            hpecp.gateway.create_with_ssh_key(
+                ip="127.0.0.1", proxy_node_hostname="somehost"
+            )
+
+        self.assertEqual(cm.exception.code, 1)
+
+        self.assertEqual(
+            self.out.getvalue(),
+            "Either ssh_key or ssh_key_file must be provided\n",
+        )
+
+    def test_key_and_keycontent_provided(self,):
+
+        hpecp = self.cli.CLI()
+        with self.assertRaises(SystemExit) as cm:
+            hpecp.gateway.create_with_ssh_key(
+                ip="127.0.0.1",
+                proxy_node_hostname="somehost",
+                ssh_key="foobar",
+                ssh_key_file="foobar",
+            )
+
+        self.assertEqual(cm.exception.code, 1)
+
+        self.assertEqual(
+            self.out.getvalue(),
+            "Either ssh_key or ssh_key_file must be provided\n",
+        )
+
+    def mocked_requests_post(*args, **kwargs):
+        if args[0] == "https://127.0.0.1:8080/api/v1/login":
+            return session_mock_response()
+        raise RuntimeError("Unhandle POST request: " + args[0])
+
+    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("hpecp.gateway")
+    def test_with_only_ssh_key_content_provided(self, mock_post, mock_gateway):
+
+        """Test that the ssh key content provided by the 'ssh_key' parameter is
+        passed to the library method 'create_with_ssh_key()'.
+        """
+
+        with patch.object(
+            GatewayController, "create_with_ssh_key", return_value=None
+        ) as mock_create_with_ssh_key:
+            hpecp = self.cli.CLI()
+            hpecp.gateway.create_with_ssh_key(
+                ip="127.0.0.1",
+                proxy_node_hostname="somehost",
+                ssh_key="test_ssh_key",
+            )
+
+            mock_create_with_ssh_key.assert_called_once_with(
+                ip="127.0.0.1",
+                proxy_node_hostname="somehost",
+                ssh_key_data="test_ssh_key",
+                tags=[],
+            )
+
+    def test_with_only_ssh_key_file_provided(self):
+        # TODO
+        pass
+
