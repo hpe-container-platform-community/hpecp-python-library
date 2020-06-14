@@ -1,11 +1,11 @@
 language: python
 python:
   - "2.7"
-  #-  "3.5"
-  #-  "3.6"
-  #-  "3.7"
-  #-  "3.8"
-  #-  "3.9-dev"
+  - "3.5"
+  - "3.6"
+  - "3.7"
+  - "3.8"
+  - "3.9-dev"
 install:
   - pip install tox-travis
   - pip install python-coveralls
@@ -23,14 +23,14 @@ after_success:
 
 jobs:
   include:
-    - stage: flake8code
+    - stage: flake8_code
       name: "Flake8 code checks"
       python: 3.8
       install:
         - pip3 install flake8 flake8-per-file-ignores
       script:
         - flake8 bin/ hpecp/ tests/
-    - stage: flake8docs
+    - stage: flake8_docs
       name: "Flake8 doc checks"
       python: 3.8
       install:
