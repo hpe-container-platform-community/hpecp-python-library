@@ -36,19 +36,17 @@ except NameError:
 
 
 class GatewayController:
-    """This is the main class that users will interact with to work with
-
-    Gateways. An instance of this class is available in the
+    """Class that users will interact with to work with Gateways. An instance
+    of this class is available in the
     client.ContainerPlatformClient with the attribute name
     :py:attr:`gateway <.client.ContainerPlatformClient.gateway>`. The methods
     of this class can be invoked using `client.gateway.method()`. See the
     example below:
 
-    Example::
-
-        client = ContainerPlatformClient(...).create_session()
-        client.gateway.list()
-
+    Example
+    -------
+    >>> client = ContainerPlatformClient(...).create_session()
+    >>> client.gateway.list()
     """
 
     def __init__(self, client):
@@ -62,22 +60,25 @@ class GatewayController:
         self, ip, proxy_node_hostname, ssh_key_data, tags=[]
     ):
         """Create a gateway instance using SSH key credentials to access the
-
         host.
 
-        Args:
-            ip: str
-                The IP address of the proxy host.  Used for internal
-                communication.
-            proxy_node_hostname: str
-                Clients will access cluster services will be accessed using
-                this name.
-            ssh_key_data: str
-                The ssh key data as a string.
-            tags: list
-                Tags to use, e.g. "{ 'tag1': 'foo', 'tag2', 'bar' }".
+        Parameters
+        ----------
+        ip: str
+            The IP address of the proxy host.  Used for internal
+            communication.
+        proxy_node_hostname: str
+            Clients will access cluster services will be accessed using
+            this name.
+        ssh_key_data: str
+            The ssh key data as a string.
+        tags: list
+            Tags to use, e.g. "{ 'tag1': 'foo', 'tag2', 'bar' }".
 
-        Returns: gateway ID
+        Returns
+        -------
+        str
+            gateway ID
         """
 
         assert isinstance(
@@ -110,13 +111,16 @@ class GatewayController:
         return response.headers["location"]
 
     def list(self):
-        """Retrieve a list of Gateways
+        """Retrieve a list of Gateways.
 
-        Returns:
-            GatewayList: list of Gateways
+        Returns
+        -------
+        GatewayList
+            list of Gateways
 
-        Raises:
-            APIException
+        Raises
+        ------
+        APIException
         """
         response = self.client._request(
             url="/api/v1/workers/",
@@ -128,15 +132,19 @@ class GatewayController:
     def get(self, gateway_id):
         """Retrieve a Gateway by ID.
 
-        Args:
-            gateway_id: str
-                The gateway ID - format: '/api/v1/workers/[0-9]+'
+        Parameters
+        ----------
+        gateway_id: str
+            The gateway ID - format: '/api/v1/workers/[0-9]+'
 
-        Returns:
-            Gateway: object representing Gateway
+        Returns
+        -------
+        Gateway
+            object representing a Gateway
 
-        Raises:
-            APIException
+        Raises
+        ------
+        APIException
         """
         assert isinstance(
             gateway_id, str
@@ -163,12 +171,14 @@ class GatewayController:
         You can use :py:meth:`wait_for_status` to check for the gateway
         state/existence.
 
-        Args:
-            gateway_id: str
-                The Gateway ID - format: '/api/v1/workers/[0-9]+'
+        Parameters
+        ----------
+        gateway_id: str
+            The Gateway ID - format: '/api/v1/workers/[0-9]+'
 
-        Raises:
-            APIException
+        Raises
+        ------
+        APIException
         """
         assert isinstance(
             gateway_id, str
@@ -188,37 +198,45 @@ class GatewayController:
     def wait_for_delete(self, gateway_id, timeout_secs=1200):
         """Wait for gateway to be deleted.
 
-        Args:
-            gateway_id: str
-                The gateway ID - format: '/api/v1/workers/[0-9]+'
-            timeout_secs: int
-                How long to wait for the status(es) before raising an
-                exception.
+        Parameters
+        ----------
+        gateway_id: str
+            The gateway ID - format: '/api/v1/workers/[0-9]+'
+        timeout_secs: int
+            How long to wait for the status(es) before raising an
+            exception.
 
-        Returns:
-            bool: True if gateway was deleted before timeout, otherwise False
+        Returns
+        -------
+        bool
+            True if gateway was deleted before timeout, otherwise False
         """
 
     def wait_for_state(self, gateway_id, state=[], timeout_secs=1200):
         """Wait for gateway state.
 
-        Args:
-            gateway_id: str
-                The gateway ID - format: '/api/v1/workers/[0-9]+'
-            status: list[:py:class:`GatewayStatus`]
-                Status(es) to wait for.  Use an empty array if you want to wait
-                for a cluster's existence to cease.
-            timeout_secs: int
-                How long to wait for the status(es) before raising an
-                exception.
+        Parameters
+        ----------
+        gateway_id: str
+            The gateway ID - format: '/api/v1/workers/[0-9]+'
+        status: list[:py:class:`GatewayStatus`]
+            Status(es) to wait for.  Use an empty array if you want to wait
+            for a cluster's existence to cease.
+        timeout_secs: int
+            How long to wait for the status(es) before raising an
+            exception.
 
-        Returns:
-            bool: True if status was found before timeout, otherwise False
+        Returns
+        -------
+        bool
+            True if status was found before timeout, otherwise False
 
-        Raises:
-            APIItemNotFoundException: if the item is not found and state is not
-            empty
-            APIException: if a generic API exception occurred
+        Raises
+        ------
+        APIItemNotFoundException
+            if the item is not found and state is not empty
+        APIException
+            if a generic API exception occurred
         """
         assert isinstance(
             gateway_id, basestring
@@ -305,13 +323,15 @@ class Gateway:
     Container Platform API. Users of this library are not expected to create an
     instance of this class.
 
-    Parameters:
-        json : str
-            The json returned by the API representing a Gateway.
+    Parameters
+    ----------
+    json : str
+        The json returned by the API representing a Gateway.
 
-    Returns:
-        Gateway:
-            An instance of Gateway
+    Returns
+    -------
+    Gateway
+        An instance of Gateway
     """
 
     # All of the fields of Gateway objects as returned by the HPE Container
@@ -368,10 +388,13 @@ class Gateway:
 
         with :py:meth:`.GatewayList.tabulate`
 
-        Parameters:
-            columns : list[str]
-                Set the list of colums to return
+        Parameters
+        ----------
+        columns : list[str]
+            Set the list of colums to return
 
+        See Also
+        --------
         See :py:attr:`all_fields` for the complete list of field names.
         """
         self.display_columns = columns
@@ -450,17 +473,18 @@ class Gateway:
 
 
 class GatewayList:
-    """List of :py:obj:`.Gateway` objects
+    """List of :py:obj:`.Gateway` objects."""
 
-    This class is not expected to be instantiated by users.
+    def __init__(self, json):
+        """Create a GatewayList.  This class is not expected to be
+        instantiated by users.
 
-    Parameters:
+        Parameters
+        ----------
         json : str
             json data returned from the HPE Container Platform API get request
             to /api/v1/Gateway
-    """
-
-    def __init__(self, json):
+        """
         self.json = [g for g in json if g["purpose"] == "proxy"]
         self.gateways = sorted(
             [Gateway(g) for g in json if g["purpose"] == "proxy"],
@@ -500,25 +524,28 @@ class GatewayList:
         style="pretty",
         display_headers=True,
     ):
-        """Provide a tabular represenation of the list of Gateways
+        """Provide a tabular represenation of the list of Gateways.
 
-        Parameters:
-            columns : list[str]
-                list of columns to return in the table -
-                default :py:attr:`.Gateway.default_display_fields`
-            style: str
-                See: https://github.com/astanin/python-tabulate#table-format
+        Parameters
+        ----------
+        columns : list[str]
+            list of columns to return in the table -
+            default :py:attr:`.Gateway.default_display_fields`
+        style: str
+            See: https://github.com/astanin/python-tabulate#table-format
 
-        Returns:
-            str : table output
+        Returns
+        -------
+        str
+            table output
 
-        Example::
+        Example
+        -------
+        Print the gateway list with all of the avaialble fields
+        >>> print(hpeclient.gateway.list().tabulate())
 
-            # Print the gateway list with all of the avaialble fields
-            print(hpeclient.gateway.list().tabulate())
-
-            # Print the cluster list with a subset of the fields
-            print(hpeclient.gateway.list().tabulate(columns=['id', 'state']))
+        Print the cluster list with a subset of the fields
+        >>> print(hpeclient.gateway.list().tabulate(columns=['id', 'state']))
         """
         if columns != Gateway.default_display_fields:
             assert isinstance(
