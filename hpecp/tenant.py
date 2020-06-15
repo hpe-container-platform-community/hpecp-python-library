@@ -80,14 +80,16 @@ class Tenant:
 
 
 class TenantList:
-    """[summary]
-    """
+    """Represents a list of HPE Container Platform tenants."""
 
     def __init__(self, json):
-        """[summary]
+        """Create a TenantList.  This method is not expected to be called by
+        users directly.
 
-        Arguments:
-            json {[type]} -- [description]
+        Parameters
+        ----------
+        json : str
+            The Json object returned from the HPE Container Platform API.
         """
         self.json = json
         self.tenants = sorted([Tenant(t) for t in json], key=attrgetter("id"))
@@ -114,10 +116,12 @@ class TenantList:
         return len(self.tenants)
 
     def tabulate(self):
-        """[summary]
+        """Output a tabular view of Tenants.
 
-        Returns:
-            [type] -- [description]
+        Returns
+        -------
+        str
+            Tablular view of Tenants.
         """
         return tabulate(
             self, headers=Tenant.__class_dir__(), tablefmt="pretty"
@@ -125,31 +129,34 @@ class TenantList:
 
 
 class TenantController:
-    """This class allows a user to retrieve and interact with tenant information
+    """Class that users will interact with to work with tenants.
 
-    An instance of this class is available in `client.ContainerPlatformClient`
-    with the attribute name
+    An instance of this class is available in
+    `client.ContainerPlatformClient` with the attribute name
     :py:attr:`tenant <.client.ContainerPlatformClient.tenant>`. The methods of
     this class can be invoked using `client.tenant.method()`. See the example
     below.
 
-    Example::
-
-        client = ContainerPlatformClient(...).create_session()
-        client.tenant.list()
+    Example
+    -------
+    >>> client = ContainerPlatformClient(...).create_session()
+    >>> client.tenant.list()
     """
 
     def __init__(self, client):
         self.client = client
 
     def list(self):
-        """Retrieve a list of available tenants
+        """Retrieve a list of the tenants.
 
-        Returns:
-            TenantList: list of tenants
+        Returns
+        -------
+        TenantList
+            list of tenants
 
-        Raises:
-            APIException
+        Raises
+        ------
+        APIException
         """
         response = self.client._request(
             url="/api/v1/tenant", http_method="get", description="tenant/list"
@@ -198,14 +205,19 @@ class TenantController:
     def get(self, tenant_id):
         """Retrieve a Tenant by ID.
 
-        Args:
-            tenant_id (str): The tenant ID - format: '/api/v1/tenant/[0-9]+'
+        Parameters
+        ----------
+        tenant_id : str
+            The tenant ID - format: '/api/v1/tenant/[0-9]+'
 
-        Returns:
-            Tenat: object representing the Tenant
+        Returns
+        -------
+        Tenant:
+            An object representing the Tenant
 
-        Raises:
-            APIException
+        Raises
+        ------
+        APIException
         """
         self.client.log.warning(
             "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
@@ -232,28 +244,33 @@ class TenantController:
     def auth_setup(self, tenant_id, data):
         """Setup external autentication for the tenant.
 
-        Parameters:
-            tenant_id : type
-                description
-            data : type
-                description
+        Parameters
+        ----------
+        tenant_id : str
+            The tenant ID
+        data : object
+            See below for an example.
 
-        Example::
-
-            data: {
-                "external_user_groups": [
-                    {
-                        "role": "/api/v1/role/2", # 2 = Admins
-                        "group":"CN=DemoTenantAdmins,CN=Users,DC=samdom
-                        ,DC=example,DC=com"
-                    },
-                    {
-                        "role": "/api/v1/role/3", # 3 = Members
-                        "group": "CN=DemoTenantUsers,CN=Users,DC=samdom
-                        ,DC=example,DC=com"
-                    }
-                ]
-            }
+        Example
+        -------
+        >>> data = {
+        ...    "external_user_groups": [
+        ...        {
+        ...            "role": "/api/v1/role/2", # 2 = Admins
+        ...            "group":(
+        ...                 "CN=DemoTenantAdmins,CN=Users,DC=samdom,"
+        ...                 "DC=example,DC=com"
+        ...                 ),
+        ...        },
+        ...        {
+        ...            "role": "/api/v1/role/3", # 3 = Members
+        ...            "group": (
+        ...                 "CN=DemoTenantUsers,CN=Users,DC=samdom,"
+        ...                 "DC=example,DC=com"
+        ...                 ),
+        ...        }
+        ...    ]
+        ... }
         """
         self.client._request(
             url="/api/v1/tenant/{}?external_user_groups".format(tenant_id),
@@ -263,29 +280,23 @@ class TenantController:
         )
 
     def assign_user_to_role(self, tenant_id, role_id, user_id):
-        """Assign a user to a given role using the tenant
+        """Assign a user to a given role using the tenant.
 
-        Args:
-            tenant_id (str): The tenant ID - format: '/api/v1/tenant/[0-9]+'
-            role_id (str): The role ID - format: '/api/v1/role/[0-9]+'
-            user_id (str): The role ID - format: '/api/v1/user/[0-9]+'
+        Parameters
+        ----------
+        tenant_id : str
+            The tenant ID - format: '/api/v1/tenant/[0-9]+'
+        role_id : str
+            The role ID - format: '/api/v1/role/[0-9]+'
+        user_id : str
+            The role ID - format: '/api/v1/user/[0-9]+'
 
-        Raises:
-            APIItemNotFoundException
-            APIItemConflictException
-            APIException
+        Raises
+        ------
+        APIItemNotFoundException
+        APIItemConflictException
+        APIException
         """
-        # FIXME: Assuming this functionality is experimental like others.
-        self.client.log.warning(
-            "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-        )
-        self.client.log.warning(
-            "!!!! The method `tenant.get()` is experimental !!!!"
-        )
-        self.client.log.warning(
-            "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-        )
-
         # Ensure that the tenant is valid and exists
         self.get(tenant_id)
 
