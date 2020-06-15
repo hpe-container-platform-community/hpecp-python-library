@@ -147,8 +147,8 @@ class ContainerPlatformClient(object):
         config.readfp(codecs.open(config_file, "r", "utf8"))
 
         assert (
-                profile in config.sections()
-            ), "'{}' section not found in '{}'".format(profile, config_file)
+            profile in config.sections()
+        ), "'{}' section not found in '{}'".format(profile, config_file)
         assert (
             "username" in config[profile] or "username" in config["default"]
         ), (
