@@ -31,19 +31,8 @@ from collections import OrderedDict
 
 import fire
 import jmespath
+import six
 import yaml
-
-from hpecp.logger import Logger
-
-from hpecp.gateway import (
-    Gateway,
-    GatewayStatus,
-)
-from hpecp.k8s_cluster import (
-    K8sClusterHostConfig,
-    K8sClusterStatus,
-)
-from hpecp.user import User
 
 from hpecp import (
     APIException,
@@ -51,7 +40,11 @@ from hpecp import (
     ContainerPlatformClient,
     ContainerPlatformClientException,
 )
+from hpecp.gateway import Gateway, GatewayStatus
+from hpecp.k8s_cluster import K8sClusterHostConfig, K8sClusterStatus
 from hpecp.k8s_worker import WorkerK8sStatus
+from hpecp.logger import Logger
+from hpecp.user import User
 
 if sys.version_info[0] >= 3:
     unicode = str
@@ -1117,23 +1110,20 @@ def configure_cli():
         controller_username = config_reader.username
         controller_password = config_reader.password
 
-    if sys.version_info[0] >= 3:
-        raw_input = input
-
     sys.stdout.write("Controller API Host [{}]: ".format(controller_api_host))
-    tmp = raw_input()
+    tmp = six.moves.input()
     if tmp != "":
         controller_api_host = tmp
 
     sys.stdout.write("Controller API Port [{}]: ".format(controller_api_port))
-    tmp = input()
+    tmp = six.moves.input()
     if tmp != "":
         controller_api_port = tmp
 
     sys.stdout.write(
         "Controller uses ssl (True|False) [{}]: ".format(controller_use_ssl)
     )
-    tmp = input()
+    tmp = six.moves.input()
     if tmp != "":
         controller_use_ssl = tmp
 
@@ -1142,24 +1132,24 @@ def configure_cli():
             controller_verify_ssl
         )
     )
-    tmp = input()
+    tmp = six.moves.input()
     if tmp != "":
         controller_verify_ssl = tmp
 
     sys.stdout.write(
         "Controller warn ssl (True|False) [{}]: ".format(controller_warn_ssl)
     )
-    tmp = input()
+    tmp = six.moves.input()
     if tmp != "":
         controller_warn_ssl = tmp
 
     sys.stdout.write("Controller Username [{}]: ".format(controller_username))
-    tmp = raw_input()
+    tmp = six.moves.input()
     if tmp != "":
         controller_username = tmp
 
     sys.stdout.write("Controller Password [{}]: ".format(controller_password))
-    tmp = raw_input()
+    tmp = six.moves.input()
     if tmp != "":
         controller_password = tmp
 
