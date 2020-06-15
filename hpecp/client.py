@@ -22,9 +22,9 @@
 
 from __future__ import absolute_import
 
-import configparser
 import json
 import os
+from configparser import SafeConfigParser
 
 import requests
 from six import raise_from
@@ -43,9 +43,10 @@ from .k8s_worker import K8sWorkerController
 from .license import LicenseController
 from .lock import LockController
 from .logger import Logger
-from .tenant import TenantController
 from .role import RoleController
+from .tenant import TenantController
 from .user import UserController
+import codecs
 
 try:
     basestring
@@ -142,12 +143,12 @@ class ContainerPlatformClient(object):
                 "Could not find configuration file '{}'".format(config_file)
             )
 
-        config = configparser.ConfigParser()
-        config.read(config_file)
+        config = SafeConfigParser()
+        config.readfp(codecs.open(config_file, "r", "utf8"))
 
-        assert profile in config, "'{}' section not found in '{}'".format(
-            profile, config_file
-        )
+        assert (
+                profile in config.sections()
+            ), "'{}' section not found in '{}'".format(profile, config_file)
         assert (
             "username" in config[profile] or "username" in config["default"]
         ), (

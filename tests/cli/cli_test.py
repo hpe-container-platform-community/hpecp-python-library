@@ -104,26 +104,14 @@ class TestCLI(TestCase):
             "Could not find configuration file 'this_file_should_not_exist'\n",
         )
 
-    def test_configure_cli_with_existing_hpecp_conf(self):
-
-        mock_data = dedent(
-            """[default]
-                api_host = 127.0.0.1
-                api_port = 8080
-                use_ssl = True
-                verify_ssl = False
-                warn_ssl = True
-                username = admin
-                password = admin123"""
-        )
+    def test_configure_cli_writes_hpecp_conf(self):
 
         if six.PY2:
             builtins_name = "__builtin__.open"
         else:
             builtins_name = "builtins.open"
 
-        m = mock_open(read_data=mock_data)
-        with patch(builtins_name, m):
+        with patch(builtins_name, mock_open()) as m:
 
             # mock the input capture to simulate user input
             # TODO: we want to send different data for each parameter
@@ -132,20 +120,61 @@ class TestCLI(TestCase):
             hpecp = self.cli.CLI()
             hpecp.configure_cli()
 
-            handle = m()
-            handle.write.assert_has_calls(
-                [
-                    mock.call("[default]\n"),
-                    mock.call("api_host = 1234\n"),
-                    mock.call("api_port = 1234\n"),
-                    mock.call("use_ssl = 1234\n"),
-                    mock.call("verify_ssl = 1234\n"),
-                    mock.call("warn_ssl = 1234\n"),
-                    mock.call("username = 1234\n"),
-                    mock.call("password = 1234\n"),
-                    mock.call("\n"),
-                ]
-            )
+        handle = m()
+        handle.write.assert_has_calls(
+            [
+                mock.call("[default]\n"),
+                mock.call("api_host = 1234\n"),
+                mock.call("api_port = 1234\n"),
+                mock.call("use_ssl = 1234\n"),
+                mock.call("verify_ssl = 1234\n"),
+                mock.call("warn_ssl = 1234\n"),
+                mock.call("username = 1234\n"),
+                mock.call("password = 1234\n"),
+                mock.call("\n"),
+            ]
+        )
+
+    def test_configure_cli_reads_hpecp_conf(self):
+
+        mock_data = dedent(
+            """                [default]
+                api_host = mock_host
+                api_port = 9999
+                use_ssl = True
+                verify_ssl = False
+                warn_ssl = True
+                username = admin
+                password = admin123"""
+        ).encode("utf8")
+
+        if six.PY2:
+            builtins_name = "__builtin__.open"
+        else:
+            builtins_name = "builtins.open"
+
+        with patch(builtins_name, mock_open(read_data=mock_data)):
+            with patch("os.path.exists") as os_path_exists:
+
+                # instruct the CLI that the mock file is actually
+                # ~/.hpecp.conf
+                os_path_exists.return_value = True
+
+                # mock the input capture to simulate user input
+                # TODO: we want to send different data for each configuration
+                # parameter
+                six.moves.input = lambda *args: ("1234")
+
+                hpecp = self.cli.CLI()
+                hpecp.configure_cli()
+
+                self.assertIn(
+                    "Controller API Host [mock_host]:", self.out.getvalue()
+                )
+                self.assertIn(
+                    "Controller API Port [9999]:", self.out.getvalue()
+                )
+                # TODO check all values
 
     def test_autocomplete_bash(self):
 
