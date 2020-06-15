@@ -21,7 +21,8 @@
     "python.linting.pylintEnabled": false,
     "python.linting.flake8Enabled": true,
     "python.linting.flake8Args": [
-        "per-file-ignores=hpecp/__init__.py:F401"
+        "per-file-ignores=hpecp/__init__.py:F401",
+        "--docstring-convention=numpy"
     ],
     "python.linting.enabled": true,
     "python.formatting.provider": "black",

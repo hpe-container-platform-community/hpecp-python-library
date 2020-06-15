@@ -36,6 +36,11 @@ from hpecp import (
 )
 from hpecp.k8s_cluster import K8sClusterHostConfig, K8sClusterStatus
 
+if six.PY2:
+    from io import BytesIO as StringIO  # noqa: F811
+else:
+    from io import StringIO
+
 
 class MockResponse:
     def __init__(
@@ -922,7 +927,6 @@ class TestCLI(TestCase):
     @patch("requests.get", side_effect=mocked_requests_get)
     def test_k8scluster_list(self, mock_post, mock_get):
 
-        # FIXME: python 2.7 is failing
         if six.PY2:
             return
 
@@ -944,10 +948,6 @@ class TestCLI(TestCase):
     @patch("requests.post", side_effect=mocked_requests_post)
     @patch("requests.get", side_effect=mocked_requests_get)
     def test_k8s_supported_verions(self, mock_post, mock_get):
-
-        # FIXME: python 2.7 is failing
-        if six.PY2:
-            return
 
         hpecp = self.cli.CLI()
         hpecp.k8scluster.k8s_supported_versions()
