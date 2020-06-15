@@ -106,5 +106,8 @@ class TestCLI(TestCase):
 
     def test_autocomplete_bash(self):
 
-        hpecp = self.cli.CLI()
-        hpecp.autocomplete.bash()
+        try:
+            hpecp = self.cli.CLI()
+            hpecp.autocomplete.bash()
+        except Exception:
+            self.fail("Unexpected exception.")
