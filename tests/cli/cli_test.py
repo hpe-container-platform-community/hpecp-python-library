@@ -26,7 +26,6 @@ from unittest import TestCase
 
 import requests
 import six
-from mock import patch
 
 if six.PY2:
     from io import BytesIO as StringIO  # noqa: F811
@@ -95,7 +94,7 @@ class TestCLI(TestCase):
 
         with self.assertRaises(SystemExit) as cm:
             self.cli.HPECP_CONFIG_FILE = "this_file_should_not_exist"
-            hpecp = self.cli.get_client()
+            self.cli.get_client()
 
         self.assertEqual(cm.exception.code, 1)
 
@@ -111,4 +110,3 @@ class TestCLI(TestCase):
             hpecp.autocomplete.bash()
         except Exception:
             self.fail("Unexpected exception.")
-
