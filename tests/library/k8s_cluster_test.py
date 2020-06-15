@@ -218,7 +218,7 @@ class TestClusterList(TestCase):
             "+-------------+-----------------------+\n"
             "| my cluster  | /api/v2/k8scluster/20 |\n"
             "+-------------+-----------------------+",
-        )  # noqa: E131
+        )
 
 
 class TestCreateCluster(TestCase):
