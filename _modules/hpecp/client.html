@@ -64,11 +64,13 @@
 <span class="c1"># ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR</span>
 <span class="c1"># OTHER DEALINGS IN THE SOFTWARE.</span>
 
+<span class="sd">&quot;&quot;&quot;HPE Container Platform Client.&quot;&quot;&quot;</span>
+
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
 
-<span class="kn">import</span> <span class="nn">configparser</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">configparser</span> <span class="kn">import</span> <span class="n">SafeConfigParser</span>
 
 <span class="kn">import</span> <span class="nn">requests</span>
 <span class="kn">from</span> <span class="nn">six</span> <span class="kn">import</span> <span class="n">raise_from</span>
@@ -87,9 +89,10 @@
 <span class="kn">from</span> <span class="nn">.license</span> <span class="kn">import</span> <span class="n">LicenseController</span>
 <span class="kn">from</span> <span class="nn">.lock</span> <span class="kn">import</span> <span class="n">LockController</span>
 <span class="kn">from</span> <span class="nn">.logger</span> <span class="kn">import</span> <span class="n">Logger</span>
-<span class="kn">from</span> <span class="nn">.tenant</span> <span class="kn">import</span> <span class="n">TenantController</span>
 <span class="kn">from</span> <span class="nn">.role</span> <span class="kn">import</span> <span class="n">RoleController</span>
+<span class="kn">from</span> <span class="nn">.tenant</span> <span class="kn">import</span> <span class="n">TenantController</span>
 <span class="kn">from</span> <span class="nn">.user</span> <span class="kn">import</span> <span class="n">UserController</span>
+<span class="kn">import</span> <span class="nn">codecs</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="n">basestring</span>
@@ -98,8 +101,9 @@
 
 
 <div class="viewcode-block" id="ContainerPlatformClient"><a class="viewcode-back" href="../../hpecp.client.html#hpecp.client.ContainerPlatformClient">[docs]</a><span class="k">class</span> <span class="nc">ContainerPlatformClient</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Client object for HPE Container Platform.  This is the central object</span>
-<span class="sd">    that users of this library work with.</span>
+    <span class="sd">&quot;&quot;&quot;Client object for HPE Container Platform.</span>
+
+<span class="sd">    This is the central object that users of this library work with.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -172,7 +176,6 @@
 <span class="sd">        username = admin</span>
 <span class="sd">        password = admin123</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="k">if</span> <span class="n">profile</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">profile</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span>
 
@@ -186,12 +189,12 @@
                 <span class="s2">&quot;Could not find configuration file &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">config_file</span><span class="p">)</span>
             <span class="p">)</span>
 
-        <span class="n">config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">config_file</span><span class="p">)</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">SafeConfigParser</span><span class="p">()</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">readfp</span><span class="p">(</span><span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="s2">&quot;utf8&quot;</span><span class="p">))</span>
 
-        <span class="k">assert</span> <span class="n">profile</span> <span class="ow">in</span> <span class="n">config</span><span class="p">,</span> <span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39; section not found in &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="n">profile</span><span class="p">,</span> <span class="n">config_file</span>
-        <span class="p">)</span>
+        <span class="k">assert</span> <span class="p">(</span>
+            <span class="n">profile</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">sections</span><span class="p">()</span>
+        <span class="p">),</span> <span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39; section not found in &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">config_file</span><span class="p">)</span>
         <span class="k">assert</span> <span class="p">(</span>
             <span class="s2">&quot;username&quot;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="n">profile</span><span class="p">]</span> <span class="ow">or</span> <span class="s2">&quot;username&quot;</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span>
         <span class="p">),</span> <span class="p">(</span>
@@ -276,23 +279,24 @@
 
 <div class="viewcode-block" id="ContainerPlatformClient.create_from_env"><a class="viewcode-back" href="../../hpecp.client.html#hpecp.client.ContainerPlatformClient.create_from_env">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">create_from_env</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Create an instance of ContainerPlatformClient from environment variables:</span>
+        <span class="sd">&quot;&quot;&quot;Create an instance of ContainerPlatformClient from environment variables.</span>
 
-<span class="sd">        Variables::</span>
+<span class="sd">        Variables</span>
+<span class="sd">        ---------</span>
+<span class="sd">        HPECP_USERNAME</span>
+<span class="sd">        HPECP_PASSWORD</span>
+<span class="sd">        HPECP_API_HOST</span>
+<span class="sd">        HPECP_API_PORT</span>
+<span class="sd">        HPECP_USE_SSL</span>
+<span class="sd">        HPECP_VERIFY_SSL</span>
+<span class="sd">        HPECP_WARN_SSL</span>
 
-<span class="sd">            HPECP_USERNAME</span>
-<span class="sd">            HPECP_PASSWORD</span>
-<span class="sd">            HPECP_API_HOST</span>
-<span class="sd">            HPECP_API_PORT</span>
-<span class="sd">            HPECP_USE_SSL</span>
-<span class="sd">            HPECP_VERIFY_SSL</span>
-<span class="sd">            HPECP_warn_ssl</span>
-
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
 <span class="sd">        See ContainerPlatformClient</span>
 <span class="sd">        :py:class:`constructor &lt;ContainerPlatformClient&gt;` for the paramaeter</span>
 <span class="sd">        definitions.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="k">if</span> <span class="s2">&quot;HPECP_USERNAME&quot;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
             <span class="n">HPECP_USERNAME</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;HPECP_USERNAME&quot;</span><span class="p">]</span>
 
@@ -334,7 +338,6 @@
         <span class="n">verify_ssl</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">warn_ssl</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Doc string is defined at the top of the class&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_log</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">verify_ssl</span> <span class="o">==</span> <span class="s2">&quot;True&quot;</span><span class="p">:</span>
@@ -407,13 +410,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_role</span> <span class="o">=</span> <span class="n">RoleController</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ContainerPlatformClient.create_session"><a class="viewcode-back" href="../../hpecp.client.html#hpecp.client.ContainerPlatformClient.create_session">[docs]</a>    <span class="k">def</span> <span class="nf">create_session</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Create a session with the HPE CP controller defined in the object</span>
-
-<span class="sd">        :py:class:`ContainerPlatformClient`.</span>
+        <span class="sd">&quot;&quot;&quot;Create a session with the HPE CP controller.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        ContainerPlatformClient:</span>
+<span class="sd">        ContainerPlatformClient</span>
 <span class="sd">            An instance of ContainerPlatformClient is returned.</span>
 
 <span class="sd">        Raises</span>
@@ -423,7 +424,6 @@
 <span class="sd">            requests.exceptions.RequestException</span>
 <span class="sd">            for exceptions that are not a connection error</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/api/v1/login&quot;</span>
         <span class="n">auth</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="s2">&quot;password&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">}</span>
 
@@ -615,8 +615,9 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">tenant</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Reference  to an object of type `.tenant.TenantController`. See</span>
-<span class="sd">        the class :py:class:`.tenant.TenantController` for the methods</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve a reference to `.tenant.TenantController` object.</span>
+
+<span class="sd">        See the class :py:class:`.tenant.TenantController` for the methods</span>
 <span class="sd">        available.</span>
 
 <span class="sd">        Example</span>
@@ -633,8 +634,9 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Reference to an object of type `.config.ConfigController`. See</span>
-<span class="sd">        the class :py:class:`.config.ConfigController` for the methods</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve a reference to `.config.ConfigController` object.</span>
+
+<span class="sd">        See the class :py:class:`.config.ConfigController` for the methods</span>
 <span class="sd">        available.</span>
 
 <span class="sd">        Example</span>
@@ -665,12 +667,12 @@
 <span class="sd">        ...        }</span>
 <span class="sd">        ...    )</span>
 <span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
-
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">k8s_cluster</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Reference to an object of type `.k8s_cluster.K8sClusterController`.</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve a reference to `.k8s_cluster.K8sClusterController` object.</span>
+
 <span class="sd">        See the class :py:class:`.k8s_cluster.K8sClusterController` for the</span>
 <span class="sd">        methods available.</span>
 
@@ -688,7 +690,8 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">k8s_worker</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Reference to an object of type `.k8s_worker.K8sWorkerController`.</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve a reference to `.k8s_worker.K8sWorkerController` object.</span>
+
 <span class="sd">        See the class :py:class:`.k8s_worker.K8sWorkerController` for the</span>
 <span class="sd">        methods available.</span>
 
@@ -706,8 +709,9 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">gateway</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Reference to an object of type `.gateway.GatewayController`. See</span>
-<span class="sd">        the class :py:class:`.gateway.GatewayController` for the methods</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve a reference to `.gateway.GatewayController` object.</span>
+
+<span class="sd">        See the class :py:class:`.gateway.GatewayController` for the methods</span>
 <span class="sd">        available.</span>
 
 <span class="sd">        Example</span>
@@ -724,8 +728,9 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">license</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Reference to an object of type `.license.LicenseController`. See</span>
-<span class="sd">        the class :py:class:`.license.LicenseController` for the methods</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve a reference to a `.license.LicenseController` object.</span>
+
+<span class="sd">        See the class :py:class:`.license.LicenseController` for the methods</span>
 <span class="sd">        available.</span>
 
 <span class="sd">        Example</span>
@@ -742,8 +747,10 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">lock</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Reference to an object of type `.lock.LockController`. See the</span>
-<span class="sd">        class :py:class:`.lock.LockController` for the methods available.</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve a reference to a `.lock.LockController` object.</span>
+
+<span class="sd">        See the class :py:class:`.lock.LockController` for the methods</span>
+<span class="sd">        available.</span>
 
 <span class="sd">        Example</span>
 <span class="sd">        -------</span>
@@ -759,7 +766,9 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Reference to :py:class:`.logger.Logger`. The log function can be</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve a reference to a `:py:class:`.logger.Logger`.</span>
+
+<span class="sd">        The log function can be</span>
 <span class="sd">        called from controller objects via the `client` parameter passed in</span>
 <span class="sd">        during instantiation of the controller.</span>
 
@@ -775,13 +784,14 @@
 <span class="sd">                ...</span>
 <span class="sd">                self.client.log.error(&quot;Some Error&quot;)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_log</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Reference to an object of type `.user.UserController`. See the</span>
-<span class="sd">        class :py:class:`.lock.UserController` for the methods available.</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve a reference to a `.lock.LockController` object.</span>
+
+<span class="sd">        See the class :py:class:`.lock.UserController` for the methods</span>
+<span class="sd">        available.</span>
 
 <span class="sd">        Example</span>
 <span class="sd">        -------</span>
@@ -797,8 +807,9 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">catalog</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Reference to an object of type `.catalog.CatalogController`. See</span>
-<span class="sd">        the class :py:class:`.catalog.CatalogController` for the methods</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve a reference to a `.catalog.CatalogController` object.</span>
+
+<span class="sd">        See the class :py:class:`.catalog.CatalogController` for the methods</span>
 <span class="sd">        available.</span>
 
 <span class="sd">        Example</span>
@@ -815,8 +826,10 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">role</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Reference to an object of type `.role.RoleController`. See the</span>
-<span class="sd">        class :py:class:`.role.RoleController` for the methods available.</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve a reference to a `.role.RoleController` object.</span>
+
+<span class="sd">        See the class :py:class:`.role.RoleController` for the methods</span>
+<span class="sd">        available.</span>
 
 <span class="sd">        Example</span>
 <span class="sd">        -------</span>
