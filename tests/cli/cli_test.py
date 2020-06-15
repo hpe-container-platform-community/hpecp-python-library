@@ -26,7 +26,7 @@ from unittest import TestCase
 
 import requests
 import six
-from mock import MagicMock, mock, mock_open, patch
+from mock import mock, mock_open, patch
 
 if six.PY2:
     from io import BytesIO as StringIO  # noqa: F811
@@ -123,7 +123,7 @@ class TestCLI(TestCase):
             builtins_name = "builtins.open"
 
         m = mock_open(read_data=mock_data)
-        with patch(builtins_name, m) as mock_file:
+        with patch(builtins_name, m):
 
             # mock the input capture to simulate user input
             # TODO: we want to send different data for each parameter
