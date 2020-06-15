@@ -405,13 +405,13 @@ class TestCatalogRefresh(unittest.TestCase):
             "'catalog_id' must have format "
             + r"'\/api\/v1\/catalog\/\[0-9\]\+'",
         ):
-            client.catalog.refresh()("garbage")
+            client.catalog.refresh("garbage")
 
         with self.assertRaisesRegexp(
             APIItemNotFoundException,
             "'catalog not found with id: /api/v1/catalog/101'",
         ):
-            client.catalog.refresh()("/api/v1/catalog/101")
+            client.catalog.refresh("/api/v1/catalog/101")
 
         client.catalog.refresh("/api/v1/catalog/99")
 
