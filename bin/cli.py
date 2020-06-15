@@ -20,7 +20,7 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-"""Prototype for HPE Container Platform API."""
+"""HPE Container Platform CLI."""
 
 import base64
 import configparser
@@ -219,13 +219,13 @@ class GatewayProxy(object):
 
         if ssh_key_file is not None:
             with open(ssh_key_file) as f:
-                ssh_key_data = f.read()
+                ssh_key = f.read()
 
         try:
             gateway_id = get_client().gateway.create_with_ssh_key(
                 ip=ip,
                 proxy_node_hostname=proxy_node_hostname,
-                ssh_key_data=ssh_key_data,
+                ssh_key_data=ssh_key,
                 tags=tags,
             )
             print(gateway_id)
@@ -607,10 +607,9 @@ class K8sClusterProxy(object):
                 data = get_client().k8s_cluster.list().json
                 print(json.dumps(jmespath.search(str(query), data)))
             else:
-                output = (
+                print(
                     get_client().k8s_cluster.list().tabulate(columns=columns)
                 )
-                print(output)
 
     def get(
         self, k8scluster_id,
