@@ -271,15 +271,19 @@ class TestTentants(TestCase):
 
         with self.assertRaisesRegexp(
             AssertionError,
-            "'tenant_id' must have format "
-            + r"'\/api\/v1\/tenant\/\[0-9\]\+'",
+            (
+                "'tenant_id' must have format "
+                + r"'\/api\/v1\/tenant\/\[0-9\]\+'"  # noqa: W503
+            ),
         ):
             client.tenant.get("garbage")
 
         with self.assertRaisesRegexp(
             AssertionError,
-            "'tenant_id' must have format "
-            + r"'\/api\/v1\/tenant\/\[0-9\]\+'",
+            (
+                "'tenant_id' must have format "
+                + r"'\/api\/v1\/tenant\/\[0-9\]\+'"  # noqa: W503
+            ),
         ):
             client.tenant.get("/api/v1/tenant/some_id")
 
