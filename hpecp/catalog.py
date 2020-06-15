@@ -114,7 +114,7 @@ class CatalogController:
 
         _data = {"action": "install"}
 
-        response = self.client._request(
+        self.client._request(
             url=catalog_id,
             http_method="post",
             description="catalog/post/install",
