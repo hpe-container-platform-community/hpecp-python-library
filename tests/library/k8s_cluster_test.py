@@ -213,14 +213,12 @@ class TestClusterList(TestCase):
 
         self.assertEqual(
             get_client().k8s_cluster.list().tabulate(["description", "id"]),
-            (
-                "+-------------+-----------------------+\n" # noqa : E128
-                "| description |          id           |\n"
-                "+-------------+-----------------------+\n"
-                "| my cluster  | /api/v2/k8scluster/20 |\n"
-                "+-------------+-----------------------+",
-            ),
-        )
+            "+-------------+-----------------------+\n"
+            "| description |          id           |\n"
+            "+-------------+-----------------------+\n"
+            "| my cluster  | /api/v2/k8scluster/20 |\n"
+            "+-------------+-----------------------+",
+        )  # noqa: E131
 
 
 class TestCreateCluster(TestCase):

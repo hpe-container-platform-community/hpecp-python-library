@@ -512,12 +512,14 @@ class K8sClusterProxy(object):
         self,
         all_columns=False,
         columns=["id", "name", "description", "status"],
+        output="table",
         query={},
     ):
         """Print a table of K8s Clusters.
 
         :param all_columns: (True/False) set to True to return all columns
-        :param columns: (aaa) afadsfs
+        :param output: how to display the output [text|table]
+        :param columns: Which columns to display
         """
         if all_columns:
             print(get_client().k8s_cluster.list().tabulate())
