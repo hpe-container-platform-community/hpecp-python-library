@@ -20,7 +20,7 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-"""Prototype for HPE Container Platform API."""
+"""HPE Container Platform CLI."""
 
 import base64
 import configparser
@@ -31,19 +31,8 @@ from collections import OrderedDict
 
 import fire
 import jmespath
+import six
 import yaml
-
-from hpecp.logger import Logger
-
-from hpecp.gateway import (
-    Gateway,
-    GatewayStatus,
-)
-from hpecp.k8s_cluster import (
-    K8sClusterHostConfig,
-    K8sClusterStatus,
-)
-from hpecp.user import User
 
 from hpecp import (
     APIException,
@@ -51,7 +40,11 @@ from hpecp import (
     ContainerPlatformClient,
     ContainerPlatformClientException,
 )
+from hpecp.gateway import Gateway, GatewayStatus
+from hpecp.k8s_cluster import K8sClusterHostConfig, K8sClusterStatus
 from hpecp.k8s_worker import WorkerK8sStatus
+from hpecp.logger import Logger
+from hpecp.user import User
 
 if sys.version_info[0] >= 3:
     unicode = str
@@ -145,13 +138,13 @@ class GatewayProxy(object):
 
         if ssh_key_file is not None:
             with open(ssh_key_file) as f:
-                ssh_key_data = f.read()
+                ssh_key = f.read()
 
         try:
             gateway_id = get_client().gateway.create_with_ssh_key(
                 ip=ip,
                 proxy_node_hostname=proxy_node_hostname,
-                ssh_key_data=ssh_key_data,
+                ssh_key_data=ssh_key,
                 tags=tags,
             )
             print(gateway_id)
@@ -519,12 +512,14 @@ class K8sClusterProxy(object):
         self,
         all_columns=False,
         columns=["id", "name", "description", "status"],
+        output="table",
         query={},
     ):
         """Print a table of K8s Clusters.
 
         :param all_columns: (True/False) set to True to return all columns
-        :param columns: (aaa) afadsfs
+        :param output: how to display the output [text|table]
+        :param columns: Which columns to display
         """
         if all_columns:
             print(get_client().k8s_cluster.list().tabulate())
@@ -533,10 +528,9 @@ class K8sClusterProxy(object):
                 data = get_client().k8s_cluster.list().json
                 print(json.dumps(jmespath.search(str(query), data)))
             else:
-                output = (
+                print(
                     get_client().k8s_cluster.list().tabulate(columns=columns)
                 )
-                print(output)
 
     def get(
         self, k8scluster_id,
@@ -1118,23 +1112,20 @@ def configure_cli():
         controller_username = config_reader.username
         controller_password = config_reader.password
 
-    if sys.version_info[0] >= 3:
-        raw_input = input
-
     sys.stdout.write("Controller API Host [{}]: ".format(controller_api_host))
-    tmp = raw_input()
+    tmp = six.moves.input()
     if tmp != "":
         controller_api_host = tmp
 
     sys.stdout.write("Controller API Port [{}]: ".format(controller_api_port))
-    tmp = input()
+    tmp = six.moves.input()
     if tmp != "":
         controller_api_port = tmp
 
     sys.stdout.write(
         "Controller uses ssl (True|False) [{}]: ".format(controller_use_ssl)
     )
-    tmp = input()
+    tmp = six.moves.input()
     if tmp != "":
         controller_use_ssl = tmp
 
@@ -1143,24 +1134,24 @@ def configure_cli():
             controller_verify_ssl
         )
     )
-    tmp = input()
+    tmp = six.moves.input()
     if tmp != "":
         controller_verify_ssl = tmp
 
     sys.stdout.write(
         "Controller warn ssl (True|False) [{}]: ".format(controller_warn_ssl)
     )
-    tmp = input()
+    tmp = six.moves.input()
     if tmp != "":
         controller_warn_ssl = tmp
 
     sys.stdout.write("Controller Username [{}]: ".format(controller_username))
-    tmp = raw_input()
+    tmp = six.moves.input()
     if tmp != "":
         controller_username = tmp
 
     sys.stdout.write("Controller Password [{}]: ".format(controller_password))
-    tmp = raw_input()
+    tmp = six.moves.input()
     if tmp != "":
         controller_password = tmp
 
