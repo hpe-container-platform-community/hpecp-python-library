@@ -121,6 +121,33 @@ class CatalogController:
             data=_data,
         )
 
+    def refresh(self, catalog_id):
+        """Refresh the specified catalog.
+
+        Parameters
+        ----------
+        catalog_id : str
+            The ID of the catalog - format /api/v1/catalog/[0-9]+
+
+        Raises
+        -------
+        APIItemNotFoundException
+        APIItemConflictException
+        APIException
+        """
+        # Make sure that the given catalog exists, other validations will also
+        # be taken care of.
+        self.get(catalog_id)
+
+        _data = {"action": "refresh"}
+
+        response = self.client._request(
+            url=catalog_id,
+            http_method="post",
+            description="catalog/post/refresh",
+            data=_data,
+        )
+
 
 class Catalog:
     """Catalog Image item."""

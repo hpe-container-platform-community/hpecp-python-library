@@ -375,9 +375,45 @@ class TestCatalogInstall(unittest.TestCase):
             APIItemNotFoundException,
             "'catalog not found with id: /api/v1/catalog/101'",
         ):
-            client.catalog.get("/api/v1/catalog/101")
+            client.catalog.install("/api/v1/catalog/101")
 
         client.catalog.install("/api/v1/catalog/99")
+
+
+class TestCatalogRefresh(unittest.TestCase):
+    def mocked_requests_refresh(*args, **kwargs):
+        if args[0] == "https://127.0.0.1:8080/api/v1/catalog/99":
+            return MockResponse(json_data={}, status_code=204, headers=dict())
+        if args[0] == "https://127.0.0.1:8080/api/v1/login":
+            return session_mock_response()
+        raise RuntimeError("Unhandle GET request: " + args[0])
+
+    @patch("requests.post", side_effect=mocked_requests_refresh)
+    @patch("requests.get", side_effect=mocked_requests_get)
+    def test_catalog_refresh(self, mock_get, mock_post):
+
+        client = get_client()
+
+        with self.assertRaisesRegexp(
+            AssertionError,
+            "'catalog_id' must be provided and must be a string",
+        ):
+            client.catalog.install(999)
+
+        with self.assertRaisesRegexp(
+            AssertionError,
+            "'catalog_id' must have format "
+            + r"'\/api\/v1\/catalog\/\[0-9\]\+'",
+        ):
+            client.catalog.refresh()("garbage")
+
+        with self.assertRaisesRegexp(
+            APIItemNotFoundException,
+            "'catalog not found with id: /api/v1/catalog/101'",
+        ):
+            client.catalog.refresh()("/api/v1/catalog/101")
+
+        client.catalog.refresh("/api/v1/catalog/99")
 
 
 class TestCLI(unittest.TestCase):
