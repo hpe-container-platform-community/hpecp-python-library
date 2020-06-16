@@ -438,6 +438,36 @@ class ContainerPlatformClient(object):
         create_auth_headers=True,
         additional_headers={},
     ):
+        """Make HTTP requests to the API host.
+
+        Parameters
+        ----------
+        url : str
+            This will be suffixed to the API host's address.
+            Example '/api/v1/catalog/[0-9]+'
+        http_method : str, optional
+            HTTP method to be executed, by default "get"
+        data : dict, optional
+            Request payload (applicable for "post", "put"), by default {}
+        description : str, optional
+            Brief description about the request. , by default ""
+        create_auth_headers : bool, optional
+            By default True
+        additional_headers : dict, optional
+            Any additonal headers to be passed while making the request,
+            by default {}
+
+        Returns
+        -------
+        Response
+            The http response object
+
+        Raises
+        ------
+        APIItemNotFoundException
+        APIItemConflictException
+        APIException
+        """
         if create_auth_headers:
             headers = self._request_headers()
         else:
