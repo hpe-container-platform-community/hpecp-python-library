@@ -25,7 +25,7 @@ from tabulate import tabulate
 
 
 class CatalogController:
-    """Class that users will interact with to work with catalogs.
+    """Class that users will interact with to work with catalogs
 
     An instance of this class is available in the
     `client.ContainerPlatformClient` with the attribute name
@@ -34,7 +34,7 @@ class CatalogController:
     example below:
 
     Examples
-    --------
+    -----------
     >>> client = ContainerPlatformClient(...).create_session()
     >>> client.catalog.list()
     """
