@@ -484,6 +484,36 @@
         <span class="n">create_auth_headers</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">additional_headers</span><span class="o">=</span><span class="p">{},</span>
     <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Make HTTP requests to the API host.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        url : str</span>
+<span class="sd">            This will be suffixed to the API host&#39;s address.</span>
+<span class="sd">            Example &#39;/api/v1/catalog/[0-9]+&#39;</span>
+<span class="sd">        http_method : str, optional</span>
+<span class="sd">            HTTP method to be executed, by default &quot;get&quot;</span>
+<span class="sd">        data : dict, optional</span>
+<span class="sd">            Request payload (applicable for &quot;post&quot;, &quot;put&quot;), by default {}</span>
+<span class="sd">        description : str, optional</span>
+<span class="sd">            Brief description about the request. , by default &quot;&quot;</span>
+<span class="sd">        create_auth_headers : bool, optional</span>
+<span class="sd">            By default True</span>
+<span class="sd">        additional_headers : dict, optional</span>
+<span class="sd">            Any additonal headers to be passed while making the request,</span>
+<span class="sd">            by default {}</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Response</span>
+<span class="sd">            The http response object</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        APIItemNotFoundException</span>
+<span class="sd">        APIItemConflictException</span>
+<span class="sd">        APIException</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">create_auth_headers</span><span class="p">:</span>
             <span class="n">headers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request_headers</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
