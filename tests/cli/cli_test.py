@@ -30,34 +30,15 @@ from mock import mock, mock_open, patch
 
 if six.PY2:
     from io import BytesIO as StringIO  # noqa: F811
+    from test.test_support import EnvironmentVarGuard
 else:
     from io import StringIO
+    from test.support import EnvironmentVarGuard
 
-
-class MockResponse:
-    def __init__(
-        self,
-        json_data,
-        status_code,
-        headers,
-        raise_for_status_flag=False,
-        text_data="",
-    ):
-        self.json_data = json_data
-        self.text = text_data
-        self.status_code = status_code
-        self.raise_for_status_flag = raise_for_status_flag
-        self.headers = headers
-
-    def raise_for_status(self):
-        if self.raise_for_status_flag:
-            self.text = "some error occurred"
-            raise requests.exceptions.HTTPError()
-        else:
-            return
-
-    def json(self):
-        return self.json_data
+try:
+    from imp import reload
+except Exception:
+    from importlib import reload
 
 
 class TestCLI(TestCase):
@@ -90,6 +71,7 @@ class TestCLI(TestCase):
     def tearDown(self):
         self.tmpFile.close()
         sys.stdout = self.saved_stdout
+        del self.cli.HPECP_CONFIG_FILE
 
     def test_config_file_missing(self):
 
@@ -187,15 +169,108 @@ class TestCLI(TestCase):
 
 class TestCLIUsingCfgFileEnvVar(TestCase):
     def test_hpe_config_file_var(self):
+        dummy_filepath = "/not/a/real/dir/not_a_real_file"
 
-        filepath = "/not/a/real/dir/not_a_real_file"
-        os.environ["HPECP_CONFIG_FILE"] = filepath
+        env = EnvironmentVarGuard()
+        env.set("HPECP_CONFIG_FILE", dummy_filepath)
+
+        with env:
+            sys.path.insert(0, os.path.abspath("../../"))
+            from bin import cli
+
+            # reload cli module with mock env
+            reload(cli)
+
+            self.assertEqual(dummy_filepath, cli.HPECP_CONFIG_FILE)
+
+
+class MockResponse:
+    def __init__(
+        self,
+        json_data,
+        status_code,
+        headers,
+        raise_for_status_flag=False,
+        text_data="",
+    ):
+        self.json_data = json_data
+        self.text = text_data
+        self.status_code = status_code
+        self.raise_for_status_flag = raise_for_status_flag
+        self.headers = headers
+
+    def raise_for_status(self):
+        if self.raise_for_status_flag:
+            self.text = "some error occurred"
+            raise requests.exceptions.HTTPError()
+        else:
+            return
+
+    def json(self):
+        return self.json_data
+
+
+def session_mock_response():
+    return MockResponse(
+        json_data={},
+        status_code=200,
+        headers={
+            "location": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+        },
+    )
+
+
+class TestCLIHttpClient(TestCase):
+    def setUp(self):
+        file_data = dedent(
+            """                        [default]
+                        api_host = 127.0.0.1
+                        api_port = 8080
+                        use_ssl = True
+                        verify_ssl = False
+                        warn_ssl = True
+                        username = admin
+                        password = admin123"""
+        )
+
+        self.tmpFile = tempfile.NamedTemporaryFile(delete=True)
+        self.tmpFile.write(file_data.encode("utf-8"))
+        self.tmpFile.flush()
 
         sys.path.insert(0, os.path.abspath("../../"))
         from bin import cli
 
         self.cli = cli
+        self.cli.HPECP_CONFIG_FILE = self.tmpFile.name
 
-        self.assertEqual(
-            "/not/a/real/dir/not_a_real_file", self.cli.HPECP_CONFIG_FILE
-        )
+        self.saved_stdout = sys.stdout
+        self.out = StringIO()
+        sys.stdout = self.out
+
+    def tearDown(self):
+        self.tmpFile.close()
+        sys.stdout = self.saved_stdout
+
+    def mocked_requests_post(*args, **kwargs):
+        if args[0] == "https://127.0.0.1:8080/api/v1/login":
+            return session_mock_response()
+        raise RuntimeError("Unhandle POST request: " + args[0])
+
+    def mocked_requests_get(*args, **kwargs):
+        if args[0] == "https://127.0.0.1:8080/some/url":
+            return MockResponse(
+                json_data={"foo": "bar"},
+                text_data='{"foo":"bar"}',
+                status_code=200,
+                headers=dict(),
+            )
+        raise RuntimeError("Unhandle GET request: " + args[0])
+
+    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_get(self, mock_get, mock_post):
+
+        hpecp = self.cli.CLI()
+        hpecp.httpclient.get(url="/some/url")
+
+        self.assertEqual(self.out.getvalue(), '{"foo":"bar"}\n')
