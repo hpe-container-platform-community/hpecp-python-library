@@ -125,7 +125,8 @@ coverage erase && coverage run --source hpecp,bin setup.py test && coverage repo
 
 ```
 pip3 install flake8 flake8-docstrings
-flake8 --docstring-convention numpy bin/ hpecp/ tests/
+flake8 --docstring-convention numpy bin/ hpecp/
+flake8 --ignore=D tests/
 ```
 
 ### FORMATTING

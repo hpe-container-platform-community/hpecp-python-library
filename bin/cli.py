@@ -31,6 +31,7 @@ from collections import OrderedDict
 
 import fire
 import jmespath
+import six
 import yaml
 
 from hpecp import (
@@ -593,13 +594,20 @@ class K8sClusterProxy(object):
         self,
         all_columns=False,
         columns=["id", "name", "description", "status"],
+        output="table",
         query={},
     ):
         """Print a table of K8s Clusters.
 
         :param all_columns: (True/False) set to True to return all columns
-        :param columns: (aaa) afadsfs
-        """
+        :param output: how to display the output [text|table]
+        :param columns: Which columns to display
+
+        Example
+        -------
+        $ hpecp k8scluster list --query "[*]._links.self.href | join(' ', @)" | tr -d '"'
+        /api/v2/k8scluster/1 /api/v2/k8scluster/2
+        """  # noqa: E501
         if all_columns:
             print(get_client().k8s_cluster.list().tabulate())
         else:
@@ -1191,23 +1199,20 @@ def configure_cli():
         controller_username = config_reader.username
         controller_password = config_reader.password
 
-    if sys.version_info[0] >= 3:
-        raw_input = input
-
     sys.stdout.write("Controller API Host [{}]: ".format(controller_api_host))
-    tmp = raw_input()
+    tmp = six.moves.input()
     if tmp != "":
         controller_api_host = tmp
 
     sys.stdout.write("Controller API Port [{}]: ".format(controller_api_port))
-    tmp = input()
+    tmp = six.moves.input()
     if tmp != "":
         controller_api_port = tmp
 
     sys.stdout.write(
         "Controller uses ssl (True|False) [{}]: ".format(controller_use_ssl)
     )
-    tmp = input()
+    tmp = six.moves.input()
     if tmp != "":
         controller_use_ssl = tmp
 
@@ -1216,24 +1221,24 @@ def configure_cli():
             controller_verify_ssl
         )
     )
-    tmp = input()
+    tmp = six.moves.input()
     if tmp != "":
         controller_verify_ssl = tmp
 
     sys.stdout.write(
         "Controller warn ssl (True|False) [{}]: ".format(controller_warn_ssl)
     )
-    tmp = input()
+    tmp = six.moves.input()
     if tmp != "":
         controller_warn_ssl = tmp
 
     sys.stdout.write("Controller Username [{}]: ".format(controller_username))
-    tmp = raw_input()
+    tmp = six.moves.input()
     if tmp != "":
         controller_username = tmp
 
     sys.stdout.write("Controller Password [{}]: ".format(controller_password))
-    tmp = raw_input()
+    tmp = six.moves.input()
     if tmp != "":
         controller_password = tmp
 
@@ -1247,7 +1252,7 @@ def configure_cli():
     config["default"]["username"] = controller_username
     config["default"]["password"] = controller_password
 
-    with open(config_path, "w",) as config_file:
+    with open(config_path, "w") as config_file:
         config.write(config_file)
 
 

@@ -224,15 +224,19 @@ class TestCatalogGet(unittest.TestCase):
 
         with self.assertRaisesRegexp(
             AssertionError,
-            "'catalog_id' must have format "
-            + r"'\/api\/v1\/catalog\/\[0-9\]\+'",
+            (
+                "'catalog_id' must have format "
+                + r"'\/api\/v1\/catalog\/\[0-9\]\+'"  # noqa: W503
+            ),
         ):
             get_client().catalog.get("garbage")
 
         with self.assertRaisesRegexp(
             AssertionError,
-            "'catalog_id' must have format "
-            + r"'\/api\/v1\/catalog\/\[0-9\]\+'",
+            (
+                "'catalog_id' must have format "
+                + r"'\/api\/v1\/catalog\/\[0-9\]\+'"  # noqa: W503
+            ),
         ):
             get_client().catalog.get("/api/v1/catalog/some_id")
 

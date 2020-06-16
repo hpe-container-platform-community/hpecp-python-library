@@ -214,10 +214,10 @@ class TestClusterList(TestCase):
         self.assertEqual(
             get_client().k8s_cluster.list().tabulate(["description", "id"]),
             "+-------------+-----------------------+\n"
-            + "| description |          id           |\n"
-            + "+-------------+-----------------------+\n"
-            + "| my cluster  | /api/v2/k8scluster/20 |\n"
-            + "+-------------+-----------------------+",
+            "| description |          id           |\n"
+            "+-------------+-----------------------+\n"
+            "| my cluster  | /api/v2/k8scluster/20 |\n"
+            "+-------------+-----------------------+",
         )
 
 
