@@ -1,5 +1,3 @@
-name: hpecp-python-library Code Checks
-
 on:
   pull_request:
     branches:
@@ -35,13 +33,3 @@ jobs:
       - name: Check code formatting (black)
         run: |
           black --check hpecp/ tests/ bin/
-      - name: Code coverage for library (./hpecp)
-        run: |
-          coverage erase
-          coverage run --source hpecp setup.py test
-          coverage report -m --fail-under 68
-      - name: Code coverage for cli (./bin)
-        run: |
-          coverage erase
-          coverage run --source bin setup.py test
-          coverage report -m --fail-under 32

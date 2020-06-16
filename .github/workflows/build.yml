@@ -1,5 +1,3 @@
-name: hpecp-python-library Build
-
 on:
   pull_request:
     branches:
