@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  build:
+  check:
     name: hpecp-python-library (Checks)
     runs-on: ubuntu-latest
     strategy:
@@ -15,7 +15,8 @@ jobs:
         python-version: [3.8]
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout ${{ github.sha }} from repository ${{ github.repository }}
+        uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
