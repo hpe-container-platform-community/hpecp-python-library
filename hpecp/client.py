@@ -438,7 +438,7 @@ class ContainerPlatformClient(object):
         create_auth_headers=True,
         additional_headers={},
     ):
-        """Make HTTP requests to the API host.
+        """Makes HTTP requests to the API host.
 
         Parameters
         ----------
