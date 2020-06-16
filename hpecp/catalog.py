@@ -130,7 +130,7 @@ class CatalogController:
             The ID of the catalog - format /api/v1/catalog/[0-9]+
 
         Raises
-        -------
+        ------
         APIItemNotFoundException
         APIItemConflictException
         APIException

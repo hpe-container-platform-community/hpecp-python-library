@@ -97,7 +97,7 @@ class CatalogProxy(object):
     def list(
         self, output="json", columns=Catalog.default_display_fields, query={}
     ):
-        """Retrieve the list of catalogs
+        """Retrieve the list of catalogs.
 
         Parameters
         ----------
@@ -110,8 +110,7 @@ class CatalogProxy(object):
             Query in jmespath (https://jmespath.org/) format, by default {}
 
         Examples
-        ----------
-
+        --------
         > hpecp catalog list --output text --query '[0].distro_id'
 
         bluedata/spark240juphub7xssl
@@ -135,7 +134,7 @@ class CatalogProxy(object):
                 print(data)
 
     def refresh(self, catalog_id):
-        """Refresh a catalog
+        """Refresh a catalog.
 
         Parameters
         ----------
@@ -143,8 +142,7 @@ class CatalogProxy(object):
             The ID of the catalog - format: '/api/v1/catalog/[0-9]+'
 
         Examples
-        ----------
-
+        --------
         > hpecp catalog refresh /api/v1/catalog/99
 
         """
@@ -157,7 +155,7 @@ class CatalogProxy(object):
             sys.exit(1)
 
     def install(self, catalog_id):
-        """Install a catalog
+        """Install a catalog.
 
         Parameters
         ----------
@@ -165,9 +163,9 @@ class CatalogProxy(object):
             The ID of the catalog - format: '/api/v1/catalog/[0-9]+'
 
         Examples
-        ----------
-
+        --------
         > hpecp catalog install /api/v1/catalog/99
+
         """
         try:
             get_client().catalog.install(catalog_id)
