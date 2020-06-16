@@ -1,3 +1,5 @@
+name: Code Checks
+
 on:
   pull_request:
     branches:
