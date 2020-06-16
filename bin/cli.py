@@ -520,7 +520,12 @@ class K8sClusterProxy(object):
         :param all_columns: (True/False) set to True to return all columns
         :param output: how to display the output [text|table]
         :param columns: Which columns to display
-        """
+
+        Example
+        -------
+        $ hpecp k8scluster list --query "[*]._links.self.href | join(' ', @)" | tr -d '"'
+        /api/v2/k8scluster/1 /api/v2/k8scluster/2
+        """  # noqa: E501
         if all_columns:
             print(get_client().k8s_cluster.list().tabulate())
         else:
@@ -1165,7 +1170,7 @@ def configure_cli():
     config["default"]["username"] = controller_username
     config["default"]["password"] = controller_password
 
-    with open(config_path, "w",) as config_file:
+    with open(config_path, "w") as config_file:
         config.write(config_file)
 
 
