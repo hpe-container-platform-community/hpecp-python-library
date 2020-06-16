@@ -1,5 +1,2 @@
 [tool.black]
 line-length = 79
-
-[tool.coverage.run]
-relative_files = true
