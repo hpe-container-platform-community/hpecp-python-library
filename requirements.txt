@@ -7,3 +7,7 @@ polling
 pyyaml
 fire
 jmespath
+mock
+tox
+coverage
+python-coveralls
