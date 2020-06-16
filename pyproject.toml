@@ -2,4 +2,4 @@
 line-length = 79
 
 [tool.coverage.run]
-relative_files = True
+relative_files = true
