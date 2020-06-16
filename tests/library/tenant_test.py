@@ -184,7 +184,9 @@ class TestTentants(TestCase):
                     },
                     "constraints_supported": False,
                     "tenant_storage_quota_supported": False,
-                }
+                },
+                status_code=200,
+                headers={},
             )
         if args[0] == "https://127.0.0.1:8080/api/v1/tenant/2":
             # TODO: Get live data for individual tenants
@@ -220,8 +222,17 @@ class TestTentants(TestCase):
                     "tenant_storage_quota_supported": True,
                     "qos_multiplier": 1,
                 },
+                status_code=200,
+                headers={},
             )
-
+        if args[0] == "https://127.0.0.1:8080/api/v1/tenant/100":
+            # TODO: Get live data for individual tenants
+            return MockResponse(
+                json_data={},
+                status_code=404,
+                headers={},
+                raise_for_status_flag=True,
+            )
         raise RuntimeError("Unhandled GET request: " + args[0])
 
     def mocked_requests_post(*args, **kwargs):
@@ -287,19 +298,14 @@ class TestTentants(TestCase):
         ):
             client.tenant.get("/api/v1/tenant/some_id")
 
-    @skip("This does not work yet!")
     @patch("requests.get", side_effect=mocked_requests_get)
     @patch("requests.post", side_effect=mocked_requests_post)
     def test_get_tenant(self, mock_get, mock_post):
         tenant = get_client().tenant.get("/api/v1/tenant/1")
         self.assertEqual(tenant.id, "/api/v1/tenant/1")
 
-        tenant = get_client().tenant.get("/api/v1/tenant/1")
+        tenant = get_client().tenant.get("/api/v1/tenant/2")
         self.assertEqual(tenant.id, "/api/v1/tenant/2")
 
-        # TODO: test other property accessors
-        with self.assertRaisesRegexp(
-            APIItemNotFoundException,
-            "'tenant not found with id: /api/v1/tenant/100'",
-        ):
+        with self.assertRaises(APIItemNotFoundException):
             get_client().tenant.get("/api/v1/tenant/100")
