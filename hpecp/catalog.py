@@ -121,6 +121,33 @@ class CatalogController:
             data=_data,
         )
 
+    def refresh(self, catalog_id):
+        """Refresh the specified catalog.
+
+        Parameters
+        ----------
+        catalog_id : str
+            The ID of the catalog - format /api/v1/catalog/[0-9]+
+
+        Raises
+        ------
+        APIItemNotFoundException
+        APIItemConflictException
+        APIException
+        """
+        # Make sure that the given catalog exists, other validations will also
+        # be taken care of.
+        self.get(catalog_id)
+
+        _data = {"action": "refresh"}
+
+        self.client._request(
+            url=catalog_id,
+            http_method="post",
+            description="catalog/post/refresh",
+            data=_data,
+        )
+
 
 class Catalog:
     """Catalog Image item."""
@@ -195,6 +222,7 @@ class Catalog:
 
     def set_display_columns(self, columns):
         """Set the columns this instance should have when the instance is used
+
         with :py:meth:`.CatalogList.tabulate`.
 
         Parameters
@@ -212,7 +240,8 @@ class Catalog:
     def id(self):
         """@Field: from json['_links']['self']['href'] -
 
-        id format: '/api/v1/catalog/[0-9]+'"""
+        id format: '/api/v1/catalog/[0-9]+'
+        """
         return self.json["_links"]["self"]["href"]
 
     @property
@@ -252,7 +281,7 @@ class CatalogList:
 
     # Python 2
     def next(self):
-        """Support iterator access on Python 2.7"""
+        """Support iterator access on Python 2.7."""
         if not self.catalogs:
             raise StopIteration
         catalog = self.catalogs.pop(0)
