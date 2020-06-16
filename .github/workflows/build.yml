@@ -32,7 +32,5 @@ jobs:
           coverage report -m
           python setup.py install
       - name: Coverage report (Coveralls)
-        uses: AndreMiras/coveralls-python-action@develop
-        with:
-          github-token: g0waCcM28o3gLyuF0JbAmWRbYl1iS9lyp
-          debug: true
+        run: |
+          COVERALLS_REPO_TOKEN=g0waCcM28o3gLyuF0JbAmWRbYl1iS9lyp coveralls
