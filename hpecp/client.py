@@ -438,7 +438,7 @@ class ContainerPlatformClient(object):
         create_auth_headers=True,
         additional_headers={},
     ):
-        """Wrapper method to make HTTP requests to the API host.
+        """This wrapper method makes HTTP requests to the API host.
 
         Parameters
         ----------
