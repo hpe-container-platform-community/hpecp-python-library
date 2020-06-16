@@ -569,7 +569,7 @@ class K8sClusterList:
     def __len__(self):
         return len(self.clusters)
 
-    def tabulate(self, columns=K8sCluster.all_fields):
+    def tabulate(self, columns=K8sCluster.all_fields, style="pretty"):
         """Provide a tabular represenation of the list of K8s Clusters.
 
         Parameters
@@ -577,6 +577,8 @@ class K8sClusterList:
         columns : list[str]
             list of columns to return in the table - default
             :py:attr:`.K8sCluster.all_fields`
+        output: str
+            How to format the output.
 
         Returns
         -------
@@ -604,7 +606,7 @@ class K8sClusterList:
                 )
 
         self.tenant_columns = columns
-        return tabulate(self, headers=columns, tablefmt="pretty")
+        return tabulate(self, headers=columns, tablefmt=style)
 
 
 class K8sClusterHostConfig:
