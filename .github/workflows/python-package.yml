@@ -21,7 +21,7 @@ jobs:
     - name: Install and lint with flake8
       run: |
         python -m pip install --upgrade pip
-        pip install flake8 flake8-docstrings flake8-per-file-ignores
+        pip install flake8 flake8-docstrings
         # stop the build if there are Python syntax errors or undefined names
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         flake8 --exit-zero --exclude hpecp/role.py --docstring-convention numpy bin/ hpecp/
