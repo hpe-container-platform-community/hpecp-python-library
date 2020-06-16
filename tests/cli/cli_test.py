@@ -274,3 +274,24 @@ class TestCLIHttpClient(TestCase):
         hpecp.httpclient.get(url="/some/url")
 
         self.assertEqual(self.out.getvalue(), '{"foo":"bar"}\n')
+
+    def mocked_requests_delete(*args, **kwargs):
+        if args[0] == "https://127.0.0.1:8080/some/url":
+            return MockResponse(
+                json_data={"foo": "bar"},
+                text_data='{"foo":"bar"}',
+                status_code=200,
+                headers=dict(),
+            )
+        raise RuntimeError("Unhandle DELETE request: " + args[0])
+
+    @patch("requests.delete", side_effect=mocked_requests_delete)
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_delete(self, mock_delete, mock_post):
+
+        hpecp = self.cli.CLI()
+        hpecp.httpclient.delete(url="/some/url")
+
+        self.assertEqual(self.out.getvalue(), '{"foo":"bar"}\n')
+
+    # TODO - add tests for POST and PUT
