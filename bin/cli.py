@@ -518,18 +518,30 @@ class K8sClusterProxy(object):
         """Print a table of K8s Clusters.
 
         :param all_columns: (True/False) set to True to return all columns
-        :param output: how to display the output [text|table]
-        :param columns: Which columns to display
+        :param columns: list of columns to output
+        :param output: table|text
+        :param query: JMESPATH query
         """
         if all_columns:
             print(get_client().k8s_cluster.list().tabulate())
         else:
             if query:
-                data = get_client().k8s_cluster.list().json
-                print(json.dumps(jmespath.search(str(query), data)))
+                raw_data = get_client().k8s_cluster.list().json
+                queried_data = jmespath.search(str(query), raw_data)
+                if output == "text":
+                    for row in queried_data:
+                        print(" ".join(map(str, row)))
+                else:
+                    print(json.dumps(queried_data))
             else:
+                if output == "text":
+                    tabulate_style = "plain"
+                else:
+                    tabulate_style = "pretty"
                 print(
-                    get_client().k8s_cluster.list().tabulate(columns=columns)
+                    get_client()
+                    .k8s_cluster.list()
+                    .tabulate(columns=columns, style=tabulate_style)
                 )
 
     def get(
@@ -1165,7 +1177,7 @@ def configure_cli():
     config["default"]["username"] = controller_username
     config["default"]["password"] = controller_password
 
-    with open(config_path, "w",) as config_file:
+    with open(config_path, "w") as config_file:
         config.write(config_file)
 
 
