@@ -9,5 +9,4 @@ fire
 jmespath
 mock
 tox
-coverage==4.5.4
-python-coveralls
+coverage
