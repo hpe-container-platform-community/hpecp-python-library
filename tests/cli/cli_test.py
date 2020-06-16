@@ -63,7 +63,7 @@ class MockResponse:
 class TestCLI(TestCase):
     def setUp(self):
         file_data = dedent(
-            """[default]
+            """                [default]
                 api_host = 127.0.0.1
                 api_port = 8080
                 use_ssl = True
@@ -183,3 +183,19 @@ class TestCLI(TestCase):
             hpecp.autocomplete.bash()
         except Exception:
             self.fail("Unexpected exception.")
+
+
+class TestCLIUsingCfgFileEnvVar(TestCase):
+    def test_hpe_config_file_var(self):
+
+        filepath = "/not/a/real/dir/not_a_real_file"
+        os.environ["HPECP_CONFIG_FILE"] = filepath
+
+        sys.path.insert(0, os.path.abspath("../../"))
+        from bin import cli
+
+        self.cli = cli
+
+        self.assertEqual(
+            "/not/a/real/dir/not_a_real_file", self.cli.HPECP_CONFIG_FILE
+        )
