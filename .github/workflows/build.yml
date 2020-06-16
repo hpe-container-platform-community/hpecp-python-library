@@ -33,6 +33,7 @@ jobs:
         run: |
           tox
       - name: Test coverage
+        run: |
           coverage run --source hpecp,bin setup.py test
           coverage report -m
       - name: Coverage
