@@ -29,6 +29,8 @@ jobs:
           coverage run --source hpecp,bin setup.py test
           coverage report -m
           python setup.py install
-      - name: Coverage report
+      - name: Coverage report (Coveralls)
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
         run: |
           coveralls
