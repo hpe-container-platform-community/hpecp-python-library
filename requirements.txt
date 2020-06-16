@@ -9,4 +9,4 @@ fire
 jmespath
 mock
 tox
-coverage
+coverage[toml]
