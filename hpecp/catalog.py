@@ -34,7 +34,7 @@ class CatalogController:
     example below:
 
     Examples
-    -----------
+    --------
     >>> client = ContainerPlatformClient(...).create_session()
     >>> client.catalog.list()
     """
