@@ -366,11 +366,13 @@ with <a class="reference internal" href="#hpecp.k8s_cluster.K8sClusterList.tabul
 <dd><p>List of <a class="reference internal" href="#hpecp.k8s_cluster.K8sCluster" title="hpecp.k8s_cluster.K8sCluster"><code class="xref py py-obj docutils literal notranslate"><span class="pre">K8sCluster</span></code></a> objects.</p>
 <dl class="py method">
 <dt id="hpecp.k8s_cluster.K8sClusterList.tabulate">
-<code class="sig-name descname">tabulate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">columns</span><span class="o">=</span><span class="default_value">['id', 'name', 'description', 'k8s_version', 'created_by_user_id', 'created_by_user_name', 'created_time', 'k8shosts_config', 'admin_kube_config', 'dashboard_token', 'api_endpoint_access', 'dashboard_endpoint_access', 'cert_data', 'status', 'status_message', '_links']</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_cluster.html#K8sClusterList.tabulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_cluster.K8sClusterList.tabulate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">tabulate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">columns</span><span class="o">=</span><span class="default_value">['id', 'name', 'description', 'k8s_version', 'created_by_user_id', 'created_by_user_name', 'created_time', 'k8shosts_config', 'admin_kube_config', 'dashboard_token', 'api_endpoint_access', 'dashboard_endpoint_access', 'cert_data', 'status', 'status_message', '_links']</span></em>, <em class="sig-param"><span class="n">style</span><span class="o">=</span><span class="default_value">'pretty'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_cluster.html#K8sClusterList.tabulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_cluster.K8sClusterList.tabulate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Provide a tabular represenation of the list of K8s Clusters.</p>
 <dl class="simple">
 <dt>columns<span class="classifier">list[str]</span></dt><dd><p>list of columns to return in the table - default
 <a class="reference internal" href="#hpecp.k8s_cluster.K8sCluster.all_fields" title="hpecp.k8s_cluster.K8sCluster.all_fields"><code class="xref py py-attr docutils literal notranslate"><span class="pre">K8sCluster.all_fields</span></code></a></p>
+</dd>
+<dt>output: str</dt><dd><p>How to format the output.</p>
 </dd>
 </dl>
 <dl class="simple">

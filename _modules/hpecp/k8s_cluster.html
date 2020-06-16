@@ -615,7 +615,7 @@
     <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clusters</span><span class="p">)</span>
 
-<div class="viewcode-block" id="K8sClusterList.tabulate"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterList.tabulate">[docs]</a>    <span class="k">def</span> <span class="nf">tabulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">K8sCluster</span><span class="o">.</span><span class="n">all_fields</span><span class="p">):</span>
+<div class="viewcode-block" id="K8sClusterList.tabulate"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterList.tabulate">[docs]</a>    <span class="k">def</span> <span class="nf">tabulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">K8sCluster</span><span class="o">.</span><span class="n">all_fields</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;pretty&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Provide a tabular represenation of the list of K8s Clusters.</span>
 
 <span class="sd">        Parameters</span>
@@ -623,6 +623,8 @@
 <span class="sd">        columns : list[str]</span>
 <span class="sd">            list of columns to return in the table - default</span>
 <span class="sd">            :py:attr:`.K8sCluster.all_fields`</span>
+<span class="sd">        output: str</span>
+<span class="sd">            How to format the output.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -650,7 +652,7 @@
                 <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">tenant_columns</span> <span class="o">=</span> <span class="n">columns</span>
-        <span class="k">return</span> <span class="n">tabulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span> <span class="n">tablefmt</span><span class="o">=</span><span class="s2">&quot;pretty&quot;</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">tabulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span> <span class="n">tablefmt</span><span class="o">=</span><span class="n">style</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="K8sClusterHostConfig"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterHostConfig">[docs]</a><span class="k">class</span> <span class="nc">K8sClusterHostConfig</span><span class="p">:</span>
