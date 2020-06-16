@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [2.7, 3.5, 3.6, 3.7]
+        python-version: [2.7, 3.5, 3.6, 3.7, 3.8]
 
     steps:
       - name: Checkout ${{ github.sha }} from repository ${{ github.repository }}
@@ -29,7 +29,7 @@ jobs:
           pip install python-coveralls
       - name: Run tests
         run: |
-          tox
+          tox -e py
           coverage run --source hpecp,bin setup.py test
           coverage report -m
           python setup.py install
