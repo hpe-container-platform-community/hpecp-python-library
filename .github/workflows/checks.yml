@@ -31,7 +31,7 @@ jobs:
         run: |
           # stop the build if there are Python syntax errors or undefined names
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-          flake8 --exit-zero --exclude hpecp/role.py --docstring-convention numpy bin/ hpecp/
+          flake8 --exclude hpecp/role.py --docstring-convention numpy bin/ hpecp/
       - name: Check code formatting (black)
         run: |
           black --check hpecp/ tests/ bin/
