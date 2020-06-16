@@ -301,18 +301,12 @@ class TenantController:
         self.get(tenant_id)
 
         # Ensure that the role is valid and exists
-        # FIXME: Uncomment this after the role is available with the client
-        # self.client.role.get(role_id)
+        self.client.role.get(role_id)
 
         # Ensure that the user is valid and exists
         self.client.user.get(user_id)
 
-        # Build the request payload
-        data = {
-            "operation": "assign",
-            "role": role_id,
-            "user": user_id,
-        }
+        data = {"operation": "assign", "role": role_id, "user": user_id}
         url = tenant_id + "?user"
 
         # Make the request
@@ -321,4 +315,25 @@ class TenantController:
             http_method="put",
             data=data,
             description="assign_user_to_role",
+        )
+
+    def revoke_user_from_role(self, tenant_id, role_id, user_id):
+        # Ensure that the tenant is valid and exists
+        self.get(tenant_id)
+
+        # Ensure that teh role is valid and exists
+        self.client.role.get(role_id)
+
+        # Ensure that the user is valid and exists
+        self.client.user.get(user_id)
+
+        data = {"operation": "revoke", "role": role_id, "user": user_id}
+        url = tenant_id + "?user"
+
+        # Make the request
+        self.client._request(
+            url=url,
+            http_method="put",
+            data=data,
+            description="revoke_user_from_role",
         )
