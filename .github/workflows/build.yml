@@ -31,6 +31,4 @@ jobs:
           coverage run --source hpecp,bin setup.py test
           coverage report -m
           python setup.py install
-      - name: Coverage report (Coveralls)
-        run: |
           COVERALLS_REPO_TOKEN=g0waCcM28o3gLyuF0JbAmWRbYl1iS9lyp coveralls
