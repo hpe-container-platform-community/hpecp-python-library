@@ -25,10 +25,16 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+      - name: Build
+        run: |
+          python setup.py install
       - name: Run tests
         run: |
           tox -e py
           coverage run --source hpecp,bin setup.py test
           coverage report -m
-          python setup.py install
-          COVERALLS_REPO_TOKEN=g0waCcM28o3gLyuF0JbAmWRbYl1iS9lyp coveralls
+      - name: Coverage
+        uses: AndreMiras/coveralls-python-action@master
+        with:        
+          github-token: g0waCcM28o3gLyuF0JbAmWRbYl1iS9lyp 
+          debug: true
