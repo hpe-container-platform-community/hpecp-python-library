@@ -26,7 +26,7 @@
     ],
     "python.linting.enabled": true,
     "python.formatting.provider": "black",
-    "python.pythonPath": ".venv\\Scripts\\python.exe",
+    "python.pythonPath": "/bin/python3",
     "python.envFile": "${workspaceFolder}/gitpod.env",
     "editor.formatOnSave": true,
     "files.insertFinalNewline": true,
