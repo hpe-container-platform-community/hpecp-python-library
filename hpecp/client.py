@@ -18,11 +18,13 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
+"""HPE Container Platform Client."""
+
 from __future__ import absolute_import
 
-import configparser
 import json
 import os
+from configparser import SafeConfigParser
 
 import requests
 from six import raise_from
@@ -41,9 +43,10 @@ from .k8s_worker import K8sWorkerController
 from .license import LicenseController
 from .lock import LockController
 from .logger import Logger
-from .tenant import TenantController
 from .role import RoleController
+from .tenant import TenantController
 from .user import UserController
+import codecs
 
 try:
     basestring
@@ -52,8 +55,9 @@ except NameError:
 
 
 class ContainerPlatformClient(object):
-    """Client object for HPE Container Platform.  This is the central object
-    that users of this library work with.
+    """Client object for HPE Container Platform.
+
+    This is the central object that users of this library work with.
 
     Parameters
     ----------
@@ -126,7 +130,6 @@ class ContainerPlatformClient(object):
         username = admin
         password = admin123
         """
-
         if profile is None:
             profile = "default"
 
@@ -140,12 +143,12 @@ class ContainerPlatformClient(object):
                 "Could not find configuration file '{}'".format(config_file)
             )
 
-        config = configparser.ConfigParser()
-        config.read(config_file)
+        config = SafeConfigParser()
+        config.readfp(codecs.open(config_file, "r", "utf8"))
 
-        assert profile in config, "'{}' section not found in '{}'".format(
-            profile, config_file
-        )
+        assert (
+            profile in config.sections()
+        ), "'{}' section not found in '{}'".format(profile, config_file)
         assert (
             "username" in config[profile] or "username" in config["default"]
         ), (
@@ -230,23 +233,24 @@ class ContainerPlatformClient(object):
 
     @classmethod
     def create_from_env(cls):
-        """Create an instance of ContainerPlatformClient from environment variables:
+        """Create an instance of ContainerPlatformClient from environment variables.
 
-        Variables::
+        Variables
+        ---------
+        HPECP_USERNAME
+        HPECP_PASSWORD
+        HPECP_API_HOST
+        HPECP_API_PORT
+        HPECP_USE_SSL
+        HPECP_VERIFY_SSL
+        HPECP_WARN_SSL
 
-            HPECP_USERNAME
-            HPECP_PASSWORD
-            HPECP_API_HOST
-            HPECP_API_PORT
-            HPECP_USE_SSL
-            HPECP_VERIFY_SSL
-            HPECP_warn_ssl
-
+        See Also
+        --------
         See ContainerPlatformClient
         :py:class:`constructor <ContainerPlatformClient>` for the paramaeter
         definitions.
         """
-
         if "HPECP_USERNAME" in os.environ:
             HPECP_USERNAME = os.environ["HPECP_USERNAME"]
 
@@ -288,7 +292,6 @@ class ContainerPlatformClient(object):
         verify_ssl=True,
         warn_ssl=False,
     ):
-        """Doc string is defined at the top of the class"""
         self._log = Logger().get_logger(self.__class__.__name__)
 
         if verify_ssl == "True":
@@ -361,13 +364,11 @@ class ContainerPlatformClient(object):
         self._role = RoleController(self)
 
     def create_session(self):
-        """Create a session with the HPE CP controller defined in the object
-
-        :py:class:`ContainerPlatformClient`.
+        """Create a session with the HPE CP controller.
 
         Returns
         -------
-        ContainerPlatformClient:
+        ContainerPlatformClient
             An instance of ContainerPlatformClient is returned.
 
         Raises
@@ -377,7 +378,6 @@ class ContainerPlatformClient(object):
             requests.exceptions.RequestException
             for exceptions that are not a connection error
         """
-
         url = self.base_url + "/api/v1/login"
         auth = {"name": self.username, "password": self.password}
 
@@ -438,6 +438,36 @@ class ContainerPlatformClient(object):
         create_auth_headers=True,
         additional_headers={},
     ):
+        """Make HTTP requests to the API host.
+
+        Parameters
+        ----------
+        url : str
+            This will be suffixed to the API host's address.
+            Example '/api/v1/catalog/[0-9]+'
+        http_method : str, optional
+            HTTP method to be executed, by default "get"
+        data : dict, optional
+            Request payload (applicable for "post", "put"), by default {}
+        description : str, optional
+            Brief description about the request. , by default ""
+        create_auth_headers : bool, optional
+            By default True
+        additional_headers : dict, optional
+            Any additonal headers to be passed while making the request,
+            by default {}
+
+        Returns
+        -------
+        Response
+            The http response object
+
+        Raises
+        ------
+        APIItemNotFoundException
+        APIItemConflictException
+        APIException
+        """
         if create_auth_headers:
             headers = self._request_headers()
         else:
@@ -569,8 +599,9 @@ class ContainerPlatformClient(object):
 
     @property
     def tenant(self):
-        """Reference  to an object of type `.tenant.TenantController`. See
-        the class :py:class:`.tenant.TenantController` for the methods
+        """Retrieve a reference to `.tenant.TenantController` object.
+
+        See the class :py:class:`.tenant.TenantController` for the methods
         available.
 
         Example
@@ -587,8 +618,9 @@ class ContainerPlatformClient(object):
 
     @property
     def config(self):
-        """Reference to an object of type `.config.ConfigController`. See
-        the class :py:class:`.config.ConfigController` for the methods
+        """Retrieve a reference to `.config.ConfigController` object.
+
+        See the class :py:class:`.config.ConfigController` for the methods
         available.
 
         Example
@@ -619,12 +651,12 @@ class ContainerPlatformClient(object):
         ...        }
         ...    )
         """  # noqa: E501
-
         return self._config
 
     @property
     def k8s_cluster(self):
-        """Reference to an object of type `.k8s_cluster.K8sClusterController`.
+        """Retrieve a reference to `.k8s_cluster.K8sClusterController` object.
+
         See the class :py:class:`.k8s_cluster.K8sClusterController` for the
         methods available.
 
@@ -642,7 +674,8 @@ class ContainerPlatformClient(object):
 
     @property
     def k8s_worker(self):
-        """Reference to an object of type `.k8s_worker.K8sWorkerController`.
+        """Retrieve a reference to `.k8s_worker.K8sWorkerController` object.
+
         See the class :py:class:`.k8s_worker.K8sWorkerController` for the
         methods available.
 
@@ -660,8 +693,9 @@ class ContainerPlatformClient(object):
 
     @property
     def gateway(self):
-        """Reference to an object of type `.gateway.GatewayController`. See
-        the class :py:class:`.gateway.GatewayController` for the methods
+        """Retrieve a reference to `.gateway.GatewayController` object.
+
+        See the class :py:class:`.gateway.GatewayController` for the methods
         available.
 
         Example
@@ -678,8 +712,9 @@ class ContainerPlatformClient(object):
 
     @property
     def license(self):
-        """Reference to an object of type `.license.LicenseController`. See
-        the class :py:class:`.license.LicenseController` for the methods
+        """Retrieve a reference to a `.license.LicenseController` object.
+
+        See the class :py:class:`.license.LicenseController` for the methods
         available.
 
         Example
@@ -696,8 +731,10 @@ class ContainerPlatformClient(object):
 
     @property
     def lock(self):
-        """Reference to an object of type `.lock.LockController`. See the
-        class :py:class:`.lock.LockController` for the methods available.
+        """Retrieve a reference to a `.lock.LockController` object.
+
+        See the class :py:class:`.lock.LockController` for the methods
+        available.
 
         Example
         -------
@@ -713,7 +750,9 @@ class ContainerPlatformClient(object):
 
     @property
     def log(self):
-        """Reference to :py:class:`.logger.Logger`. The log function can be
+        """Retrieve a reference to a `:py:class:`.logger.Logger`.
+
+        The log function can be
         called from controller objects via the `client` parameter passed in
         during instantiation of the controller.
 
@@ -729,13 +768,14 @@ class ContainerPlatformClient(object):
                 ...
                 self.client.log.error("Some Error")
         """
-
         return self._log
 
     @property
     def user(self):
-        """Reference to an object of type `.user.UserController`. See the
-        class :py:class:`.lock.UserController` for the methods available.
+        """Retrieve a reference to a `.lock.LockController` object.
+
+        See the class :py:class:`.lock.UserController` for the methods
+        available.
 
         Example
         -------
@@ -751,8 +791,9 @@ class ContainerPlatformClient(object):
 
     @property
     def catalog(self):
-        """Reference to an object of type `.catalog.CatalogController`. See
-        the class :py:class:`.catalog.CatalogController` for the methods
+        """Retrieve a reference to a `.catalog.CatalogController` object.
+
+        See the class :py:class:`.catalog.CatalogController` for the methods
         available.
 
         Example
@@ -769,8 +810,10 @@ class ContainerPlatformClient(object):
 
     @property
     def role(self):
-        """Reference to an object of type `.role.RoleController`. See the
-        class :py:class:`.role.RoleController` for the methods available.
+        """Retrieve a reference to a `.role.RoleController` object.
+
+        See the class :py:class:`.role.RoleController` for the methods
+        available.
 
         Example
         -------

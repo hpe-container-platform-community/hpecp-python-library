@@ -40,6 +40,8 @@ from hpecp import (
     ContainerPlatformClient,
     ContainerPlatformClientException,
 )
+from hpecp.catalog import Catalog
+from hpecp.exceptions import APIItemNotFoundException
 from hpecp.gateway import Gateway, GatewayStatus
 from hpecp.k8s_cluster import K8sClusterHostConfig, K8sClusterStatus
 from hpecp.k8s_worker import WorkerK8sStatus
@@ -92,9 +94,87 @@ def get_client():
 class CatalogProxy(object):
     """Proxy object to :py:attr:`<hpecp.client.catalog>`."""
 
-    def list(self):
-        """Retrieve the list of Catalog Images."""
-        print(get_client().catalog.list())
+    def list(
+        self, output="json", columns=Catalog.default_display_fields, query={}
+    ):
+        """Retrieve the list of catalogs.
+
+        Parameters
+        ----------
+        output : str, optional
+            Define how the output should be printed, by default "json"
+        columns : list/tuple, optional
+            List of speicifc columns to be displayed, by default
+            `Catalog.default_display_fields`
+        query : dict, optional
+            Query in jmespath (https://jmespath.org/) format, by default {}
+
+        Examples
+        --------
+        > hpecp catalog list --output text --query '[0].distro_id'
+
+        bluedata/spark240juphub7xssl
+
+        """
+        if output == "table":
+            print(get_client().catalog.list().tabulate(columns=columns))
+        elif output == "text":
+            print(
+                get_client()
+                .catalog.list()
+                .tabulate(
+                    columns=columns, style="plain", display_headers=False,
+                )
+            )
+        else:
+            data = get_client().catalog.list().json
+            if query:
+                print(json.dumps(jmespath.search(str(query), data)))
+            else:
+                print(data)
+
+    def refresh(self, catalog_id):
+        """Refresh a catalog.
+
+        Parameters
+        ----------
+        catalog_id : str
+            The ID of the catalog - format: '/api/v1/catalog/[0-9]+'
+
+        Examples
+        --------
+        > hpecp catalog refresh /api/v1/catalog/99
+
+        """
+        try:
+            get_client().catalog.refresh(catalog_id)
+
+            # TODO: Report progress of the refresh workflow
+        except (APIException, APIItemNotFoundException) as e:
+            print(e.message)
+            sys.exit(1)
+
+    def install(self, catalog_id):
+        """Install a catalog.
+
+        Parameters
+        ----------
+        catalog_id : str
+            The ID of the catalog - format: '/api/v1/catalog/[0-9]+'
+
+        Examples
+        --------
+        > hpecp catalog install /api/v1/catalog/99
+
+        """
+        try:
+            get_client().catalog.install(catalog_id)
+
+            # TODO: Implement a way to check if the installation is actually
+            # successful (and maybe report progress?)
+        except (APIException, APIItemNotFoundException) as e:
+            print(e.message)
+            sys.exit(1)
 
 
 class GatewayProxy(object):
@@ -346,7 +426,7 @@ class K8sWorkerProxy(object):
 
         > hpecp k8sworker list --output json --query '[0].ip'
         10.1.0.185
-        
+
         > hpecp k8sworker list --output json --query "[*].[status, hostname,
             ipaddr]"
 
@@ -518,18 +598,30 @@ class K8sClusterProxy(object):
         """Print a table of K8s Clusters.
 
         :param all_columns: (True/False) set to True to return all columns
-        :param output: how to display the output [text|table]
-        :param columns: Which columns to display
+        :param columns: list of columns to output
+        :param output: table|text
+        :param query: JMESPATH query
         """
         if all_columns:
             print(get_client().k8s_cluster.list().tabulate())
         else:
             if query:
-                data = get_client().k8s_cluster.list().json
-                print(json.dumps(jmespath.search(str(query), data)))
+                raw_data = get_client().k8s_cluster.list().json
+                queried_data = jmespath.search(str(query), raw_data)
+                if output == "text":
+                    for row in queried_data:
+                        print(" ".join(map(str, row)))
+                else:
+                    print(json.dumps(queried_data))
             else:
+                if output == "text":
+                    tabulate_style = "plain"
+                else:
+                    tabulate_style = "pretty"
                 print(
-                    get_client().k8s_cluster.list().tabulate(columns=columns)
+                    get_client()
+                    .k8s_cluster.list()
+                    .tabulate(columns=columns, style=tabulate_style)
                 )
 
     def get(
@@ -1165,7 +1257,7 @@ def configure_cli():
     config["default"]["username"] = controller_username
     config["default"]["password"] = controller_password
 
-    with open(config_path, "w",) as config_file:
+    with open(config_path, "w") as config_file:
         config.write(config_file)
 
 
