@@ -247,7 +247,7 @@ class TestTentants(TestCase):
                     )
                 },
             )
-        raise RuntimeError("Unhandle POST request: " + args[0])
+        raise RuntimeError("Unhandled POST request: " + args[0])
 
     @patch("requests.get", side_effect=mocked_requests_get)
     @patch("requests.post", side_effect=mocked_requests_post)
