@@ -4,6 +4,12 @@ on:
   pull_request:
     branches:
       - master
+  push:
+    branches:
+      - master
+  schedule:
+    # Run a build twice a day (12.00 AM and 12.00 PM)
+    - cron: '0 0-23/12 * * *'
 
 jobs:
   test:
