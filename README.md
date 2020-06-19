@@ -1,3 +1,5 @@
+![Build & Test](https://github.com/hpe-container-platform-community/hpecp-python-library/workflows/Build%20&%20Test/badge.svg?branch=master&event=push)
+![Code Checks](https://github.com/hpe-container-platform-community/hpecp-python-library/workflows/Code%20Checks/badge.svg?branch=master&event=push)
 [![Build Status](https://travis-ci.org/hpe-container-platform-community/hpecp-python-library.svg?branch=master)](https://travis-ci.org/hpe-container-platform-community/hpecp-python-library)
 [![Issues](https://img.shields.io/github/issues/hpe-container-platform-community/hpecp-python-library/bug.svg)](https://github.com/hpe-container-platform-community/hpecp-python-library/issues?q=is%3Aissue+is%3Aopen+label%3A"bug")
 [![Coverage Status](https://coveralls.io/repos/github/hpe-container-platform-community/hpecp-python-library/badge.png?branch=master)](https://coveralls.io/github/hpe-container-platform-community/hpecp-python-library?branch=master)
