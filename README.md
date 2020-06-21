@@ -1,5 +1,5 @@
-![Build & Test](https://github.com/hpe-container-platform-community/hpecp-python-library/workflows/Build%20&%20Test/badge.svg?branch=master&event=push)
-![Code Checks](https://github.com/hpe-container-platform-community/hpecp-python-library/workflows/Code%20Checks/badge.svg?branch=master&event=push)
+[![Build & Test](https://github.com/hpe-container-platform-community/hpecp-python-library/workflows/Build%20&%20Test/badge.svg?branch=master&event=push)](https://github.com/hpe-container-platform-community/hpecp-python-library/actions?query=workflow%3A%22Build+%26+Test%22+branch%3Amaster)
+[![Code Checks](https://github.com/hpe-container-platform-community/hpecp-python-library/workflows/Code%20Checks/badge.svg?branch=master&event=push)](https://github.com/hpe-container-platform-community/hpecp-python-library/actions?query=workflow%3A%22Code+Checks%22+branch%3Amaster)
 [![Build Status](https://travis-ci.org/hpe-container-platform-community/hpecp-python-library.svg?branch=master)](https://travis-ci.org/hpe-container-platform-community/hpecp-python-library)
 [![Issues](https://img.shields.io/github/issues/hpe-container-platform-community/hpecp-python-library/bug.svg)](https://github.com/hpe-container-platform-community/hpecp-python-library/issues?q=is%3Aissue+is%3Aopen+label%3A"bug")
 [![Coverage Status](https://coveralls.io/repos/github/hpe-container-platform-community/hpecp-python-library/badge.png?branch=master)](https://coveralls.io/github/hpe-container-platform-community/hpecp-python-library?branch=master)
@@ -16,8 +16,8 @@
 ```diff
 - This project is under active development.
 - Method APIs may change between commits.
-- Not all HPE CP APIs have been implemented. 
-- Help Wanted - please consider contributing! 
+- Not all HPE CP APIs have been implemented.
+- Help Wanted - please consider contributing!
 ```
 
 ## Documentation
@@ -50,9 +50,9 @@ Example:
 ```py3
 from hpecp import ContainerPlatformClient
 
-client = ContainerPlatformClient(username='admin', 
-                                password='admin123', 
-                                api_host='127.0.0.1', 
+client = ContainerPlatformClient(username='admin',
+                                password='admin123',
+                                api_host='127.0.0.1',
                                 api_port=8080,
                                 use_ssl=True,
                                 verify_ssl='/certs/hpecp-ca-cert.pem')
@@ -78,7 +78,7 @@ On my environment, this displays:
 
 CLI is installed with pip ([as above](#installation))
 
-First you need to create a config file with your endpoint details.  
+First you need to create a config file with your endpoint details.
 
 Note that you can have multiple profiles:
 
@@ -170,7 +170,7 @@ echo "Configuring AD authentication"
 JSON_FILE=$(mktemp)
 trap "{ rm -f $JSON_FILE; }" EXIT
 cat >$JSON_FILE<<-EOF
-{ 
+{
     "external_identity_server":  {
         "bind_pwd":"5ambaPwd@",
         "user_attribute":"sAMAccountName",
@@ -181,7 +181,7 @@ cat >$JSON_FILE<<-EOF
         "base_dn":"CN=Users,DC=samdom,DC=example,DC=com",
         "verify_peer": false,
         "type":"Active Directory",
-        "port":636 
+        "port":636
     }
 }
 EOF
@@ -215,7 +215,7 @@ for WRKR in ${WRKR_IDS[@]}; do
 done
 
 # get the k8s worker IDs
-hpecp k8sworker list 
+hpecp k8sworker list
 
 # Example output:
 # +-----------+--------+------------------------------------------+------------+---------------------------+
@@ -248,7 +248,7 @@ export KUBECONFIG=./clus_kfg
 hpecp k8scluster admin-kube-config ${CLUS_ID} > ${KUBECONFIG}
 
 # test kubectl:
-kubectl get pods --all-namespaces 
+kubectl get pods --all-namespaces
 ```
 
 
