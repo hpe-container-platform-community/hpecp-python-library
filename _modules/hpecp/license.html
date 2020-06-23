@@ -1,0 +1,223 @@
+
+
+<!doctype html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hpecp.license &#8212; HPE Container Platform Python Library  documentation</title>
+    <link rel="stylesheet" href="../../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">HPE Container Platform Python Library  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">hpecp.license</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for hpecp.license</h1><div class="highlight"><pre>
+<span></span><span class="c1"># (C) Copyright [2020] Hewlett Packard Enterprise Development LP</span>
+<span class="c1">#</span>
+<span class="c1"># Permission is hereby granted, free of charge, to any person obtaining a</span>
+<span class="c1"># copy of this software and associated documentation files (the &quot;Software&quot;),</span>
+<span class="c1"># to deal in the Software without restriction, including without limitation</span>
+<span class="c1"># the rights to use, copy, modify, merge, publish, distribute, sublicense,</span>
+<span class="c1"># and/or sell copies of the Software, and to permit persons to whom the</span>
+<span class="c1"># Software is furnished to do so, subject to the following conditions:</span>
+<span class="c1">#</span>
+<span class="c1"># The above copyright notice and this permission notice shall be included</span>
+<span class="c1"># in all copies or substantial portions of the Software.</span>
+<span class="c1">#</span>
+<span class="c1"># THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="c1"># IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="c1"># FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL</span>
+<span class="c1"># THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR</span>
+<span class="c1"># OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,</span>
+<span class="c1"># ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR</span>
+<span class="c1"># OTHER DEALINGS IN THE SOFTWARE.</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
+
+
+<span class="kn">import</span> <span class="nn">urllib</span>
+
+
+<div class="viewcode-block" id="LicenseController"><a class="viewcode-back" href="../../hpecp.license.html#hpecp.license.LicenseController">[docs]</a><span class="k">class</span> <span class="nc">LicenseController</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">client</span>
+
+<div class="viewcode-block" id="LicenseController.platform_id"><a class="viewcode-back" href="../../hpecp.license.html#hpecp.license.LicenseController.platform_id">[docs]</a>    <span class="k">def</span> <span class="nf">platform_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve the Platform ID&quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
+            <span class="n">url</span><span class="o">=</span><span class="s2">&quot;/api/v1/license&quot;</span><span class="p">,</span>
+            <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;get&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;license/get_platform_id&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;uuid&quot;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="LicenseController.list"><a class="viewcode-back" href="../../hpecp.license.html#hpecp.license.LicenseController.list">[docs]</a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve the list of licenses</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
+            <span class="n">url</span><span class="o">=</span><span class="s2">&quot;/api/v2/hpelicense&quot;</span><span class="p">,</span>
+            <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;get&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;license/get_license&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="LicenseController.upload_with_ssh_key"><a class="viewcode-back" href="../../hpecp.license.html#hpecp.license.LicenseController.upload_with_ssh_key">[docs]</a>    <span class="k">def</span> <span class="nf">upload_with_ssh_key</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">server_filename</span><span class="p">,</span>
+        <span class="n">ssh_key_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">ssh_key_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">base64enc_license</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Not implemented yet!</span>
+
+<span class="sd">        Workaround:</span>
+<span class="sd">         - scp your license to &#39;/srv/bluedata/license/&#39; on the controller</span>
+<span class="sd">         - run client.license.register(server_filename) to register the license</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+            <span class="s2">&quot;Not implemented yet! Workaround: scp your license to&quot;</span>
+            <span class="s2">&quot; &#39;/srv/bluedata/license/&#39;&quot;</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="LicenseController.upload_with_ssh_pass"><a class="viewcode-back" href="../../hpecp.license.html#hpecp.license.LicenseController.upload_with_ssh_pass">[docs]</a>    <span class="k">def</span> <span class="nf">upload_with_ssh_pass</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">server_filename</span><span class="p">,</span> <span class="n">ssh_username</span><span class="p">,</span> <span class="n">ssh_password</span><span class="p">,</span> <span class="n">base64enc_license</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Not implemented yet!</span>
+
+<span class="sd">        Workaround:</span>
+<span class="sd">         - scp your license to &#39;/srv/bluedata/license/&#39; on the controller</span>
+<span class="sd">         - run client.license.register(server_filename) to register the license</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+            <span class="s2">&quot;Not implemented yet! Workaround: scp your license to&quot;</span>
+            <span class="s2">&quot;&#39;/srv/bluedata/license/&#39;&quot;</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="LicenseController.register"><a class="viewcode-back" href="../../hpecp.license.html#hpecp.license.LicenseController.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server_filename</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Register a license. The license must have previously been uploaded</span>
+<span class="sd">        to &#39;/srv/bluedata/license/&#39; on the controller.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        server_filename: str</span>
+<span class="sd">            Filepath to the license on the server, e.g.</span>
+<span class="sd">            &#39;/srv/bluedata/license/LICENSE-1.txt&#39;</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        APIException</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;hpelicense_file&quot;</span><span class="p">:</span> <span class="n">server_filename</span><span class="p">}</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
+            <span class="n">url</span><span class="o">=</span><span class="s2">&quot;/api/v2/hpelicense&quot;</span><span class="p">,</span>
+            <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;post&quot;</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;license/register&quot;</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="LicenseController.delete"><a class="viewcode-back" href="../../hpecp.license.html#hpecp.license.LicenseController.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">license_key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Delete a license by LicenseKey.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        license_key: str</span>
+<span class="sd">            The license key, e.g. &#39;1234 1234 ... 1234 &quot;SOMETEXT&quot;&#39;</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        APIException</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">lic</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">license_key</span><span class="p">)</span>  <span class="c1"># python 2</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">lic</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">pathname2url</span><span class="p">(</span><span class="n">license_key</span><span class="p">)</span>  <span class="c1"># python 3</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
+            <span class="n">url</span><span class="o">=</span><span class="s2">&quot;/api/v2/hpelicense/</span><span class="si">{}</span><span class="s2">/&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lic</span><span class="p">),</span>
+            <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;delete&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;license/delete&quot;</span><span class="p">,</span>
+        <span class="p">)</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../index.html">Table of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hpecp.html">API Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cli.html">CLI Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../github.html">Source Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">Apache License</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">HPE Container Platform Python Library  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">hpecp.license</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Chris Snow.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.1.
+    </div>
+  </body>
+</html>

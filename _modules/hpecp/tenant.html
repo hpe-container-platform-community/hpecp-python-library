@@ -1,0 +1,436 @@
+
+
+<!doctype html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hpecp.tenant &#8212; HPE Container Platform Python Library  documentation</title>
+    <link rel="stylesheet" href="../../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">HPE Container Platform Python Library  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">hpecp.tenant</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for hpecp.tenant</h1><div class="highlight"><pre>
+<span></span><span class="c1"># (C) Copyright [2020] Hewlett Packard Enterprise Development LP</span>
+<span class="c1">#</span>
+<span class="c1"># Permission is hereby granted, free of charge, to any person obtaining a</span>
+<span class="c1"># copy of this software and associated documentation files (the &quot;Software&quot;),</span>
+<span class="c1"># to deal in the Software without restriction, including without limitation</span>
+<span class="c1"># the rights to use, copy, modify, merge, publish, distribute, sublicense,</span>
+<span class="c1"># and/or sell copies of the Software, and to permit persons to whom the</span>
+<span class="c1"># Software is furnished to do so, subject to the following conditions:</span>
+<span class="c1">#</span>
+<span class="c1"># The above copyright notice and this permission notice shall be included</span>
+<span class="c1"># in all copies or substantial portions of the Software.</span>
+<span class="c1">#</span>
+<span class="c1"># THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="c1"># IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="c1"># FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL</span>
+<span class="c1"># THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR</span>
+<span class="c1"># OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,</span>
+<span class="c1"># ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR</span>
+<span class="c1"># OTHER DEALINGS IN THE SOFTWARE.</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
+
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">attrgetter</span>
+
+<span class="kn">from</span> <span class="nn">tabulate</span> <span class="kn">import</span> <span class="n">tabulate</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">basestring</span>
+<span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>
+    <span class="n">basestring</span> <span class="o">=</span> <span class="nb">str</span>
+
+
+<div class="viewcode-block" id="Tenant"><a class="viewcode-back" href="../../hpecp.tenant.html#hpecp.tenant.Tenant">[docs]</a><span class="k">class</span> <span class="nc">Tenant</span><span class="p">:</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__class_dir__</span><span class="p">():</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">,</span> <span class="s2">&quot;tenant_type&quot;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;&lt;Tenant id:</span><span class="si">{}</span><span class="s2"> name:</span><span class="si">{}</span><span class="s2"> description:</span><span class="si">{}</span><span class="s2"> type:</span><span class="si">{}</span><span class="s2">&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tenant_type</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;Tenant(id=</span><span class="si">{}</span><span class="s2">, name=</span><span class="si">{}</span><span class="s2">, description=</span><span class="si">{}</span><span class="s2">, type:</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tenant_type</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">json</span> <span class="o">=</span> <span class="n">json</span>
+
+    <span class="k">def</span> <span class="fm">__dir__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Tenant</span><span class="o">.</span><span class="n">__class_dir__</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__dir__</span><span class="p">()[</span><span class="n">item</span><span class="p">])</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;_links&quot;</span><span class="p">][</span><span class="s2">&quot;self&quot;</span><span class="p">][</span><span class="s2">&quot;href&quot;</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">description</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">][</span><span class="s2">&quot;description&quot;</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">tenant_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;tenant_type&quot;</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="TenantList"><a class="viewcode-back" href="../../hpecp.tenant.html#hpecp.tenant.TenantList">[docs]</a><span class="k">class</span> <span class="nc">TenantList</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Represents a list of HPE Container Platform tenants.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a TenantList.  This method is not expected to be called by</span>
+<span class="sd">        users directly.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        json : str</span>
+<span class="sd">            The Json object returned from the HPE Container Platform API.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">json</span> <span class="o">=</span> <span class="n">json</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tenants</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">Tenant</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">json</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="n">attrgetter</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tenants</span><span class="p">[</span><span class="n">item</span><span class="p">]</span>
+
+    <span class="c1"># Python 2</span>
+<div class="viewcode-block" id="TenantList.next"><a class="viewcode-back" href="../../hpecp.tenant.html#hpecp.tenant.TenantList.next">[docs]</a>    <span class="k">def</span> <span class="nf">next</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">tenants</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">StopIteration</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tenants</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
+
+    <span class="c1"># Python 3</span>
+    <span class="k">def</span> <span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">tenants</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">StopIteration</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tenants</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tenants</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TenantList.tabulate"><a class="viewcode-back" href="../../hpecp.tenant.html#hpecp.tenant.TenantList.tabulate">[docs]</a>    <span class="k">def</span> <span class="nf">tabulate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Output a tabular view of Tenants.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+<span class="sd">            Tablular view of Tenants.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">tabulate</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">Tenant</span><span class="o">.</span><span class="n">__class_dir__</span><span class="p">(),</span> <span class="n">tablefmt</span><span class="o">=</span><span class="s2">&quot;pretty&quot;</span>
+        <span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="TenantController"><a class="viewcode-back" href="../../hpecp.tenant.html#hpecp.tenant.TenantController">[docs]</a><span class="k">class</span> <span class="nc">TenantController</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Class that users will interact with to work with tenants.</span>
+
+<span class="sd">    An instance of this class is available in</span>
+<span class="sd">    `client.ContainerPlatformClient` with the attribute name</span>
+<span class="sd">    :py:attr:`tenant &lt;.client.ContainerPlatformClient.tenant&gt;`. The methods of</span>
+<span class="sd">    this class can be invoked using `client.tenant.method()`. See the example</span>
+<span class="sd">    below.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; client = ContainerPlatformClient(...).create_session()</span>
+<span class="sd">    &gt;&gt;&gt; client.tenant.list()</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">client</span>
+
+<div class="viewcode-block" id="TenantController.list"><a class="viewcode-back" href="../../hpecp.tenant.html#hpecp.tenant.TenantController.list">[docs]</a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve a list of the tenants.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        TenantList</span>
+<span class="sd">            list of tenants</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        APIException</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
+            <span class="n">url</span><span class="o">=</span><span class="s2">&quot;/api/v1/tenant&quot;</span><span class="p">,</span> <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;tenant/list&quot;</span>
+        <span class="p">)</span>
+        <span class="n">tenants</span> <span class="o">=</span> <span class="n">TenantList</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;_embedded&quot;</span><span class="p">][</span><span class="s2">&quot;tenants&quot;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">tenants</span></div>
+
+<div class="viewcode-block" id="TenantController.create"><a class="viewcode-back" href="../../hpecp.tenant.html#hpecp.tenant.TenantController.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tenant_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">k8s_cluster</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s2">&quot;!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s2">&quot;!!!! The method `tenant.create()` is experimental !!!!&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s2">&quot;!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!&quot;</span>
+        <span class="p">)</span>
+
+        <span class="k">assert</span> <span class="p">(</span>
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">basestring</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="p">),</span> <span class="s2">&quot;&#39;name&#39; must be provided and must be a string&quot;</span>
+        <span class="k">assert</span> <span class="n">description</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span>
+            <span class="n">description</span><span class="p">,</span> <span class="n">basestring</span>
+        <span class="p">),</span> <span class="s2">&quot;&#39;description&#39; if provided, must be a string&quot;</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">},</span>
+            <span class="s2">&quot;tenant_type&quot;</span><span class="p">:</span> <span class="n">tenant_type</span><span class="p">,</span>
+            <span class="s2">&quot;member_key_available&quot;</span><span class="p">:</span> <span class="s2">&quot;all_admins&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;k8s_cluster&quot;</span><span class="p">:</span> <span class="n">k8s_cluster</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="n">description</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">][</span><span class="s2">&quot;description&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">description</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
+            <span class="n">url</span><span class="o">=</span><span class="s2">&quot;/api/v1/tenant&quot;</span><span class="p">,</span>
+            <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;post&quot;</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;tenant/create&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;Location&quot;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="TenantController.get"><a class="viewcode-back" href="../../hpecp.tenant.html#hpecp.tenant.TenantController.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tenant_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve a Tenant by ID.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        tenant_id : str</span>
+<span class="sd">            The tenant ID - format: &#39;/api/v1/tenant/[0-9]+&#39;</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Tenant:</span>
+<span class="sd">            An object representing the Tenant</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        APIException</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s2">&quot;!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s2">&quot;!!!! The method `tenant.get()` is experimental !!!!&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s2">&quot;!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!&quot;</span>
+        <span class="p">)</span>
+
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
+            <span class="n">tenant_id</span><span class="p">,</span> <span class="nb">str</span>
+        <span class="p">),</span> <span class="s2">&quot;&#39;tenant_id&#39; must be provided and must be string&quot;</span>
+        <span class="k">assert</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+            <span class="sa">r</span><span class="s2">&quot;\/api\/v1\/tenant\/[0-9]+&quot;</span><span class="p">,</span> <span class="n">tenant_id</span>
+        <span class="p">),</span> <span class="s2">&quot;&#39;tenant_id&#39; must have format &#39;/api/v1/tenant/[0-9]+&#39;&quot;</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
+            <span class="n">url</span><span class="o">=</span><span class="n">tenant_id</span><span class="p">,</span> <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;tenant/get&quot;</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">Tenant</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="TenantController.auth_setup"><a class="viewcode-back" href="../../hpecp.tenant.html#hpecp.tenant.TenantController.auth_setup">[docs]</a>    <span class="k">def</span> <span class="nf">auth_setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tenant_id</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Setup external autentication for the tenant.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        tenant_id : str</span>
+<span class="sd">            The tenant ID</span>
+<span class="sd">        data : object</span>
+<span class="sd">            See below for an example.</span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; data = {</span>
+<span class="sd">        ...    &quot;external_user_groups&quot;: [</span>
+<span class="sd">        ...        {</span>
+<span class="sd">        ...            &quot;role&quot;: &quot;/api/v1/role/2&quot;, # 2 = Admins</span>
+<span class="sd">        ...            &quot;group&quot;:(</span>
+<span class="sd">        ...                 &quot;CN=DemoTenantAdmins,CN=Users,DC=samdom,&quot;</span>
+<span class="sd">        ...                 &quot;DC=example,DC=com&quot;</span>
+<span class="sd">        ...                 ),</span>
+<span class="sd">        ...        },</span>
+<span class="sd">        ...        {</span>
+<span class="sd">        ...            &quot;role&quot;: &quot;/api/v1/role/3&quot;, # 3 = Members</span>
+<span class="sd">        ...            &quot;group&quot;: (</span>
+<span class="sd">        ...                 &quot;CN=DemoTenantUsers,CN=Users,DC=samdom,&quot;</span>
+<span class="sd">        ...                 &quot;DC=example,DC=com&quot;</span>
+<span class="sd">        ...                 ),</span>
+<span class="sd">        ...        }</span>
+<span class="sd">        ...    ]</span>
+<span class="sd">        ... }</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
+            <span class="n">url</span><span class="o">=</span><span class="s2">&quot;/api/v1/tenant/</span><span class="si">{}</span><span class="s2">?external_user_groups&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tenant_id</span><span class="p">),</span>
+            <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;put&quot;</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;epic_tenant_auth&quot;</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="TenantController.assign_user_to_role"><a class="viewcode-back" href="../../hpecp.tenant.html#hpecp.tenant.TenantController.assign_user_to_role">[docs]</a>    <span class="k">def</span> <span class="nf">assign_user_to_role</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tenant_id</span><span class="p">,</span> <span class="n">role_id</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Assign a user to a given role using the tenant.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        tenant_id : str</span>
+<span class="sd">            The tenant ID - format: &#39;/api/v1/tenant/[0-9]+&#39;</span>
+<span class="sd">        role_id : str</span>
+<span class="sd">            The role ID - format: &#39;/api/v1/role/[0-9]+&#39;</span>
+<span class="sd">        user_id : str</span>
+<span class="sd">            The role ID - format: &#39;/api/v1/user/[0-9]+&#39;</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        APIItemNotFoundException</span>
+<span class="sd">        APIItemConflictException</span>
+<span class="sd">        APIException</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Ensure that the tenant is valid and exists</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">tenant_id</span><span class="p">)</span>
+
+        <span class="c1"># Ensure that the role is valid and exists</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">role_id</span><span class="p">)</span>
+
+        <span class="c1"># Ensure that the user is valid and exists</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;operation&quot;</span><span class="p">:</span> <span class="s2">&quot;assign&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="n">role_id</span><span class="p">,</span> <span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="n">user_id</span><span class="p">}</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">tenant_id</span> <span class="o">+</span> <span class="s2">&quot;?user&quot;</span>
+
+        <span class="c1"># Make the request</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
+            <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
+            <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;put&quot;</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;assign_user_to_role&quot;</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="TenantController.revoke_user_from_role"><a class="viewcode-back" href="../../hpecp.tenant.html#hpecp.tenant.TenantController.revoke_user_from_role">[docs]</a>    <span class="k">def</span> <span class="nf">revoke_user_from_role</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tenant_id</span><span class="p">,</span> <span class="n">role_id</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
+        <span class="c1"># Ensure that the tenant is valid and exists</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">tenant_id</span><span class="p">)</span>
+
+        <span class="c1"># Ensure that teh role is valid and exists</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">role_id</span><span class="p">)</span>
+
+        <span class="c1"># Ensure that the user is valid and exists</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;operation&quot;</span><span class="p">:</span> <span class="s2">&quot;revoke&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="n">role_id</span><span class="p">,</span> <span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="n">user_id</span><span class="p">}</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">tenant_id</span> <span class="o">+</span> <span class="s2">&quot;?user&quot;</span>
+
+        <span class="c1"># Make the request</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
+            <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
+            <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;put&quot;</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;revoke_user_from_role&quot;</span><span class="p">,</span>
+        <span class="p">)</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../index.html">Table of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hpecp.html">API Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cli.html">CLI Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../github.html">Source Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">Apache License</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">HPE Container Platform Python Library  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">hpecp.tenant</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Chris Snow.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.1.
+    </div>
+  </body>
+</html>

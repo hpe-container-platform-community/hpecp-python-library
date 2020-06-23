@@ -51,8 +51,61 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="hpecp-lock-module">
-<h1>hpecp.lock module<a class="headerlink" href="#hpecp-lock-module" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-hpecp.lock">
+<span id="hpecp-lock-module"></span><h1>hpecp.lock module<a class="headerlink" href="#module-hpecp.lock" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="hpecp.lock.LockController">
+<em class="property">class </em><code class="sig-prename descclassname">hpecp.lock.</code><code class="sig-name descname">LockController</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">client</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/lock.html#LockController"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.lock.LockController" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="hpecp.lock.LockController.get">
+<code class="sig-name descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/lock.html#LockController.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.lock.LockController.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve the locks</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="hpecp.lock.LockController.list">
+<code class="sig-name descname">list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/lock.html#LockController.list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.lock.LockController.list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve the locks</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="hpecp.lock.LockController.create">
+<code class="sig-name descname">create</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">reason</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/lock.html#LockController.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.lock.LockController.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new lock.</p>
+<dl class="simple">
+<dt>reason: str</dt><dd><p>Provide a reason for the lock.</p>
+</dd>
+</dl>
+<p>APIException</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="hpecp.lock.LockController.delete">
+<code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lock_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/lock.html#LockController.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.lock.LockController.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete a lock.</p>
+<dl class="simple">
+<dt>lock_id: str</dt><dd><p>The lock id as retrieved with <cite>get()</cite>  Format:
+‘/api/v1/lock/[0-9]+’</p>
+</dd>
+</dl>
+<p>APIException</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="hpecp.lock.LockController.delete_all">
+<code class="sig-name descname">delete_all</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">timeout_secs</span><span class="o">=</span><span class="default_value">300</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/lock.html#LockController.delete_all"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.lock.LockController.delete_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete all locks.</p>
+<dl class="simple">
+<dt>timeout_secs: int</dt><dd><p>How long to wait for internal locks (note these need to be
+cleared before external locks can be deleted)</p>
+</dd>
+</dl>
+<p>APIException</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 
