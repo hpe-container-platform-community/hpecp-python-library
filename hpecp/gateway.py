@@ -391,7 +391,7 @@ class Gateway:
         Parameters
         ----------
         columns : list[str]
-            Set the list of colums to return
+            Set the list of columns to return
 
         See Also
         --------
@@ -524,7 +524,7 @@ class GatewayList:
         style="pretty",
         display_headers=True,
     ):
-        """Provide a tabular represenation of the list of Gateways.
+        """Provide a tabular representation of the list of Gateways.
 
         Parameters
         ----------
@@ -541,7 +541,7 @@ class GatewayList:
 
         Example
         -------
-        Print the gateway list with all of the avaialble fields
+        Print the gateway list with all of the available fields
         >>> print(hpeclient.gateway.list().tabulate())
 
         Print the cluster list with a subset of the fields

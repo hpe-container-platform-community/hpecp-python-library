@@ -375,20 +375,25 @@ class K8sWorkerProxy(object):
     ):
         """Create a K8s Worker using SSH key authentication.
 
-        :param ip: The IP address of the host.  Used for internal
-            communication.
-        :param ssh_key: The ssh key data as a string.  Alternatively, use the
-            ssh_key_file parameter.
-        :param ssh_key_file: The file path to the ssh key.  Alternatively, use
-            the ssh_key parameter.
-        :param tags: Tags to use, e.g. "{ 'tag1': 'foo', 'tag2', 'bar' }".
+        Parameters
+        ----------
+        ip : str, optional
+            The IP address of the host, this is used for internal
+            communication, by default None.
+        ssh_key : str, optional
+            The SSH key data as a string, instead of this location to a key
+            file may also be provided, by default None.
+        ssh_key_file : str, optional
+            The SSH key file path, by default None
+        tags : list, optional
+            Tags to use, e.g. "{ "tag1": "foo", "tag2": "bar"}", by default []
         """
         if ssh_key is None and ssh_key_file is None:
             print("Either ssh_key or ssh_key_file must be provided")
             sys.exit(1)
 
         if ssh_key is not None and ssh_key_file is not None:
-            print("Either ssh_key or ssh_key_file must be provided")
+            print("Please provide only of one ssh_key or ssh_key_file")
             sys.exit(1)
 
         if ssh_key_file is not None:
@@ -458,9 +463,7 @@ class K8sWorkerProxy(object):
             else:
                 print(data)
 
-    def get(
-        self, k8sworker_id,
-    ):
+    def get(self, k8sworker_id):
         """Retrieve a K8s Worker.
 
         :param k8sworker_id: the worker ID
@@ -470,9 +473,7 @@ class K8sWorkerProxy(object):
             yaml.dump(yaml.load(json.dumps(worker), Loader=yaml.FullLoader,))
         )
 
-    def delete(
-        self, k8sworker_id,
-    ):
+    def delete(self, k8sworker_id):
         """Delete a K8s Worker.
 
         :param k8sworker_id: the worker ID
@@ -480,17 +481,29 @@ class K8sWorkerProxy(object):
         print(get_client().k8s_worker.delete(worker_id=k8sworker_id))
 
     def set_storage(
-        self, k8sworker_id=None, persistent_disks=None, ephemeral_disks=None,
+        self, k8sworker_id, ephemeral_disks, persistent_disks=None,
     ):
-        """Set Storage for a K8S Worker.
+        """Set storage for a k8s worker.
 
-        :param k8sworker_id: the worker ID
-        :param persistent_disks: a comma separated list of zero or more
-            persistent disks, e.g. "/dev/nvme2n1"
-        :param ephemeral_disks: a comma separated list of zero or more
-            ephemeral_disks disks, e.g. "/dev/nvme1n1"
+        Parameters
+        ----------
+        k8sworker_id : str
+            The k8s worker ID
+        ephemeral_disks : str
+            Comma separated string containing ephemeral disks.
+            e.g: "/dev/nvme2n1,/dev/nvme2n2"
+        persistent_disks : str, optional
+            Comma separated string containing persistent disks, by default
+            None.
+            e.g: "/dev/nvme1n1,/dev/nvme1n2"
         """
-        p_disks = persistent_disks.split(",")
+        if not ephemeral_disks:
+            print("`ephemeral_disks` must be provided")
+            sys.exit(1)
+
+        p_disks = (
+            persistent_disks.split(",") if persistent_disks is not None else []
+        )
         e_disks = ephemeral_disks.split(",")
 
         get_client().k8s_worker.set_storage(

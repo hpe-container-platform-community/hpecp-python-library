@@ -1,9 +1,11 @@
 from unittest import TestCase
-from mock import patch
 
 import requests
+from mock import patch
+
 from hpecp import ContainerPlatformClient
 from hpecp.k8s_worker import WorkerK8sStatus
+from hpecp.exceptions import APIItemNotFoundException
 
 
 class MockResponse:
@@ -30,6 +32,18 @@ class MockResponse:
 
     def json(self):
         return self.json_data
+
+
+def get_client():
+    client = ContainerPlatformClient(
+        username="admin",
+        password="admin123",
+        api_host="127.0.0.1",
+        api_port=8080,
+        use_ssl=True,
+    )
+    client.create_session()
+    return client
 
 
 class TestWorkers(TestCase):
@@ -104,6 +118,31 @@ class TestWorkers(TestCase):
                 status_code=200,
                 headers={},
             )
+        elif args[0] == "https://127.0.0.1:8080/api/v2/worker/k8shost/5":
+            return MockResponse(
+                json_data={
+                    "status": "bundle",
+                    "approved_worker_pubkey": [],
+                    "tags": [],
+                    "hostname": "",
+                    "ipaddr": "10.1.0.186",
+                    "setup_log": (
+                        "/var/log/bluedata/install/"
+                        "k8shost_setup_10.1.0.186-"
+                        "2020-4-26-18-49-10"
+                    ),
+                    "_links": {"self": {"href": "/api/v2/worker/k8shost/5"}},
+                },
+                status_code=200,
+                headers={},
+            )
+        elif args[0] == "https://127.0.0.1:8080/api/v2/worker/k8shost/8":
+            return MockResponse(
+                json_data={},
+                status_code=404,
+                raise_for_status_flag=True,
+                headers={},
+            )
         raise RuntimeError("Unhandle GET request: " + args[0])
 
     def mocked_requests_post(*args, **kwargs):
@@ -117,22 +156,16 @@ class TestWorkers(TestCase):
                     )
                 },
             )
-        raise RuntimeError("Unhandle POST request: " + args[0])
+        elif args[0] == "https://127.0.0.1:8080/api/v2/worker/k8shost/5":
+            return MockResponse(json_data={}, status_code=204, headers={})
+
+        raise RuntimeError("Unhandled POST request: " + args[0])
 
     @patch("requests.get", side_effect=mocked_requests_get)
     @patch("requests.post", side_effect=mocked_requests_post)
     def test_get_k8shosts(self, mock_get, mock_post):
 
-        client = ContainerPlatformClient(
-            username="admin",
-            password="admin123",
-            api_host="127.0.0.1",
-            api_port=8080,
-            use_ssl=True,
-        )
-
-        # Makes POST Request: https://127.0.0.1:8080/api/v1/login
-        client.create_session()
+        client = get_client()
 
         # Makes GET Request: https://127.0.0.1:8080/api/v2/worker/k8shost/
         workers = client.k8s_worker.list()
@@ -154,3 +187,81 @@ class TestWorkers(TestCase):
             4,
             5,
         ]
+
+    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_set_storage_invalid_worker_id(self, mock_get, mock_post):
+        client = get_client()
+        with self.assertRaisesRegexp(
+            AssertionError,
+            "'worker_id' must have format "
+            + r"'\/api\/v2\/worker\/k8shost\/\[0-9\]\+'",
+        ):
+            client.k8s_worker.set_storage(worker_id="garbage")
+
+        with self.assertRaises(AssertionError):
+            client.k8s_worker.set_storage(worker_id=123)
+
+        with self.assertRaises(APIItemNotFoundException):
+            client.k8s_worker.set_storage(worker_id="/api/v2/worker/k8shost/8")
+
+    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_set_storage_no_disks(self, mock_get, mock_post):
+        client = get_client()
+
+        with self.assertRaises(AssertionError) as c:
+            client.k8s_worker.set_storage(worker_id="/api/v2/worker/k8shost/5")
+        self.assertEqual(
+            str(c.exception),
+            "'ephemeral_disks' must contain at least one disk",
+        )
+
+    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_set_storage_invalid_ephemeral_disks(self, mock_get, mock_post):
+        client = get_client()
+
+        with self.assertRaises(AssertionError) as c:
+            client.k8s_worker.set_storage(
+                worker_id="/api/v2/worker/k8shost/5",
+                ephemeral_disks="garbage",
+            )
+        self.assertEqual(
+            str(c.exception),
+            "'ephemeral_disks' must be provided and and must be a list",
+        )
+
+        with self.assertRaises(AssertionError) as c:
+            client.k8s_worker.set_storage(
+                worker_id="/api/v2/worker/k8shost/5", ephemeral_disks=list()
+            )
+        self.assertEqual(
+            str(c.exception),
+            "'ephemeral_disks' must contain at least one disk",
+        )
+
+    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_set_storage_invalid_persistent_disks(self, mock_get, mock_post):
+        client = get_client()
+        _sample_ep_disks = ["/dev/nvme2n1", "/dev/nvme2n2"]
+
+        with self.assertRaises(AssertionError) as c:
+            client.k8s_worker.set_storage(
+                worker_id="/api/v2/worker/k8shost/5",
+                ephemeral_disks=_sample_ep_disks,
+                persistent_disks="garbage",
+            )
+        self.assertEqual(str(c.exception), "'persistent_disks' must be a list")
+
+    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_set_storage_only_ephemeral_disks(self, mock_get, mock_post):
+        client = get_client()
+
+        _sample_ep_disks = ["/dev/nvme2n1", "/dev/nvme2n2"]
+        client.k8s_worker.set_storage(
+            worker_id="/api/v2/worker/k8shost/5",
+            ephemeral_disks=_sample_ep_disks,
+        )
