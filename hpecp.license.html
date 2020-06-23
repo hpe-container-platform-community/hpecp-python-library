@@ -32,9 +32,6 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
           <a href="hpecp.lock.html" title="hpecp.lock module"
              accesskey="N">next</a> |</li>
         <li class="right" >
@@ -51,76 +48,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="module-hpecp.license">
-<span id="hpecp-license-module"></span><h1>hpecp.license module<a class="headerlink" href="#module-hpecp.license" title="Permalink to this headline">¶</a></h1>
-<dl class="py class">
-<dt id="hpecp.license.LicenseController">
-<em class="property">class </em><code class="sig-prename descclassname">hpecp.license.</code><code class="sig-name descname">LicenseController</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">client</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/license.html#LicenseController"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.license.LicenseController" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="py method">
-<dt id="hpecp.license.LicenseController.platform_id">
-<code class="sig-name descname">platform_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/license.html#LicenseController.platform_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.license.LicenseController.platform_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieve the Platform ID</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="hpecp.license.LicenseController.list">
-<code class="sig-name descname">list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/license.html#LicenseController.list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.license.LicenseController.list" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieve the list of licenses</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="hpecp.license.LicenseController.upload_with_ssh_key">
-<code class="sig-name descname">upload_with_ssh_key</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">server_filename</span></em>, <em class="sig-param"><span class="n">ssh_key_file</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ssh_key_data</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">base64enc_license</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/license.html#LicenseController.upload_with_ssh_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.license.LicenseController.upload_with_ssh_key" title="Permalink to this definition">¶</a></dt>
-<dd><p>Not implemented yet!</p>
-<dl class="simple">
-<dt>Workaround:</dt><dd><ul class="simple">
-<li><p>scp your license to ‘/srv/bluedata/license/’ on the controller</p></li>
-<li><p>run client.license.register(server_filename) to register the license</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="hpecp.license.LicenseController.upload_with_ssh_pass">
-<code class="sig-name descname">upload_with_ssh_pass</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">server_filename</span></em>, <em class="sig-param"><span class="n">ssh_username</span></em>, <em class="sig-param"><span class="n">ssh_password</span></em>, <em class="sig-param"><span class="n">base64enc_license</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/license.html#LicenseController.upload_with_ssh_pass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.license.LicenseController.upload_with_ssh_pass" title="Permalink to this definition">¶</a></dt>
-<dd><p>Not implemented yet!</p>
-<dl class="simple">
-<dt>Workaround:</dt><dd><ul class="simple">
-<li><p>scp your license to ‘/srv/bluedata/license/’ on the controller</p></li>
-<li><p>run client.license.register(server_filename) to register the license</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="hpecp.license.LicenseController.register">
-<code class="sig-name descname">register</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">server_filename</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/license.html#LicenseController.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.license.LicenseController.register" title="Permalink to this definition">¶</a></dt>
-<dd><p>Register a license. The license must have previously been uploaded
-to ‘/srv/bluedata/license/’ on the controller.</p>
-<dl class="simple">
-<dt>server_filename: str</dt><dd><p>Filepath to the license on the server, e.g.
-‘/srv/bluedata/license/LICENSE-1.txt’</p>
-</dd>
-</dl>
-<p>APIException</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="hpecp.license.LicenseController.delete">
-<code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">license_key</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/license.html#LicenseController.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.license.LicenseController.delete" title="Permalink to this definition">¶</a></dt>
-<dd><p>Delete a license by LicenseKey.</p>
-<dl class="simple">
-<dt>license_key: str</dt><dd><p>The license key, e.g. ‘1234 1234 … 1234 “SOMETEXT”’</p>
-</dd>
-</dl>
-<p>APIException</p>
-</dd></dl>
-
-</dd></dl>
-
+  <div class="section" id="hpecp-license-module">
+<h1>hpecp.license module<a class="headerlink" href="#hpecp-license-module" title="Permalink to this headline">¶</a></h1>
 </div>
 
 
@@ -185,9 +114,6 @@ to ‘/srv/bluedata/license/’ on the controller.</p>
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
         <li class="right" >
           <a href="hpecp.lock.html" title="hpecp.lock module"
              >next</a> |</li>
