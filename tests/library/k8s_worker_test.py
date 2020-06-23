@@ -265,4 +265,3 @@ class TestWorkers(TestCase):
             worker_id="/api/v2/worker/k8shost/5",
             ephemeral_disks=_sample_ep_disks,
         )
-
