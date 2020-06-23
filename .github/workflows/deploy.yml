@@ -25,6 +25,8 @@ jobs:
         run: |
           pip install tabulate
           pip install sphinx
+          pip install six
+          pip install polling
       - name: Build Docs
         run: |
           cd docs
