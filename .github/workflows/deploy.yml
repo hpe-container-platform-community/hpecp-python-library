@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
   deploy:
@@ -14,6 +17,6 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@3.5.5
         with:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-          BRANCH: master
+          BRANCH: gh-pages
           FOLDER: docs/build/html
           CLEAN: true
