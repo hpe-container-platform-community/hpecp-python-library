@@ -202,7 +202,7 @@ class K8sWorkerController:
     def get(self, worker_id):
         """
         See: https://<<controller_ip>>/apidocs/site-admin-api.html for the
-        schema of the  response object
+        schema of the response object
         """
         response = self.client._request(
             url=worker_id, http_method="get", description="worker/get_k8shosts"
@@ -297,31 +297,48 @@ class K8sWorkerController:
             except polling.TimeoutException:
                 return False
 
-    def set_storage(self, worker_id, persistent_disks, ephemeral_disks):
-        """Set Storage
+    def set_storage(self, worker_id, ephemeral_disks, persistent_disks=[]):
+        """Set storage for a k8s worker.
 
-        :param k8sworker_id: the worker ID
-        :param persistent_disks: a comma separated list of zero or more
-        persistent disks, e.g. "/dev/nvme2n1"
-        :param ephemeral_disks: a comma separated list of zero or more
-        ephemeral_disks disks, e.g. "/dev/nvme1n1"
+        Parameters
+        ----------
+        worker_id : str
+            The k8s worker ID, format - '/api/v2/worker/k8shost/[0-9]+'
+        ephemeral_disks : list
+            List of ephemeral disks. Mandatory parameter.
+        persistent_disks : list, optional
+            List of persistent disks, by default []
+
+        Raises
+        ------
+        APIItemNotFoundException
+        APIItemConflictException
+        APIException
+        AssertionError
         """
+        # Make sure that the worker exists
+        self.get(worker_id)
 
-        # TODO: id is valid
-        # TODO: assert disks are arrays
+        assert isinstance(
+            ephemeral_disks, list
+        ), "'ephemeral_disks' must be provided and and must be a list"
+        assert isinstance(
+            persistent_disks, list
+        ), "'persistent_disks' must be a list"
 
+        # Prepare the payload
         data = {
             "op_spec": {
-                "persistent_disks": persistent_disks,
                 "ephemeral_disks": ephemeral_disks,
+                "persistent_disks": persistent_disks,
             },
             "op": "storage",
         }
 
-        self.client._request(
+        # Make the request
+        _response = self.client._request(
             url=worker_id,
             http_method="post",
             data=data,
-            description="worker/add_k8shost",
+            description="worker/set_storage",
         )
-        # no response - just status code

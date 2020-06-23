@@ -454,7 +454,7 @@ class ContainerPlatformClient(object):
         create_auth_headers : bool, optional
             By default True
         additional_headers : dict, optional
-            Any additonal headers to be passed while making the request,
+            Any additional headers to be passed while making the request,
             by default {}
 
         Returns
