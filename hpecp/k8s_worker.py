@@ -204,6 +204,13 @@ class K8sWorkerController:
         See: https://<<controller_ip>>/apidocs/site-admin-api.html for the
         schema of the response object
         """
+        assert isinstance(
+            worker_id, basestring
+        ), "'worker_id' must be a string"
+        assert re.match(
+            r"\/api\/v2\/worker\/k8shost\/[0-9]+", worker_id
+        ), "'worker_id' must have format '/api/v2/worker/k8shost/[0-9]+'"
+
         response = self.client._request(
             url=worker_id, http_method="get", description="worker/get_k8shosts"
         )
@@ -247,12 +254,8 @@ class K8sWorkerController:
             If the item is not found and status is not empty
             APIException: if a generic API exception occurred
         """
-        assert isinstance(
-            worker_id, basestring
-        ), "'worker_id' must be a string"
-        assert re.match(
-            r"\/api\/v2\/worker\/k8shost\/[0-9]+", worker_id
-        ), "'worker_id' must have format '/api/v2/worker/k8shost/[0-9]+'"
+        self.get(worker_id)
+
         assert isinstance(status, list), "'status' must be a list"
         for i, s in enumerate(status):
             assert isinstance(
@@ -297,7 +300,7 @@ class K8sWorkerController:
             except polling.TimeoutException:
                 return False
 
-    def set_storage(self, worker_id, ephemeral_disks, persistent_disks=[]):
+    def set_storage(self, worker_id, ephemeral_disks=[], persistent_disks=[]):
         """Set storage for a k8s worker.
 
         Parameters
@@ -305,7 +308,7 @@ class K8sWorkerController:
         worker_id : str
             The k8s worker ID, format - '/api/v2/worker/k8shost/[0-9]+'
         ephemeral_disks : list
-            List of ephemeral disks. Mandatory parameter.
+            List of ephemeral disks. Mandatory parameter, by default []
         persistent_disks : list, optional
             List of persistent disks, by default []
 
@@ -322,6 +325,11 @@ class K8sWorkerController:
         assert isinstance(
             ephemeral_disks, list
         ), "'ephemeral_disks' must be provided and and must be a list"
+
+        assert (
+            len(ephemeral_disks) > 0
+        ), "'ephemeral_disks' must contain at least one disk"
+
         assert isinstance(
             persistent_disks, list
         ), "'persistent_disks' must be a list"
@@ -336,7 +344,7 @@ class K8sWorkerController:
         }
 
         # Make the request
-        _response = self.client._request(
+        self.client._request(
             url=worker_id,
             http_method="post",
             data=data,

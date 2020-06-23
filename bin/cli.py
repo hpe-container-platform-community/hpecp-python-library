@@ -378,11 +378,11 @@ class K8sWorkerProxy(object):
         Parameters
         ----------
         ip : str, optional
-            The IP address of the host, this is used for internal communication,
-            by default None.
+            The IP address of the host, this is used for internal
+            communication, by default None.
         ssh_key : str, optional
-            The SSH key data as a string, instead of this location to a key file
-            may also be provided, by default None.
+            The SSH key data as a string, instead of this location to a key
+            file may also be provided, by default None.
         ssh_key_file : str, optional
             The SSH key file path, by default None
         tags : list, optional
@@ -493,10 +493,10 @@ class K8sWorkerProxy(object):
             Comma separated string containing ephemeral disks.
             e.g: "/dev/nvme2n1,/dev/nvme2n2"
         persistent_disks : str, optional
-            Comma separated string containing persistent disks, by default None.
+            Comma separated string containing persistent disks, by default
+            None.
             e.g: "/dev/nvme1n1,/dev/nvme1n2"
         """
-
         if not ephemeral_disks:
             print("`ephemeral_disks` must be provided")
             sys.exit(1)
