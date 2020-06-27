@@ -19,7 +19,6 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import absolute_import
-from .exceptions import APIItemNotFoundException
 
 import re
 
@@ -71,12 +70,6 @@ class RoleController:
         response = self.client._request(
             url=role_id, http_method="get", description="role/get"
         )
-        if response.json()["purpose"] != "proxy":
-            raise APIItemNotFoundException(
-                message="role not found with id: " + role_id,
-                request_method="get",
-                request_url=role_id,
-            )
 
         return Role(response.json())
 
@@ -119,9 +112,7 @@ class Role:
         return "<Role id:{} description:{}>".format(self.id, self.description)
 
     def __str__(self):
-        return "K8sCluster(id={}, description={})".format(
-            self.id, self.description
-        )
+        return "Role(id={}, description={})".format(self.id, self.description)
 
     def __dir__(self):
         return self.display_columns
