@@ -33,8 +33,7 @@ except NameError:
 
 
 class K8sClusterController:
-    """This is the main class that users will interact with to work with K8S
-    Clusters.
+    """Class for interacting with K8S Clusters.
 
     An instance of this class is available in the
     client.ContainerPlatformClient with the attribute name
@@ -42,11 +41,10 @@ class K8sClusterController:
     methods of this class can be invoked using `client.k8s_cluster.method()`.
     See the example below:
 
-    Example::
-
-        client = ContainerPlatformClient(...).create_session()
-        client.k8s_cluster.list()
-
+    Example
+    -------
+    >>> client = ContainerPlatformClient(...).create_session()
+    >>> client.k8s_cluster.list()
     """
 
     def __init__(self, client):
@@ -68,44 +66,45 @@ class K8sClusterController:
         will be asynchronous - use the :py:meth:`wait_for_status` method to
         wait for the cluster to be created.
 
-        For the lis of statuses see :py:class:`K8sClusterStatus`
+        For the list of possible statuses see :py:class:`K8sClusterStatus`.
 
-        Arguments:
+        Parameters
+        ----------
+        name: str
+            Cluster name - required parameter.  Name must be at least 1
+            character
+        description: str
+            Cluster description - defaults to empty string if not provided
+        k8s_version: str
+            Kubernetes version to configure. If not specified defaults to
+            the latest version as supported by the rpms.
+        pod_network_range: str
+            Network range to be used for kubernetes pods. Defaults to
+            `10.192.0.0/12`
+        service_network_range: str
+            Network range to be used for kubernetes services that are
+            exposed with Cluster IP. Defaults to `10.96.0.0/12`
+        pod_dns_domain: str
+            DNS Domain to be used for kubernetes pods. Defaults to
+            `cluster.local`
+        persistent_storage_local: str
+            Enables local host storage to be available in the kubernetes
+            cluster
+        persistent_storage_nimble_csi: bool
+            Set to True to installs the Nimble CSI plugin for Nimble
+            storage to be available in the kubernetes cluster
+        k8shosts_config: list[K8sClusterHostConfig]
+            list of :py:class:`K8sClusterHostConfig` objects determining
+            which hosts to add and their role (master or worker)
 
-            name: str
-                Cluster name - required parameter.  Name must be at least 1
-                character
-            description: str
-                Cluster description - defaults to empty string if not provided
-            k8s_version: str
-                Kubernetes version to configure. If not specified defaults to
-                the latest version as supported by the rpms.
-            pod_network_range: str
-                Network range to be used for kubernetes pods. Defaults to
-                `10.192.0.0/12`
-            service_network_range: str
-                Network range to be used for kubernetes services that are
-                exposed with Cluster IP. Defaults to `10.96.0.0/12`
-            pod_dns_domain: str
-                DNS Domain to be used for kubernetes pods. Defaults to
-                `cluster.local`
-            persistent_storage_local: str
-                Enables local host storage to be available in the kubernetes
-                cluster
-            persistent_storage_nimble_csi: bool
-                Set to True to installs the Nimble CSI plugin for Nimble
-                storage to be available in the kubernetes cluster
-            k8shosts_config: list[K8sClusterHostConfig]
-                list of :py:class:`K8sClusterHostConfig` objects determining
-                which hosts to add and their role (master or worker)
-
-        Returns:
-
+        Returns
+        -------
+        str
             K8s Cluster ID with the format: '/api/v2/k8scluster/[0-9]+'
 
-        Raises:
-
-            APIException
+        Raises
+        ------
+        APIException
         """
 
         assert (
@@ -171,13 +170,14 @@ class K8sClusterController:
     def list(self):
         """Retrieve list of K8S Clusters.
 
-        Returns:
+        Returns
+        -------
+        :py:class:`K8sClusterList`
+            List of K8s Clusters
 
-            :py:class:`K8sClusterList` List of K8s Clusters
-
-        Raises:
-
-            APIException
+        Raises
+        ------
+        APIException
         """
         response = self.client._request(
             url="/api/v2/k8scluster",
@@ -189,17 +189,21 @@ class K8sClusterController:
     def get(self, k8scluster_id, setup_log=False):
         """Retrieve a K8S Cluster by ID.
 
-        Args:
-            k8scluster_id: str
-                The K8S cluster ID - format: '/api/v2/k8scluster/[0-9]+'
-            setup_log: (bool)
-                Set to True to return the cluster setup log
+        Parameters
+        ----------
+        k8scluster_id: str
+            The K8S cluster ID - format: '/api/v2/k8scluster/[0-9]+'
+        setup_log: (bool)
+            Set to True to return the cluster setup log
 
-        Returns:
-            K8sCluster: object representing K8S Cluster
+        Returns
+        -------
+        K8sCluster
+            object representing K8S Cluster
 
-        Raises:
-            APIException
+        Raises
+        ------
+        APIException
         """
         assert isinstance(
             k8scluster_id, str
@@ -223,22 +227,28 @@ class K8sClusterController:
     def wait_for_status(self, k8scluster_id, status=[], timeout_secs=60):
         """Wait for cluster status.
 
-        Args:
-            k8scluster_id: str
-                The K8S cluster ID - format: '/api/v2/k8scluster/[0-9]+'
-            status: list[:py:class:`K8sClusterStatus`]
-                Status(es) to wait for.  Use an empty array if you want to
-                wait for a cluster's existence to cease.
-            timeout_secs: int
-                How long to wait for the status(es) before raising an
-                exception.
+        Parameters
+        ----------
+        k8scluster_id: str
+            The K8S cluster ID - format: '/api/v2/k8scluster/[0-9]+'
+        status: list[:py:class:`K8sClusterStatus`]
+            Status(es) to wait for.  Use an empty array if you want to
+            wait for a cluster's existence to cease.
+        timeout_secs: int
+            How long to wait for the status(es) before raising an
+            exception.
 
-        Returns:
-            bool: True if status was found before timeout, otherwise False
+        Returns
+        -------
+        bool
+            True if status was found before timeout, otherwise False
 
-        Raises:
-            APIItemNotFoundException: if the item is not found
-            APIException: if a generic API exception occurred
+        Raises
+        ------
+        APIItemNotFoundException
+            if the item is not found
+        APIException
+            if a generic API exception occurred
         """
 
         assert isinstance(
@@ -270,17 +280,17 @@ class K8sClusterController:
             return False
 
     def delete(self, k8scluster_id):
-        """Delete a K8S Cluster.
+        """Delete a K8S Cluster. You can use :py:meth:`wait_for_status` to
+        check for the cluster state/existence.
 
-        You can use :py:meth:`wait_for_status` to check for the cluster
-        state/existence.
+        Parameters
+        ----------
+        k8scluster_id: str
+            The K8S cluster ID - format: '/api/v2/k8scluster/[0-9]+'
 
-        Args:
-            k8scluster_id: str
-                The K8S cluster ID - format: '/api/v2/k8scluster/[0-9]+'
-
-        Raises:
-            APIException
+        Raises
+        ------
+        APIException
         """
         assert isinstance(
             k8scluster_id, str
@@ -298,11 +308,15 @@ class K8sClusterController:
 
     def k8s_supported_versions(self):
         """Retrieve list of K8S Supported Versions.
-        Returns:
+
+        Returns
+        -------
+        list[str]
             List of K8s Supported Versions
 
-        Raises:
-            APIException
+        Raises
+        ------
+        APIException
         """
         response = self.client._request(
             url="/api/v2/k8smanifest",
@@ -337,15 +351,18 @@ class K8sCluster:
     """Create an instance of K8sCluster from json data returned from the HPE
     Container Platform API.
 
-    Users of this library are not expected to create an instance of this class.
+    Users of this library are not expected to create an instance of this
+    class.
 
-    Parameters:
-        json : str
-            The json returned by the API representing a K8sCluster.
+    Parameters
+    ----------
+    json : str
+        The json returned by the API representing a K8sCluster.
 
-    Returns:
-        K8sCluster:
-            An instance of K8sCluster
+    Returns
+    -------
+    K8sCluster:
+        An instance of K8sCluster
     """
 
     all_fields = [
@@ -393,10 +410,13 @@ class K8sCluster:
         """Set the columns this instance should have when the instance is used
         with :py:meth:`.K8sClusterList.tabulate`
 
-        Parameters:
-            columns : list[str]
-                Set the list of colums to return
+        Parameters
+        ----------
+        columns : list[str]
+            Set the list of colums to return
 
+        See Also
+        --------
         See :py:attr:`all_fields` for the complete list of field names.
         """
         self.display_columns = columns
@@ -505,17 +525,18 @@ class K8sCluster:
 
 
 class K8sClusterList:
-    """List of :py:obj:`.K8sCluster` objects
+    """List of :py:obj:`.K8sCluster` objects."""
 
-    This class is not expected to be instantiated by users.
+    def __init__(self, json):
+        """Create a K8sClusterList.  This class is not expected to be
+        instantiated directly by users.
 
-    Parameters:
+        Parameters
+        ----------
         json : str
             json data returned from the HPE Container Platform API get request
             to /api/v2/k8scluster
-    """
-
-    def __init__(self, json):
+        """
         self.json = json
         self.clusters = sorted(
             [K8sCluster(t) for t in json], key=attrgetter("id")
@@ -548,25 +569,30 @@ class K8sClusterList:
     def __len__(self):
         return len(self.clusters)
 
-    def tabulate(self, columns=K8sCluster.all_fields):
-        """Provide a tabular represenation of the list of K8s Clusters
+    def tabulate(self, columns=K8sCluster.all_fields, style="pretty"):
+        """Provide a tabular represenation of the list of K8s Clusters.
 
-        Parameters:
-            columns : list[str]
-                list of columns to return in the table - default
-                :py:attr:`.K8sCluster.all_fields`
+        Parameters
+        ----------
+        columns : list[str]
+            list of columns to return in the table - default
+            :py:attr:`.K8sCluster.all_fields`
+        output: str
+            How to format the output.
 
-        Returns:
-            str : table output
+        Returns
+        -------
+        str
+            table output
 
-        Example::
+        Example
+        -------
+        Print the cluster list with all of the avaialble fields
+        >>> print(hpeclient.cluster.list().tabulate())
 
-            # Print the cluster list with all of the avaialble fields
-            print(hpeclient.cluster.list().tabulate())
-
-            # Print the cluster list with a subset of the fields
-            print(hpeclient.cluster.list().tabulate(columns=['id', 'name',
-            'description']))
+        Print the cluster list with a subset of the fields
+        >>> print(hpeclient.cluster.list().tabulate(
+        ...     columns=['id', 'name','description']))
         """
         if columns != K8sCluster.all_fields:
             assert isinstance(
@@ -580,29 +606,25 @@ class K8sClusterList:
                 )
 
         self.tenant_columns = columns
-        return tabulate(self, headers=columns, tablefmt="pretty")
+        return tabulate(self, headers=columns, tablefmt=style)
 
 
 class K8sClusterHostConfig:
     """Object to represent a pair of `host node` and the `role` of the host
     - `master` or `worker`.
-
-    Arguments:
-
-        node: str
-            The node ID. Must have. the format: '/api/v2/worker/k8shost/[0-9]+'
-        role: str
-            The role of the worker node - `master` or `worker`
     """
 
     @classmethod
     def create_from_list(cls, noderole):
         """Factory method to create K8sClusterHostConfig from a list.
 
-        Arguments:
-            noderole: list
-                the noderole must only have two values: [ node, role ]
+        Parameters
+        ----------
+        noderole: list
+            the noderole must only have two values: [ node, role ]
 
+        See Also
+        --------
         See :py:meth:`K8sClusterHostConfig` for the allowed node and role
         values.
         """
@@ -628,13 +650,16 @@ class K8sClusterHostConfig:
     def to_dict(self):
         """Returns a dict representation of the object.
 
-        Returns:
-            dict
+        Returns
+        -------
+        dict
 
-        Example::
-            {
-                'node': '/api/v2/worker/k8shost/12',
-                'role': 'master'
-            }
+        Example
+        -------
+        >>> .to_dict()
+        {
+            'node': '/api/v2/worker/k8shost/12',
+            'role': 'master'
+        }
         """
         return {"node": self.node, "role": self.role}

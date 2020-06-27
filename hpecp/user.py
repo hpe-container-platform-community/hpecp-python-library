@@ -34,7 +34,7 @@ except NameError:
 
 
 class UserController:
-    """This is the main class that users will interact get the li .
+    """Class that users will interact with to work with catalogs.
 
     An instance of this class is available in the
     client.ContainerPlatformClient with the attribute name
@@ -42,33 +42,36 @@ class UserController:
     this class can be invoked using `client.user.method()`.  See the example
     below:
 
-    Example::
-
-        client = ContainerPlatformClient(...).create_session()
-        client.user.list()
+    Example
+    -------
+    >>> client = ContainerPlatformClient(...).create_session()
+    >>> client.user.list()
     """
 
     def __init__(self, client):
         self.client = client
 
     def create_with_ssh_password(self, username, password):
-        """Not Implemented yet"""
+        """Not Implemented yet."""
         raise NotImplementedError()
 
     def create_with_ssh_key(
         self, ip, proxy_node_hostname, ssh_key_data, tags=[]
     ):
-        """Not Implemented yet"""
+        """Not Implemented yet."""
         raise NotImplementedError()
 
     def list(self):
-        """Retrieve a list of Users
+        """Retrieve a list of Users.
 
-        Returns:
-            UserList: list of Users
+        Returns
+        -------
+        UserList
+            list of Users
 
-        Raises:
-            APIException
+        Raises
+        ------
+        APIException
         """
         response = self.client._request(
             url="/api/v1/user/", http_method="get", description="user/list"
@@ -78,15 +81,19 @@ class UserController:
     def get(self, user_id):
         """Retrieve a User by ID.
 
-        Args:
-            user_id: str
-                The user ID - format: '/api/v1/user/[0-9]+'
+        Parameters
+        ----------
+        user_id: str
+            The user ID - format: '/api/v1/user/[0-9]+'
 
-        Returns:
-            User: object representing User
+        Returns
+        -------
+        User
+            object representing a User
 
-        Raises:
-            APIException
+        Raises
+        ------
+        APIException
         """
         assert isinstance(
             user_id, str
@@ -110,12 +117,14 @@ class UserController:
     def delete(self, user_id):
         """Delete a user.
 
-        Args:
-            user_id: str
-                The User ID - format: '/api/v1/user/[0-9]+'
+        Parameters
+        ----------
+        user_id: str
+            The User ID - format: '/api/v1/user/[0-9]+'
 
-        Raises:
-            APIException
+        Raises
+        ------
+        APIException
         """
         assert isinstance(
             user_id, str
@@ -137,17 +146,21 @@ class UserController:
         raise NotImplementedError()
 
     def create(self, name, description="", is_external=True):
-        """Create a user by specifying name & description
+        """Create a user by specifying name and description.
 
-        Args:
-            name: str
-                Client name.
-            description: str
-                Description as a string.
-            is_external: bool
-                Set to True for external users
+        Parameters
+        ----------
+        name: str
+            Client name.
+        description: str
+            Description as a string.
+        is_external: bool
+            Set to True for external users
 
-        Returns: user ID
+        Returns
+        -------
+        str
+            The user ID
         """
 
         assert isinstance(
@@ -176,17 +189,18 @@ class UserController:
 
 class User:
     """Create an instance of User from json data returned from the HPE
-
     Container Platform API. Users of this library are not expected to create an
     instance of this class.
 
-    Parameters:
-        json : str
-            The json returned by the API representing a User.
+    Parameters
+    ----------
+    json : str
+        The json returned by the API representing a User.
 
-    Returns:
-        User:
-            An instance of User
+    Returns
+    -------
+    User
+        An instance of User
     """
 
     all_fields = [
@@ -227,14 +241,16 @@ class User:
         return len(dir(self))
 
     def set_display_columns(self, columns):
-        """Set the columns this instance should have when the instance is used
+        """Set the columns this instance should have when the instance is
+        used with :py:meth:`.User.tabulate`
 
-        with :py:meth:`.User.tabulate`
+        Parameters
+        ----------
+        columns : list[str]
+            Set the list of colums to return
 
-        Parameters:
-            columns : list[str]
-                Set the list of colums to return
-
+        See Also
+        --------
         See :py:attr:`all_fields` for the complete list of field names.
         """
         self.display_columns = columns
@@ -284,17 +300,18 @@ class User:
 
 
 class UserList:
-    """List of :py:obj:`.User` objects
+    """List of :py:obj:`.User` objects."""
 
-    This class is not expected to be instantiated by users.
+    def __init__(self, json):
+        """Create a UserList object.
+        This class is not expected to be instantiated by users.
 
-    Parameters:
+        Parameters
+        ----------
         json : str
             json data returned from the HPE Container Platform API get request
             to /api/v1/user
-    """
-
-    def __init__(self, json):
+        """
         self.json = json
         self.users = sorted([User(g) for g in json], key=attrgetter("id"))
         self.display_columns = User.default_display_fields
@@ -331,25 +348,28 @@ class UserList:
         style="pretty",
         display_headers=True,
     ):
-        """Provide a tabular represenation of the list of Users
+        """Provide a tabular represenation of the list of Users.
 
-        Parameters:
-            columns : list[str]
-                list of columns to return in the table - default
-                :py:attr:`.User.default_display_fields`
-            style: str
-                See: https://github.com/astanin/python-tabulate#table-format
+        Parameters
+        ----------
+        columns : list[str]
+            list of columns to return in the table - default
+            :py:attr:`.User.default_display_fields`
+        style: str
+            See: https://github.com/astanin/python-tabulate#table-format
 
-        Returns:
-            str : table output
+        Returns
+        -------
+        str
+            table output of Users
 
-        Example::
+        Example
+        -------
+        Print the user list with all of the avaialble fields
+        >>> print(hpeclient.user.list().tabulate())
 
-            # Print the user list with all of the avaialble fields
-            print(hpeclient.user.list().tabulate())
-
-            # Print the cluster list with a subset of the fields
-            print(hpeclient.user.list().tabulate(columns=['id', 'state']))
+        Print the cluster list with a subset of the fields
+        >>> print(hpeclient.user.list().tabulate(columns=['id', 'state']))
         """
         if columns != User.default_display_fields:
             assert isinstance(

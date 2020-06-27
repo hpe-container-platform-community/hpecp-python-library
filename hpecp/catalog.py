@@ -25,7 +25,7 @@ from tabulate import tabulate
 
 
 class CatalogController:
-    """This is the main class that users will interact with to talk to catalogs.
+    """Class that users will interact with to work with catalogs
 
     An instance of this class is available in the
     `client.ContainerPlatformClient` with the attribute name
@@ -43,13 +43,16 @@ class CatalogController:
         self.client = client
 
     def list(self):
-        """Retrieve a list of Catalogs
+        """Retrieve a list of Catalogs.
 
-        Returns:
-            CatalogList: list of Catalogs
+        Returns
+        -------
+        CatalogList
+            list of Catalogs
 
-        Raises:
-            APIException
+        Raises
+        ------
+        APIException
         """
         response = self.client._request(
             url="/api/v1/catalog/",
@@ -61,17 +64,22 @@ class CatalogController:
         )
 
     def get(self, catalog_id):
-        """Retrieve a catalog identified by {catalog_id}
+        """Retrieve a catalog identified by {catalog_id}.
 
-        Args:
-            catalog_id: str
-                The Catalog ID - format: '/api/v1/catalog/[0-9]+'
+        Parameters
+        ----------
+        catalog_id: str
+            The Catalog ID - format: '/api/v1/catalog/[0-9]+'
 
-        Raises:
-            APIException
+        Returns
+        -------
+        Catalog
+            object representing the requested Catalog
 
-        Returns:
-            Catalog -- object representing the requested Catalog
+        Raises
+        ------
+        APIException
+        APIItemNotFoundException
         """
         assert isinstance(
             catalog_id, str
@@ -86,21 +94,63 @@ class CatalogController:
 
         return Catalog(response.json())
 
+    def install(self, catalog_id):
+        """Install the specified catalog.
+
+        Parameters
+        ----------
+        catalog_id : str
+            The ID of the catalog - format /api/v1/catalog/[0-9]+
+
+        Raises
+        ------
+        APIItemNotFoundException
+        APIItemConflictException
+        APIException
+        """
+        # Make sure that the given catalog exists, other validations will also
+        # be taken care of.
+        self.get(catalog_id)
+
+        _data = {"action": "install"}
+
+        self.client._request(
+            url=catalog_id,
+            http_method="post",
+            description="catalog/post/install",
+            data=_data,
+        )
+
+    def refresh(self, catalog_id):
+        """Refresh the specified catalog.
+
+        Parameters
+        ----------
+        catalog_id : str
+            The ID of the catalog - format /api/v1/catalog/[0-9]+
+
+        Raises
+        ------
+        APIItemNotFoundException
+        APIItemConflictException
+        APIException
+        """
+        # Make sure that the given catalog exists, other validations will also
+        # be taken care of.
+        self.get(catalog_id)
+
+        _data = {"action": "refresh"}
+
+        self.client._request(
+            url=catalog_id,
+            http_method="post",
+            description="catalog/post/refresh",
+            data=_data,
+        )
+
 
 class Catalog:
-    """Create an instance of Catalog from json data returned from the HPE
-
-    Container Platform API. Users of this library are not expected to create an
-    instance of this class.
-
-    Parameters:
-        json : str
-            The json returned by the API representing a Catalog.
-
-    Returns:
-        Catalog:
-            An instance of Catalog
-    """
+    """Catalog Image item."""
 
     # All of the fields of Catalog objects as returned by the HPE Container
     # Platform API.
@@ -133,6 +183,23 @@ class Catalog:
     default_display_fields = all_fields
 
     def __init__(self, json):
+        """Create a Catalog Image.
+
+        Parameters
+        ----------
+        json : str
+            The json returned by the API representing a Catalog.
+
+        Returns
+        -------
+        Catalog:
+            An instance of Catalog
+
+        Note
+        ----
+        Users of the library aren't expected to create instances of this class
+        directly.
+        """
         self.json = json
         self.display_columns = Catalog.default_display_fields
 
@@ -158,10 +225,13 @@ class Catalog:
 
         with :py:meth:`.CatalogList.tabulate`.
 
-        Parameters:
-            columns : list[str]
-                Set the list of colums to return
+        Parameters
+        ----------
+        columns : list[str]
+            Set the list of colums to return
 
+        See Also
+        --------
         See :py:attr:`all_fields` for the complete list of field names.
         """
         self.display_columns = columns
@@ -170,7 +240,8 @@ class Catalog:
     def id(self):
         """@Field: from json['_links']['self']['href'] -
 
-        id format: '/api/v1/catalog/[0-9]+'"""
+        id format: '/api/v1/catalog/[0-9]+'
+        """
         return self.json["_links"]["self"]["href"]
 
     @property
@@ -185,14 +256,17 @@ class Catalog:
 
 
 class CatalogList:
-    """List of :py:obj:`.Catalog` objects
+    """List of :py:obj:`.Catalog` objects.
 
+    Parameters
+    ----------
+    json : str
+        json data returned from the HPE Container Platform API get request
+        to /api/v1/catalog
+
+    Note
+    ----
     This class is not expected to be instantiated by users.
-
-    Parameters:
-        json : str
-            json data returned from the HPE Container Platform API get request
-            to /api/v1/catalog
     """
 
     def __init__(self, json):
@@ -207,7 +281,7 @@ class CatalogList:
 
     # Python 2
     def next(self):
-        """Support iterator access on Python 2.7"""
+        """Support iterator access on Python 2.7."""
         if not self.catalogs:
             raise StopIteration
         catalog = self.catalogs.pop(0)
@@ -234,25 +308,30 @@ class CatalogList:
         style="pretty",
         display_headers=True,
     ):
-        """Provide a tabular represenation of the list of Catalogs
+        """Provide a tabular represenation of the list of Catalog images.
 
-        Parameters:
-            columns : list[str]
-                list of columns to return in the table - default
-                :py:attr:`.Catalog.default_display_fields`
-            style: str
-                See: https://github.com/astanin/python-tabulate#table-format
+        Parameters
+        ----------
+        columns : list[str]
+            list of columns to return in the table - default
+            :py:attr:`.Catalog.default_display_fields`
+        style: str
+            See: https://github.com/astanin/python-tabulate#table-format
 
-        Returns:
-            str : table output
+        Returns
+        -------
+        str
+            table output
 
-        Example::
+        Example
+        -------
+        Print the catalog list with all of the avaialble fields:
 
-            # Print the catalog list with all of the avaialble fields
-            print(hpeclient.catalog.list().tabulate())
+        >>> print(hpeclient.catalog.list().tabulate())
 
-            # Print the cluster list with a subset of the fields
-            print(hpeclient.catalog.list().tabulate(columns=['id', 'state']))
+        Print the cluster list with a subset of the fields:
+
+        >>> print(hpeclient.catalog.list().tabulate(columns=['id', 'state']))
         """
         if columns != Catalog.default_display_fields:
             assert isinstance(

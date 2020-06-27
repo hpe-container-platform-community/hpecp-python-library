@@ -21,7 +21,8 @@
     "python.linting.pylintEnabled": false,
     "python.linting.flake8Enabled": true,
     "python.linting.flake8Args": [
-        "per-file-ignores=hpecp/__init__.py:F401"
+        "per-file-ignores=hpecp/__init__.py:F401",
+        "--docstring-convention=numpy"
     ],
     "python.linting.enabled": true,
     "python.formatting.provider": "black",
@@ -29,5 +30,6 @@
     "python.envFile": "${workspaceFolder}/gitpod.env",
     "editor.formatOnSave": true,
     "files.insertFinalNewline": true,
-    "git.alwaysSignOff": true
+    "git.alwaysSignOff": true,
+    "autoDocstring.docstringFormat": "numpy"
 }

@@ -44,16 +44,16 @@ class LockController:
         return self.get()
 
     def create(self, reason=None):
-        """Create a new lock
+        """Create a new lock.
 
-        Arguments:
+        Arguments
+        ---------
+        reason: str
+            Provide a reason for the lock.
 
-            reason: str
-                Provide a reason for the lock
-
-        Raises:
-
-            APIException
+        Raises
+        ------
+        APIException
         """
         data = {"reason": reason}
         return self.client._request(
@@ -64,17 +64,17 @@ class LockController:
         )
 
     def delete(self, lock_id):
-        """Delete a lock
+        """Delete a lock.
 
-        Arguments:
+        Parameters
+        ----------
+        lock_id: str
+            The lock id as retrieved with `get()`  Format:
+            '/api/v1/lock/[0-9]+'
 
-            lock_id: str
-                The lock id as retrieved with `get()`  Format:
-                '/api/v1/lock/[0-9]+'
-
-        Raises:
-
-            APIException
+        Raises
+        ------
+        APIException
         """
 
         assert isinstance(
@@ -89,17 +89,17 @@ class LockController:
         )
 
     def delete_all(self, timeout_secs=300):
-        """Delete all locks
+        """Delete all locks.
 
-        Arguments:
+        Parameters
+        ----------
+        timeout_secs: int
+            How long to wait for internal locks (note these need to be
+            cleared before external locks can be deleted)
 
-            timeout_secs: int
-                How long to wait for internal locks (note these need to be
-                cleared before external locks can be deleted)
-
-        Raises:
-
-            APIException
+        Raises
+        ------
+        APIException
         """
 
         try:

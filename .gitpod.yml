@@ -1,10 +1,10 @@
 tasks:
   - before: gp env -e PYTHONPATH=/workspace/hpecp-python-library:$PYTHONPATH
   - command: /home/gitpod/.pyenv/versions/2.7.17/bin/python2 -m pip install -U pytest mock awscli -r ./requirements.txt --user && exit
-  - command: /home/gitpod/.pyenv/versions/3.5.9/bin/python3 -m pip install -U pytest tox mock awscli flake8 -r ./requirements.txt --user && exit
-  - command: /home/gitpod/.pyenv/versions/3.6.9/bin/python3 -m pip install -U pytest tox mock awscli black flake8 -r ./requirements.txt --user && exit
-  - command: /home/gitpod/.pyenv/versions/3.7.7/bin/python3 -m pip install -U pytest tox mock awscli black flake8 -r ./requirements.txt --user && exit
-  - command: /bin/python3 -m pip install -U pytest tox mock awscli black flake8 -r ./requirements.txt --user && exit
+  - command: /home/gitpod/.pyenv/versions/3.5.9/bin/python3 -m pip install -U pytest tox mock awscli flake8 flake8-docstrings -r ./requirements.txt --user && exit
+  - command: /home/gitpod/.pyenv/versions/3.6.9/bin/python3 -m pip install -U pytest tox mock awscli black flake8 flake8-docstrings -r ./requirements.txt --user && exit
+  - command: /home/gitpod/.pyenv/versions/3.7.7/bin/python3 -m pip install -U pytest tox mock awscli black flake8 flake8-docstrings -r ./requirements.txt --user && exit
+  - command: /bin/python3 -m pip install -U pytest tox mock awscli black flake8 flake8-docstrings -r ./requirements.txt --user && exit
 
   # - command: /home/gitpod/.pyenv/versions/3.9-dev/bin/python3 -m pip install -U pytest tox mock awscli black flake8 -r ./requirements.txt --user && exit
   - command: cd docs && make html && cd build/html && python3 -m http.server 9090
@@ -17,3 +17,4 @@ vscode:
     - littlefoxteam.vscode-python-test-adapter@0.3.16:tZ/6xOSSdKUaq6JCUVkD+A==
     - almenon.arepl@1.0.20:Uu7lIOwyLgmNWpTwCl/iqQ==
     - timonwong.shellcheck@0.9.0:hsU/Rd39aqPYowTqL+DbXg==
+    - njpwerner.autodocstring@0.5.3:EBIOShg8dcmi8/snmYWYnw==

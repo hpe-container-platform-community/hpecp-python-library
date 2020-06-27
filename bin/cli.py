@@ -20,7 +20,7 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-"""Prototype for HPE Container Platform API."""
+"""HPE Container Platform CLI."""
 
 import base64
 import configparser
@@ -31,19 +31,8 @@ from collections import OrderedDict
 
 import fire
 import jmespath
+import six
 import yaml
-
-from hpecp.logger import Logger
-
-from hpecp.gateway import (
-    Gateway,
-    GatewayStatus,
-)
-from hpecp.k8s_cluster import (
-    K8sClusterHostConfig,
-    K8sClusterStatus,
-)
-from hpecp.user import User
 
 from hpecp import (
     APIException,
@@ -51,7 +40,13 @@ from hpecp import (
     ContainerPlatformClient,
     ContainerPlatformClientException,
 )
+from hpecp.catalog import Catalog
+from hpecp.exceptions import APIItemNotFoundException
+from hpecp.gateway import Gateway, GatewayStatus
+from hpecp.k8s_cluster import K8sClusterHostConfig, K8sClusterStatus
 from hpecp.k8s_worker import WorkerK8sStatus
+from hpecp.logger import Logger
+from hpecp.user import User
 
 if sys.version_info[0] >= 3:
     unicode = str
@@ -99,9 +94,87 @@ def get_client():
 class CatalogProxy(object):
     """Proxy object to :py:attr:`<hpecp.client.catalog>`."""
 
-    def list(self):
-        """Retrieve the list of Catalog Images."""
-        print(get_client().catalog.list())
+    def list(
+        self, output="json", columns=Catalog.default_display_fields, query={}
+    ):
+        """Retrieve the list of catalogs.
+
+        Parameters
+        ----------
+        output : str, optional
+            Define how the output should be printed, by default "json"
+        columns : list/tuple, optional
+            List of speicifc columns to be displayed, by default
+            `Catalog.default_display_fields`
+        query : dict, optional
+            Query in jmespath (https://jmespath.org/) format, by default {}
+
+        Examples
+        --------
+        > hpecp catalog list --output text --query '[0].distro_id'
+
+        bluedata/spark240juphub7xssl
+
+        """
+        if output == "table":
+            print(get_client().catalog.list().tabulate(columns=columns))
+        elif output == "text":
+            print(
+                get_client()
+                .catalog.list()
+                .tabulate(
+                    columns=columns, style="plain", display_headers=False,
+                )
+            )
+        else:
+            data = get_client().catalog.list().json
+            if query:
+                print(json.dumps(jmespath.search(str(query), data)))
+            else:
+                print(data)
+
+    def refresh(self, catalog_id):
+        """Refresh a catalog.
+
+        Parameters
+        ----------
+        catalog_id : str
+            The ID of the catalog - format: '/api/v1/catalog/[0-9]+'
+
+        Examples
+        --------
+        > hpecp catalog refresh /api/v1/catalog/99
+
+        """
+        try:
+            get_client().catalog.refresh(catalog_id)
+
+            # TODO: Report progress of the refresh workflow
+        except (APIException, APIItemNotFoundException) as e:
+            print(e.message)
+            sys.exit(1)
+
+    def install(self, catalog_id):
+        """Install a catalog.
+
+        Parameters
+        ----------
+        catalog_id : str
+            The ID of the catalog - format: '/api/v1/catalog/[0-9]+'
+
+        Examples
+        --------
+        > hpecp catalog install /api/v1/catalog/99
+
+        """
+        try:
+            get_client().catalog.install(catalog_id)
+
+            # TODO: Implement a way to check if the installation is actually
+            # successful (and maybe report progress?)
+        except (APIException, APIItemNotFoundException) as e:
+            print(e.message)
+            sys.exit(1)
 
 
 class GatewayProxy(object):
@@ -145,13 +218,13 @@ class GatewayProxy(object):
 
         if ssh_key_file is not None:
             with open(ssh_key_file) as f:
-                ssh_key_data = f.read()
+                ssh_key = f.read()
 
         try:
             gateway_id = get_client().gateway.create_with_ssh_key(
                 ip=ip,
                 proxy_node_hostname=proxy_node_hostname,
-                ssh_key_data=ssh_key_data,
+                ssh_key_data=ssh_key,
                 tags=tags,
             )
             print(gateway_id)
@@ -302,20 +375,25 @@ class K8sWorkerProxy(object):
     ):
         """Create a K8s Worker using SSH key authentication.
 
-        :param ip: The IP address of the host.  Used for internal
-            communication.
-        :param ssh_key: The ssh key data as a string.  Alternatively, use the
-            ssh_key_file parameter.
-        :param ssh_key_file: The file path to the ssh key.  Alternatively, use
-            the ssh_key parameter.
-        :param tags: Tags to use, e.g. "{ 'tag1': 'foo', 'tag2', 'bar' }".
+        Parameters
+        ----------
+        ip : str, optional
+            The IP address of the host, this is used for internal
+            communication, by default None.
+        ssh_key : str, optional
+            The SSH key data as a string, instead of this location to a key
+            file may also be provided, by default None.
+        ssh_key_file : str, optional
+            The SSH key file path, by default None
+        tags : list, optional
+            Tags to use, e.g. "{ "tag1": "foo", "tag2": "bar"}", by default []
         """
         if ssh_key is None and ssh_key_file is None:
             print("Either ssh_key or ssh_key_file must be provided")
             sys.exit(1)
 
         if ssh_key is not None and ssh_key_file is not None:
-            print("Either ssh_key or ssh_key_file must be provided")
+            print("Please provide only of one ssh_key or ssh_key_file")
             sys.exit(1)
 
         if ssh_key_file is not None:
@@ -353,7 +431,7 @@ class K8sWorkerProxy(object):
 
         > hpecp k8sworker list --output json --query '[0].ip'
         10.1.0.185
-        
+
         > hpecp k8sworker list --output json --query "[*].[status, hostname,
             ipaddr]"
 
@@ -385,9 +463,7 @@ class K8sWorkerProxy(object):
             else:
                 print(data)
 
-    def get(
-        self, k8sworker_id,
-    ):
+    def get(self, k8sworker_id):
         """Retrieve a K8s Worker.
 
         :param k8sworker_id: the worker ID
@@ -397,9 +473,7 @@ class K8sWorkerProxy(object):
             yaml.dump(yaml.load(json.dumps(worker), Loader=yaml.FullLoader,))
         )
 
-    def delete(
-        self, k8sworker_id,
-    ):
+    def delete(self, k8sworker_id):
         """Delete a K8s Worker.
 
         :param k8sworker_id: the worker ID
@@ -407,17 +481,29 @@ class K8sWorkerProxy(object):
         print(get_client().k8s_worker.delete(worker_id=k8sworker_id))
 
     def set_storage(
-        self, k8sworker_id=None, persistent_disks=None, ephemeral_disks=None,
+        self, k8sworker_id, ephemeral_disks, persistent_disks=None,
     ):
-        """Set Storage for a K8S Worker.
+        """Set storage for a k8s worker.
 
-        :param k8sworker_id: the worker ID
-        :param persistent_disks: a comma separated list of zero or more
-            persistent disks, e.g. "/dev/nvme2n1"
-        :param ephemeral_disks: a comma separated list of zero or more
-            ephemeral_disks disks, e.g. "/dev/nvme1n1"
+        Parameters
+        ----------
+        k8sworker_id : str
+            The k8s worker ID
+        ephemeral_disks : str
+            Comma separated string containing ephemeral disks.
+            e.g: "/dev/nvme2n1,/dev/nvme2n2"
+        persistent_disks : str, optional
+            Comma separated string containing persistent disks, by default
+            None.
+            e.g: "/dev/nvme1n1,/dev/nvme1n2"
         """
-        p_disks = persistent_disks.split(",")
+        if not ephemeral_disks:
+            print("`ephemeral_disks` must be provided")
+            sys.exit(1)
+
+        p_disks = (
+            persistent_disks.split(",") if persistent_disks is not None else []
+        )
         e_disks = ephemeral_disks.split(",")
 
         get_client().k8s_worker.set_storage(
@@ -519,24 +605,37 @@ class K8sClusterProxy(object):
         self,
         all_columns=False,
         columns=["id", "name", "description", "status"],
+        output="table",
         query={},
     ):
         """Print a table of K8s Clusters.
 
         :param all_columns: (True/False) set to True to return all columns
-        :param columns: (aaa) afadsfs
+        :param columns: list of columns to output
+        :param output: table|text
+        :param query: JMESPATH query
         """
         if all_columns:
             print(get_client().k8s_cluster.list().tabulate())
         else:
             if query:
-                data = get_client().k8s_cluster.list().json
-                print(json.dumps(jmespath.search(str(query), data)))
+                raw_data = get_client().k8s_cluster.list().json
+                queried_data = jmespath.search(str(query), raw_data)
+                if output == "text":
+                    for row in queried_data:
+                        print(" ".join(map(str, row)))
+                else:
+                    print(json.dumps(queried_data))
             else:
-                output = (
-                    get_client().k8s_cluster.list().tabulate(columns=columns)
+                if output == "text":
+                    tabulate_style = "plain"
+                else:
+                    tabulate_style = "pretty"
+                print(
+                    get_client()
+                    .k8s_cluster.list()
+                    .tabulate(columns=columns, style=tabulate_style)
                 )
-                print(output)
 
     def get(
         self, k8scluster_id,
@@ -1118,23 +1217,20 @@ def configure_cli():
         controller_username = config_reader.username
         controller_password = config_reader.password
 
-    if sys.version_info[0] >= 3:
-        raw_input = input
-
     sys.stdout.write("Controller API Host [{}]: ".format(controller_api_host))
-    tmp = raw_input()
+    tmp = six.moves.input()
     if tmp != "":
         controller_api_host = tmp
 
     sys.stdout.write("Controller API Port [{}]: ".format(controller_api_port))
-    tmp = input()
+    tmp = six.moves.input()
     if tmp != "":
         controller_api_port = tmp
 
     sys.stdout.write(
         "Controller uses ssl (True|False) [{}]: ".format(controller_use_ssl)
     )
-    tmp = input()
+    tmp = six.moves.input()
     if tmp != "":
         controller_use_ssl = tmp
 
@@ -1143,24 +1239,24 @@ def configure_cli():
             controller_verify_ssl
         )
     )
-    tmp = input()
+    tmp = six.moves.input()
     if tmp != "":
         controller_verify_ssl = tmp
 
     sys.stdout.write(
         "Controller warn ssl (True|False) [{}]: ".format(controller_warn_ssl)
     )
-    tmp = input()
+    tmp = six.moves.input()
     if tmp != "":
         controller_warn_ssl = tmp
 
     sys.stdout.write("Controller Username [{}]: ".format(controller_username))
-    tmp = raw_input()
+    tmp = six.moves.input()
     if tmp != "":
         controller_username = tmp
 
     sys.stdout.write("Controller Password [{}]: ".format(controller_password))
-    tmp = raw_input()
+    tmp = six.moves.input()
     if tmp != "":
         controller_password = tmp
 
@@ -1174,7 +1270,7 @@ def configure_cli():
     config["default"]["username"] = controller_username
     config["default"]["password"] = controller_password
 
-    with open(config_path, "w",) as config_file:
+    with open(config_path, "w") as config_file:
         config.write(config_file)
 
 

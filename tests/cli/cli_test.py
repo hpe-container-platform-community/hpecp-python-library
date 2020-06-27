@@ -25,7 +25,163 @@ from textwrap import dedent
 from unittest import TestCase
 
 import requests
-from mock import patch
+import six
+from mock import mock, mock_open, patch
+
+if six.PY2:
+    from io import BytesIO as StringIO  # noqa: F811
+    from test.test_support import EnvironmentVarGuard
+else:
+    from io import StringIO
+    from test.support import EnvironmentVarGuard
+
+try:
+    from imp import reload
+except Exception:
+    from importlib import reload
+
+
+class TestCLI(TestCase):
+    def setUp(self):
+        file_data = dedent(
+            """                [default]
+                api_host = 127.0.0.1
+                api_port = 8080
+                use_ssl = True
+                verify_ssl = False
+                warn_ssl = True
+                username = admin
+                password = admin123"""
+        )
+
+        self.tmpFile = tempfile.NamedTemporaryFile(delete=True)
+        self.tmpFile.write(file_data.encode("utf-8"))
+        self.tmpFile.flush()
+
+        sys.path.insert(0, os.path.abspath("../../"))
+        from bin import cli
+
+        self.cli = cli
+        self.cli.HPECP_CONFIG_FILE = self.tmpFile.name
+
+        self.saved_stdout = sys.stdout
+        self.out = StringIO()
+        sys.stdout = self.out
+
+    def tearDown(self):
+        self.tmpFile.close()
+        sys.stdout = self.saved_stdout
+        del self.cli.HPECP_CONFIG_FILE
+
+    def test_config_file_missing(self):
+
+        with self.assertRaises(SystemExit) as cm:
+            self.cli.HPECP_CONFIG_FILE = "this_file_should_not_exist"
+            self.cli.get_client()
+
+        self.assertEqual(cm.exception.code, 1)
+
+        self.assertEqual(
+            self.out.getvalue(),
+            "Could not find configuration file 'this_file_should_not_exist'\n",
+        )
+
+    def test_configure_cli_writes_hpecp_conf(self):
+
+        if six.PY2:
+            builtins_name = "__builtin__.open"
+        else:
+            builtins_name = "builtins.open"
+
+        with patch(builtins_name, mock_open()) as m:
+
+            # mock the input capture to simulate user input
+            # TODO: we want to send different data for each parameter
+            six.moves.input = lambda *args: ("1234")
+
+            hpecp = self.cli.CLI()
+            hpecp.configure_cli()
+
+        handle = m()
+        handle.write.assert_has_calls(
+            [
+                mock.call("[default]\n"),
+                mock.call("api_host = 1234\n"),
+                mock.call("api_port = 1234\n"),
+                mock.call("use_ssl = 1234\n"),
+                mock.call("verify_ssl = 1234\n"),
+                mock.call("warn_ssl = 1234\n"),
+                mock.call("username = 1234\n"),
+                mock.call("password = 1234\n"),
+                mock.call("\n"),
+            ]
+        )
+
+    def test_configure_cli_reads_hpecp_conf(self):
+
+        mock_data = dedent(
+            """                [default]
+                api_host = mock_host
+                api_port = 9999
+                use_ssl = True
+                verify_ssl = False
+                warn_ssl = True
+                username = admin
+                password = admin123"""
+        ).encode("utf8")
+
+        if six.PY2:
+            builtins_name = "__builtin__.open"
+        else:
+            builtins_name = "builtins.open"
+
+        with patch(builtins_name, mock_open(read_data=mock_data)):
+            with patch("os.path.exists") as os_path_exists:
+
+                # instruct the CLI that the mock file is actually
+                # ~/.hpecp.conf
+                os_path_exists.return_value = True
+
+                # mock the input capture to simulate user input
+                # TODO: we want to send different data for each configuration
+                # parameter
+                six.moves.input = lambda *args: ("1234")
+
+                hpecp = self.cli.CLI()
+                hpecp.configure_cli()
+
+                self.assertIn(
+                    "Controller API Host [mock_host]:", self.out.getvalue()
+                )
+                self.assertIn(
+                    "Controller API Port [9999]:", self.out.getvalue()
+                )
+                # TODO check all values
+
+    def test_autocomplete_bash(self):
+
+        try:
+            hpecp = self.cli.CLI()
+            hpecp.autocomplete.bash()
+        except Exception:
+            self.fail("Unexpected exception.")
+
+
+class TestCLIUsingCfgFileEnvVar(TestCase):
+    def test_hpe_config_file_var(self):
+        dummy_filepath = "/not/a/real/dir/not_a_real_file"
+
+        env = EnvironmentVarGuard()
+        env.set("HPECP_CONFIG_FILE", dummy_filepath)
+
+        with env:
+            sys.path.insert(0, os.path.abspath("../../"))
+            from bin import cli
+
+            # reload cli module with mock env
+            reload(cli)
+
+            self.assertEqual(dummy_filepath, cli.HPECP_CONFIG_FILE)
 
 
 class MockResponse:
@@ -54,74 +210,20 @@ class MockResponse:
         return self.json_data
 
 
-class TestCLI(TestCase):
+def session_mock_response():
+    return MockResponse(
+        json_data={},
+        status_code=200,
+        headers={
+            "location": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+        },
+    )
 
-    # pylint: disable=no-method-argument
-    def mocked_requests_post(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v1/login":
-            return MockResponse(
-                json_data={},
-                status_code=200,
-                headers={
-                    "location": (
-                        "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
-                    )
-                },
-            )
-        raise RuntimeError("Unhandle POST request: " + args[0])
 
-    # pylint: disable=no-method-argument
-    def mocked_requests_get(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v2/k8scluster":
-            return MockResponse(
-                json_data={
-                    "_links": {"self": {"href": "/api/v2/k8scluster"}},
-                    "_embedded": {
-                        "k8sclusters": [
-                            {
-                                "_links": {
-                                    "self": {"href": "/api/v2/k8scluster/20"}
-                                },
-                                "label": {
-                                    "name": "def",
-                                    "description": "my cluster",
-                                },
-                                "k8s_version": "1.17.0",
-                                "pod_network_range": "10.192.0.0/12",
-                                "service_network_range": "10.96.0.0/12",
-                                "pod_dns_domain": "cluster.local",
-                                "created_by_user_id": "/api/v1/user/5",
-                                "created_by_user_name": "admin",
-                                "created_time": 1588260014,
-                                "k8shosts_config": [
-                                    {
-                                        "node": "/api/v2/worker/k8shost/4",
-                                        "role": "worker",
-                                    },
-                                    {
-                                        "node": "/api/v2/worker/k8shost/5",
-                                        "role": "master",
-                                    },
-                                ],
-                                "status": "ready",
-                                "status_message": "really ready",
-                                "api_endpoint_access": "api:1234",
-                                "dashboard_endpoint_access": "dashboard:1234",
-                                "admin_kube_config": "xyz==",
-                                "dashboard_token": "abc==",
-                                "persistent_storage": {"nimble_csi": False},
-                            }
-                        ]
-                    },
-                },
-                status_code=200,
-                headers={},
-            )
-        raise RuntimeError("Unhandle GET request: " + args[0])
-
+class TestCLIHttpClient(TestCase):
     def setUp(self):
         file_data = dedent(
-            """[default]
+            """                        [default]
                         api_host = 127.0.0.1
                         api_port = 8080
                         use_ssl = True
@@ -141,18 +243,55 @@ class TestCLI(TestCase):
         self.cli = cli
         self.cli.HPECP_CONFIG_FILE = self.tmpFile.name
 
+        self.saved_stdout = sys.stdout
+        self.out = StringIO()
+        sys.stdout = self.out
+
     def tearDown(self):
         self.tmpFile.close()
+        sys.stdout = self.saved_stdout
 
-    def test_autocomplete_bash(self):
+    def mocked_requests_post(*args, **kwargs):
+        if args[0] == "https://127.0.0.1:8080/api/v1/login":
+            return session_mock_response()
+        raise RuntimeError("Unhandle POST request: " + args[0])
 
-        hpecp = self.cli.CLI()
-        hpecp.autocomplete.bash()
+    def mocked_requests_get(*args, **kwargs):
+        if args[0] == "https://127.0.0.1:8080/some/url":
+            return MockResponse(
+                json_data={"foo": "bar"},
+                text_data='{"foo":"bar"}',
+                status_code=200,
+                headers=dict(),
+            )
+        raise RuntimeError("Unhandle GET request: " + args[0])
 
-    # TODO move this to tests/library/k8s_cluster_test.py
-    @patch("requests.post", side_effect=mocked_requests_post)
     @patch("requests.get", side_effect=mocked_requests_get)
-    def test_k8scluster_list(self, mock_post, mock_get):
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_get(self, mock_get, mock_post):
 
         hpecp = self.cli.CLI()
-        hpecp.k8scluster.list()
+        hpecp.httpclient.get(url="/some/url")
+
+        self.assertEqual(self.out.getvalue(), '{"foo":"bar"}\n')
+
+    def mocked_requests_delete(*args, **kwargs):
+        if args[0] == "https://127.0.0.1:8080/some/url":
+            return MockResponse(
+                json_data={"foo": "bar"},
+                text_data='{"foo":"bar"}',
+                status_code=200,
+                headers=dict(),
+            )
+        raise RuntimeError("Unhandle DELETE request: " + args[0])
+
+    @patch("requests.delete", side_effect=mocked_requests_delete)
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_delete(self, mock_delete, mock_post):
+
+        hpecp = self.cli.CLI()
+        hpecp.httpclient.delete(url="/some/url")
+
+        self.assertEqual(self.out.getvalue(), '{"foo":"bar"}\n')
+
+    # TODO - add tests for POST and PUT
