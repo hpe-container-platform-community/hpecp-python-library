@@ -32,6 +32,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install tox-gh-actions
+          pip install coverage
       - name: Build
         run: |
           python setup.py install
