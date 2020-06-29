@@ -7,6 +7,3 @@ polling
 pyyaml
 fire
 jmespath
-mock
-tox
-coverage[toml]

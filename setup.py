@@ -48,7 +48,7 @@ setup(
     keywords="",
     install_requires=requirements,
     test_suite="nose.collector",
-    tests_require=["nose", "mock"],
+    tests_require=["nose", "mock", "mock", "coverage"],
     classifiers=[
         "License :: OSI Approved :: MIT",
         "Programming Language :: Python",
