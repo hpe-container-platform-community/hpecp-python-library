@@ -715,7 +715,12 @@ class TestDeleteCluster(TestCase):
         error = self.err.getvalue().strip()
         self.assertEqual(error, "")
 
+    @patch("requests.delete", side_effect=mocked_requests_delete)
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_delete_k8scluster_cli_with_exception(self, mock_delete, mock_get):
+
         with self.assertRaises(SystemExit) as cm:
+            hpecp = self.cli.CLI()
             hpecp.k8scluster.delete(k8scluster_id="/api/v2/k8scluster/999")
 
             output = self.out.getvalue().strip()
