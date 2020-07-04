@@ -658,20 +658,19 @@ class TestDeleteCluster(TestCase):
 
         # pylint: disable=anomalous-backslash-in-string
         with self.assertRaisesRegexp(
-            AssertionError,
-            (
-                "'k8scluster_id' must have format"
-                " '\/api\/v2\/worker\/k8scluster\/\[0-9\]\+'"  # noqa: W605
-            ),
+            AssertionError, ("'id' does not start with '/api/v2/k8scluster/'"),
         ):
-            get_client().k8s_cluster.delete(k8scluster_id="garbage")
+            get_client().k8s_cluster.delete(id="garbage")
 
         with self.assertRaises(APIItemNotFoundException):
-            get_client().k8s_cluster.delete(
-                k8scluster_id="/api/v2/k8scluster/999"
-            )
+            get_client().k8s_cluster.delete(id="/api/v2/k8scluster/999")
 
-        get_client().k8s_cluster.delete(k8scluster_id="/api/v2/k8scluster/123")
+        get_client().k8s_cluster.delete(id="/api/v2/k8scluster/123")
+
+    def test_delete_k8scluster_cli(self):
+        raise Exception(
+            "TODO: Refactor CLI delete to use 'id' and test CLI here"
+        )
 
 
 class TestK8sSupportVersions(TestCase):

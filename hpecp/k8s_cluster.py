@@ -20,6 +20,8 @@
 
 from __future__ import absolute_import
 
+from .base_resource import AbstractResourceController
+
 from operator import attrgetter
 from tabulate import tabulate
 import polling
@@ -32,7 +34,7 @@ except NameError:
     basestring = str
 
 
-class K8sClusterController:
+class K8sClusterController(AbstractResourceController):
     """Class for interacting with K8S Clusters.
 
     An instance of this class is available in the
@@ -49,6 +51,8 @@ class K8sClusterController:
 
     def __init__(self, client):
         self.client = client
+
+    base_resource_path = "/api/v2/k8scluster/"
 
     def create(
         self,
@@ -279,32 +283,8 @@ class K8sClusterController:
         except polling.TimeoutException:
             return False
 
-    def delete(self, k8scluster_id):
-        """Delete a K8S Cluster. You can use :py:meth:`wait_for_status` to
-        check for the cluster state/existence.
-
-        Parameters
-        ----------
-        k8scluster_id: str
-            The K8S cluster ID - format: '/api/v2/k8scluster/[0-9]+'
-
-        Raises
-        ------
-        APIException
-        """
-        assert isinstance(
-            k8scluster_id, str
-        ), "'k8scluster_id' must be provided and must be a string"
-        assert re.match(r"\/api\/v2\/k8scluster\/[0-9]+", k8scluster_id), (
-            "'k8scluster_id' must have format"
-            " '/api/v2/worker/k8scluster/[0-9]+'"
-        )
-
-        self.client._request(
-            url=k8scluster_id,
-            http_method="delete",
-            description="k8s_cluster/delete",
-        )
+    def delete(self, id):
+        super(K8sClusterController, self).delete(id)
 
     def k8s_supported_versions(self):
         """Retrieve list of K8S Supported Versions.
