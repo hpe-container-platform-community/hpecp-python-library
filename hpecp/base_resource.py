@@ -26,6 +26,8 @@ from operator import attrgetter
 
 from tabulate import tabulate
 
+from .logger import Logger
+
 
 @six.add_metaclass(abc.ABCMeta)
 class AbstractResourceController:
@@ -113,9 +115,15 @@ class AbstractResource:
 
     all_fields = abc.abstractproperty(_get_all_fields, _set_all_fields)
 
+    # def get_display_fields(self):
+    #     return list(self.display_fields)
+
+    # def set_display_fields(self, display_fields):
+    #     self.display_fields = list(display_fields)
+
     def __init__(self, json):
         self.json = json
-        self.display_columns = self.__class__.all_fields
+        # self.set_display_fields(self.__class__.all_fields)
 
     def __repr__(self):
         return "<{} id:{}>".format(self.__class__.__name__, self.id)
@@ -123,14 +131,15 @@ class AbstractResource:
     def __str__(self):
         return "K8sCluster(id={})".format(self.__class__.__name__.self.id)
 
-    def __dir__(self):
-        return self.display_columns
+    # def __dir__(self):
+    #     return self.display_fields
 
-    def __getitem__(self, item):
-        return getattr(self, self.__dir__()[item])
+    # def __getitem__(self, item):
+    #     prop = getattr(self, self.get_display_fields[item])
+    #     return prop
 
-    def set_display_columns(self, columns):
-        self.display_columns = columns
+    # def set_display_fields(self, fields):
+    #     self.display_fields = fields
 
     @property
     def id(self):
@@ -150,36 +159,34 @@ class ResourceList:
     def __init__(self, resource_class, json):
         self.json = json
         self.resource_class = resource_class
-        self.resource = sorted(
-            [self.resource_class(t) for t in json], key=attrgetter("id")
-        )
-        self.resource_columns = resource_class.all_fields
+        self.resources = [self.resource_class(j) for j in json]
+        # self.display_fields = list(resource_class.all_fields)
+
+    # # Python 2
+    # def next(self):
+    #     """Support iterator access on Python 2.7"""
+    #     if not self.resource:
+    #         raise StopIteration
+    #     resource = self.resource.pop(0)
+    #     resource.set_display_fields(self.display_fields)
+    #     return resource
+
+    # # Python 3
+    # def __next__(self):
+    #     if not self.resource:
+    #         raise StopIteration
+    #     resource = self.resource.pop(0)
+    #     resource.set_display_fields(self.display_fields)
+    #     return resource
+
+    # def __iter__(self):
+    #     return self
+
+    # def __len__(self):
+    #     return len(self.resource)
 
     def __getitem__(self, item):
-        return self.resource[item]
-
-    # Python 2
-    def next(self):
-        """Support iterator access on Python 2.7"""
-        if not self.resource:
-            raise StopIteration
-        resource = self.resource.pop(0)
-        resource.set_display_columns(self.resource_columns)
-        return resource
-
-    # Python 3
-    def __next__(self):
-        if not self.resource:
-            raise StopIteration
-        resource = self.resource.pop(0)
-        resource.set_display_columns(self.resource_columns)
-        return resource
-
-    def __iter__(self):
-        return self
-
-    def __len__(self):
-        return len(self.resource)
+        return self.resources[item]
 
     def tabulate(self, columns=[], style="pretty"):
         """
@@ -205,5 +212,14 @@ class ResourceList:
                 field, self.__class__.__name__
             )
 
-        self.resource_columns = columns
-        return tabulate(self, headers=columns, tablefmt=style)
+        self.display_fields = columns
+
+        table = []
+        for resource in self.resources:
+            row = []
+            for col in columns:
+                row.append(getattr(resource, col))
+            table.append(row)
+                
+            
+        return tabulate(table, headers=columns, tablefmt=style)
