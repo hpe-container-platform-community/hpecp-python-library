@@ -50,3 +50,52 @@ class AbstractResourceController:
             http_method="delete",
             description=self.__class__.__name__ + "/delete",
         )
+
+@six.add_metaclass(abc.ABCMeta)
+class AbstractResource:
+
+    def _get_all_fields(self):
+        return self.all_fields
+
+    def _set_all_fields(self, fields):
+        self.all_fields = fields
+
+    all_fields = abc.abstractproperty(
+        _get_all_fields, _set_all_fields
+    )
+
+    def __init__(self, json):
+        self.json = json
+        self.display_columns = self.__class__.all_fields
+
+    def __repr__(self):
+        return "<{} id:{}>".format(
+            self.__class__.__name__ , self.id
+        )
+
+    def __str__(self):
+        return "K8sCluster(id={})".format(
+            self.__class__.__name__. self.id
+        )
+
+    def __dir__(self):
+        return self.display_columns
+
+    def __getitem__(self, item):
+        return getattr(self, self.__dir__()[item])
+
+    def set_display_columns(self, columns):
+        self.display_columns = columns
+
+    @property
+    def id(self):
+        """@Field: from json['_links']['self']['href']"""
+        return self.json["_links"]["self"]["href"]
+
+    @property
+    def _links(self):
+        """@Field: from json['_links']"""
+        return self.json["_links"]
+
+    def __len__(self):
+        return len(dir(self))

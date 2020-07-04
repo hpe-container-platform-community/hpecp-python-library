@@ -20,7 +20,7 @@
 
 from __future__ import absolute_import
 
-from .base_resource import AbstractResourceController
+from .base_resource import AbstractResourceController, AbstractResource
 
 from operator import attrgetter
 from tabulate import tabulate
@@ -327,7 +327,7 @@ class K8sClusterStatus(Enum):
     warning = 7
 
 
-class K8sCluster:
+class K8sCluster(AbstractResource):
     """Create an instance of K8sCluster from json data returned from the HPE
     Container Platform API.
 
@@ -366,46 +366,6 @@ class K8sCluster:
     """All of the fields of a K8s Cluster objects that are returned by the HPE
     Container Platform API"""
 
-    def __init__(self, json):
-        self.json = json
-        self.display_columns = K8sCluster.all_fields
-
-    def __repr__(self):
-        return "<K8sCluster id:{} name:{} description:{} status:{}>".format(
-            self.id, self.name, self.description, self.status
-        )
-
-    def __str__(self):
-        return "K8sCluster(id={}, name={}, description={}, status={})".format(
-            self.id, self.name, self.description, self.status
-        )
-
-    def __dir__(self):
-        return self.display_columns
-
-    def __getitem__(self, item):
-        return getattr(self, self.__dir__()[item])
-
-    def set_display_columns(self, columns):
-        """Set the columns this instance should have when the instance is used
-        with :py:meth:`.K8sClusterList.tabulate`
-
-        Parameters
-        ----------
-        columns : list[str]
-            Set the list of colums to return
-
-        See Also
-        --------
-        See :py:attr:`all_fields` for the complete list of field names.
-        """
-        self.display_columns = columns
-
-    @property
-    def id(self):
-        """@Field: from json['_links']['self']['href'] - id format:
-        '/api/v2/k8scluster/[0-9]+'"""
-        return self.json["_links"]["self"]["href"]
 
     @property
     def name(self):
@@ -494,14 +454,6 @@ class K8sCluster:
             return self.json["status_message"]
         else:
             return ""
-
-    @property
-    def _links(self):
-        """@Field: from json['_links']"""
-        return self.json["_links"]
-
-    def __len__(self):
-        return len(dir(self))
 
 
 class K8sClusterList:
