@@ -196,12 +196,15 @@ class TestClusterList(TestCase):
         ):
             get_client().k8s_cluster.list().tabulate(columns="garbage")
 
-        # FIXME: This test doesn't work on 2.x or 3.5
-        # may   be just a string comparision issue?
+    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_k8sclusters_tabulate(self, mock_get, mock_post):
+
         if sys.version_info[0] == 3 and sys.version_info[1] >= 6:
+            k8scluster_list = get_client().k8s_cluster.list()
             self.maxDiff = None
             self.assertEqual(
-                get_client().k8s_cluster.list().tabulate(),
+                k8scluster_list.tabulate(),
                 (
                     "+-----------------------+------+-------------+-------------+--------------------+----------------------+--------------+------------------------------------------------------------------------------------------------------------------+-------------------+-----------------+---------------------+---------------------------+-----------+--------+----------------+---------------------------------------------+\n"  # noqa: E501
                     "|          id           | name | description | k8s_version | created_by_user_id | created_by_user_name | created_time |                                                 k8shosts_config                                                  | admin_kube_config | dashboard_token | api_endpoint_access | dashboard_endpoint_access | cert_data | status | status_message |                   _links                    |\n"  # noqa: E501
@@ -210,9 +213,23 @@ class TestClusterList(TestCase):
                     "+-----------------------+------+-------------+-------------+--------------------+----------------------+--------------+------------------------------------------------------------------------------------------------------------------+-------------------+-----------------+---------------------+---------------------------+-----------+--------+----------------+---------------------------------------------+"  # noqa: E501
                 ),
             )  # noqa: E501
+        else:
+            k8scluster_list = get_client().k8s_cluster.list()
+            self.maxDiff = None
+            self.assertEqual(
+                k8scluster_list.tabulate(),
+                (
+                    "+-----------------------+------+-------------+-------------+--------------------+----------------------+--------------+------------------------------------------------------------------------------------------------------------------+-------------------+-----------------+---------------------+---------------------------+-----------+--------+----------------+---------------------------------------------+\n"  # noqa: E501
+                    "|          id           | name | description | k8s_version | created_by_user_id | created_by_user_name | created_time |                                                 k8shosts_config                                                  | admin_kube_config | dashboard_token | api_endpoint_access | dashboard_endpoint_access | cert_data | status | status_message |                   _links                    |\n"  # noqa: E501
+                    "+-----------------------+------+-------------+-------------+--------------------+----------------------+--------------+------------------------------------------------------------------------------------------------------------------+-------------------+-----------------+---------------------+---------------------------+-----------+--------+----------------+---------------------------------------------+\n"  # noqa: E501
+                    "| /api/v2/k8scluster/20 | def  | my cluster  |   1.17.0    |   /api/v1/user/5   |        admin         |  1588260014  | [{'role': 'worker', 'node': '/api/v2/worker/k8shost/4'}, {'role': 'master', 'node': '/api/v2/worker/k8shost/5'}] |       xyz==       |      abc==      |      api:1234       |      dashboard:1234       |           | ready  |  really ready  | {'self': {'href': '/api/v2/k8scluster/20'}} |\n"  # noqa: E501
+                    "+-----------------------+------+-------------+-------------+--------------------+----------------------+--------------+------------------------------------------------------------------------------------------------------------------+-------------------+-----------------+---------------------+---------------------------+-----------+--------+----------------+---------------------------------------------+"  # noqa: E501
+                ),
+            )  # noqa: E501
 
+        k8scluster_list = get_client().k8s_cluster.list()
         self.assertEqual(
-            get_client().k8s_cluster.list().tabulate(["description", "id"]),
+            k8scluster_list.tabulate(["description", "id"]),
             "+-------------+-----------------------+\n"
             "| description |          id           |\n"
             "+-------------+-----------------------+\n"

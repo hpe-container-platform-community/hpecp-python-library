@@ -192,16 +192,18 @@ class ResourceList:
         >>> print(hpeclient.cluster.list().tabulate(
         ...     columns=['id', 'name','description']))
         """
-        if columns != self.resource_class.all_fields:
-            assert isinstance(
-                columns, list
-            ), "'columns' parameter must be list"
-            for field in self.resource_class.all_fields:
-                assert (
-                    field in self.resource_class.all_fields
-                ), "item '{}' is not a field in {}.all_fields".format(
-                    field, self.__class__.__name__
-                )
+
+        assert isinstance(columns, list), "'columns' parameter must be list"
+
+        if len(columns) == 0:
+            columns = self.resource_class.all_fields
+
+        for field in columns:
+            assert (
+                field in self.resource_class.all_fields
+            ), "item '{}' is not a field in {}.all_fields".format(
+                field, self.__class__.__name__
+            )
 
         self.resource_columns = columns
         return tabulate(self, headers=columns, tablefmt=style)

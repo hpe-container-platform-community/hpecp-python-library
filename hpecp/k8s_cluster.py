@@ -393,11 +393,6 @@ class K8sClusterController(AbstractResourceController):
     def delete(self, id):
         super(K8sClusterController, self).delete(id)
 
-    def tabulate(self, columns=[], style="pretty"):
-        super(K8sClusterController, self).tabulate(
-            columns=K8sCluster.all_fields, style="pretty"
-        )
-
     def wait_for_status(self, k8scluster_id, status=[], timeout_secs=60):
         """Wait for cluster status.
 
