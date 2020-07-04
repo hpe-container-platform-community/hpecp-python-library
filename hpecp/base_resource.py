@@ -26,9 +26,9 @@ from operator import attrgetter
 
 from tabulate import tabulate
 
+
 @six.add_metaclass(abc.ABCMeta)
 class AbstractResourceController:
-
     def _get_base_resource_path(self):
         return self._resource_path
 
@@ -62,7 +62,7 @@ class AbstractResourceController:
 
     @abc.abstractmethod
     def get(self, id, params):
-        
+
         assert isinstance(id, str), "'id' must be provided and must be a str"
         assert id.startswith(
             self.base_resource_path
@@ -83,7 +83,9 @@ class AbstractResourceController:
             http_method="get",
             description=self.__class__.__name__ + "/list",
         )
-        return ResourceList(self.resource_class, response.json()["_embedded"]["k8sclusters"])
+        return ResourceList(
+            self.resource_class, response.json()["_embedded"]["k8sclusters"]
+        )
 
     @abc.abstractmethod
     def delete(self, id):
@@ -100,32 +102,26 @@ class AbstractResourceController:
             description=self.__class__.__name__ + "/delete",
         )
 
+
 @six.add_metaclass(abc.ABCMeta)
 class AbstractResource:
-
     def _get_all_fields(self):
         return self.all_fields
 
     def _set_all_fields(self, fields):
         self.all_fields = fields
 
-    all_fields = abc.abstractproperty(
-        _get_all_fields, _set_all_fields
-    )
+    all_fields = abc.abstractproperty(_get_all_fields, _set_all_fields)
 
     def __init__(self, json):
         self.json = json
         self.display_columns = self.__class__.all_fields
 
     def __repr__(self):
-        return "<{} id:{}>".format(
-            self.__class__.__name__ , self.id
-        )
+        return "<{} id:{}>".format(self.__class__.__name__, self.id)
 
     def __str__(self):
-        return "K8sCluster(id={})".format(
-            self.__class__.__name__. self.id
-        )
+        return "K8sCluster(id={})".format(self.__class__.__name__.self.id)
 
     def __dir__(self):
         return self.display_columns
@@ -151,7 +147,6 @@ class AbstractResource:
 
 
 class ResourceList:
-
     def __init__(self, resource_class, json):
         self.json = json
         self.resource_class = resource_class

@@ -34,7 +34,6 @@ except NameError:
     basestring = str
 
 
-
 class K8sClusterStatus(Enum):
     """Bases: enum.Enum
 
@@ -94,7 +93,6 @@ class K8sCluster(AbstractResource):
     ]
     """All of the fields of a K8s Cluster objects that are returned by the HPE
     Container Platform API"""
-
 
     @property
     def name(self):
@@ -384,7 +382,7 @@ class K8sClusterController(AbstractResourceController):
         return super(K8sClusterController, self).list()
 
     def get(self, id, setup_log=False):
- 
+
         if setup_log is True:
             params = "?setup_log"
         else:
@@ -468,4 +466,3 @@ class K8sClusterController(AbstractResourceController):
             description="k8s_cluster/k8s_supported_versions",
         )
         return response.json()["supported_versions"]
-
