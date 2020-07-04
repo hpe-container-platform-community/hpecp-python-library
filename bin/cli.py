@@ -700,7 +700,14 @@ class K8sClusterProxy(object):
 
         :param k8scluster_id: the cluster ID
         """
-        print(get_client().k8s_cluster.delete(k8scluster_id=k8scluster_id))
+        try:
+            get_client().k8s_cluster.delete(id=k8scluster_id)
+        except APIItemNotFoundException as nfe:
+            print("'{}' does not exist".format(k8scluster_id), file=sys.stderr)
+            sys.exit(1)
+        except Exception as e:
+            print("Unknow error. To debug, run with environment variable LOG_LEVEL=DEBUG", file=sys.stderr)
+            sys.exit(1)
 
     def wait_for_status(
         self, k8scluster_id, status=[], timeout_secs=60,

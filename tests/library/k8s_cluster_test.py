@@ -652,6 +652,41 @@ class TestDeleteCluster(TestCase):
             )
         raise RuntimeError("Unhandle POST request: " + args[0])
 
+    def setUp(self):
+        file_data = dedent(
+            """[default]
+                        api_host = 127.0.0.1
+                        api_port = 8080
+                        use_ssl = True
+                        verify_ssl = False
+                        warn_ssl = True
+                        username = admin
+                        password = admin123"""
+        )
+
+        self.tmpFile = tempfile.NamedTemporaryFile(delete=True)
+        self.tmpFile.write(file_data.encode("utf-8"))
+        self.tmpFile.flush()
+
+        self.saved_stdout = sys.stdout
+        self.out = StringIO()
+        sys.stdout = self.out
+
+        self.saved_stderr = sys.stderr
+        self.err = StringIO()
+        sys.stderr = self.err
+
+        sys.path.insert(0, os.path.abspath("../../"))
+        from bin import cli
+
+        self.cli = cli
+        self.cli.HPECP_CONFIG_FILE = self.tmpFile.name
+
+    def tearDown(self):
+        self.tmpFile.close()
+        sys.stdout = self.saved_stdout
+        sys.stderr = self.saved_stderr
+
     @patch("requests.delete", side_effect=mocked_requests_delete)
     @patch("requests.post", side_effect=mocked_requests_post)
     def test_delete_k8scluster(self, mock_get, mock_post):
@@ -667,10 +702,29 @@ class TestDeleteCluster(TestCase):
 
         get_client().k8s_cluster.delete(id="/api/v2/k8scluster/123")
 
-    def test_delete_k8scluster_cli(self):
-        raise Exception(
-            "TODO: Refactor CLI delete to use 'id' and test CLI here"
-        )
+    @patch("requests.delete", side_effect=mocked_requests_delete)
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_delete_k8scluster_cli(self, mock_delete, mock_get):
+
+        hpecp = self.cli.CLI()
+        hpecp.k8scluster.delete(k8scluster_id="/api/v2/k8scluster/123")
+
+        output = self.out.getvalue().strip()
+        self.assertEqual(output, "")
+
+        error = self.err.getvalue().strip()
+        self.assertEqual(error, "")
+
+        with self.assertRaises(SystemExit) as cm:
+            hpecp.k8scluster.delete(k8scluster_id="/api/v2/k8scluster/999")
+
+            output = self.out.getvalue().strip()
+            self.assertEqual(output, "")
+
+            error = self.err.getvalue().strip()
+            self.assertEqual(error, "'/api/v2/k8scluster/999' does not exist")
+
+            self.assertEqual(cm.exception.code, 1)
 
 
 class TestK8sSupportVersions(TestCase):
