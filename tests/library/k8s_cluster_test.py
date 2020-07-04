@@ -430,11 +430,11 @@ class TestGetCluster(TestCase):
 
         with self.assertRaises(APIItemNotFoundException):
             get_client().k8s_cluster.get(
-                k8scluster_id="/api/v2/k8scluster/999", setup_log=False
+                id="/api/v2/k8scluster/999", setup_log=False
             )
 
         get_client().k8s_cluster.get(
-            k8scluster_id="/api/v2/k8scluster/123", setup_log=False
+            id="/api/v2/k8scluster/123", setup_log=False
         )
 
         # TODO test with setup_log = True
@@ -693,7 +693,7 @@ class TestDeleteCluster(TestCase):
 
         # pylint: disable=anomalous-backslash-in-string
         with self.assertRaisesRegexp(
-            AssertionError, ("'id' does not start with '/api/v2/k8scluster/'"),
+            AssertionError, ("'id' does not start with '/api/v2/k8scluster'"),
         ):
             get_client().k8s_cluster.delete(id="garbage")
 

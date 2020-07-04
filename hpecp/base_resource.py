@@ -22,9 +22,13 @@ import abc, six
 
 import re
 
+from operator import attrgetter
+
+from tabulate import tabulate
 
 @six.add_metaclass(abc.ABCMeta)
 class AbstractResourceController:
+
     def _get_base_resource_path(self):
         return self._resource_path
 
@@ -35,6 +39,51 @@ class AbstractResourceController:
     base_resource_path = abc.abstractproperty(
         _get_base_resource_path, _set_base_resource_path
     )
+
+    def _get_resource_class(self):
+        return self._resource_class
+
+    def _set_resource_class(self, clazz):
+        self._resource_class = clazz
+
+    resource_class = abc.abstractproperty(
+        _get_resource_class, _set_resource_class
+    )
+
+    # def _get_resource_list_class(self):
+    #     return self._resource_list_class
+
+    # def _set_resource_list_class(self, clazz):
+    #     self._resource_list_class = clazz
+
+    # resource_list_class = abc.abstractproperty(
+    #     _get_resource_list_class, _set_resource_list_class
+    # )
+
+    @abc.abstractmethod
+    def get(self, id, params):
+        
+        assert isinstance(id, str), "'id' must be provided and must be a str"
+        assert id.startswith(
+            self.base_resource_path
+        ), "'id' does not start with '{}'".format(self.base_resource_path)
+
+        response = self.client._request(
+            url="{}{}".format(id, params),
+            http_method="get",
+            description=self.__class__.__name__ + "/get",
+        )
+        return self.resource_class(response.json())
+
+    @abc.abstractmethod
+    def list(self):
+
+        response = self.client._request(
+            url=self.base_resource_path,
+            http_method="get",
+            description=self.__class__.__name__ + "/list",
+        )
+        return ResourceList(self.resource_class, response.json()["_embedded"]["k8sclusters"])
 
     @abc.abstractmethod
     def delete(self, id):
@@ -99,3 +148,65 @@ class AbstractResource:
 
     def __len__(self):
         return len(dir(self))
+
+
+class ResourceList:
+
+    def __init__(self, resource_class, json):
+        self.json = json
+        self.resource_class = resource_class
+        self.resource = sorted(
+            [self.resource_class(t) for t in json], key=attrgetter("id")
+        )
+        self.resource_columns = resource_class.all_fields
+
+    def __getitem__(self, item):
+        return self.resource[item]
+
+    # Python 2
+    def next(self):
+        """Support iterator access on Python 2.7"""
+        if not self.resource:
+            raise StopIteration
+        resource = self.resource.pop(0)
+        resource.set_display_columns(self.resource_columns)
+        return resource
+
+    # Python 3
+    def __next__(self):
+        if not self.resource:
+            raise StopIteration
+        resource = self.resource.pop(0)
+        resource.set_display_columns(self.resource_columns)
+        return resource
+
+    def __iter__(self):
+        return self
+
+    def __len__(self):
+        return len(self.resource)
+
+    def tabulate(self, columns=[], style="pretty"):
+        """
+        Example
+        -------
+        Print the cluster list with all of the avaialble fields
+        >>> print(hpeclient.cluster.list().tabulate())
+
+        Print the cluster list with a subset of the fields
+        >>> print(hpeclient.cluster.list().tabulate(
+        ...     columns=['id', 'name','description']))
+        """
+        if columns != self.resource_class.all_fields:
+            assert isinstance(
+                columns, list
+            ), "'columns' parameter must be list"
+            for field in self.resource_class.all_fields:
+                assert (
+                    field in self.resource_class.all_fields
+                ), "item '{}' is not a field in {}.all_fields".format(
+                    field, self.__class__.__name__
+                )
+
+        self.resource_columns = columns
+        return tabulate(self, headers=columns, tablefmt=style)
