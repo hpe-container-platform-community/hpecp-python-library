@@ -1,7 +1,7 @@
-hpecp.k8s\_cluster module
+hpecp.base\_resource module
 =========================
 
-.. automodule:: hpecp.k8s_cluster
+.. automodule:: hpecp.base_resource
    :show-inheritance:
    :members:
    :undoc-members:

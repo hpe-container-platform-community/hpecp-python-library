@@ -390,6 +390,14 @@ class K8sClusterController(AbstractResourceController):
 
         return super(K8sClusterController, self).get(id, params)
 
+    def delete(self, id):
+        super(K8sClusterController, self).delete(id)
+
+    def tabulate(self, columns=[], style="pretty"):
+        super(K8sClusterController, self).tabulate(
+            columns=K8sCluster.all_fields, style="pretty"
+        )
+
     def wait_for_status(self, k8scluster_id, status=[], timeout_secs=60):
         """Wait for cluster status.
 
@@ -444,9 +452,6 @@ class K8sClusterController(AbstractResourceController):
             return True
         except polling.TimeoutException:
             return False
-
-    def delete(self, id):
-        super(K8sClusterController, self).delete(id)
 
     def k8s_supported_versions(self):
         """Retrieve list of K8S Supported Versions.

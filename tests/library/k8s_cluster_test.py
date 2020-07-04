@@ -197,7 +197,7 @@ class TestClusterList(TestCase):
             get_client().k8s_cluster.list().tabulate(columns="garbage")
 
         # FIXME: This test doesn't work on 2.x or 3.5
-        # maybe just a string comparision issue?
+        # may   be just a string comparision issue?
         if sys.version_info[0] == 3 and sys.version_info[1] >= 6:
             self.maxDiff = None
             self.assertEqual(
@@ -717,8 +717,8 @@ class TestDeleteCluster(TestCase):
 
             # FIXME: This is failing on Python 3x because stderr seems to contain
             #        the unitest framework output.
-            #error = self.err.getvalue().strip()
-            #self.assertEqual(error, "")
+            # error = self.err.getvalue().strip()
+            # self.assertEqual(error, "")
 
         except Exception:
             self.fail("Unexpected exception.")
