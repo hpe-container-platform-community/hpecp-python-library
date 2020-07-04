@@ -20,6 +20,8 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
+from __future__ import print_function
+
 """HPE Container Platform CLI."""
 
 import base64
@@ -706,7 +708,10 @@ class K8sClusterProxy(object):
             print("'{}' does not exist".format(k8scluster_id), file=sys.stderr)
             sys.exit(1)
         except Exception as e:
-            print("Unknow error. To debug, run with environment variable LOG_LEVEL=DEBUG", file=sys.stderr)
+            print(
+                "Unknow error. To debug, run with environment variable LOG_LEVEL=DEBUG",
+                file=sys.stderr,
+            )
             sys.exit(1)
 
     def wait_for_status(
