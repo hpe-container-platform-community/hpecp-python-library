@@ -709,6 +709,8 @@ class TestDeleteCluster(TestCase):
         hpecp = self.cli.CLI()
         hpecp.k8scluster.delete(k8scluster_id="/api/v2/k8scluster/123")
 
+        self.maxDiff = None
+
         output = self.out.getvalue().strip()
         self.assertEqual(output, "")
 
@@ -723,6 +725,8 @@ class TestDeleteCluster(TestCase):
             hpecp = self.cli.CLI()
             hpecp.k8scluster.delete(k8scluster_id="/api/v2/k8scluster/999")
 
+            self.maxDiff = None
+            
             output = self.out.getvalue().strip()
             self.assertEqual(output, "")
 
