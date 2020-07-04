@@ -706,16 +706,20 @@ class TestDeleteCluster(TestCase):
     @patch("requests.post", side_effect=mocked_requests_post)
     def test_delete_k8scluster_cli(self, mock_delete, mock_get):
 
-        hpecp = self.cli.CLI()
-        hpecp.k8scluster.delete(k8scluster_id="/api/v2/k8scluster/123")
+        try:
+            hpecp = self.cli.CLI()
+            hpecp.k8scluster.delete(k8scluster_id="/api/v2/k8scluster/123")
 
-        self.maxDiff = None
+            self.maxDiff = None
 
-        output = self.out.getvalue().strip()
-        self.assertEqual(output, "")
+            output = self.out.getvalue().strip()
+            self.assertEqual(output, "")
 
-        error = self.err.getvalue().strip()
-        self.assertEqual(error, "")
+            error = self.err.getvalue().strip()
+            self.assertEqual(error, "")
+
+        except Exception:
+            self.fail("Unexpected exception.")
 
     @patch("requests.delete", side_effect=mocked_requests_delete)
     @patch("requests.post", side_effect=mocked_requests_post)
@@ -726,7 +730,7 @@ class TestDeleteCluster(TestCase):
             hpecp.k8scluster.delete(k8scluster_id="/api/v2/k8scluster/999")
 
             self.maxDiff = None
-            
+
             output = self.out.getvalue().strip()
             self.assertEqual(output, "")
 
