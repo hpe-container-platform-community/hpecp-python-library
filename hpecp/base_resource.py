@@ -184,39 +184,101 @@ class AbstractResource:
     all_fields = abc.abstractproperty(_get_all_fields, _set_all_fields)
 
     def __init__(self, json):
+        """Create a new Resource class.
+
+        Parameters
+        ----------
+        json : obj
+            JSON returned from the API for the Resource.
+        """
         self.json = json
 
     def __repr__(self):
+        """Return a represenation of Resource class."""
         return "<{} id:{}>".format(self.__class__.__name__, self.id)
 
     def __str__(self):
+        """Return a str representation of a Resource class."""
         return "K8sCluster(id={})".format(self.__class__.__name__.self.id)
 
     @property
     def id(self):
-        """@Field: from json['_links']['self']['href']"""
+        """@Field: from json['_links']['self']['href']."""
         return self.json["_links"]["self"]["href"]
 
     @property
     def _links(self):
-        """@Field: from json['_links']"""
+        """@Field: from json['_links']."""
         return self.json["_links"]
 
     def __len__(self):
+        """Return the number of resource fields in the Resource class."""
         return len(dir(self))
 
 
 class ResourceList:
+    """List of Resource objects."""
+
     def __init__(self, resource_class, json):
+        """Create a list of resources using the resource_class.
+
+        Parameters
+        ----------
+        resource_class : class
+            Resource implementation class
+        json : obj
+            JSON return from the API
+        """
         self.json = json
         self.resource_class = resource_class
         self.resources = [self.resource_class(j) for j in json]
 
     def __getitem__(self, item):
+        """Retrieve a field value."""
         return self.resources[item]
 
     def tabulate(self, columns=[], style="pretty"):
-        """
+        """Return a tabule output of the ResourceList.
+
+        Parameters
+        ----------
+        columns : list, optional
+            List of columns to output. The default value of an empty list
+            will output all the available fields
+        style : str, optional
+            Table styles, by default "pretty"
+
+            The available styles are:
+
+            "plain"
+            "simple"
+            "github"
+            "grid"
+            "fancy_grid"
+            "pipe"
+            "orgtbl"
+            "jira"
+            "presto"
+            "pretty"
+            "psql"
+            "rst"
+            "mediawiki"
+            "moinmoin"
+            "youtrack"
+            "html"
+            "latex"
+            "latex_raw"
+            "latex_booktabs"
+            "textile"
+
+            See section 'Table Format' in https://pypi.org/project/tabulate/
+            for more information
+
+        Returns
+        -------
+        str
+            table output of Resource
+
         Example
         -------
         Print the cluster list with all of the avaialble fields
@@ -226,7 +288,6 @@ class ResourceList:
         >>> print(hpeclient.cluster.list().tabulate(
         ...     columns=['id', 'name','description']))
         """
-
         assert isinstance(columns, list), "'columns' parameter must be list"
 
         if len(columns) == 0:
