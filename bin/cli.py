@@ -20,9 +20,9 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-from __future__ import print_function
-
 """HPE Container Platform CLI."""
+
+from __future__ import print_function
 
 import base64
 import configparser
@@ -704,12 +704,12 @@ class K8sClusterProxy(object):
         """
         try:
             get_client().k8s_cluster.delete(id=k8scluster_id)
-        except APIItemNotFoundException as nfe:
+        except APIItemNotFoundException:
             print("'{}' does not exist".format(k8scluster_id), file=sys.stderr)
             sys.exit(1)
-        except Exception as e:
+        except Exception:
             print(
-                "Unknow error. To debug, run with environment variable LOG_LEVEL=DEBUG",
+                "Unknow error. To debug run with env var LOG_LEVEL=DEBUG",
                 file=sys.stderr,
             )
             sys.exit(1)
