@@ -73,6 +73,8 @@
 </li>
       <li><a href="hpecp.base_resource.html#hpecp.base_resource.AbstractResourceController">AbstractResourceController (class in hpecp.base_resource)</a>
 </li>
+      <li><a href="hpecp.base_resource.html#hpecp.base_resource.AbstractWaitableResourceController">AbstractWaitableResourceController (class in hpecp.base_resource)</a>
+</li>
       <li><a href="hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sCluster.admin_kube_config">admin_kube_config() (hpecp.k8s_cluster.K8sCluster property)</a>
 </li>
       <li><a href="hpecp.gateway.html#hpecp.gateway.Gateway.all_fields">all_fields (hpecp.gateway.Gateway attribute)</a>
@@ -209,10 +211,6 @@
 
       <ul>
         <li><a href="hpecp.gateway.html#hpecp.gateway.GatewayController.delete">(hpecp.gateway.GatewayController method)</a>
-</li>
-        <li><a href="hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.delete">(hpecp.k8s_cluster.K8sClusterController method)</a>
-</li>
-        <li><a href="hpecp.k8s_worker.html#hpecp.k8s_worker.K8sWorkerController.delete">(hpecp.k8s_worker.K8sWorkerController method)</a>
 </li>
         <li><a href="hpecp.license.html#hpecp.license.LicenseController.delete">(hpecp.license.LicenseController method)</a>
 </li>
@@ -446,10 +444,6 @@
       <ul>
         <li><a href="hpecp.gateway.html#hpecp.gateway.GatewayController.list">(hpecp.gateway.GatewayController method)</a>
 </li>
-        <li><a href="hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.list">(hpecp.k8s_cluster.K8sClusterController method)</a>
-</li>
-        <li><a href="hpecp.k8s_worker.html#hpecp.k8s_worker.K8sWorkerController.list">(hpecp.k8s_worker.K8sWorkerController method)</a>
-</li>
         <li><a href="hpecp.license.html#hpecp.license.LicenseController.list">(hpecp.license.LicenseController method)</a>
 </li>
         <li><a href="hpecp.lock.html#hpecp.lock.LockController.list">(hpecp.lock.LockController method)</a>
@@ -554,6 +548,14 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="hpecp.base_resource.html#hpecp.base_resource.AbstractResourceController.resource_class">resource_class() (hpecp.base_resource.AbstractResourceController property)</a>
 </li>
+      <li><a href="hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.resource_list_path">resource_list_path (hpecp.k8s_cluster.K8sClusterController attribute)</a>
+
+      <ul>
+        <li><a href="hpecp.k8s_worker.html#hpecp.k8s_worker.K8sWorkerController.resource_list_path">(hpecp.k8s_worker.K8sWorkerController attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="hpecp.base_resource.html#hpecp.base_resource.AbstractResourceController.resource_list_path">resource_list_path() (hpecp.base_resource.AbstractResourceController property)</a>
+</li>
       <li><a href="hpecp.base_resource.html#hpecp.base_resource.ResourceList">ResourceList (class in hpecp.base_resource)</a>
 </li>
       <li><a href="hpecp.tenant.html#hpecp.tenant.TenantController.revoke_user_from_role">revoke_user_from_role() (hpecp.tenant.TenantController method)</a>
@@ -582,12 +584,28 @@
         <li><a href="hpecp.tenant.html#hpecp.tenant.Tenant.status">(hpecp.tenant.Tenant property)</a>
 </li>
       </ul></li>
+      <li><a href="hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.status_class">status_class (hpecp.k8s_cluster.K8sClusterController attribute)</a>
+
+      <ul>
+        <li><a href="hpecp.k8s_worker.html#hpecp.k8s_worker.K8sWorkerController.status_class">(hpecp.k8s_worker.K8sWorkerController attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="hpecp.base_resource.html#hpecp.base_resource.AbstractWaitableResourceController.status_class">status_class() (hpecp.base_resource.AbstractWaitableResourceController property)</a>
+</li>
+      <li><a href="hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.status_fieldname">status_fieldname (hpecp.k8s_cluster.K8sClusterController attribute)</a>
+
+      <ul>
+        <li><a href="hpecp.k8s_worker.html#hpecp.k8s_worker.K8sWorkerController.status_fieldname">(hpecp.k8s_worker.K8sWorkerController attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hpecp.base_resource.html#hpecp.base_resource.AbstractWaitableResourceController.status_fieldname">status_fieldname() (hpecp.base_resource.AbstractWaitableResourceController property)</a>
+</li>
       <li><a href="hpecp.gateway.html#hpecp.gateway.Gateway.status_info">status_info() (hpecp.gateway.Gateway property)</a>
 </li>
       <li><a href="hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sCluster.status_message">status_message() (hpecp.k8s_cluster.K8sCluster property)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="hpecp.gateway.html#hpecp.gateway.GatewayStatus.storage_configuring">storage_configuring (hpecp.gateway.GatewayStatus attribute)</a>
 
       <ul>
@@ -682,14 +700,14 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="hpecp.gateway.html#hpecp.gateway.GatewayController.wait_for_delete">wait_for_delete() (hpecp.gateway.GatewayController method)</a>
 </li>
-      <li><a href="hpecp.gateway.html#hpecp.gateway.GatewayController.wait_for_state">wait_for_state() (hpecp.gateway.GatewayController method)</a>
-</li>
-      <li><a href="hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.wait_for_status">wait_for_status() (hpecp.k8s_cluster.K8sClusterController method)</a>
+      <li><a href="hpecp.base_resource.html#hpecp.base_resource.AbstractWaitableResourceController.wait_for_state">wait_for_state() (hpecp.base_resource.AbstractWaitableResourceController method)</a>
 
       <ul>
-        <li><a href="hpecp.k8s_worker.html#hpecp.k8s_worker.K8sWorkerController.wait_for_status">(hpecp.k8s_worker.K8sWorkerController method)</a>
+        <li><a href="hpecp.gateway.html#hpecp.gateway.GatewayController.wait_for_state">(hpecp.gateway.GatewayController method)</a>
 </li>
       </ul></li>
+      <li><a href="hpecp.base_resource.html#hpecp.base_resource.AbstractWaitableResourceController.wait_for_status">wait_for_status() (hpecp.base_resource.AbstractWaitableResourceController method)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterStatus.warning">warning (hpecp.k8s_cluster.K8sClusterStatus attribute)</a>

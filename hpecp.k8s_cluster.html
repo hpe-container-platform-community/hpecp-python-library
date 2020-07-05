@@ -246,7 +246,7 @@ values.</p>
 <dl class="py class">
 <dt id="hpecp.k8s_cluster.K8sClusterController">
 <em class="property">class </em><code class="sig-prename descclassname">hpecp.k8s_cluster.</code><code class="sig-name descname">K8sClusterController</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">client</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_cluster.html#K8sClusterController"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_cluster.K8sClusterController" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="hpecp.base_resource.html#hpecp.base_resource.AbstractResourceController" title="hpecp.base_resource.AbstractResourceController"><code class="xref py py-class docutils literal notranslate"><span class="pre">hpecp.base_resource.AbstractResourceController</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="hpecp.base_resource.html#hpecp.base_resource.AbstractWaitableResourceController" title="hpecp.base_resource.AbstractWaitableResourceController"><code class="xref py py-class docutils literal notranslate"><span class="pre">hpecp.base_resource.AbstractWaitableResourceController</span></code></a></p>
 <p>Class for interacting with K8S Clusters.</p>
 <p>An instance of this class is available in the
 client.ContainerPlatformClient with the attribute name
@@ -263,16 +263,32 @@ See the example below:</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt id="hpecp.k8s_cluster.K8sClusterController.resource_list_path">
+<code class="sig-name descname">resource_list_path</code><em class="property"> = 'k8sclusters'</em><a class="headerlink" href="#hpecp.k8s_cluster.K8sClusterController.resource_list_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt id="hpecp.k8s_cluster.K8sClusterController.resource_class">
 <code class="sig-name descname">resource_class</code><a class="headerlink" href="#hpecp.k8s_cluster.K8sClusterController.resource_class" title="Permalink to this definition">¶</a></dt>
 <dd><p>alias of <a class="reference internal" href="#hpecp.k8s_cluster.K8sCluster" title="hpecp.k8s_cluster.K8sCluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">K8sCluster</span></code></a></p>
 </dd></dl>
 
+<dl class="py attribute">
+<dt id="hpecp.k8s_cluster.K8sClusterController.status_class">
+<code class="sig-name descname">status_class</code><a class="headerlink" href="#hpecp.k8s_cluster.K8sClusterController.status_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#hpecp.k8s_cluster.K8sClusterStatus" title="hpecp.k8s_cluster.K8sClusterStatus"><code class="xref py py-class docutils literal notranslate"><span class="pre">K8sClusterStatus</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="hpecp.k8s_cluster.K8sClusterController.status_fieldname">
+<code class="sig-name descname">status_fieldname</code><em class="property"> = 'status'</em><a class="headerlink" href="#hpecp.k8s_cluster.K8sClusterController.status_fieldname" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt id="hpecp.k8s_cluster.K8sClusterController.create">
 <code class="sig-name descname">create</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">description</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">k8s_version</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pod_network_range</span><span class="o">=</span><span class="default_value">'10.192.0.0/12'</span></em>, <em class="sig-param"><span class="n">service_network_range</span><span class="o">=</span><span class="default_value">'10.96.0.0/12'</span></em>, <em class="sig-param"><span class="n">pod_dns_domain</span><span class="o">=</span><span class="default_value">'cluster.local'</span></em>, <em class="sig-param"><span class="n">persistent_storage_local</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">persistent_storage_nimble_csi</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">k8shosts_config</span><span class="o">=</span><span class="default_value">[]</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_cluster.html#K8sClusterController.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_cluster.K8sClusterController.create" title="Permalink to this definition">¶</a></dt>
 <dd><p>Send an API request to create a K8s Cluster.  The cluster creation
-will be asynchronous - use the <a class="reference internal" href="#hpecp.k8s_cluster.K8sClusterController.wait_for_status" title="hpecp.k8s_cluster.K8sClusterController.wait_for_status"><code class="xref py py-meth docutils literal notranslate"><span class="pre">wait_for_status()</span></code></a> method to
+will be asynchronous - use the <code class="xref py py-meth docutils literal notranslate"><span class="pre">wait_for_status()</span></code> method to
 wait for the cluster to be created.</p>
 <p>For the list of possible statuses see <a class="reference internal" href="#hpecp.k8s_cluster.K8sClusterStatus" title="hpecp.k8s_cluster.K8sClusterStatus"><code class="xref py py-class docutils literal notranslate"><span class="pre">K8sClusterStatus</span></code></a>.</p>
 <dl class="simple">
@@ -311,17 +327,6 @@ which hosts to add and their role (master or worker)</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="hpecp.k8s_cluster.K8sClusterController.list">
-<code class="sig-name descname">list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_cluster.html#K8sClusterController.list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_cluster.K8sClusterController.list" title="Permalink to this definition">¶</a></dt>
-<dd><p>Make an API call to retrieve a list of Resources.</p>
-<dl class="simple">
-<dt>ResourceList</dt><dd><p>The ResourceList will contain instances of the class defined by
-the property self.resource_class</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt id="hpecp.k8s_cluster.K8sClusterController.get">
 <code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">setup_log</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_cluster.html#K8sClusterController.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_cluster.K8sClusterController.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make an API call to retrieve a Resource.</p>
@@ -340,48 +345,6 @@ self.resource_class</p>
 <dt>APIException</dt><dd><p>The remote API returned an error.</p>
 </dd>
 <dt>APIItemNotFoundException</dt><dd><p>The item with {id} was not found.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="hpecp.k8s_cluster.K8sClusterController.delete">
-<code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_cluster.html#K8sClusterController.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_cluster.K8sClusterController.delete" title="Permalink to this definition">¶</a></dt>
-<dd><p>Make an API call to delete a Resources.</p>
-<dl class="simple">
-<dt>id<span class="classifier">str</span></dt><dd><p>The ID with the format /resource/path/id</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>APIException</dt><dd><p>The remote API returned an error.</p>
-</dd>
-<dt>APIItemNotFoundException</dt><dd><p>The item with {id} was not found.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="hpecp.k8s_cluster.K8sClusterController.wait_for_status">
-<code class="sig-name descname">wait_for_status</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">k8scluster_id</span></em>, <em class="sig-param"><span class="n">status</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">timeout_secs</span><span class="o">=</span><span class="default_value">60</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_cluster.html#K8sClusterController.wait_for_status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_cluster.K8sClusterController.wait_for_status" title="Permalink to this definition">¶</a></dt>
-<dd><p>Wait for cluster status.</p>
-<dl class="simple">
-<dt>k8scluster_id: str</dt><dd><p>The K8S cluster ID - format: ‘/api/v2/k8scluster/[0-9]+’</p>
-</dd>
-<dt>status: list[<a class="reference internal" href="#hpecp.k8s_cluster.K8sClusterStatus" title="hpecp.k8s_cluster.K8sClusterStatus"><code class="xref py py-class docutils literal notranslate"><span class="pre">K8sClusterStatus</span></code></a>]</dt><dd><p>Status(es) to wait for.  Use an empty array if you want to
-wait for a cluster’s existence to cease.</p>
-</dd>
-<dt>timeout_secs: int</dt><dd><p>How long to wait for the status(es) before raising an
-exception.</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>bool</dt><dd><p>True if status was found before timeout, otherwise False</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>APIItemNotFoundException</dt><dd><p>if the item is not found</p>
-</dd>
-<dt>APIException</dt><dd><p>if a generic API exception occurred</p>
 </dd>
 </dl>
 </dd></dl>

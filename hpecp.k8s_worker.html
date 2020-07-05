@@ -171,10 +171,15 @@ Container Platform API</p>
 <dl class="py class">
 <dt id="hpecp.k8s_worker.K8sWorkerController">
 <em class="property">class </em><code class="sig-prename descclassname">hpecp.k8s_worker.</code><code class="sig-name descname">K8sWorkerController</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">client</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_worker.html#K8sWorkerController"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_worker.K8sWorkerController" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="hpecp.base_resource.html#hpecp.base_resource.AbstractResourceController" title="hpecp.base_resource.AbstractResourceController"><code class="xref py py-class docutils literal notranslate"><span class="pre">hpecp.base_resource.AbstractResourceController</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="hpecp.base_resource.html#hpecp.base_resource.AbstractWaitableResourceController" title="hpecp.base_resource.AbstractWaitableResourceController"><code class="xref py py-class docutils literal notranslate"><span class="pre">hpecp.base_resource.AbstractWaitableResourceController</span></code></a></p>
 <dl class="py attribute">
 <dt id="hpecp.k8s_worker.K8sWorkerController.base_resource_path">
 <code class="sig-name descname">base_resource_path</code><em class="property"> = '/api/v2/worker/k8shost'</em><a class="headerlink" href="#hpecp.k8s_worker.K8sWorkerController.base_resource_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="hpecp.k8s_worker.K8sWorkerController.resource_list_path">
+<code class="sig-name descname">resource_list_path</code><em class="property"> = 'k8shosts'</em><a class="headerlink" href="#hpecp.k8s_worker.K8sWorkerController.resource_list_path" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -182,6 +187,17 @@ Container Platform API</p>
 <code class="sig-name descname">resource_class</code><a class="headerlink" href="#hpecp.k8s_worker.K8sWorkerController.resource_class" title="Permalink to this definition">¶</a></dt>
 <dd><p>alias of <a class="reference internal" href="#hpecp.k8s_worker.WorkerK8s" title="hpecp.k8s_worker.WorkerK8s"><code class="xref py py-class docutils literal notranslate"><span class="pre">WorkerK8s</span></code></a></p>
 </dd></dl>
+
+<dl class="py attribute">
+<dt id="hpecp.k8s_worker.K8sWorkerController.status_class">
+<code class="sig-name descname">status_class</code><a class="headerlink" href="#hpecp.k8s_worker.K8sWorkerController.status_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#hpecp.k8s_worker.WorkerK8sStatus" title="hpecp.k8s_worker.WorkerK8sStatus"><code class="xref py py-class docutils literal notranslate"><span class="pre">WorkerK8sStatus</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="hpecp.k8s_worker.K8sWorkerController.status_fieldname">
+<code class="sig-name descname">status_fieldname</code><em class="property"> = 'status'</em><a class="headerlink" href="#hpecp.k8s_worker.K8sWorkerController.status_fieldname" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt id="hpecp.k8s_worker.K8sWorkerController.create_with_ssh_password">
@@ -209,17 +225,6 @@ communication.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="hpecp.k8s_worker.K8sWorkerController.list">
-<code class="sig-name descname">list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_worker.html#K8sWorkerController.list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_worker.K8sWorkerController.list" title="Permalink to this definition">¶</a></dt>
-<dd><p>Make an API call to retrieve a list of Resources.</p>
-<dl class="simple">
-<dt>ResourceList</dt><dd><p>The ResourceList will contain instances of the class defined by
-the property self.resource_class</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt id="hpecp.k8s_worker.K8sWorkerController.get">
 <code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">setup_log</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_worker.html#K8sWorkerController.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_worker.K8sWorkerController.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make an API call to retrieve a Resource.</p>
@@ -238,47 +243,6 @@ self.resource_class</p>
 <dt>APIException</dt><dd><p>The remote API returned an error.</p>
 </dd>
 <dt>APIItemNotFoundException</dt><dd><p>The item with {id} was not found.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="hpecp.k8s_worker.K8sWorkerController.delete">
-<code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_worker.html#K8sWorkerController.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_worker.K8sWorkerController.delete" title="Permalink to this definition">¶</a></dt>
-<dd><p>Make an API call to delete a Resources.</p>
-<dl class="simple">
-<dt>id<span class="classifier">str</span></dt><dd><p>The ID with the format /resource/path/id</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>APIException</dt><dd><p>The remote API returned an error.</p>
-</dd>
-<dt>APIItemNotFoundException</dt><dd><p>The item with {id} was not found.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="hpecp.k8s_worker.K8sWorkerController.wait_for_status">
-<code class="sig-name descname">wait_for_status</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">worker_id</span></em>, <em class="sig-param"><span class="n">status</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">timeout_secs</span><span class="o">=</span><span class="default_value">1200</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_worker.html#K8sWorkerController.wait_for_status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_worker.K8sWorkerController.wait_for_status" title="Permalink to this definition">¶</a></dt>
-<dd><p>Wait for K8S worker status.</p>
-<dl class="simple">
-<dt>worker_id: str</dt><dd><p>The worker ID - format: ‘/api/v1/workers/[0-9]+’</p>
-</dd>
-<dt>status: list[<a class="reference internal" href="#hpecp.k8s_worker.WorkerK8sStatus" title="hpecp.k8s_worker.WorkerK8sStatus"><code class="xref py py-class docutils literal notranslate"><span class="pre">WorkerK8sStatus</span></code></a>]</dt><dd><p>Status(es) to wait for.  Use an empty array if you want to
-wait for a cluster’s existence to cease.</p>
-</dd>
-<dt>timeout_secs: int</dt><dd><p>How long to wait for the status(es) before raising an
-exception.</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>bool</dt><dd><p>True if status was found before timeout, otherwise False</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>APIItemNotFoundException</dt><dd><p>If the item is not found and status is not empty
-APIException: if a generic API exception occurred</p>
 </dd>
 </dl>
 </dd></dl>

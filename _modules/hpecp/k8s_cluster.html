@@ -66,9 +66,8 @@
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
 
-<span class="kn">from</span> <span class="nn">.base_resource</span> <span class="kn">import</span> <span class="n">AbstractResourceController</span><span class="p">,</span> <span class="n">AbstractResource</span>
+<span class="kn">from</span> <span class="nn">.base_resource</span> <span class="kn">import</span> <span class="n">AbstractWaitableResourceController</span><span class="p">,</span> <span class="n">AbstractResource</span>
 
-<span class="kn">import</span> <span class="nn">polling</span>
 <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
 <span class="kn">import</span> <span class="nn">re</span>
 
@@ -283,7 +282,7 @@
         <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;node&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">role</span><span class="p">}</span></div></div>
 
 
-<div class="viewcode-block" id="K8sClusterController"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController">[docs]</a><span class="k">class</span> <span class="nc">K8sClusterController</span><span class="p">(</span><span class="n">AbstractResourceController</span><span class="p">):</span>
+<div class="viewcode-block" id="K8sClusterController"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController">[docs]</a><span class="k">class</span> <span class="nc">K8sClusterController</span><span class="p">(</span><span class="n">AbstractWaitableResourceController</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Class for interacting with K8S Clusters.</span>
 
 <span class="sd">    An instance of this class is available in the</span>
@@ -300,7 +299,13 @@
 
     <span class="n">base_resource_path</span> <span class="o">=</span> <span class="s2">&quot;/api/v2/k8scluster&quot;</span>
 
+    <span class="n">resource_list_path</span> <span class="o">=</span> <span class="s2">&quot;k8sclusters&quot;</span>
+
     <span class="n">resource_class</span> <span class="o">=</span> <span class="n">K8sCluster</span>
+
+    <span class="n">status_class</span> <span class="o">=</span> <span class="n">K8sClusterStatus</span>
+
+    <span class="n">status_fieldname</span> <span class="o">=</span> <span class="s2">&quot;status&quot;</span>
 
 <div class="viewcode-block" id="K8sClusterController.create"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -419,9 +424,6 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;Location&quot;</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="K8sClusterController.list"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.list">[docs]</a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">K8sClusterController</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">list</span><span class="p">()</span></div>
-
 <div class="viewcode-block" id="K8sClusterController.get"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">setup_log</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 
         <span class="k">if</span> <span class="n">setup_log</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
@@ -430,64 +432,6 @@
             <span class="n">params</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 
         <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">K8sClusterController</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="K8sClusterController.delete"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">K8sClusterController</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="K8sClusterController.wait_for_status"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.wait_for_status">[docs]</a>    <span class="k">def</span> <span class="nf">wait_for_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k8scluster_id</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="p">[],</span> <span class="n">timeout_secs</span><span class="o">=</span><span class="mi">60</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Wait for cluster status.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        k8scluster_id: str</span>
-<span class="sd">            The K8S cluster ID - format: &#39;/api/v2/k8scluster/[0-9]+&#39;</span>
-<span class="sd">        status: list[:py:class:`K8sClusterStatus`]</span>
-<span class="sd">            Status(es) to wait for.  Use an empty array if you want to</span>
-<span class="sd">            wait for a cluster&#39;s existence to cease.</span>
-<span class="sd">        timeout_secs: int</span>
-<span class="sd">            How long to wait for the status(es) before raising an</span>
-<span class="sd">            exception.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        bool</span>
-<span class="sd">            True if status was found before timeout, otherwise False</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        APIItemNotFoundException</span>
-<span class="sd">            if the item is not found</span>
-<span class="sd">        APIException</span>
-<span class="sd">            if a generic API exception occurred</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
-            <span class="n">k8scluster_id</span><span class="p">,</span> <span class="n">basestring</span>
-        <span class="p">),</span> <span class="s2">&quot;&#39;k8scluster_id&#39; must be a string&quot;</span>
-        <span class="k">assert</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\/api\/v2\/k8scluster\/[0-9]+&quot;</span><span class="p">,</span> <span class="n">k8scluster_id</span><span class="p">),</span> <span class="p">(</span>
-            <span class="s2">&quot;&#39;k8scluster_id&#39; must have format&quot;</span>
-            <span class="s2">&quot; &#39;/api/v2/worker/k8scluster/[0-9]+&#39;&quot;</span>
-        <span class="p">)</span>
-
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span> <span class="s2">&quot;&#39;status&#39; must be a list&quot;</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">status</span><span class="p">):</span>
-            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
-                <span class="n">s</span><span class="p">,</span> <span class="n">K8sClusterStatus</span>
-            <span class="p">),</span> <span class="s2">&quot;&#39;status&#39; item &#39;</span><span class="si">{}</span><span class="s2">&#39; is not of type K8sClusterStatus&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">timeout_secs</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span> <span class="s2">&quot;&#39;timeout_secs&#39; must be an int&quot;</span>
-        <span class="k">assert</span> <span class="n">timeout_secs</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;&#39;timeout_secs&#39; must be &gt;= 0&quot;</span>
-
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">polling</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span>
-                <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k8scluster_id</span><span class="p">)</span><span class="o">.</span><span class="n">status</span>
-                <span class="ow">in</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">status</span><span class="p">],</span>
-                <span class="n">step</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-                <span class="n">poll_forever</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                <span class="n">timeout</span><span class="o">=</span><span class="n">timeout_secs</span><span class="p">,</span>
-            <span class="p">)</span>
-            <span class="k">return</span> <span class="kc">True</span>
-        <span class="k">except</span> <span class="n">polling</span><span class="o">.</span><span class="n">TimeoutException</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="K8sClusterController.k8s_supported_versions"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.k8s_supported_versions">[docs]</a>    <span class="k">def</span> <span class="nf">k8s_supported_versions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Retrieve list of K8S Supported Versions.</span>

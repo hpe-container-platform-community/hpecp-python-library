@@ -106,8 +106,32 @@ resource_class = K8sCluster</p>
 </dd></dl>
 
 <dl class="py method">
+<dt id="hpecp.base_resource.AbstractResourceController.resource_list_path">
+<em class="property">abstract property </em><code class="sig-name descname">resource_list_path</code><a class="headerlink" href="#hpecp.base_resource.AbstractResourceController.resource_list_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Declare the implementing resource list path for the API resource.
+The resource list path is where the resources are after the
+‘_embedded’ element in the API response json.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Getter</dt>
+<dd class="field-odd"><p>Returns the resource list path</p>
+</dd>
+<dt class="field-even">Setter</dt>
+<dd class="field-even"><p>Sets the resource list path</p>
+</dd>
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>class K8sClusterController(AbstractResourceController):</dt><dd><p>…
+resource_list_path = “k8sclusters”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt id="hpecp.base_resource.AbstractResourceController.get">
-<em class="property">abstract </em><code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">params</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/base_resource.html#AbstractResourceController.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.base_resource.AbstractResourceController.get" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/base_resource.html#AbstractResourceController.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.base_resource.AbstractResourceController.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make an API call to retrieve a Resource.</p>
 <dl class="simple">
 <dt>id<span class="classifier">str</span></dt><dd><p>The ID with the format /resource/path/id</p>
@@ -130,7 +154,7 @@ self.resource_class</p>
 
 <dl class="py method">
 <dt id="hpecp.base_resource.AbstractResourceController.list">
-<em class="property">abstract </em><code class="sig-name descname">list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/base_resource.html#AbstractResourceController.list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.base_resource.AbstractResourceController.list" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/base_resource.html#AbstractResourceController.list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.base_resource.AbstractResourceController.list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make an API call to retrieve a list of Resources.</p>
 <dl class="simple">
 <dt>ResourceList</dt><dd><p>The ResourceList will contain instances of the class defined by
@@ -141,7 +165,7 @@ the property self.resource_class</p>
 
 <dl class="py method">
 <dt id="hpecp.base_resource.AbstractResourceController.delete">
-<em class="property">abstract </em><code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/base_resource.html#AbstractResourceController.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.base_resource.AbstractResourceController.delete" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/base_resource.html#AbstractResourceController.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.base_resource.AbstractResourceController.delete" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make an API call to delete a Resources.</p>
 <dl class="simple">
 <dt>id<span class="classifier">str</span></dt><dd><p>The ID with the format /resource/path/id</p>
@@ -151,6 +175,91 @@ the property self.resource_class</p>
 <dt>APIException</dt><dd><p>The remote API returned an error.</p>
 </dd>
 <dt>APIItemNotFoundException</dt><dd><p>The item with {id} was not found.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="hpecp.base_resource.AbstractWaitableResourceController">
+<em class="property">class </em><code class="sig-prename descclassname">hpecp.base_resource.</code><code class="sig-name descname">AbstractWaitableResourceController</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">client</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/base_resource.html#AbstractWaitableResourceController"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.base_resource.AbstractWaitableResourceController" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#hpecp.base_resource.AbstractResourceController" title="hpecp.base_resource.AbstractResourceController"><code class="xref py py-class docutils literal notranslate"><span class="pre">hpecp.base_resource.AbstractResourceController</span></code></a></p>
+<p>Resource Controller that is able to wait for the resource’s status.</p>
+<dl class="py method">
+<dt id="hpecp.base_resource.AbstractWaitableResourceController.status_class">
+<em class="property">abstract property </em><code class="sig-name descname">status_class</code><a class="headerlink" href="#hpecp.base_resource.AbstractWaitableResourceController.status_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Declare the implementing Status class for the API resource.
+The status class contains properties mapping to attributes in the
+response.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Getter</dt>
+<dd class="field-odd"><p>Returns the Status class</p>
+</dd>
+<dt class="field-even">Setter</dt>
+<dd class="field-even"><p>Sets the Status class</p>
+</dd>
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>class</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>class K8sClusterController(AbstractResourceController):</dt><dd><p>…
+status_class = K8sClusterStatus</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="hpecp.base_resource.AbstractWaitableResourceController.status_fieldname">
+<em class="property">abstract property </em><code class="sig-name descname">status_fieldname</code><a class="headerlink" href="#hpecp.base_resource.AbstractWaitableResourceController.status_fieldname" title="Permalink to this definition">¶</a></dt>
+<dd><p>Declare the Status fieldname in the API resource.</p>
+<p>Usually either: status or state</p>
+<dl class="field-list simple">
+<dt class="field-odd">Getter</dt>
+<dd class="field-odd"><p>Returns the Status fieldname</p>
+</dd>
+<dt class="field-even">Setter</dt>
+<dd class="field-even"><p>Sets the Status fieldname</p>
+</dd>
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>class K8sClusterController(AbstractResourceController):</dt><dd><p>…
+status_fieldname = status</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="hpecp.base_resource.AbstractWaitableResourceController.wait_for_state">
+<code class="sig-name descname">wait_for_state</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">states</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">timeout_secs</span><span class="o">=</span><span class="default_value">1200</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/base_resource.html#AbstractWaitableResourceController.wait_for_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.base_resource.AbstractWaitableResourceController.wait_for_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>See wait_for_status().</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="hpecp.base_resource.AbstractWaitableResourceController.wait_for_status">
+<code class="sig-name descname">wait_for_status</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">status</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">timeout_secs</span><span class="o">=</span><span class="default_value">1200</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/base_resource.html#AbstractWaitableResourceController.wait_for_status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.base_resource.AbstractWaitableResourceController.wait_for_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wait for K8S worker status.</p>
+<dl class="simple">
+<dt>id: str</dt><dd><p>The resource ID - format: ‘/resource/path/[0-9]+’</p>
+</dd>
+<dt>status: list[<a href="#id1"><span class="problematic" id="id2">:py:method:`status_class`</span></a>]</dt><dd><p>Status(es) to wait for.  Use an empty array if you want to
+wait for the resource existence to cease.</p>
+</dd>
+<dt>timeout_secs: int</dt><dd><p>How long to wait for the status(es) before raising an
+exception.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>bool</dt><dd><p>True if status was found before timeout, otherwise False</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>APIItemNotFoundException</dt><dd><p>If the item is not found and status is not empty
+APIException: if a generic API exception occurred</p>
 </dd>
 </dl>
 </dd></dl>
