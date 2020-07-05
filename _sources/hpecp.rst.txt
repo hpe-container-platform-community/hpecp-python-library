@@ -11,6 +11,7 @@ API Docs
    hpecp.license
    hpecp.lock
    hpecp.gateway
+   hpecp.base_resource
    hpecp.k8s_cluster
 
 .. toctree::

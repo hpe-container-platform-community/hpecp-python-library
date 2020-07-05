@@ -338,6 +338,26 @@
         <span class="n">verify_ssl</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">warn_ssl</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a Client object for interacting with HPE Container Platform.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        username : str</span>
+<span class="sd">            HPECP Username</span>
+<span class="sd">        password : str</span>
+<span class="sd">            HPECP Password</span>
+<span class="sd">        api_host : str,</span>
+<span class="sd">            HPECP API Host</span>
+<span class="sd">        api_port : int, optional</span>
+<span class="sd">            HPECP API Port, by default 8080</span>
+<span class="sd">        use_ssl : bool, optional</span>
+<span class="sd">            Connect to HPECP using SSL:, by default True</span>
+<span class="sd">        verify_ssl : bool, optional</span>
+<span class="sd">            See &quot;https://requests.readthedocs.io/en/master/user/advanced/</span>
+<span class="sd">            #ssl-cert-verification&quot;, by default True</span>
+<span class="sd">        warn_ssl : bool, optional</span>
+<span class="sd">            Disable ssl warnings, by default False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_log</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">verify_ssl</span> <span class="o">==</span> <span class="s2">&quot;True&quot;</span><span class="p">:</span>
@@ -919,7 +939,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Chris Snow.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.2.
     </div>
   </body>
 </html>
