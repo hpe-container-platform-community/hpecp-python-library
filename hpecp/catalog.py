@@ -18,12 +18,11 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-import re
 from operator import attrgetter
 
 from tabulate import tabulate
 
-from .base_resource import AbstractResourceController, AbstractResource
+from .base_resource import AbstractResourceController
 
 
 class Catalog:
