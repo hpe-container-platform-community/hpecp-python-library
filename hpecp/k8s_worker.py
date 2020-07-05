@@ -20,12 +20,11 @@
 
 from __future__ import absolute_import
 
-import re
+from .base_resource import AbstractResourceController, AbstractResource
+
 from enum import Enum
-from operator import attrgetter
 
 import polling
-from tabulate import tabulate
 
 from .exceptions import APIItemNotFoundException
 
@@ -52,29 +51,41 @@ class WorkerK8sStatus(Enum):
     storage_error = 14
 
 
-class WorkerK8s:
-    @staticmethod
-    def __class_dir__():
-        return ["worker_id", "status", "hostname", "ipaddr", "href"]
+class WorkerK8s(AbstractResource):
 
-    def __repr__(self):
-        return "<WorkerK8S worker_id:{} status:{} ipaddr:{}>".format(
-            self.worker_id, self.status, self.ipaddr
-        )
+    all_fields = [
+        "id",
+        "status",
+        "hostname",
+        "ipaddr",
+        "href",
+        "_links",
+    ]
+    """All of the fields of a K8s Cluster objects that are returned by the HPE
+    Container Platform API"""
 
-    def __str__(self):
-        return "WorkerK8s(worker_id={}, status={}, ipaddr={})".format(
-            self.worker_id, self.status, self.ipaddr
-        )
+    # @staticmethod
+    # def __class_dir__():
+    #     return ["worker_id", "status", "hostname", "ipaddr", "href"]
 
-    def __init__(self, json):
-        self.json = json
+    # def __repr__(self):
+    #     return "<WorkerK8S worker_id:{} status:{} ipaddr:{}>".format(
+    #         self.worker_id, self.status, self.ipaddr
+    #     )
 
-    def __dir__(self):
-        return WorkerK8s.__class_dir__()
+    # def __str__(self):
+    #     return "WorkerK8s(worker_id={}, status={}, ipaddr={})".format(
+    #         self.worker_id, self.status, self.ipaddr
+    #     )
 
-    def __getitem__(self, item):
-        return getattr(self, self.__dir__()[item])
+    # def __init__(self, json):
+    #     self.json = json
+
+    # def __dir__(self):
+    #     return WorkerK8s.__class_dir__()
+
+    # def __getitem__(self, item):
+    #     return getattr(self, self.__dir__()[item])
 
     @property
     def worker_id(self):
@@ -96,48 +107,50 @@ class WorkerK8s:
     def href(self):
         return self.json["_links"]["self"]["href"]
 
-    def __len__(self):
-        return len(dir(self))
+    # def __len__(self):
+    #     return len(dir(self))
 
 
-class WorkerK8sList:
-    def __init__(self, json):
-        self.json = json
-        self.tenants = sorted(
-            [WorkerK8s(t) for t in json], key=attrgetter("worker_id")
-        )
+# class WorkerK8sList:
+#     def __init__(self, json):
+#         self.json = json
+#         self.tenants = sorted(
+#             [WorkerK8s(t) for t in json], key=attrgetter("worker_id")
+#         )
 
-    def __getitem__(self, item):
-        return self.tenants[item]
+#     def __getitem__(self, item):
+#         return self.tenants[item]
 
-    def next(self):
-        if not self.tenants:
-            raise StopIteration
-        return self.tenants.pop(0)
+#     def next(self):
+#         if not self.tenants:
+#             raise StopIteration
+#         return self.tenants.pop(0)
 
-    # TODO do we need  both next() and __next__()?
-    def __next__(self):
-        if not self.tenants:
-            raise StopIteration
-        return self.tenants.pop(0)
+#     # TODO do we need  both next() and __next__()?
+#     def __next__(self):
+#         if not self.tenants:
+#             raise StopIteration
+#         return self.tenants.pop(0)
 
-    def __iter__(self):
-        return self
+#     def __iter__(self):
+#         return self
 
-    def __len__(self):
-        return len(self.tenants)
+#     def __len__(self):
+#         return len(self.tenants)
 
-    def tabulate(self, columns=None):
-        # FIXME columns is ignored, see GatewayController.list().tabulate()
-        # for an example implementation
-        return tabulate(
-            self, headers=WorkerK8s.__class_dir__(), tablefmt="pretty"
-        )
+#     def tabulate(self, columns=None):
+#         # FIXME columns is ignored, see GatewayController.list().tabulate()
+#         # for an example implementation
+#         return tabulate(
+#             self, headers=WorkerK8s.__class_dir__(), tablefmt="pretty"
+#         )
 
 
-class K8sWorkerController:
-    def __init__(self, client):
-        self.client = client
+class K8sWorkerController(AbstractResourceController):
+
+    base_resource_path = "/api/v2/worker/k8shost"
+
+    resource_class = WorkerK8s
 
     def create_with_ssh_password(self, username, password):
         """Not Implemented yet"""
@@ -187,46 +200,13 @@ class K8sWorkerController:
         return response.headers["location"]
 
     def list(self):
-        """
-        See: https://<<controller_ip>>/apidocs/site-admin-api.html for the
-        schema of the  response object
-        """
-        response = self.client._request(
-            url="/api/v2/worker/k8shost/",
-            http_method="get",
-            description="worker/get_k8shosts",
-        )
-        hosts = WorkerK8sList(response.json()["_embedded"]["k8shosts"])
-        return hosts
+        return super(K8sWorkerController, self).list()
 
-    def get(self, worker_id):
-        """
-        See: https://<<controller_ip>>/apidocs/site-admin-api.html for the
-        schema of the response object
-        """
-        assert isinstance(
-            worker_id, basestring
-        ), "'worker_id' must be a string"
-        assert re.match(
-            r"\/api\/v2\/worker\/k8shost\/[0-9]+", worker_id
-        ), "'worker_id' must have format '/api/v2/worker/k8shost/[0-9]+'"
+    def get(self, id, setup_log=False):
+        return super(K8sWorkerController, self).get(id, None)
 
-        response = self.client._request(
-            url=worker_id, http_method="get", description="worker/get_k8shosts"
-        )
-        host = WorkerK8s(response.json())
-        return host
-
-    def delete(self, worker_id):
-        """
-        See: https://<<controller_ip>>/apidocs/site-admin-api.html for the
-        schema of the  response object
-        """
-        self.client._request(
-            url=worker_id,
-            http_method="delete",
-            description="worker/delete_k8shosts",
-        )
+    def delete(self, id):
+        super(K8sWorkerController, self).delete(id)
 
     # TODO rename status parameter to statuses
     def wait_for_status(self, worker_id, status=[], timeout_secs=1200):

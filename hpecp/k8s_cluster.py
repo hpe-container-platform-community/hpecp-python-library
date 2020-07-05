@@ -256,9 +256,6 @@ class K8sClusterController(AbstractResourceController):
 
     resource_class = K8sCluster
 
-    def __init__(self, client):
-        self.client = client
-
     def create(
         self,
         name=None,

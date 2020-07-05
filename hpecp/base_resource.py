@@ -34,6 +34,9 @@ class AbstractResourceController:
         return self._resource_path
 
     def _set_base_resource_path(self, path):
+        assert (
+            path.endswith("/") is False
+        ), "base resource path must not end with '/'"
         self._base_resource_path = path
 
     base_resource_path = abc.abstractproperty(
@@ -76,6 +79,16 @@ class AbstractResourceController:
         resource_class = K8sCluster
     """
 
+    def __init__(self, client):
+        """Create a new instance.
+
+        Parameters
+        ----------
+        client : ContainerPlatformClient
+            client instance for working with the HPE CP API.
+        """
+        self.client = client
+
     @abc.abstractmethod
     def get(self, id, params):
         """Make an API call to retrieve a Resource.
@@ -105,6 +118,9 @@ class AbstractResourceController:
             self.base_resource_path
         ), "'id' does not start with '{}'".format(self.base_resource_path)
 
+        if params is None:
+            params = ""
+
         response = self.client._request(
             url="{}{}".format(id, params),
             http_method="get",
@@ -128,7 +144,13 @@ class AbstractResourceController:
             description=self.__class__.__name__ + "/list",
         )
         return ResourceList(
-            self.resource_class, response.json()["_embedded"]["k8sclusters"]
+            self.resource_class,
+            response.json()["_embedded"][
+                # TODO is it sufficient to just add an "s" to make the
+                # resource name plural?
+                self.base_resource_path.split("/")[-1]
+                + "s"
+            ],
         )
 
     @abc.abstractmethod
@@ -199,7 +221,7 @@ class AbstractResource:
 
     def __str__(self):
         """Return a str representation of a Resource class."""
-        return "K8sCluster(id={})".format(self.__class__.__name__.self.id)
+        return "{}(id={})".format(self.__class__.__name__, self.id)
 
     @property
     def id(self):

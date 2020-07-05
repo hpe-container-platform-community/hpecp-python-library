@@ -48,7 +48,7 @@ def get_client():
 
 class TestWorkers(TestCase):
     def mocked_requests_get(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v2/worker/k8shost/":
+        if args[0] == "https://127.0.0.1:8080/api/v2/worker/k8shost":
             return MockResponse(
                 json_data={
                     "_embedded": {
@@ -194,8 +194,7 @@ class TestWorkers(TestCase):
         client = get_client()
         with self.assertRaisesRegexp(
             AssertionError,
-            "'worker_id' must have format "
-            + r"'\/api\/v2\/worker\/k8shost\/\[0-9\]\+'",
+            "'id' does not start with '/api/v2/worker/k8shost'",
         ):
             client.k8s_worker.set_storage(worker_id="garbage")
 
