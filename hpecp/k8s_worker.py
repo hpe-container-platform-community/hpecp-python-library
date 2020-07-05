@@ -24,10 +24,6 @@ from .base_resource import AbstractResourceController, AbstractResource
 
 from enum import Enum
 
-import polling
-
-from .exceptions import APIItemNotFoundException
-
 try:
     basestring
 except NameError:

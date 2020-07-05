@@ -21,9 +21,11 @@
 """Base classes for Controllers and Resources."""
 
 import abc
+import polling
 import six
 
 from tabulate import tabulate
+from hpecp.exceptions import APIItemNotFoundException
 
 
 @six.add_metaclass(abc.ABCMeta)
@@ -85,9 +87,7 @@ class AbstractResourceController:
     def _set_status_class(self, clazz):
         self._status_class = clazz
 
-    status_class = abc.abstractproperty(
-        _get_status_class, _set_status_class
-    )
+    status_class = abc.abstractproperty(_get_status_class, _set_status_class)
     """Declare the implementing Status class for the API resource.
     The status class contains properties mapping to attributes in the
     response.
@@ -113,7 +113,7 @@ class AbstractResourceController:
         _get_status_fieldname, _set_status_fieldname
     )
     """Declare the Status fieldname in the API resource.
-    
+
     Usually either: status or state
 
     :getter: Returns the Status fieldname
@@ -226,8 +226,9 @@ class AbstractResourceController:
         )
 
     def wait_for_state(self, id, states=[], timeout_secs=1200):
+        """See wait_for_status()."""
         self.wait_for_status(id, states, timeout_secs)
-    
+
     def wait_for_status(self, worker_id, status=[], timeout_secs=1200):
         """Wait for K8S worker status.
 
@@ -258,7 +259,7 @@ class AbstractResourceController:
         assert isinstance(status, list), "'status' must be a list"
         for i, s in enumerate(status):
             assert isinstance(
-                s, WorkerK8sStatus
+                s, self.status_class
             ), "'status' item '{}' is not of type WorkerK8sStatus".format(i)
         assert isinstance(timeout_secs, int), "'timeout_secs' must be an int"
         assert timeout_secs >= 0, "'timeout_secs' must be >= 0"
