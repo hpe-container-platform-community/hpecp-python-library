@@ -225,6 +225,11 @@ class AbstractResourceController:
             description=self.__class__.__name__ + "/delete",
         )
 
+
+@six.add_metaclass(abc.ABCMeta)
+class AbstractWaitableResourceController(AbstractResourceController):
+    """Resource Controller that is able to wait for the resource's status."""
+
     def wait_for_state(self, id, states=[], timeout_secs=1200):
         """See wait_for_status()."""
         self.wait_for_status(id, states, timeout_secs)
@@ -290,7 +295,6 @@ class AbstractResourceController:
         # if state is not empty return success when resource current state is
         # in desired state
         else:
-
             try:
 
                 def get_status():

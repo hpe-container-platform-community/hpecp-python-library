@@ -20,7 +20,7 @@
 
 from __future__ import absolute_import
 
-from .base_resource import AbstractResourceController, AbstractResource
+from .base_resource import AbstractWaitableResourceController, AbstractResource
 
 from enum import Enum
 import re
@@ -236,7 +236,7 @@ class K8sClusterHostConfig:
         return {"node": self.node, "role": self.role}
 
 
-class K8sClusterController(AbstractResourceController):
+class K8sClusterController(AbstractWaitableResourceController):
     """Class for interacting with K8S Clusters.
 
     An instance of this class is available in the

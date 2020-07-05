@@ -20,7 +20,7 @@
 
 from __future__ import absolute_import
 
-from .base_resource import AbstractResourceController, AbstractResource
+from .base_resource import AbstractWaitableResourceController, AbstractResource
 
 from enum import Enum
 
@@ -81,7 +81,7 @@ class WorkerK8s(AbstractResource):
         return self.json["_links"]["self"]["href"]
 
 
-class K8sWorkerController(AbstractResourceController):
+class K8sWorkerController(AbstractWaitableResourceController):
 
     base_resource_path = "/api/v2/worker/k8shost"
 
