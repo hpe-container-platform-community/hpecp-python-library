@@ -79,6 +79,54 @@ class AbstractResourceController:
         resource_class = K8sCluster
     """
 
+    def _get_status_class(self):
+        return self._status_class
+
+    def _set_status_class(self, clazz):
+        self._status_class = clazz
+
+    status_class = abc.abstractproperty(
+        _get_status_class, _set_status_class
+    )
+    """Declare the implementing Status class for the API resource.
+    The status class contains properties mapping to attributes in the
+    response.
+
+    :getter: Returns the Status class
+    :setter: Sets the Status class
+    :type: class
+
+    Example
+    -------
+    class K8sClusterController(AbstractResourceController):
+        ...
+        status_class = K8sClusterStatus
+    """
+
+    def _get_status_fieldname(self):
+        return self._status_fieldname
+
+    def _set_status_fieldname(self, fieldname):
+        self._status_fieldname = fieldname
+
+    status_fieldname = abc.abstractproperty(
+        _get_status_fieldname, _set_status_fieldname
+    )
+    """Declare the Status fieldname in the API resource.
+    
+    Usually either: status or state
+
+    :getter: Returns the Status fieldname
+    :setter: Sets the Status fieldname
+    :type: str
+
+    Example
+    -------
+    class K8sClusterController(AbstractResourceController):
+        ...
+        status_fieldname = status
+    """
+
     def __init__(self, client):
         """Create a new instance.
 
@@ -89,7 +137,6 @@ class AbstractResourceController:
         """
         self.client = client
 
-    @abc.abstractmethod
     def get(self, id, params):
         """Make an API call to retrieve a Resource.
 
@@ -128,7 +175,6 @@ class AbstractResourceController:
         )
         return self.resource_class(response.json())
 
-    @abc.abstractmethod
     def list(self):
         """Make an API call to retrieve a list of Resources.
 
@@ -153,7 +199,6 @@ class AbstractResourceController:
             ],
         )
 
-    @abc.abstractmethod
     def delete(self, id):
         """Make an API call to delete a Resources.
 
@@ -179,6 +224,80 @@ class AbstractResourceController:
             http_method="delete",
             description=self.__class__.__name__ + "/delete",
         )
+
+    def wait_for_state(self, id, states=[], timeout_secs=1200):
+        self.wait_for_status(id, states, timeout_secs)
+    
+    def wait_for_status(self, worker_id, status=[], timeout_secs=1200):
+        """Wait for K8S worker status.
+
+        Parameters
+        ----------
+        worker_id: str
+            The worker ID - format: '/api/v1/workers/[0-9]+'
+        status: list[:py:class:`WorkerK8sStatus`]
+            Status(es) to wait for.  Use an empty array if you want to
+            wait for a cluster's existence to cease.
+        timeout_secs: int
+            How long to wait for the status(es) before raising an
+            exception.
+
+        Returns
+        -------
+        bool
+            True if status was found before timeout, otherwise False
+
+        Raises
+        ------
+        APIItemNotFoundException
+            If the item is not found and status is not empty
+            APIException: if a generic API exception occurred
+        """
+        self.get(worker_id)
+
+        assert isinstance(status, list), "'status' must be a list"
+        for i, s in enumerate(status):
+            assert isinstance(
+                s, WorkerK8sStatus
+            ), "'status' item '{}' is not of type WorkerK8sStatus".format(i)
+        assert isinstance(timeout_secs, int), "'timeout_secs' must be an int"
+        assert timeout_secs >= 0, "'timeout_secs' must be >= 0"
+
+        # if status is empty return success when worker_id not found
+        if len(status) == 0:
+
+            def item_not_exists():
+                try:
+                    self.get(worker_id)
+                    return False
+                except APIItemNotFoundException:
+                    return True
+
+            try:
+                polling.poll(
+                    lambda: item_not_exists(),
+                    step=10,
+                    poll_forever=False,
+                    timeout=timeout_secs,
+                )
+                return True
+            except polling.TimeoutException:
+                return False
+
+        # if state is not empty return success when gateway current state is
+        # in desired state
+        else:
+            try:
+                polling.poll(
+                    lambda: self.get(worker_id).status
+                    in [s.name for s in status],
+                    step=10,
+                    poll_forever=False,
+                    timeout=timeout_secs,
+                )
+                return True
+            except polling.TimeoutException:
+                return False
 
 
 @six.add_metaclass(abc.ABCMeta)

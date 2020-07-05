@@ -256,6 +256,10 @@ class K8sClusterController(AbstractResourceController):
 
     resource_class = K8sCluster
 
+    status_class = K8sClusterStatus
+
+    status_fieldname = "status"
+
     def create(
         self,
         name=None,
@@ -373,9 +377,6 @@ class K8sClusterController(AbstractResourceController):
         )
         return response.headers["Location"]
 
-    def list(self):
-        return super(K8sClusterController, self).list()
-
     def get(self, id, setup_log=False):
 
         if setup_log is True:
@@ -384,9 +385,6 @@ class K8sClusterController(AbstractResourceController):
             params = ""
 
         return super(K8sClusterController, self).get(id, params)
-
-    def delete(self, id):
-        super(K8sClusterController, self).delete(id)
 
     def wait_for_status(self, k8scluster_id, status=[], timeout_secs=60):
         """Wait for cluster status.
