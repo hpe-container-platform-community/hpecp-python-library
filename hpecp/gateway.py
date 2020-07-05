@@ -20,273 +20,16 @@
 
 from __future__ import absolute_import
 
-import re
 from enum import Enum
-from operator import attrgetter
-
-import polling
-from tabulate import tabulate
 
 from .exceptions import APIItemNotFoundException
+
+from .base_resource import AbstractWaitableResourceController, AbstractResource
 
 try:
     basestring
 except NameError:
     basestring = str
-
-
-class GatewayController:
-    """Class that users will interact with to work with Gateways. An instance
-    of this class is available in the
-    client.ContainerPlatformClient with the attribute name
-    :py:attr:`gateway <.client.ContainerPlatformClient.gateway>`. The methods
-    of this class can be invoked using `client.gateway.method()`. See the
-    example below:
-
-    Example
-    -------
-    >>> client = ContainerPlatformClient(...).create_session()
-    >>> client.gateway.list()
-    """
-
-    def __init__(self, client):
-        self.client = client
-
-    def create_with_ssh_password(self, username, password):
-        """Not Implemented yet"""
-        raise NotImplementedError()
-
-    def create_with_ssh_key(
-        self, ip, proxy_node_hostname, ssh_key_data, tags=[]
-    ):
-        """Create a gateway instance using SSH key credentials to access the
-        host.
-
-        Parameters
-        ----------
-        ip: str
-            The IP address of the proxy host.  Used for internal
-            communication.
-        proxy_node_hostname: str
-            Clients will access cluster services will be accessed using
-            this name.
-        ssh_key_data: str
-            The ssh key data as a string.
-        tags: list
-            Tags to use, e.g. "{ 'tag1': 'foo', 'tag2', 'bar' }".
-
-        Returns
-        -------
-        str
-            gateway ID
-        """
-
-        assert isinstance(
-            ip, basestring
-        ), "'ip' must be provided and must be a string"
-        assert isinstance(
-            proxy_node_hostname, basestring
-        ), "'proxy_node_hostname' must be provided and must be a string"
-        assert isinstance(
-            ssh_key_data, basestring
-        ), "'ssh_key_data' must be provided and must be a string"
-
-        data = {
-            "ip": ip,
-            "credentials": {
-                "type": "ssh_key_access",
-                "ssh_key_data": ssh_key_data,
-            },
-            "tags": tags,
-            "proxy_nodes_hostname": proxy_node_hostname,
-            "purpose": "proxy",
-        }
-
-        response = self.client._request(
-            url="/api/v1/workers/",
-            http_method="post",
-            data=data,
-            description="gateway/create_with_ssh_key",
-        )
-        return response.headers["location"]
-
-    def list(self):
-        """Retrieve a list of Gateways.
-
-        Returns
-        -------
-        GatewayList
-            list of Gateways
-
-        Raises
-        ------
-        APIException
-        """
-        response = self.client._request(
-            url="/api/v1/workers/",
-            http_method="get",
-            description="gateway/list",
-        )
-        return GatewayList(response.json()["_embedded"]["workers"])
-
-    def get(self, gateway_id):
-        """Retrieve a Gateway by ID.
-
-        Parameters
-        ----------
-        gateway_id: str
-            The gateway ID - format: '/api/v1/workers/[0-9]+'
-
-        Returns
-        -------
-        Gateway
-            object representing a Gateway
-
-        Raises
-        ------
-        APIException
-        """
-        assert isinstance(
-            gateway_id, str
-        ), "'gateway_id' must be provided and must be a string"
-        assert re.match(
-            r"\/api\/v1\/workers\/[0-9]+", gateway_id
-        ), "'gateway_id' must have format '/api/v1/workers/[0-9]+'"
-
-        response = self.client._request(
-            url=gateway_id, http_method="get", description="gateway/get"
-        )
-        if response.json()["purpose"] != "proxy":
-            raise APIItemNotFoundException(
-                message="gateway not found with id: " + gateway_id,
-                request_method="get",
-                request_url=gateway_id,
-            )
-
-        return Gateway(response.json())
-
-    def delete(self, gateway_id):
-        """Delete a Gateway.
-
-        You can use :py:meth:`wait_for_status` to check for the gateway
-        state/existence.
-
-        Parameters
-        ----------
-        gateway_id: str
-            The Gateway ID - format: '/api/v1/workers/[0-9]+'
-
-        Raises
-        ------
-        APIException
-        """
-        assert isinstance(
-            gateway_id, str
-        ), "'gateway_id' must be provided and must be a string"
-        assert re.match(
-            r"\/api\/v1\/workers\/[0-9]+", gateway_id
-        ), "'gateway_id' must have format '/api/v1/workers/[0-9]+'"
-
-        # Check if host is actually a gateway
-        # Raises APIItemNotFoundException() if gateway not found
-        self.get(gateway_id)
-
-        self.client._request(
-            url=gateway_id, http_method="delete", description="gateway/delete"
-        )
-
-    def wait_for_delete(self, gateway_id, timeout_secs=1200):
-        """Wait for gateway to be deleted.
-
-        Parameters
-        ----------
-        gateway_id: str
-            The gateway ID - format: '/api/v1/workers/[0-9]+'
-        timeout_secs: int
-            How long to wait for the status(es) before raising an
-            exception.
-
-        Returns
-        -------
-        bool
-            True if gateway was deleted before timeout, otherwise False
-        """
-
-    def wait_for_state(self, gateway_id, state=[], timeout_secs=1200):
-        """Wait for gateway state.
-
-        Parameters
-        ----------
-        gateway_id: str
-            The gateway ID - format: '/api/v1/workers/[0-9]+'
-        status: list[:py:class:`GatewayStatus`]
-            Status(es) to wait for.  Use an empty array if you want to wait
-            for a cluster's existence to cease.
-        timeout_secs: int
-            How long to wait for the status(es) before raising an
-            exception.
-
-        Returns
-        -------
-        bool
-            True if status was found before timeout, otherwise False
-
-        Raises
-        ------
-        APIItemNotFoundException
-            if the item is not found and state is not empty
-        APIException
-            if a generic API exception occurred
-        """
-        assert isinstance(
-            gateway_id, basestring
-        ), "'gateway_id' must be a string"
-        assert re.match(
-            r"\/api\/v1\/workers\/[0-9]+", gateway_id
-        ), "'gateway_id' must have format '/api/v1/workers/[0-9]+'"
-        assert isinstance(state, list), "'state' must be a list"
-        for i, s in enumerate(state):
-            assert isinstance(
-                s, GatewayStatus
-            ), "'state' item '{}' is not of type GatewayStatus".format(i)
-        assert isinstance(timeout_secs, int), "'timeout_secs' must be an int"
-        assert timeout_secs >= 0, "'timeout_secs' must be >= 0"
-
-        # if state is empty return success when gateway_id not found
-        if len(state) == 0:
-
-            def item_not_exists():
-                try:
-                    self.get(gateway_id)
-                    return False
-                except APIItemNotFoundException:
-                    return True
-
-            try:
-                polling.poll(
-                    lambda: item_not_exists(),
-                    step=10,
-                    poll_forever=False,
-                    timeout=timeout_secs,
-                )
-                return True
-            except polling.TimeoutException:
-                return False
-
-        # If state is not empty return success when gateway current state is in
-        # desired state
-        else:
-            try:
-                polling.poll(
-                    lambda: self.get(gateway_id).state
-                    in [s.name for s in state],
-                    step=10,
-                    poll_forever=False,
-                    timeout=timeout_secs,
-                )
-                return True
-            except polling.TimeoutException:
-                return False
 
 
 class GatewayStatus(Enum):
@@ -317,7 +60,7 @@ class GatewayStatus(Enum):
     storage_error = 14
 
 
-class Gateway:
+class Gateway(AbstractResource):
     """Create an instance of Gateway from json data returned from the HPE
 
     Container Platform API. Users of this library are not expected to create an
@@ -363,48 +106,6 @@ class Gateway:
         "purpose",
         "tags",
     ]
-
-    def __init__(self, json):
-        self.json = json
-        self.display_columns = Gateway.default_display_fields
-
-    def __repr__(self):
-        return "<Gateway id:{} state:{}>".format(self.id, self.state)
-
-    def __str__(self):
-        return "K8sCluster(id={}, state={})".format(self.id, self.state)
-
-    def __dir__(self):
-        return self.display_columns
-
-    def __getitem__(self, item):
-        return getattr(self, self.display_columns[item])
-
-    def __len__(self):
-        return len(dir(self))
-
-    def set_display_columns(self, columns):
-        """Set the columns this instance should have when the instance is used
-
-        with :py:meth:`.GatewayList.tabulate`
-
-        Parameters
-        ----------
-        columns : list[str]
-            Set the list of columns to return
-
-        See Also
-        --------
-        See :py:attr:`all_fields` for the complete list of field names.
-        """
-        self.display_columns = columns
-
-    @property
-    def id(self):
-        """@Field: from json['_links']['self']['href'] -
-
-        id format: '/api/v1/workers/[0-9]+'"""
-        return self.json["_links"]["self"]["href"]
 
     @property
     def state(self):
@@ -466,103 +167,120 @@ class Gateway:
         """@Field: from json['tags']"""
         return self.json["tags"]
 
-    @property
-    def _links(self):
-        """@Field: from json['_links']"""
-        return self.json["_links"]
 
+class GatewayController(AbstractWaitableResourceController):
+    """Class that users will interact with to work with Gateways. An instance
+    of this class is available in the
+    client.ContainerPlatformClient with the attribute name
+    :py:attr:`gateway <.client.ContainerPlatformClient.gateway>`. The methods
+    of this class can be invoked using `client.gateway.method()`. See the
+    example below:
 
-class GatewayList:
-    """List of :py:obj:`.Gateway` objects."""
+    Example
+    -------
+    >>> client = ContainerPlatformClient(...).create_session()
+    >>> client.gateway.list()
+    """
 
-    def __init__(self, json):
-        """Create a GatewayList.  This class is not expected to be
-        instantiated by users.
+    base_resource_path = "/api/v1/workers"
 
-        Parameters
-        ----------
-        json : str
-            json data returned from the HPE Container Platform API get request
-            to /api/v1/Gateway
-        """
-        self.json = [g for g in json if g["purpose"] == "proxy"]
-        self.gateways = sorted(
-            [Gateway(g) for g in json if g["purpose"] == "proxy"],
-            key=attrgetter("id"),
-        )
-        self.display_columns = Gateway.default_display_fields
+    resource_list_path = "workers"
 
-    def __getitem__(self, item):
-        return self.gateways[item]
+    resource_class = Gateway
 
-    # Python 2
-    def next(self):
-        """Support iterator access on Python 2.7"""
-        if not self.gateways:
-            raise StopIteration
-        gateway = self.gateways.pop(0)
-        gateway.set_display_columns(self.display_columns)
-        return gateway
+    status_class = GatewayStatus
 
-    # Python 3
-    def __next__(self):
-        if not self.gateways:
-            raise StopIteration
-        gateway = self.gateways.pop(0)
-        gateway.set_display_columns(self.display_columns)
-        return gateway
+    status_fieldname = "state"
 
-    def __iter__(self):
-        return self
+    # def __init__(self, client):
+    #     self.client = client
 
-    def __len__(self):
-        return len(self.gateways)
+    def create_with_ssh_password(self, username, password):
+        """Not Implemented yet"""
+        raise NotImplementedError()
 
-    def tabulate(
-        self,
-        columns=Gateway.default_display_fields,
-        style="pretty",
-        display_headers=True,
+    def create_with_ssh_key(
+        self, ip, proxy_node_hostname, ssh_key_data, tags=[]
     ):
-        """Provide a tabular representation of the list of Gateways.
+        """Create a gateway instance using SSH key credentials to access the
+        host.
 
         Parameters
         ----------
-        columns : list[str]
-            list of columns to return in the table -
-            default :py:attr:`.Gateway.default_display_fields`
-        style: str
-            See: https://github.com/astanin/python-tabulate#table-format
+        ip: str
+            The IP address of the proxy host.  Used for internal
+            communication.
+        proxy_node_hostname: str
+            Clients will access cluster services will be accessed using
+            this name.
+        ssh_key_data: str
+            The ssh key data as a string.
+        tags: list
+            Tags to use, e.g. "{ 'tag1': 'foo', 'tag2', 'bar' }".
 
         Returns
         -------
         str
-            table output
-
-        Example
-        -------
-        Print the gateway list with all of the available fields
-        >>> print(hpeclient.gateway.list().tabulate())
-
-        Print the cluster list with a subset of the fields
-        >>> print(hpeclient.gateway.list().tabulate(columns=['id', 'state']))
+            gateway ID
         """
-        if columns != Gateway.default_display_fields:
-            assert isinstance(
-                columns, list
-            ), "'columns' parameter must be list"
-            for column in columns:
-                assert (
-                    column in Gateway.all_fields
-                ), "item '{}' is not a field in Gateway.all_fields".format(
-                    column
-                )
 
-        self.display_columns = columns
+        assert isinstance(
+            ip, basestring
+        ), "'ip' must be provided and must be a string"
+        assert isinstance(
+            proxy_node_hostname, basestring
+        ), "'proxy_node_hostname' must be provided and must be a string"
+        assert isinstance(
+            ssh_key_data, basestring
+        ), "'ssh_key_data' must be provided and must be a string"
 
-        # FIXME
-        # https://github.com/hpe-container-platform-community/hpecp-python-library/issues/5
-        if display_headers:
-            return tabulate(self, headers=columns, tablefmt=style)
-        else:
-            return tabulate(self, tablefmt=style)
+        data = {
+            "ip": ip,
+            "credentials": {
+                "type": "ssh_key_access",
+                "ssh_key_data": ssh_key_data,
+            },
+            "tags": tags,
+            "proxy_nodes_hostname": proxy_node_hostname,
+            "purpose": "proxy",
+        }
+
+        response = self.client._request(
+            url="/api/v1/workers/",
+            http_method="post",
+            data=data,
+            description="gateway/create_with_ssh_key",
+        )
+        return response.headers["location"]
+
+    def get(self, id):
+        """Retrieve a Gateway by ID.
+
+        Parameters
+        ----------
+        id: str
+            The gateway ID - format: '/api/v1/workers/[0-9]+'
+
+        Returns
+        -------
+        Gateway
+            object representing a Gateway
+
+        Raises
+        ------
+        APIException
+        """
+        worker = super(GatewayController, self).get(id)
+        if worker.purpose != "proxy":
+            raise APIItemNotFoundException(
+                message="gateway not found with id: " + id,
+                request_method="get",
+                request_url=id,
+            )
+        return worker
+
+    # TODO refactor clients so implementation not required
+    def wait_for_state(self, gateway_id, state=[], timeout_secs=1200):
+        return super(GatewayController, self).wait_for_state(
+            gateway_id, state, timeout_secs
+        )
