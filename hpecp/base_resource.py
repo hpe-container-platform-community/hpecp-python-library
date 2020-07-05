@@ -18,23 +18,39 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-import abc, six
+"""Base classes for Controllers and Resources."""
+
+import abc
+import six
 
 from tabulate import tabulate
 
 
 @six.add_metaclass(abc.ABCMeta)
 class AbstractResourceController:
+    """Base class for Resource Controllers."""
+
     def _get_base_resource_path(self):
         return self._resource_path
 
     def _set_base_resource_path(self, path):
-        """E.g.  /api/v2/k8scluster"""
         self._base_resource_path = path
 
     base_resource_path = abc.abstractproperty(
         _get_base_resource_path, _set_base_resource_path
     )
+    """Declare the resource base path for the API resource.
+
+    :getter: Returns the resource base path
+    :setter: Sets the resource base path
+    :type: str
+
+    Example
+    -------
+    class K8sClusterController(AbstractResourceController):
+        ...
+        base_resource_path = "/api/v2/k8scluster"
+    """
 
     def _get_resource_class(self):
         return self._resource_class
@@ -45,20 +61,45 @@ class AbstractResourceController:
     resource_class = abc.abstractproperty(
         _get_resource_class, _set_resource_class
     )
+    """Declare the implementing Resource class for the API resource.
+    The resource class contains properties mapping to attributes in the
+    response.
 
-    # def _get_resource_list_class(self):
-    #     return self._resource_list_class
+    :getter: Returns the Resource class
+    :setter: Sets the Resource class
+    :type: class
 
-    # def _set_resource_list_class(self, clazz):
-    #     self._resource_list_class = clazz
-
-    # resource_list_class = abc.abstractproperty(
-    #     _get_resource_list_class, _set_resource_list_class
-    # )
+    Example
+    -------
+    class K8sClusterController(AbstractResourceController):
+        ...
+        resource_class = K8sCluster
+    """
 
     @abc.abstractmethod
     def get(self, id, params):
+        """Make an API call to retrieve a Resource.
 
+        Parameters
+        ----------
+        id : str
+            The ID with the format /resource/path/id
+        params : str, optional
+            API Parameters.
+
+        Returns
+        -------
+        Instance of self.resource_class
+            An instance of the class defined by the property
+            self.resource_class
+
+        Raises
+        ------
+        APIException
+            The remote API returned an error.
+        APIItemNotFoundException
+            The item with {id} was not found.
+        """
         assert isinstance(id, str), "'id' must be provided and must be a str"
         assert id.startswith(
             self.base_resource_path
@@ -73,7 +114,14 @@ class AbstractResourceController:
 
     @abc.abstractmethod
     def list(self):
+        """Make an API call to retrieve a list of Resources.
 
+        Returns
+        -------
+        ResourceList
+            The ResourceList will contain instances of the class defined by
+            the property self.resource_class
+        """
         response = self.client._request(
             url=self.base_resource_path,
             http_method="get",
@@ -85,7 +133,19 @@ class AbstractResourceController:
 
     @abc.abstractmethod
     def delete(self, id):
-        """
+        """Make an API call to delete a Resources.
+
+        Parameters
+        ----------
+        id : str
+            The ID with the format /resource/path/id
+
+        Raises
+        ------
+        APIException
+            The remote API returned an error.
+        APIItemNotFoundException
+            The item with {id} was not found.
         """
         assert isinstance(id, str), "'id' must be provided and must be a str"
         assert id.startswith(
@@ -101,6 +161,20 @@ class AbstractResourceController:
 
 @six.add_metaclass(abc.ABCMeta)
 class AbstractResource:
+    """Base class for Resource class repreenting an API resource.
+
+    The resource class contains properties mapping to attributes in the
+    response.
+
+    The implementing class is declared in the ResourceController:
+
+    Example
+    -------
+    class K8sClusterController(AbstractResourceController):
+        ...
+        resource_class = K8sCluster
+    """
+
     def _get_all_fields(self):
         return self.all_fields
 
