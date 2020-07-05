@@ -28,9 +28,9 @@ import requests
 from mock import patch
 
 from hpecp import ContainerPlatformClient
-from hpecp.catalog import CatalogList
 from hpecp.exceptions import APIItemNotFoundException
 import tempfile
+from hpecp.base_resource import ResourceList
 
 
 class MockResponse:
@@ -319,7 +319,7 @@ catalog_list_json = {
 
 class TestCatalogList(unittest.TestCase):
     def mocked_requests_list(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v1/catalog/":
+        if args[0] == "https://127.0.0.1:8080/api/v1/catalog":
             return MockResponse(
                 json_data=catalog_list_json, status_code=200, headers=dict(),
             )
@@ -330,7 +330,7 @@ class TestCatalogList(unittest.TestCase):
     def test_list(self, mock_get, mock_post):
 
         catalog_list = get_client().catalog.list()
-        self.assertIsInstance(catalog_list, CatalogList)
+        self.assertIsInstance(catalog_list, ResourceList)
 
 
 class TestCatalogInstall(unittest.TestCase):
@@ -426,7 +426,7 @@ class TestCLI(unittest.TestCase):
         self.tmpFile.close()
 
     def mocked_requests_get(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v1/catalog/":
+        if args[0] == "https://127.0.0.1:8080/api/v1/catalog":
             return MockResponse(
                 json_data=catalog_list_json, status_code=200, headers=dict(),
             )

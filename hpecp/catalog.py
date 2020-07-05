@@ -18,14 +18,10 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-from operator import attrgetter
-
-from tabulate import tabulate
-
-from .base_resource import AbstractResourceController
+from .base_resource import AbstractResourceController, AbstractResource
 
 
-class Catalog:
+class Catalog(AbstractResource):
     """Catalog Image item."""
 
     # All of the fields of Catalog objects as returned by the HPE Container
@@ -58,68 +54,6 @@ class Catalog:
     # TODO: Pick a smaller subset, again based on the API response
     default_display_fields = all_fields
 
-    def __init__(self, json):
-        """Create a Catalog Image.
-
-        Parameters
-        ----------
-        json : str
-            The json returned by the API representing a Catalog.
-
-        Returns
-        -------
-        Catalog:
-            An instance of Catalog
-
-        Note
-        ----
-        Users of the library aren't expected to create instances of this class
-        directly.
-        """
-        self.json = json
-        self.display_columns = Catalog.default_display_fields
-
-    def __repr__(self):
-        return "<Catalog id:{} state:{}>".format(self.id, self.state)
-
-    def __str__(self):
-        return "Catalog(distro_id={}, state={})".format(
-            self.distro_id, self.state
-        )
-
-    def __dir__(self):
-        return self.display_columns
-
-    def __getitem__(self, item):
-        return getattr(self, self.display_columns[item])
-
-    def __len__(self):
-        return len(dir(self))
-
-    def set_display_columns(self, columns):
-        """Set the columns this instance should have when the instance is used
-
-        with :py:meth:`.CatalogList.tabulate`.
-
-        Parameters
-        ----------
-        columns : list[str]
-            Set the list of colums to return
-
-        See Also
-        --------
-        See :py:attr:`all_fields` for the complete list of field names.
-        """
-        self.display_columns = columns
-
-    @property
-    def id(self):
-        """@Field: from json['_links']['self']['href'] -
-
-        id format: '/api/v1/catalog/[0-9]+'
-        """
-        return self.json["_links"]["self"]["href"]
-
     @property
     def distro_id(self):
         """@Field: from json['distro_id']"""
@@ -129,103 +63,6 @@ class Catalog:
     def state(self):
         """@Field: from json['state']"""
         return self.json["state"]
-
-
-class CatalogList:
-    """List of :py:obj:`.Catalog` objects.
-
-    Parameters
-    ----------
-    json : str
-        json data returned from the HPE Container Platform API get request
-        to /api/v1/catalog
-
-    Note
-    ----
-    This class is not expected to be instantiated by users.
-    """
-
-    def __init__(self, json):
-        self.json = json
-        self.catalogs = sorted(
-            [Catalog(g) for g in json], key=attrgetter("id"),
-        )
-        self.display_columns = Catalog.default_display_fields
-
-    def __getitem__(self, item):
-        return self.catalogs[item]
-
-    # Python 2
-    def next(self):
-        """Support iterator access on Python 2.7."""
-        if not self.catalogs:
-            raise StopIteration
-        catalog = self.catalogs.pop(0)
-        catalog.set_display_columns(self.display_columns)
-        return catalog
-
-    # Python 3
-    def __next__(self):
-        if not self.catalogs:
-            raise StopIteration
-        catalog = self.catalogs.pop(0)
-        catalog.set_display_columns(self.display_columns)
-        return catalog
-
-    def __iter__(self):
-        return self
-
-    def __len__(self):
-        return len(self.catalogs)
-
-    def tabulate(
-        self,
-        columns=Catalog.default_display_fields,
-        style="pretty",
-        display_headers=True,
-    ):
-        """Provide a tabular represenation of the list of Catalog images.
-
-        Parameters
-        ----------
-        columns : list[str]
-            list of columns to return in the table - default
-            :py:attr:`.Catalog.default_display_fields`
-        style: str
-            See: https://github.com/astanin/python-tabulate#table-format
-
-        Returns
-        -------
-        str
-            table output
-
-        Example
-        -------
-        Print the catalog list with all of the avaialble fields:
-
-        >>> print(hpeclient.catalog.list().tabulate())
-
-        Print the cluster list with a subset of the fields:
-
-        >>> print(hpeclient.catalog.list().tabulate(columns=['id', 'state']))
-        """
-        if columns != Catalog.default_display_fields:
-            assert isinstance(
-                columns, list
-            ), "'columns' parameter must be list"
-            for column in columns:
-                assert (
-                    column in Catalog.all_fields
-                ), "item %s is not a field in Catalog.all_fields" % (column)
-
-        self.display_columns = columns
-
-        # FIXME:
-        # https://github.com/hpe-container-platform-community/hpecp-python-library/issues/5
-        if display_headers:
-            return tabulate(self, headers=columns, tablefmt=style)
-        else:
-            return tabulate(self, tablefmt=style)
 
 
 class CatalogController(AbstractResourceController):
@@ -245,30 +82,9 @@ class CatalogController(AbstractResourceController):
 
     base_resource_path = "/api/v1/catalog"
 
+    resource_list_path = "independent_catalog_entries"
+
     resource_class = Catalog
-
-    # TODO provide a property setter for AbstractResourceController
-    # resource list json _embedded fieldname
-    def list(self):
-        """Retrieve a list of Catalogs.
-
-        Returns
-        -------
-        CatalogList
-            list of Catalogs
-
-        Raises
-        ------
-        APIException
-        """
-        response = self.client._request(
-            url="/api/v1/catalog/",
-            http_method="get",
-            description="catalog/list",
-        )
-        return CatalogList(
-            response.json()["_embedded"]["independent_catalog_entries"]
-        )
 
     def install(self, catalog_id):
         """Install the specified catalog.

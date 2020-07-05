@@ -253,6 +253,8 @@ class K8sClusterController(AbstractWaitableResourceController):
 
     base_resource_path = "/api/v2/k8scluster"
 
+    resource_list_path = "k8sclusters"
+
     resource_class = K8sCluster
 
     status_class = K8sClusterStatus

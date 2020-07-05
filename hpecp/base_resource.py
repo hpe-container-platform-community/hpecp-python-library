@@ -81,6 +81,30 @@ class AbstractResourceController:
         resource_class = K8sCluster
     """
 
+    def _get_resource_list_path(self):
+        return self._resource_list_path
+
+    def _set_resource_list_path(self, resource_list_path):
+        self._resource_list_path = resource_list_path
+
+    resource_list_path = abc.abstractproperty(
+        _get_resource_list_path, _set_resource_list_path
+    )
+    """Declare the implementing resource list path for the API resource.
+    The resource list path is where the resources are after the
+    '_embedded' element in the API response json.
+
+    :getter: Returns the resource list path
+    :setter: Sets the resource list path
+    :type: str
+
+    Example
+    -------
+    class K8sClusterController(AbstractResourceController):
+        ...
+        resource_list_path = "k8sclusters"
+    """
+
     def __init__(self, client):
         """Create a new instance.
 
@@ -145,12 +169,7 @@ class AbstractResourceController:
         )
         return ResourceList(
             self.resource_class,
-            response.json()["_embedded"][
-                # TODO is it sufficient to just add an "s" to make the
-                # resource name plural?
-                self.base_resource_path.split("/")[-1]
-                + "s"
-            ],
+            response.json()["_embedded"][self.resource_list_path],
         )
 
     def delete(self, id):

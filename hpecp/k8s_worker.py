@@ -85,6 +85,8 @@ class K8sWorkerController(AbstractWaitableResourceController):
 
     base_resource_path = "/api/v2/worker/k8shost"
 
+    resource_list_path = "k8shosts"
+
     resource_class = WorkerK8s
 
     status_class = WorkerK8sStatus
