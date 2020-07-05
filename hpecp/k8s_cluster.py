@@ -22,14 +22,9 @@ from __future__ import absolute_import
 
 from .base_resource import AbstractResourceController, AbstractResource
 
-from collections import OrderedDict
-
-from operator import attrgetter
-from tabulate import tabulate
 import polling
 from enum import Enum
 import re
-import json
 
 try:
     basestring
