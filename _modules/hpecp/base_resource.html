@@ -297,7 +297,7 @@
 
 <div class="viewcode-block" id="AbstractWaitableResourceController.wait_for_state"><a class="viewcode-back" href="../../hpecp.base_resource.html#hpecp.base_resource.AbstractWaitableResourceController.wait_for_state">[docs]</a>    <span class="k">def</span> <span class="nf">wait_for_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">states</span><span class="o">=</span><span class="p">[],</span> <span class="n">timeout_secs</span><span class="o">=</span><span class="mi">1200</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;See wait_for_status().&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">wait_for_status</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">timeout_secs</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">wait_for_status</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">timeout_secs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AbstractWaitableResourceController.wait_for_status"><a class="viewcode-back" href="../../hpecp.base_resource.html#hpecp.base_resource.AbstractWaitableResourceController.wait_for_status">[docs]</a>    <span class="k">def</span> <span class="nf">wait_for_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="p">[],</span> <span class="n">timeout_secs</span><span class="o">=</span><span class="mi">1200</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Wait for K8S worker status.</span>
@@ -324,6 +324,7 @@
 <span class="sd">            If the item is not found and status is not empty</span>
 <span class="sd">            APIException: if a generic API exception occurred</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Raise APIItemNotFoundException if Gateway Id doesn&#39;t exist</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
 
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span> <span class="s2">&quot;&#39;status&#39; must be a list&quot;</span>
