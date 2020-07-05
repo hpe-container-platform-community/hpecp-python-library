@@ -24,6 +24,7 @@ import tempfile
 from io import StringIO
 from textwrap import dedent
 from unittest import TestCase
+import json
 
 import requests
 import six
@@ -34,7 +35,7 @@ from hpecp import (
     APIItemNotFoundException,
     ContainerPlatformClient,
 )
-from hpecp.k8s_cluster import K8sClusterHostConfig, K8sClusterStatus
+from hpecp.k8s_cluster import K8sCluster, K8sClusterHostConfig, K8sClusterStatus
 
 if six.PY2:
     from io import BytesIO as StringIO  # noqa: F811
@@ -200,35 +201,26 @@ class TestClusterList(TestCase):
     @patch("requests.post", side_effect=mocked_requests_post)
     def test_k8sclusters_tabulate_all_columns(self, mock_get, mock_post):
 
-        # FIXME
-        return
-
-        role_first = (
-            "+-----------------------+------+-------------+-------------+--------------------+----------------------+--------------+------------------------------------------------------------------------------------------------------------------+-------------------+-----------------+---------------------+---------------------------+-----------+--------+----------------+---------------------------------------------+\n"  # noqa: E501
-            "|          id           | name | description | k8s_version | created_by_user_id | created_by_user_name | created_time |                                                 k8shosts_config                                                  | admin_kube_config | dashboard_token | api_endpoint_access | dashboard_endpoint_access | cert_data | status | status_message |                   _links                    |\n"  # noqa: E501
-            "+-----------------------+------+-------------+-------------+--------------------+----------------------+--------------+------------------------------------------------------------------------------------------------------------------+-------------------+-----------------+---------------------+---------------------------+-----------+--------+----------------+---------------------------------------------+\n"  # noqa: E501
-            "| /api/v2/k8scluster/20 | def  | my cluster  |   1.17.0    |   /api/v1/user/5   |        admin         |  1588260014  | [{'role': 'worker', 'node': '/api/v2/worker/k8shost/4'}, {'role': 'master', 'node': '/api/v2/worker/k8shost/5'}] |       xyz==       |      abc==      |      api:1234       |      dashboard:1234       |           | ready  |  really ready  | {'self': {'href': '/api/v2/k8scluster/20'}} |\n"  # noqa: E501
-            "+-----------------------+------+-------------+-------------+--------------------+----------------------+--------------+------------------------------------------------------------------------------------------------------------------+-------------------+-----------------+---------------------+---------------------------+-----------+--------+----------------+---------------------------------------------+"  # noqa: E501
+        expected_tabulate_output = (
+            '+-----------------------+------+-------------+-------------+--------------------+----------------------+--------------+------------------------------------------------------------------------------------------------------------------+-------------------+-----------------+---------------------+---------------------------+-----------+--------+----------------+---------------------------------------------+\n'  # noqa: E501
+            '|          id           | name | description | k8s_version | created_by_user_id | created_by_user_name | created_time |                                                 k8shosts_config                                                  | admin_kube_config | dashboard_token | api_endpoint_access | dashboard_endpoint_access | cert_data | status | status_message |                   _links                    |\n'  # noqa: E501
+            '+-----------------------+------+-------------+-------------+--------------------+----------------------+--------------+------------------------------------------------------------------------------------------------------------------+-------------------+-----------------+---------------------+---------------------------+-----------+--------+----------------+---------------------------------------------+\n'  # noqa: E501
+            '| /api/v2/k8scluster/20 | def  | my cluster  |   1.17.0    |   /api/v1/user/5   |        admin         |  1588260014  | [{"node": "/api/v2/worker/k8shost/4", "role": "worker"}, {"node": "/api/v2/worker/k8shost/5", "role": "master"}] |       xyz==       |      abc==      |      api:1234       |      dashboard:1234       |           | ready  |  really ready  | {"self": {"href": "/api/v2/k8scluster/20"}} |\n'  # noqa: E501
+            '+-----------------------+------+-------------+-------------+--------------------+----------------------+--------------+------------------------------------------------------------------------------------------------------------------+-------------------+-----------------+---------------------+---------------------------+-----------+--------+----------------+---------------------------------------------+'  # noqa: E501
         )
 
-        node_first = (
-            "+-----------------------+------+-------------+-------------+--------------------+----------------------+--------------+------------------------------------------------------------------------------------------------------------------+-------------------+-----------------+---------------------+---------------------------+-----------+--------+----------------+---------------------------------------------+\n"  # noqa: E501
-            "|          id           | name | description | k8s_version | created_by_user_id | created_by_user_name | created_time |                                                 k8shosts_config                                                  | admin_kube_config | dashboard_token | api_endpoint_access | dashboard_endpoint_access | cert_data | status | status_message |                   _links                    |\n"  # noqa: E501
-            "+-----------------------+------+-------------+-------------+--------------------+----------------------+--------------+------------------------------------------------------------------------------------------------------------------+-------------------+-----------------+---------------------+---------------------------+-----------+--------+----------------+---------------------------------------------+\n"  # noqa: E501
-            "| /api/v2/k8scluster/20 | def  | my cluster  |   1.17.0    |   /api/v1/user/5   |        admin         |  1588260014  | [{'node': '/api/v2/worker/k8shost/4', 'role': 'worker'}, {'node': '/api/v2/worker/k8shost/5', 'role': 'master'}] |       xyz==       |      abc==      |      api:1234       |      dashboard:1234       |           | ready  |  really ready  | {'self': {'href': '/api/v2/k8scluster/20'}} |\n"  # noqa: E501
-            "+-----------------------+------+-------------+-------------+--------------------+----------------------+--------------+------------------------------------------------------------------------------------------------------------------+-------------------+-----------------+---------------------+---------------------------+-----------+--------+----------------+---------------------------------------------+"  # noqa: E501
-        )
 
-        if sys.version_info[0] == 2 and sys.version_info[1] == 7:
-            expected_tabulate_output = role_first
-        else:
-            expected_tabulate_output = node_first
+        # Patch k8shosts_config method to return the node attribute before the role attribute
+        def new_k8shosts_config(self):
+            return json.dumps(self.json["k8shosts_config"], sort_keys=True)
 
+        setattr(K8sCluster, 'k8shosts_config', property(new_k8shosts_config))
 
         k8scluster_list = get_client().k8s_cluster.list()
+
         self.maxDiff = None
         self.assertEqual(
-            k8scluster_list.tabulate(), expected_tabulate_output
+            k8scluster_list.tabulate().replace("'", '"'), expected_tabulate_output
         )  # noqa: E501
 
     @patch("requests.get", side_effect=mocked_requests_get)
