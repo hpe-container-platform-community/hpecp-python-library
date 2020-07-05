@@ -21,9 +21,11 @@
 """Base classes for Controllers and Resources."""
 
 import abc
+import polling
 import six
 
 from tabulate import tabulate
+from hpecp.exceptions import APIItemNotFoundException
 
 
 @six.add_metaclass(abc.ABCMeta)
@@ -79,6 +81,30 @@ class AbstractResourceController:
         resource_class = K8sCluster
     """
 
+    def _get_resource_list_path(self):
+        return self._resource_list_path
+
+    def _set_resource_list_path(self, resource_list_path):
+        self._resource_list_path = resource_list_path
+
+    resource_list_path = abc.abstractproperty(
+        _get_resource_list_path, _set_resource_list_path
+    )
+    """Declare the implementing resource list path for the API resource.
+    The resource list path is where the resources are after the
+    '_embedded' element in the API response json.
+
+    :getter: Returns the resource list path
+    :setter: Sets the resource list path
+    :type: str
+
+    Example
+    -------
+    class K8sClusterController(AbstractResourceController):
+        ...
+        resource_list_path = "k8sclusters"
+    """
+
     def __init__(self, client):
         """Create a new instance.
 
@@ -89,8 +115,7 @@ class AbstractResourceController:
         """
         self.client = client
 
-    @abc.abstractmethod
-    def get(self, id, params):
+    def get(self, id, params=None):
         """Make an API call to retrieve a Resource.
 
         Parameters
@@ -128,7 +153,6 @@ class AbstractResourceController:
         )
         return self.resource_class(response.json())
 
-    @abc.abstractmethod
     def list(self):
         """Make an API call to retrieve a list of Resources.
 
@@ -145,15 +169,9 @@ class AbstractResourceController:
         )
         return ResourceList(
             self.resource_class,
-            response.json()["_embedded"][
-                # TODO is it sufficient to just add an "s" to make the
-                # resource name plural?
-                self.base_resource_path.split("/")[-1]
-                + "s"
-            ],
+            response.json()["_embedded"][self.resource_list_path],
         )
 
-    @abc.abstractmethod
     def delete(self, id):
         """Make an API call to delete a Resources.
 
@@ -179,6 +197,138 @@ class AbstractResourceController:
             http_method="delete",
             description=self.__class__.__name__ + "/delete",
         )
+
+
+@six.add_metaclass(abc.ABCMeta)
+class AbstractWaitableResourceController(AbstractResourceController):
+    """Resource Controller that is able to wait for the resource's status."""
+
+    def _get_status_class(self):
+        return self._status_class
+
+    def _set_status_class(self, clazz):
+        self._status_class = clazz
+
+    status_class = abc.abstractproperty(_get_status_class, _set_status_class)
+    """Declare the implementing Status class for the API resource.
+    The status class contains properties mapping to attributes in the
+    response.
+
+    :getter: Returns the Status class
+    :setter: Sets the Status class
+    :type: class
+
+    Example
+    -------
+    class K8sClusterController(AbstractResourceController):
+        ...
+        status_class = K8sClusterStatus
+    """
+
+    def _get_status_fieldname(self):
+        return self._status_fieldname
+
+    def _set_status_fieldname(self, fieldname):
+        self._status_fieldname = fieldname
+
+    status_fieldname = abc.abstractproperty(
+        _get_status_fieldname, _set_status_fieldname
+    )
+    """Declare the Status fieldname in the API resource.
+
+    Usually either: status or state
+
+    :getter: Returns the Status fieldname
+    :setter: Sets the Status fieldname
+    :type: str
+
+    Example
+    -------
+    class K8sClusterController(AbstractResourceController):
+        ...
+        status_fieldname = status
+    """
+
+    def wait_for_state(self, id, states=[], timeout_secs=1200):
+        """See wait_for_status()."""
+        self.wait_for_status(id, states, timeout_secs)
+
+    def wait_for_status(self, id, status=[], timeout_secs=1200):
+        """Wait for K8S worker status.
+
+        Parameters
+        ----------
+        id: str
+            The resource ID - format: '/resource/path/[0-9]+'
+        status: list[:py:method:`status_class`]
+            Status(es) to wait for.  Use an empty array if you want to
+            wait for the resource existence to cease.
+        timeout_secs: int
+            How long to wait for the status(es) before raising an
+            exception.
+
+        Returns
+        -------
+        bool
+            True if status was found before timeout, otherwise False
+
+        Raises
+        ------
+        APIItemNotFoundException
+            If the item is not found and status is not empty
+            APIException: if a generic API exception occurred
+        """
+        self.get(id)
+
+        assert isinstance(status, list), "'status' must be a list"
+        for i, s in enumerate(status):
+            assert isinstance(
+                s, self.status_class
+            ), "'status' item '{}' is not of type {}".format(
+                i, self.status_class
+            )
+        assert isinstance(timeout_secs, int), "'timeout_secs' must be an int"
+        assert timeout_secs >= 0, "'timeout_secs' must be >= 0"
+
+        # if status is empty return success when resource id not found
+        if len(status) == 0:
+
+            def item_not_exists():
+                try:
+                    self.get(id)
+                    return False
+                except APIItemNotFoundException:
+                    return True
+
+            try:
+                polling.poll(
+                    lambda: item_not_exists(),
+                    step=10,
+                    poll_forever=False,
+                    timeout=timeout_secs,
+                )
+                return True
+            except polling.TimeoutException:
+                return False
+
+        # if state is not empty return success when resource current state is
+        # in desired state
+        else:
+            try:
+
+                def get_status():
+                    status = getattr(self.get(id), self.status_fieldname)
+                    return status
+
+                polling.poll(
+                    lambda: (get_status() in [s.name for s in status]),
+                    step=10,
+                    poll_forever=False,
+                    timeout=timeout_secs,
+                )
+                return True
+            except polling.TimeoutException:
+                return False
 
 
 @six.add_metaclass(abc.ABCMeta)

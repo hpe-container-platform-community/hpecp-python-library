@@ -28,9 +28,9 @@ import requests
 from mock import patch
 
 from hpecp import ContainerPlatformClient
-from hpecp.catalog import CatalogList
 from hpecp.exceptions import APIItemNotFoundException
 import tempfile
+from hpecp.base_resource import ResourceList
 
 
 class MockResponse:
@@ -207,14 +207,12 @@ class TestCatalogGet(unittest.TestCase):
     def test_get_catalog_id_type(self, mock_get, mock_post):
 
         with self.assertRaisesRegexp(
-            AssertionError,
-            "'catalog_id' must be provided and must be a string",
+            AssertionError, "'id' must be provided and must be a str",
         ):
             get_client().catalog.get(123)
 
         with self.assertRaisesRegexp(
-            AssertionError,
-            "'catalog_id' must be provided and must be a string",
+            AssertionError, "'id' must be provided and must be a str",
         ):
             get_client().catalog.get(False)
 
@@ -223,22 +221,9 @@ class TestCatalogGet(unittest.TestCase):
     def test_get_catalog_id_format(self, mock_get, mock_post):
 
         with self.assertRaisesRegexp(
-            AssertionError,
-            (
-                "'catalog_id' must have format "
-                + r"'\/api\/v1\/catalog\/\[0-9\]\+'"  # noqa: W503
-            ),
+            AssertionError, "'id' does not start with '/api/v1/catalog'"
         ):
             get_client().catalog.get("garbage")
-
-        with self.assertRaisesRegexp(
-            AssertionError,
-            (
-                "'catalog_id' must have format "
-                + r"'\/api\/v1\/catalog\/\[0-9\]\+'"  # noqa: W503
-            ),
-        ):
-            get_client().catalog.get("/api/v1/catalog/some_id")
 
     # @unittest.skip("This does not work yet!")
     @patch("requests.get", side_effect=mocked_requests_get)
@@ -334,7 +319,7 @@ catalog_list_json = {
 
 class TestCatalogList(unittest.TestCase):
     def mocked_requests_list(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v1/catalog/":
+        if args[0] == "https://127.0.0.1:8080/api/v1/catalog":
             return MockResponse(
                 json_data=catalog_list_json, status_code=200, headers=dict(),
             )
@@ -345,7 +330,7 @@ class TestCatalogList(unittest.TestCase):
     def test_list(self, mock_get, mock_post):
 
         catalog_list = get_client().catalog.list()
-        self.assertIsInstance(catalog_list, CatalogList)
+        self.assertIsInstance(catalog_list, ResourceList)
 
 
 class TestCatalogInstall(unittest.TestCase):
@@ -363,15 +348,12 @@ class TestCatalogInstall(unittest.TestCase):
         client = get_client()
 
         with self.assertRaisesRegexp(
-            AssertionError,
-            "'catalog_id' must be provided and must be a string",
+            AssertionError, "'id' must be provided and must be a str",
         ):
             client.catalog.install(999)
 
         with self.assertRaisesRegexp(
-            AssertionError,
-            "'catalog_id' must have format "
-            + r"'\/api\/v1\/catalog\/\[0-9\]\+'",
+            AssertionError, "'id' does not start with '/api/v1/catalog'",
         ):
             client.catalog.install("garbage")
 
@@ -399,15 +381,12 @@ class TestCatalogRefresh(unittest.TestCase):
         client = get_client()
 
         with self.assertRaisesRegexp(
-            AssertionError,
-            "'catalog_id' must be provided and must be a string",
+            AssertionError, "'id' must be provided and must be a str",
         ):
             client.catalog.install(999)
 
         with self.assertRaisesRegexp(
-            AssertionError,
-            "'catalog_id' must have format "
-            + r"'\/api\/v1\/catalog\/\[0-9\]\+'",
+            AssertionError, "'id' does not start with '/api/v1/catalog'",
         ):
             client.catalog.refresh("garbage")
 
@@ -447,7 +426,7 @@ class TestCLI(unittest.TestCase):
         self.tmpFile.close()
 
     def mocked_requests_get(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v1/catalog/":
+        if args[0] == "https://127.0.0.1:8080/api/v1/catalog":
             return MockResponse(
                 json_data=catalog_list_json, status_code=200, headers=dict(),
             )

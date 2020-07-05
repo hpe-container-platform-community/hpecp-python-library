@@ -516,38 +516,30 @@ class TestWaitForClusterStatus(TestCase):
 
     @patch("requests.get", side_effect=mocked_requests_get)
     @patch("requests.post", side_effect=mocked_requests_post)
-    def test_wait_for_status_k8scluster(self, mock_get, mock_post):
+    def test_wait_for_status_k8scluster_assertions(self, mock_get, mock_post):
 
         # FIXME speed these tests up
 
         with self.assertRaisesRegexp(
-            AssertionError, "'k8scluster_id' must be a string"
+            AssertionError, "'id' must be provided and must be a str"
         ):
             get_client().k8s_cluster.wait_for_status(
-                k8scluster_id=1,
-                timeout_secs=1,
-                status=[K8sClusterStatus.ready],
+                id=1, timeout_secs=1, status=[K8sClusterStatus.ready],
             )
 
         # pylint: disable=anomalous-backslash-in-string
         with self.assertRaisesRegexp(
-            AssertionError,
-            (
-                "'k8scluster_id' must have format"
-                " '\/api\/v2\/worker\/k8scluster\/\[0-9\]\+'"  # noqa: W605
-            ),
+            AssertionError, "'id' does not start with '/api/v2/k8scluster'",
         ):
             get_client().k8s_cluster.wait_for_status(
-                k8scluster_id="garbage",
-                timeout_secs=1,
-                status=[K8sClusterStatus.ready],
+                id="garbage", timeout_secs=1, status=[K8sClusterStatus.ready],
             )
 
         with self.assertRaisesRegexp(
             AssertionError, "'timeout_secs' must be an int"
         ):
             get_client().k8s_cluster.wait_for_status(
-                k8scluster_id="/api/v2/k8scluster/123",
+                id="/api/v2/k8scluster/123",
                 timeout_secs="blah",
                 status=[K8sClusterStatus.ready],
             )
@@ -556,23 +548,26 @@ class TestWaitForClusterStatus(TestCase):
             AssertionError, "'timeout_secs' must be >= 0"
         ):
             get_client().k8s_cluster.wait_for_status(
-                k8scluster_id="/api/v2/k8scluster/123",
+                id="/api/v2/k8scluster/123",
                 timeout_secs=-1,
                 status=[K8sClusterStatus.ready],
             )
 
         with self.assertRaisesRegexp(
-            AssertionError, "'status' item '0' is not of type K8sClusterStatus"
+            AssertionError,
+            "'status' item '0' is not of type <enum 'K8sClusterStatus'>",
         ):
             get_client().k8s_cluster.wait_for_status(
-                k8scluster_id="/api/v2/k8scluster/123",
-                timeout_secs=1,
-                status=["abc"],
+                id="/api/v2/k8scluster/123", timeout_secs=1, status=["abc"],
             )
+
+    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_wait_for_status_k8scluster_body(self, mock_get, mock_post):
 
         self.assertTrue(
             get_client().k8s_cluster.wait_for_status(
-                k8scluster_id="/api/v2/k8scluster/123",
+                id="/api/v2/k8scluster/123",
                 timeout_secs=1,
                 status=[K8sClusterStatus.ready],
             )
@@ -580,7 +575,7 @@ class TestWaitForClusterStatus(TestCase):
 
         self.assertFalse(
             get_client().k8s_cluster.wait_for_status(
-                k8scluster_id="/api/v2/k8scluster/123",
+                id="/api/v2/k8scluster/123",
                 timeout_secs=1,
                 status=[K8sClusterStatus.updating],
             )
@@ -588,7 +583,7 @@ class TestWaitForClusterStatus(TestCase):
 
         self.assertTrue(
             get_client().k8s_cluster.wait_for_status(
-                k8scluster_id="/api/v2/k8scluster/123",
+                id="/api/v2/k8scluster/123",
                 timeout_secs=1,
                 status=[K8sClusterStatus.ready, K8sClusterStatus.upgrading],
             )
@@ -596,7 +591,7 @@ class TestWaitForClusterStatus(TestCase):
 
         self.assertFalse(
             get_client().k8s_cluster.wait_for_status(
-                k8scluster_id="/api/v2/k8scluster/123",
+                id="/api/v2/k8scluster/123",
                 timeout_secs=1,
                 status=[K8sClusterStatus.warning, K8sClusterStatus.upgrading],
             )
@@ -605,7 +600,7 @@ class TestWaitForClusterStatus(TestCase):
         # Get the status of a Cluster ID that doesn't exist
         with self.assertRaises(APIItemNotFoundException):
             get_client().k8s_cluster.wait_for_status(
-                k8scluster_id="/api/v2/k8scluster/999",
+                id="/api/v2/k8scluster/999",
                 timeout_secs=1,
                 status=[K8sClusterStatus.ready],
             )
@@ -614,9 +609,7 @@ class TestWaitForClusterStatus(TestCase):
         # without providing a status
         with self.assertRaises(APIItemNotFoundException):
             get_client().k8s_cluster.wait_for_status(
-                k8scluster_id="/api/v2/k8scluster/999",
-                timeout_secs=1,
-                status=[],
+                id="/api/v2/k8scluster/999", timeout_secs=1, status=[],
             )
 
 

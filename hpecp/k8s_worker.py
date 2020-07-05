@@ -20,13 +20,9 @@
 
 from __future__ import absolute_import
 
-from .base_resource import AbstractResourceController, AbstractResource
+from .base_resource import AbstractWaitableResourceController, AbstractResource
 
 from enum import Enum
-
-import polling
-
-from .exceptions import APIItemNotFoundException
 
 try:
     basestring
@@ -85,11 +81,17 @@ class WorkerK8s(AbstractResource):
         return self.json["_links"]["self"]["href"]
 
 
-class K8sWorkerController(AbstractResourceController):
+class K8sWorkerController(AbstractWaitableResourceController):
 
     base_resource_path = "/api/v2/worker/k8shost"
 
+    resource_list_path = "k8shosts"
+
     resource_class = WorkerK8s
+
+    status_class = WorkerK8sStatus
+
+    status_fieldname = "status"
 
     def create_with_ssh_password(self, username, password):
         """Not Implemented yet"""
@@ -138,86 +140,15 @@ class K8sWorkerController(AbstractResourceController):
         )
         return response.headers["location"]
 
-    def list(self):
-        return super(K8sWorkerController, self).list()
-
     def get(self, id, setup_log=False):
-        return super(K8sWorkerController, self).get(id, None)
 
-    def delete(self, id):
-        super(K8sWorkerController, self).delete(id)
-
-    # TODO rename status parameter to statuses
-    def wait_for_status(self, worker_id, status=[], timeout_secs=1200):
-        """Wait for K8S worker status.
-
-        Parameters
-        ----------
-        worker_id: str
-            The worker ID - format: '/api/v1/workers/[0-9]+'
-        status: list[:py:class:`WorkerK8sStatus`]
-            Status(es) to wait for.  Use an empty array if you want to
-            wait for a cluster's existence to cease.
-        timeout_secs: int
-            How long to wait for the status(es) before raising an
-            exception.
-
-        Returns
-        -------
-        bool
-            True if status was found before timeout, otherwise False
-
-        Raises
-        ------
-        APIItemNotFoundException
-            If the item is not found and status is not empty
-            APIException: if a generic API exception occurred
-        """
-        self.get(worker_id)
-
-        assert isinstance(status, list), "'status' must be a list"
-        for i, s in enumerate(status):
-            assert isinstance(
-                s, WorkerK8sStatus
-            ), "'status' item '{}' is not of type WorkerK8sStatus".format(i)
-        assert isinstance(timeout_secs, int), "'timeout_secs' must be an int"
-        assert timeout_secs >= 0, "'timeout_secs' must be >= 0"
-
-        # if status is empty return success when worker_id not found
-        if len(status) == 0:
-
-            def item_not_exists():
-                try:
-                    self.get(worker_id)
-                    return False
-                except APIItemNotFoundException:
-                    return True
-
-            try:
-                polling.poll(
-                    lambda: item_not_exists(),
-                    step=10,
-                    poll_forever=False,
-                    timeout=timeout_secs,
-                )
-                return True
-            except polling.TimeoutException:
-                return False
-
-        # if state is not empty return success when gateway current state is
-        # in desired state
+        # TODO is this a valid paramter for workers?
+        if setup_log is True:
+            params = "?setup_log"
         else:
-            try:
-                polling.poll(
-                    lambda: self.get(worker_id).status
-                    in [s.name for s in status],
-                    step=10,
-                    poll_forever=False,
-                    timeout=timeout_secs,
-                )
-                return True
-            except polling.TimeoutException:
-                return False
+            params = ""
+
+        return super(K8sWorkerController, self).get(id, params)
 
     def set_storage(self, worker_id, ephemeral_disks=[], persistent_disks=[]):
         """Set storage for a k8s worker.
