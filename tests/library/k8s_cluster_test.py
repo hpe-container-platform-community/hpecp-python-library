@@ -516,12 +516,12 @@ class TestWaitForClusterStatus(TestCase):
 
     @patch("requests.get", side_effect=mocked_requests_get)
     @patch("requests.post", side_effect=mocked_requests_post)
-    def test_wait_for_status_k8scluster(self, mock_get, mock_post):
+    def test_wait_for_status_k8scluster_assertions(self, mock_get, mock_post):
 
         # FIXME speed these tests up
 
         with self.assertRaisesRegexp(
-            AssertionError, "'k8scluster_id' must be a string"
+            AssertionError, "'id' must be provided and must be a str"
         ):
             get_client().k8s_cluster.wait_for_status(
                 k8scluster_id=1,
@@ -531,11 +531,8 @@ class TestWaitForClusterStatus(TestCase):
 
         # pylint: disable=anomalous-backslash-in-string
         with self.assertRaisesRegexp(
-            AssertionError,
-            (
-                "'k8scluster_id' must have format"
-                " '\/api\/v2\/worker\/k8scluster\/\[0-9\]\+'"  # noqa: W605
-            ),
+            AssertionError, "'id' does not start with '/api/v2/k8scluster'"
+            ,
         ):
             get_client().k8s_cluster.wait_for_status(
                 k8scluster_id="garbage",
@@ -562,13 +559,17 @@ class TestWaitForClusterStatus(TestCase):
             )
 
         with self.assertRaisesRegexp(
-            AssertionError, "'status' item '0' is not of type K8sClusterStatus"
+            AssertionError, "'status' item '0' is not of type <enum 'K8sClusterStatus'>"
         ):
             get_client().k8s_cluster.wait_for_status(
                 k8scluster_id="/api/v2/k8scluster/123",
                 timeout_secs=1,
                 status=["abc"],
             )
+
+    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_wait_for_status_k8scluster_body(self, mock_get, mock_post):
 
         self.assertTrue(
             get_client().k8s_cluster.wait_for_status(

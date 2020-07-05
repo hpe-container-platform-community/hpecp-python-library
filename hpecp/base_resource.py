@@ -290,12 +290,15 @@ class AbstractResourceController:
         # if state is not empty return success when resource current state is
         # in desired state
         else:
+
             try:
+
+                def get_status():
+                    status = getattr(self.get(id), self.status_fieldname)
+                    return status
+
                 polling.poll(
-                    lambda: (
-                        getattr(self.get(id), self.status_fieldname)
-                        in [s.name for s in status]
-                    ),
+                    lambda: (get_status() in [s.name for s in status]),
                     step=10,
                     poll_forever=False,
                     timeout=timeout_secs,
