@@ -292,6 +292,26 @@ class ContainerPlatformClient(object):
         verify_ssl=True,
         warn_ssl=False,
     ):
+        """Create a Client object for interacting with HPE Container Platform.
+
+        Parameters
+        ----------
+        username : str
+            HPECP Username
+        password : str
+            HPECP Password
+        api_host : str,
+            HPECP API Host
+        api_port : int, optional
+            HPECP API Port, by default 8080
+        use_ssl : bool, optional
+            Connect to HPECP using SSL:, by default True
+        verify_ssl : bool, optional
+            See "https://requests.readthedocs.io/en/master/user/advanced/
+            #ssl-cert-verification", by default True
+        warn_ssl : bool, optional
+            Disable ssl warnings, by default False
+        """
         self._log = Logger().get_logger(self.__class__.__name__)
 
         if verify_ssl == "True":
