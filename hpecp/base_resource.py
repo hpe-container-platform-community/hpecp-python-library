@@ -91,7 +91,7 @@ class AbstractResourceController:
         """
         self.client = client
 
-    def get(self, id, params):
+    def get(self, id, params=None):
         """Make an API call to retrieve a Resource.
 
         Parameters

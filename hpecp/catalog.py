@@ -23,130 +23,7 @@ from operator import attrgetter
 
 from tabulate import tabulate
 
-
-class CatalogController:
-    """Class that users will interact with to work with catalogs
-
-    An instance of this class is available in the
-    `client.ContainerPlatformClient` with the attribute name
-    :py:attr:`catalog <.client.ContainerPlatformClient.catalog>`. The methods
-    of this class can be invoked using `client.catalog.method()`. See the
-    example below:
-
-    Examples
-    --------
-    >>> client = ContainerPlatformClient(...).create_session()
-    >>> client.catalog.list()
-    """
-
-    def __init__(self, client):
-        self.client = client
-
-    def list(self):
-        """Retrieve a list of Catalogs.
-
-        Returns
-        -------
-        CatalogList
-            list of Catalogs
-
-        Raises
-        ------
-        APIException
-        """
-        response = self.client._request(
-            url="/api/v1/catalog/",
-            http_method="get",
-            description="catalog/list",
-        )
-        return CatalogList(
-            response.json()["_embedded"]["independent_catalog_entries"]
-        )
-
-    def get(self, catalog_id):
-        """Retrieve a catalog identified by {catalog_id}.
-
-        Parameters
-        ----------
-        catalog_id: str
-            The Catalog ID - format: '/api/v1/catalog/[0-9]+'
-
-        Returns
-        -------
-        Catalog
-            object representing the requested Catalog
-
-        Raises
-        ------
-        APIException
-        APIItemNotFoundException
-        """
-        assert isinstance(
-            catalog_id, str
-        ), "'catalog_id' must be provided and must be a string"
-        assert re.match(
-            r"\/api\/v1\/catalog\/[0-9]+", catalog_id
-        ), "'catalog_id' must have format '/api/v1/catalog/[0-9]+'"
-
-        response = self.client._request(
-            url=catalog_id, http_method="get", description="catalog/get"
-        )
-
-        return Catalog(response.json())
-
-    def install(self, catalog_id):
-        """Install the specified catalog.
-
-        Parameters
-        ----------
-        catalog_id : str
-            The ID of the catalog - format /api/v1/catalog/[0-9]+
-
-        Raises
-        ------
-        APIItemNotFoundException
-        APIItemConflictException
-        APIException
-        """
-        # Make sure that the given catalog exists, other validations will also
-        # be taken care of.
-        self.get(catalog_id)
-
-        _data = {"action": "install"}
-
-        self.client._request(
-            url=catalog_id,
-            http_method="post",
-            description="catalog/post/install",
-            data=_data,
-        )
-
-    def refresh(self, catalog_id):
-        """Refresh the specified catalog.
-
-        Parameters
-        ----------
-        catalog_id : str
-            The ID of the catalog - format /api/v1/catalog/[0-9]+
-
-        Raises
-        ------
-        APIItemNotFoundException
-        APIItemConflictException
-        APIException
-        """
-        # Make sure that the given catalog exists, other validations will also
-        # be taken care of.
-        self.get(catalog_id)
-
-        _data = {"action": "refresh"}
-
-        self.client._request(
-            url=catalog_id,
-            http_method="post",
-            description="catalog/post/refresh",
-            data=_data,
-        )
+from .base_resource import AbstractResourceController, AbstractResource
 
 
 class Catalog:
@@ -350,3 +227,100 @@ class CatalogList:
             return tabulate(self, headers=columns, tablefmt=style)
         else:
             return tabulate(self, tablefmt=style)
+
+
+class CatalogController(AbstractResourceController):
+    """Class that users will interact with to work with catalogs
+
+    An instance of this class is available in the
+    `client.ContainerPlatformClient` with the attribute name
+    :py:attr:`catalog <.client.ContainerPlatformClient.catalog>`. The methods
+    of this class can be invoked using `client.catalog.method()`. See the
+    example below:
+
+    Examples
+    --------
+    >>> client = ContainerPlatformClient(...).create_session()
+    >>> client.catalog.list()
+    """
+
+    base_resource_path = "/api/v1/catalog"
+
+    resource_class = Catalog
+
+    # TODO provide a property setter for AbstractResourceController
+    # resource list json _embedded fieldname
+    def list(self):
+        """Retrieve a list of Catalogs.
+
+        Returns
+        -------
+        CatalogList
+            list of Catalogs
+
+        Raises
+        ------
+        APIException
+        """
+        response = self.client._request(
+            url="/api/v1/catalog/",
+            http_method="get",
+            description="catalog/list",
+        )
+        return CatalogList(
+            response.json()["_embedded"]["independent_catalog_entries"]
+        )
+
+    def install(self, catalog_id):
+        """Install the specified catalog.
+
+        Parameters
+        ----------
+        catalog_id : str
+            The ID of the catalog - format /api/v1/catalog/[0-9]+
+
+        Raises
+        ------
+        APIItemNotFoundException
+        APIItemConflictException
+        APIException
+        """
+        # Make sure that the given catalog exists, other validations will also
+        # be taken care of.
+        self.get(catalog_id)
+
+        _data = {"action": "install"}
+
+        self.client._request(
+            url=catalog_id,
+            http_method="post",
+            description="catalog/post/install",
+            data=_data,
+        )
+
+    def refresh(self, catalog_id):
+        """Refresh the specified catalog.
+
+        Parameters
+        ----------
+        catalog_id : str
+            The ID of the catalog - format /api/v1/catalog/[0-9]+
+
+        Raises
+        ------
+        APIItemNotFoundException
+        APIItemConflictException
+        APIException
+        """
+        # Make sure that the given catalog exists, other validations will also
+        # be taken care of.
+        self.get(catalog_id)
+
+        _data = {"action": "refresh"}
+
+        self.client._request(
+            url=catalog_id,
+            http_method="post",
+            description="catalog/post/refresh",
+            data=_data,
+        )

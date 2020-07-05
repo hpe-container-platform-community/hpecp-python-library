@@ -207,14 +207,12 @@ class TestCatalogGet(unittest.TestCase):
     def test_get_catalog_id_type(self, mock_get, mock_post):
 
         with self.assertRaisesRegexp(
-            AssertionError,
-            "'catalog_id' must be provided and must be a string",
+            AssertionError, "'id' must be provided and must be a str",
         ):
             get_client().catalog.get(123)
 
         with self.assertRaisesRegexp(
-            AssertionError,
-            "'catalog_id' must be provided and must be a string",
+            AssertionError, "'id' must be provided and must be a str",
         ):
             get_client().catalog.get(False)
 
@@ -223,22 +221,9 @@ class TestCatalogGet(unittest.TestCase):
     def test_get_catalog_id_format(self, mock_get, mock_post):
 
         with self.assertRaisesRegexp(
-            AssertionError,
-            (
-                "'catalog_id' must have format "
-                + r"'\/api\/v1\/catalog\/\[0-9\]\+'"  # noqa: W503
-            ),
+            AssertionError, "'id' does not start with '/api/v1/catalog'"
         ):
             get_client().catalog.get("garbage")
-
-        with self.assertRaisesRegexp(
-            AssertionError,
-            (
-                "'catalog_id' must have format "
-                + r"'\/api\/v1\/catalog\/\[0-9\]\+'"  # noqa: W503
-            ),
-        ):
-            get_client().catalog.get("/api/v1/catalog/some_id")
 
     # @unittest.skip("This does not work yet!")
     @patch("requests.get", side_effect=mocked_requests_get)
@@ -363,15 +348,12 @@ class TestCatalogInstall(unittest.TestCase):
         client = get_client()
 
         with self.assertRaisesRegexp(
-            AssertionError,
-            "'catalog_id' must be provided and must be a string",
+            AssertionError, "'id' must be provided and must be a str",
         ):
             client.catalog.install(999)
 
         with self.assertRaisesRegexp(
-            AssertionError,
-            "'catalog_id' must have format "
-            + r"'\/api\/v1\/catalog\/\[0-9\]\+'",
+            AssertionError, "'id' does not start with '/api/v1/catalog'",
         ):
             client.catalog.install("garbage")
 
@@ -399,15 +381,12 @@ class TestCatalogRefresh(unittest.TestCase):
         client = get_client()
 
         with self.assertRaisesRegexp(
-            AssertionError,
-            "'catalog_id' must be provided and must be a string",
+            AssertionError, "'id' must be provided and must be a str",
         ):
             client.catalog.install(999)
 
         with self.assertRaisesRegexp(
-            AssertionError,
-            "'catalog_id' must have format "
-            + r"'\/api\/v1\/catalog\/\[0-9\]\+'",
+            AssertionError, "'id' does not start with '/api/v1/catalog'",
         ):
             client.catalog.refresh("garbage")
 
