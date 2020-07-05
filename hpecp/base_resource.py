@@ -81,52 +81,6 @@ class AbstractResourceController:
         resource_class = K8sCluster
     """
 
-    def _get_status_class(self):
-        return self._status_class
-
-    def _set_status_class(self, clazz):
-        self._status_class = clazz
-
-    status_class = abc.abstractproperty(_get_status_class, _set_status_class)
-    """Declare the implementing Status class for the API resource.
-    The status class contains properties mapping to attributes in the
-    response.
-
-    :getter: Returns the Status class
-    :setter: Sets the Status class
-    :type: class
-
-    Example
-    -------
-    class K8sClusterController(AbstractResourceController):
-        ...
-        status_class = K8sClusterStatus
-    """
-
-    def _get_status_fieldname(self):
-        return self._status_fieldname
-
-    def _set_status_fieldname(self, fieldname):
-        self._status_fieldname = fieldname
-
-    status_fieldname = abc.abstractproperty(
-        _get_status_fieldname, _set_status_fieldname
-    )
-    """Declare the Status fieldname in the API resource.
-
-    Usually either: status or state
-
-    :getter: Returns the Status fieldname
-    :setter: Sets the Status fieldname
-    :type: str
-
-    Example
-    -------
-    class K8sClusterController(AbstractResourceController):
-        ...
-        status_fieldname = status
-    """
-
     def __init__(self, client):
         """Create a new instance.
 
@@ -229,6 +183,52 @@ class AbstractResourceController:
 @six.add_metaclass(abc.ABCMeta)
 class AbstractWaitableResourceController(AbstractResourceController):
     """Resource Controller that is able to wait for the resource's status."""
+
+    def _get_status_class(self):
+        return self._status_class
+
+    def _set_status_class(self, clazz):
+        self._status_class = clazz
+
+    status_class = abc.abstractproperty(_get_status_class, _set_status_class)
+    """Declare the implementing Status class for the API resource.
+    The status class contains properties mapping to attributes in the
+    response.
+
+    :getter: Returns the Status class
+    :setter: Sets the Status class
+    :type: class
+
+    Example
+    -------
+    class K8sClusterController(AbstractResourceController):
+        ...
+        status_class = K8sClusterStatus
+    """
+
+    def _get_status_fieldname(self):
+        return self._status_fieldname
+
+    def _set_status_fieldname(self, fieldname):
+        self._status_fieldname = fieldname
+
+    status_fieldname = abc.abstractproperty(
+        _get_status_fieldname, _set_status_fieldname
+    )
+    """Declare the Status fieldname in the API resource.
+
+    Usually either: status or state
+
+    :getter: Returns the Status fieldname
+    :setter: Sets the Status fieldname
+    :type: str
+
+    Example
+    -------
+    class K8sClusterController(AbstractResourceController):
+        ...
+        status_fieldname = status
+    """
 
     def wait_for_state(self, id, states=[], timeout_secs=1200):
         """See wait_for_status()."""
