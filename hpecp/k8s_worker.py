@@ -64,29 +64,6 @@ class WorkerK8s(AbstractResource):
     """All of the fields of a K8s Cluster objects that are returned by the HPE
     Container Platform API"""
 
-    # @staticmethod
-    # def __class_dir__():
-    #     return ["worker_id", "status", "hostname", "ipaddr", "href"]
-
-    # def __repr__(self):
-    #     return "<WorkerK8S worker_id:{} status:{} ipaddr:{}>".format(
-    #         self.worker_id, self.status, self.ipaddr
-    #     )
-
-    # def __str__(self):
-    #     return "WorkerK8s(worker_id={}, status={}, ipaddr={})".format(
-    #         self.worker_id, self.status, self.ipaddr
-    #     )
-
-    # def __init__(self, json):
-    #     self.json = json
-
-    # def __dir__(self):
-    #     return WorkerK8s.__class_dir__()
-
-    # def __getitem__(self, item):
-    #     return getattr(self, self.__dir__()[item])
-
     @property
     def worker_id(self):
         return int(self.json["_links"]["self"]["href"].split("/")[-1])
@@ -106,44 +83,6 @@ class WorkerK8s(AbstractResource):
     @property
     def href(self):
         return self.json["_links"]["self"]["href"]
-
-    # def __len__(self):
-    #     return len(dir(self))
-
-
-# class WorkerK8sList:
-#     def __init__(self, json):
-#         self.json = json
-#         self.tenants = sorted(
-#             [WorkerK8s(t) for t in json], key=attrgetter("worker_id")
-#         )
-
-#     def __getitem__(self, item):
-#         return self.tenants[item]
-
-#     def next(self):
-#         if not self.tenants:
-#             raise StopIteration
-#         return self.tenants.pop(0)
-
-#     # TODO do we need  both next() and __next__()?
-#     def __next__(self):
-#         if not self.tenants:
-#             raise StopIteration
-#         return self.tenants.pop(0)
-
-#     def __iter__(self):
-#         return self
-
-#     def __len__(self):
-#         return len(self.tenants)
-
-#     def tabulate(self, columns=None):
-#         # FIXME columns is ignored, see GatewayController.list().tabulate()
-#         # for an example implementation
-#         return tabulate(
-#             self, headers=WorkerK8s.__class_dir__(), tablefmt="pretty"
-#         )
 
 
 class K8sWorkerController(AbstractResourceController):
