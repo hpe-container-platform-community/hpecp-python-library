@@ -694,18 +694,13 @@ class TestGatewayGet(TestCase):
     def test_get_gateway_assertions(self, mock_get, mock_post):
 
         with self.assertRaisesRegexp(
-            AssertionError,
-            "'gateway_id' must be provided and must be a string",
+            AssertionError, "'id' must be provided and must be a str",
         ):
             get_client().gateway.get(123)
 
         # pylint: disable=anomalous-backslash-in-string
         with self.assertRaisesRegexp(
-            AssertionError,
-            (
-                "'gateway_id' must have format"
-                " '\/api\/v1\/workers\/\[0-9\]\+'"  # noqa: W605
-            ),
+            AssertionError, "'id' does not start with '/api/v1/workers'"
         ):
             get_client().gateway.get("garbage")
 
@@ -1091,7 +1086,7 @@ class TestWaitForGatewayStatus(TestCase):
         # FIXME speed these tests up
 
         with self.assertRaisesRegexp(
-            AssertionError, "'gateway_id' must be a string"
+            AssertionError, "'id' must be provided and must be a str"
         ):
             get_client().gateway.wait_for_state(
                 gateway_id=1, timeout_secs=1, state=[GatewayStatus.ready]
@@ -1099,11 +1094,7 @@ class TestWaitForGatewayStatus(TestCase):
 
         # pylint: disable=anomalous-backslash-in-string
         with self.assertRaisesRegexp(
-            AssertionError,
-            (
-                "'gateway_id' must have format"
-                " '\/api\/v1\/workers\/\[0-9\]\+'"  # noqa: W605
-            ),
+            AssertionError, "'id' does not start with '/api/v1/workers'"
         ):
             get_client().gateway.wait_for_state(
                 gateway_id="garbage",
@@ -1130,7 +1121,8 @@ class TestWaitForGatewayStatus(TestCase):
             )
 
         with self.assertRaisesRegexp(
-            AssertionError, "'state' item '0' is not of type GatewayStatus"
+            AssertionError,
+            "'status' item '0' is not of type <enum 'GatewayStatus'>",
         ):
             get_client().gateway.wait_for_state(
                 gateway_id="/api/v1/workers/123", timeout_secs=1, state=["abc"]
@@ -1178,11 +1170,10 @@ class TestWaitForGatewayStatus(TestCase):
 
         # Get the status of a Cluster ID that doesn't
         # exist - without providing a status
-        self.assertTrue(
+        with self.assertRaises(APIItemNotFoundException):
             get_client().gateway.wait_for_state(
                 gateway_id="/api/v1/workers/999", timeout_secs=1, state=[]
             )
-        )
 
 
 class TestDeleteGateway(TestCase):
@@ -1242,18 +1233,14 @@ class TestDeleteGateway(TestCase):
 
         # pylint: disable=anomalous-backslash-in-string
         with self.assertRaisesRegexp(
-            AssertionError,
-            (
-                "'gateway_id' must have format"
-                " '\/api\/v1\/workers\/\[0-9\]\+'"  # noqa: W605
-            ),
+            AssertionError, "'id' does not start with '/api/v1/workers'"
         ):
-            get_client().gateway.delete(gateway_id="garbage")
+            get_client().gateway.delete(id="garbage")
 
         with self.assertRaises(APIItemNotFoundException):
-            get_client().gateway.delete(gateway_id="/api/v1/workers/999")
+            get_client().gateway.delete(id="/api/v1/workers/999")
 
-        get_client().gateway.delete(gateway_id="/api/v1/workers/123")
+        get_client().gateway.delete(id="/api/v1/workers/123")
 
 
 class TestCliCreate(TestCase):

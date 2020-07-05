@@ -251,7 +251,7 @@ class AbstractWaitableResourceController(AbstractResourceController):
 
     def wait_for_state(self, id, states=[], timeout_secs=1200):
         """See wait_for_status()."""
-        self.wait_for_status(id, states, timeout_secs)
+        return self.wait_for_status(id, states, timeout_secs)
 
     def wait_for_status(self, id, status=[], timeout_secs=1200):
         """Wait for K8S worker status.
@@ -278,6 +278,7 @@ class AbstractWaitableResourceController(AbstractResourceController):
             If the item is not found and status is not empty
             APIException: if a generic API exception occurred
         """
+        # Raise APIItemNotFoundException if Gateway Id doesn't exist
         self.get(id)
 
         assert isinstance(status, list), "'status' must be a list"
