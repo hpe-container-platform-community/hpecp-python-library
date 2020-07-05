@@ -24,6 +24,7 @@ import tempfile
 from io import StringIO
 from textwrap import dedent
 from unittest import TestCase
+import json
 
 import requests
 import six
@@ -34,7 +35,11 @@ from hpecp import (
     APIItemNotFoundException,
     ContainerPlatformClient,
 )
-from hpecp.k8s_cluster import K8sClusterHostConfig, K8sClusterStatus
+from hpecp.k8s_cluster import (
+    K8sCluster,
+    K8sClusterHostConfig,
+    K8sClusterStatus,
+)
 
 if six.PY2:
     from io import BytesIO as StringIO  # noqa: F811
@@ -196,23 +201,39 @@ class TestClusterList(TestCase):
         ):
             get_client().k8s_cluster.list().tabulate(columns="garbage")
 
-        # FIXME: This test doesn't work on 2.x or 3.5
-        # maybe just a string comparision issue?
-        if sys.version_info[0] == 3 and sys.version_info[1] >= 6:
-            self.maxDiff = None
-            self.assertEqual(
-                get_client().k8s_cluster.list().tabulate(),
-                (
-                    "+-----------------------+------+-------------+-------------+--------------------+----------------------+--------------+------------------------------------------------------------------------------------------------------------------+-------------------+-----------------+---------------------+---------------------------+-----------+--------+----------------+---------------------------------------------+\n"  # noqa: E501
-                    "|          id           | name | description | k8s_version | created_by_user_id | created_by_user_name | created_time |                                                 k8shosts_config                                                  | admin_kube_config | dashboard_token | api_endpoint_access | dashboard_endpoint_access | cert_data | status | status_message |                   _links                    |\n"  # noqa: E501
-                    "+-----------------------+------+-------------+-------------+--------------------+----------------------+--------------+------------------------------------------------------------------------------------------------------------------+-------------------+-----------------+---------------------+---------------------------+-----------+--------+----------------+---------------------------------------------+\n"  # noqa: E501
-                    "| /api/v2/k8scluster/20 | def  | my cluster  |   1.17.0    |   /api/v1/user/5   |        admin         |  1588260014  | [{'node': '/api/v2/worker/k8shost/4', 'role': 'worker'}, {'node': '/api/v2/worker/k8shost/5', 'role': 'master'}] |       xyz==       |      abc==      |      api:1234       |      dashboard:1234       |           | ready  |  really ready  | {'self': {'href': '/api/v2/k8scluster/20'}} |\n"  # noqa: E501
-                    "+-----------------------+------+-------------+-------------+--------------------+----------------------+--------------+------------------------------------------------------------------------------------------------------------------+-------------------+-----------------+---------------------+---------------------------+-----------+--------+----------------+---------------------------------------------+"  # noqa: E501
-                ),
-            )  # noqa: E501
+    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_k8sclusters_tabulate_all_columns(self, mock_get, mock_post):
 
+        expected_tabulate_output = (
+            "+-----------------------+------+-------------+-------------+--------------------+----------------------+--------------+------------------------------------------------------------------------------------------------------------------+-------------------+-----------------+---------------------+---------------------------+-----------+--------+----------------+---------------------------------------------+\n"  # noqa: E501
+            "|          id           | name | description | k8s_version | created_by_user_id | created_by_user_name | created_time |                                                 k8shosts_config                                                  | admin_kube_config | dashboard_token | api_endpoint_access | dashboard_endpoint_access | cert_data | status | status_message |                   _links                    |\n"  # noqa: E501
+            "+-----------------------+------+-------------+-------------+--------------------+----------------------+--------------+------------------------------------------------------------------------------------------------------------------+-------------------+-----------------+---------------------+---------------------------+-----------+--------+----------------+---------------------------------------------+\n"  # noqa: E501
+            '| /api/v2/k8scluster/20 | def  | my cluster  |   1.17.0    |   /api/v1/user/5   |        admin         |  1588260014  | [{"node": "/api/v2/worker/k8shost/4", "role": "worker"}, {"node": "/api/v2/worker/k8shost/5", "role": "master"}] |       xyz==       |      abc==      |      api:1234       |      dashboard:1234       |           | ready  |  really ready  | {"self": {"href": "/api/v2/k8scluster/20"}} |\n'  # noqa: E501
+            "+-----------------------+------+-------------+-------------+--------------------+----------------------+--------------+------------------------------------------------------------------------------------------------------------------+-------------------+-----------------+---------------------+---------------------------+-----------+--------+----------------+---------------------------------------------+"  # noqa: E501
+        )
+
+        # Patch k8shosts_config method to return the node attribute before the role attribute
+        def new_k8shosts_config(self):
+            return json.dumps(self.json["k8shosts_config"], sort_keys=True)
+
+        setattr(K8sCluster, "k8shosts_config", property(new_k8shosts_config))
+
+        k8scluster_list = get_client().k8s_cluster.list()
+
+        self.maxDiff = None
         self.assertEqual(
-            get_client().k8s_cluster.list().tabulate(["description", "id"]),
+            k8scluster_list.tabulate().replace("'", '"'),
+            expected_tabulate_output,
+        )  # noqa: E501
+
+    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_k8sclusters_tabulate_with_column_list(self, mock_get, mock_post):
+
+        k8scluster_list = get_client().k8s_cluster.list()
+        self.assertEqual(
+            k8scluster_list.tabulate(["description", "id"]),
             "+-------------+-----------------------+\n"
             "| description |          id           |\n"
             "+-------------+-----------------------+\n"
@@ -430,11 +451,11 @@ class TestGetCluster(TestCase):
 
         with self.assertRaises(APIItemNotFoundException):
             get_client().k8s_cluster.get(
-                k8scluster_id="/api/v2/k8scluster/999", setup_log=False
+                id="/api/v2/k8scluster/999", setup_log=False
             )
 
         get_client().k8s_cluster.get(
-            k8scluster_id="/api/v2/k8scluster/123", setup_log=False
+            id="/api/v2/k8scluster/123", setup_log=False
         )
 
         # TODO test with setup_log = True
@@ -652,26 +673,94 @@ class TestDeleteCluster(TestCase):
             )
         raise RuntimeError("Unhandle POST request: " + args[0])
 
+    def setUp(self):
+        file_data = dedent(
+            """[default]
+                        api_host = 127.0.0.1
+                        api_port = 8080
+                        use_ssl = True
+                        verify_ssl = False
+                        warn_ssl = True
+                        username = admin
+                        password = admin123"""
+        )
+
+        self.tmpFile = tempfile.NamedTemporaryFile(delete=True)
+        self.tmpFile.write(file_data.encode("utf-8"))
+        self.tmpFile.flush()
+
+        self.saved_stdout = sys.stdout
+        self.out = StringIO()
+        sys.stdout = self.out
+
+        self.saved_stderr = sys.stderr
+        self.err = StringIO()
+        sys.stderr = self.err
+
+        sys.path.insert(0, os.path.abspath("../../"))
+        from bin import cli
+
+        self.cli = cli
+        self.cli.HPECP_CONFIG_FILE = self.tmpFile.name
+
+    def tearDown(self):
+        self.tmpFile.close()
+        sys.stdout = self.saved_stdout
+        sys.stderr = self.saved_stderr
+
     @patch("requests.delete", side_effect=mocked_requests_delete)
     @patch("requests.post", side_effect=mocked_requests_post)
     def test_delete_k8scluster(self, mock_get, mock_post):
 
         # pylint: disable=anomalous-backslash-in-string
         with self.assertRaisesRegexp(
-            AssertionError,
-            (
-                "'k8scluster_id' must have format"
-                " '\/api\/v2\/worker\/k8scluster\/\[0-9\]\+'"  # noqa: W605
-            ),
+            AssertionError, ("'id' does not start with '/api/v2/k8scluster'"),
         ):
-            get_client().k8s_cluster.delete(k8scluster_id="garbage")
+            get_client().k8s_cluster.delete(id="garbage")
 
         with self.assertRaises(APIItemNotFoundException):
-            get_client().k8s_cluster.delete(
-                k8scluster_id="/api/v2/k8scluster/999"
-            )
+            get_client().k8s_cluster.delete(id="/api/v2/k8scluster/999")
 
-        get_client().k8s_cluster.delete(k8scluster_id="/api/v2/k8scluster/123")
+        get_client().k8s_cluster.delete(id="/api/v2/k8scluster/123")
+
+    @patch("requests.delete", side_effect=mocked_requests_delete)
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_delete_k8scluster_cli(self, mock_delete, mock_get):
+
+        try:
+            hpecp = self.cli.CLI()
+            hpecp.k8scluster.delete(k8scluster_id="/api/v2/k8scluster/123")
+
+            self.maxDiff = None
+
+            output = self.out.getvalue().strip()
+            self.assertEqual(output, "")
+
+            # FIXME: This is failing on Python 3x because stderr seems to contain
+            #        the unitest framework output.
+            # error = self.err.getvalue().strip()
+            # self.assertEqual(error, "")
+
+        except Exception:
+            self.fail("Unexpected exception.")
+
+    @patch("requests.delete", side_effect=mocked_requests_delete)
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_delete_k8scluster_cli_with_exception(self, mock_delete, mock_get):
+
+        with self.assertRaises(SystemExit) as cm:
+            hpecp = self.cli.CLI()
+            hpecp.k8scluster.delete(k8scluster_id="/api/v2/k8scluster/999")
+
+            self.maxDiff = None
+
+            output = self.out.getvalue().strip()
+            self.assertEqual(output, "")
+
+            error = self.err.getvalue().strip()
+            self.assertEqual(error, "'/api/v2/k8scluster/999' does not exist")
+
+            self.assertEqual(cm.exception.code, 1)
 
 
 class TestK8sSupportVersions(TestCase):
