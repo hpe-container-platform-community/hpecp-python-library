@@ -694,8 +694,7 @@ class TestGatewayGet(TestCase):
     def test_get_gateway_assertions(self, mock_get, mock_post):
 
         with self.assertRaisesRegexp(
-            AssertionError,
-            "'id' must be provided and must be a str",
+            AssertionError, "'id' must be provided and must be a str",
         ):
             get_client().gateway.get(123)
 
@@ -1095,7 +1094,7 @@ class TestWaitForGatewayStatus(TestCase):
 
         # pylint: disable=anomalous-backslash-in-string
         with self.assertRaisesRegexp(
-            AssertionError,"'id' does not start with '/api/v1/workers'"
+            AssertionError, "'id' does not start with '/api/v1/workers'"
         ):
             get_client().gateway.wait_for_state(
                 gateway_id="garbage",
@@ -1122,7 +1121,8 @@ class TestWaitForGatewayStatus(TestCase):
             )
 
         with self.assertRaisesRegexp(
-            AssertionError, "'status' item '0' is not of type <enum 'GatewayStatus'>"
+            AssertionError,
+            "'status' item '0' is not of type <enum 'GatewayStatus'>",
         ):
             get_client().gateway.wait_for_state(
                 gateway_id="/api/v1/workers/123", timeout_secs=1, state=["abc"]
@@ -1233,7 +1233,7 @@ class TestDeleteGateway(TestCase):
 
         # pylint: disable=anomalous-backslash-in-string
         with self.assertRaisesRegexp(
-            AssertionError,"'id' does not start with '/api/v1/workers'"
+            AssertionError, "'id' does not start with '/api/v1/workers'"
         ):
             get_client().gateway.delete(id="garbage")
 
