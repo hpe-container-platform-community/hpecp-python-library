@@ -385,67 +385,6 @@ class K8sClusterController(AbstractResourceController):
 
         return super(K8sClusterController, self).get(id, params)
 
-    # TODO refactor clients to use the abstract class signature (id instead of k8scluster_id)
-    def wait_for_status(self, k8scluster_id, status=[], timeout_secs=60):
-        return super(K8sClusterController, self).wait_for_status(
-            k8scluster_id, status, timeout_secs
-        )
-
-    # def wait_for_status(self, k8scluster_id, status=[], timeout_secs=60):
-    #     """Wait for cluster status.
-
-    #     Parameters
-    #     ----------
-    #     k8scluster_id: str
-    #         The K8S cluster ID - format: '/api/v2/k8scluster/[0-9]+'
-    #     status: list[:py:class:`K8sClusterStatus`]
-    #         Status(es) to wait for.  Use an empty array if you want to
-    #         wait for a cluster's existence to cease.
-    #     timeout_secs: int
-    #         How long to wait for the status(es) before raising an
-    #         exception.
-
-    #     Returns
-    #     -------
-    #     bool
-    #         True if status was found before timeout, otherwise False
-
-    #     Raises
-    #     ------
-    #     APIItemNotFoundException
-    #         if the item is not found
-    #     APIException
-    #         if a generic API exception occurred
-    #     """
-
-    #     assert isinstance(
-    #         k8scluster_id, basestring
-    #     ), "'k8scluster_id' must be a string"
-    #     assert re.match(r"\/api\/v2\/k8scluster\/[0-9]+", k8scluster_id), (
-    #         "'k8scluster_id' must have format"
-    #         " '/api/v2/worker/k8scluster/[0-9]+'"
-    #     )
-
-    #     assert isinstance(status, list), "'status' must be a list"
-    #     for i, s in enumerate(status):
-    #         assert isinstance(
-    #             s, K8sClusterStatus
-    #         ), "'status' item '{}' is not of type K8sClusterStatus".format(i)
-    #     assert isinstance(timeout_secs, int), "'timeout_secs' must be an int"
-    #     assert timeout_secs >= 0, "'timeout_secs' must be >= 0"
-
-    #     try:
-    #         polling.poll(
-    #             lambda: self.get(k8scluster_id).status
-    #             in [s.name for s in status],
-    #             step=10,
-    #             poll_forever=False,
-    #             timeout=timeout_secs,
-    #         )
-    #         return True
-    #     except polling.TimeoutException:
-    #         return False
-
     def k8s_supported_versions(self):
         """Retrieve list of K8S Supported Versions.
 

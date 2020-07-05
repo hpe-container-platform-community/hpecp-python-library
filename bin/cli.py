@@ -730,7 +730,7 @@ class K8sClusterProxy(object):
 
         try:
             success = get_client().k8s_cluster.wait_for_status(
-                k8scluster_id=k8scluster_id,
+                id=k8scluster_id,
                 status=cluster_status,
                 timeout_secs=timeout_secs,
             )

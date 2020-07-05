@@ -524,7 +524,7 @@ class TestWaitForClusterStatus(TestCase):
             AssertionError, "'id' must be provided and must be a str"
         ):
             get_client().k8s_cluster.wait_for_status(
-                k8scluster_id=1,
+                id=1,
                 timeout_secs=1,
                 status=[K8sClusterStatus.ready],
             )
@@ -535,7 +535,7 @@ class TestWaitForClusterStatus(TestCase):
             ,
         ):
             get_client().k8s_cluster.wait_for_status(
-                k8scluster_id="garbage",
+                id="garbage",
                 timeout_secs=1,
                 status=[K8sClusterStatus.ready],
             )
@@ -544,7 +544,7 @@ class TestWaitForClusterStatus(TestCase):
             AssertionError, "'timeout_secs' must be an int"
         ):
             get_client().k8s_cluster.wait_for_status(
-                k8scluster_id="/api/v2/k8scluster/123",
+                id="/api/v2/k8scluster/123",
                 timeout_secs="blah",
                 status=[K8sClusterStatus.ready],
             )
@@ -553,7 +553,7 @@ class TestWaitForClusterStatus(TestCase):
             AssertionError, "'timeout_secs' must be >= 0"
         ):
             get_client().k8s_cluster.wait_for_status(
-                k8scluster_id="/api/v2/k8scluster/123",
+                id="/api/v2/k8scluster/123",
                 timeout_secs=-1,
                 status=[K8sClusterStatus.ready],
             )
@@ -562,7 +562,7 @@ class TestWaitForClusterStatus(TestCase):
             AssertionError, "'status' item '0' is not of type <enum 'K8sClusterStatus'>"
         ):
             get_client().k8s_cluster.wait_for_status(
-                k8scluster_id="/api/v2/k8scluster/123",
+                id="/api/v2/k8scluster/123",
                 timeout_secs=1,
                 status=["abc"],
             )
@@ -573,7 +573,7 @@ class TestWaitForClusterStatus(TestCase):
 
         self.assertTrue(
             get_client().k8s_cluster.wait_for_status(
-                k8scluster_id="/api/v2/k8scluster/123",
+                id="/api/v2/k8scluster/123",
                 timeout_secs=1,
                 status=[K8sClusterStatus.ready],
             )
@@ -581,7 +581,7 @@ class TestWaitForClusterStatus(TestCase):
 
         self.assertFalse(
             get_client().k8s_cluster.wait_for_status(
-                k8scluster_id="/api/v2/k8scluster/123",
+                id="/api/v2/k8scluster/123",
                 timeout_secs=1,
                 status=[K8sClusterStatus.updating],
             )
@@ -589,7 +589,7 @@ class TestWaitForClusterStatus(TestCase):
 
         self.assertTrue(
             get_client().k8s_cluster.wait_for_status(
-                k8scluster_id="/api/v2/k8scluster/123",
+                id="/api/v2/k8scluster/123",
                 timeout_secs=1,
                 status=[K8sClusterStatus.ready, K8sClusterStatus.upgrading],
             )
@@ -597,7 +597,7 @@ class TestWaitForClusterStatus(TestCase):
 
         self.assertFalse(
             get_client().k8s_cluster.wait_for_status(
-                k8scluster_id="/api/v2/k8scluster/123",
+                id="/api/v2/k8scluster/123",
                 timeout_secs=1,
                 status=[K8sClusterStatus.warning, K8sClusterStatus.upgrading],
             )
@@ -606,7 +606,7 @@ class TestWaitForClusterStatus(TestCase):
         # Get the status of a Cluster ID that doesn't exist
         with self.assertRaises(APIItemNotFoundException):
             get_client().k8s_cluster.wait_for_status(
-                k8scluster_id="/api/v2/k8scluster/999",
+                id="/api/v2/k8scluster/999",
                 timeout_secs=1,
                 status=[K8sClusterStatus.ready],
             )
@@ -615,7 +615,7 @@ class TestWaitForClusterStatus(TestCase):
         # without providing a status
         with self.assertRaises(APIItemNotFoundException):
             get_client().k8s_cluster.wait_for_status(
-                k8scluster_id="/api/v2/k8scluster/999",
+                id="/api/v2/k8scluster/999",
                 timeout_secs=1,
                 status=[],
             )

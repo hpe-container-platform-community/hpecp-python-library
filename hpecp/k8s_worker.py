@@ -139,7 +139,14 @@ class K8sWorkerController(AbstractResourceController):
         return response.headers["location"]
 
     def get(self, id, setup_log=False):
-        return super(K8sWorkerController, self).get(id, None)
+
+        # TODO is this a valid paramter for workers?
+        if setup_log is True:
+            params = "?setup_log"
+        else:
+            params = ""
+
+        return super(K8sWorkerController, self).get(id, params)
 
     def set_storage(self, worker_id, ephemeral_disks=[], persistent_disks=[]):
         """Set storage for a k8s worker.
