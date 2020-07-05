@@ -229,16 +229,16 @@ class AbstractResourceController:
         """See wait_for_status()."""
         self.wait_for_status(id, states, timeout_secs)
 
-    def wait_for_status(self, worker_id, status=[], timeout_secs=1200):
+    def wait_for_status(self, id, status=[], timeout_secs=1200):
         """Wait for K8S worker status.
 
         Parameters
         ----------
-        worker_id: str
-            The worker ID - format: '/api/v1/workers/[0-9]+'
-        status: list[:py:class:`WorkerK8sStatus`]
+        id: str
+            The resource ID - format: '/resource/path/[0-9]+'
+        status: list[:py:method:`status_class`]
             Status(es) to wait for.  Use an empty array if you want to
-            wait for a cluster's existence to cease.
+            wait for the resource existence to cease.
         timeout_secs: int
             How long to wait for the status(es) before raising an
             exception.
@@ -254,22 +254,24 @@ class AbstractResourceController:
             If the item is not found and status is not empty
             APIException: if a generic API exception occurred
         """
-        self.get(worker_id)
+        self.get(id)
 
         assert isinstance(status, list), "'status' must be a list"
         for i, s in enumerate(status):
             assert isinstance(
                 s, self.status_class
-            ), "'status' item '{}' is not of type WorkerK8sStatus".format(i)
+            ), "'status' item '{}' is not of type {}".format(
+                i, self.status_class
+            )
         assert isinstance(timeout_secs, int), "'timeout_secs' must be an int"
         assert timeout_secs >= 0, "'timeout_secs' must be >= 0"
 
-        # if status is empty return success when worker_id not found
+        # if status is empty return success when resource id not found
         if len(status) == 0:
 
             def item_not_exists():
                 try:
-                    self.get(worker_id)
+                    self.get(id)
                     return False
                 except APIItemNotFoundException:
                     return True
@@ -285,13 +287,15 @@ class AbstractResourceController:
             except polling.TimeoutException:
                 return False
 
-        # if state is not empty return success when gateway current state is
+        # if state is not empty return success when resource current state is
         # in desired state
         else:
             try:
                 polling.poll(
-                    lambda: self.get(worker_id).status
-                    in [s.name for s in status],
+                    lambda: (
+                        getattr(self.get(id), self.status_fieldname)
+                        in [s.name for s in status]
+                    ),
                     step=10,
                     poll_forever=False,
                     timeout=timeout_secs,
