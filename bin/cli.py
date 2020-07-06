@@ -108,6 +108,69 @@ class BaseProxy:
         self.client_module_name = client_module_name
         super(BaseProxy, self).__init__()
 
+    def get(
+        self, id, output="yaml",
+    ):
+        """Retrieve a Resource by ID.
+
+        id: string
+            the id of the resource with format: '/api/path/[0-9]+'
+        output: string
+            how to display the output, either 'yaml' or 'json'
+        """
+        self.client = get_client()
+        self.client_module_property = getattr(
+            self.client, self.client_module_name
+        )
+
+        try:
+            response = self.client_module_property.get(id)
+        except APIItemNotFoundException:
+            print("'{}' does not exist.".format(id))
+            sys.exit(1)
+        except Exception:
+            print(
+                "Unknow error. To debug run with env var LOG_LEVEL=DEBUG",
+                file=sys.stderr,
+            )
+            sys.exit(1)
+
+        if output == "yaml":
+            print(
+                yaml.dump(
+                    yaml.load(
+                        json.dumps(response.json), Loader=yaml.FullLoader,
+                    )
+                )
+            )
+        else:
+            print(json.dumps(response.json))
+
+    def delete(
+        self, id,
+    ):
+        """Delete a resource.
+
+        :param id: the resource ID
+        """
+        self.client = get_client()
+        self.client_module_property = getattr(
+            self.client, self.client_module_name
+        )
+
+        try:
+            self.client_module_property.delete(id=id)
+        except APIItemNotFoundException:
+            print("'{}' does not exist".format(id), file=sys.stderr)
+            sys.exit(1)
+        except Exception as e:
+            print(
+                "Unknow error. To debug run with env var LOG_LEVEL=DEBUG",
+                file=sys.stderr,
+            )
+            _log.error(e)
+            sys.exit(1)
+
     def list(self, output="table", columns=[], query={}):
         """Retrieve the list of resources.
 
@@ -273,51 +336,6 @@ class GatewayProxy(BaseProxy):
         """Not yet implemented."""
         raise NotImplementedError("Not yet implemented")
 
-    def get(
-        self, gateway_id, output="yaml",
-    ):
-        """Retrieve a Gateway by ID.
-
-        gateway_id: string
-            the id of the gateway with format: '/api/v1/workers/[0-9]+'
-        output: string
-            how to display the output, either 'yaml' or 'json'
-        """
-        response = get_client().gateway.get(gateway_id)
-        if output == "yaml":
-            print(
-                yaml.dump(
-                    yaml.load(
-                        json.dumps(response.json), Loader=yaml.FullLoader,
-                    )
-                )
-            )
-        else:
-            print(response.json)
-
-    def delete(
-        self, gateway_id, wait_for_delete_secs=0,
-    ):
-        """Retrieve a Gateway by ID.
-
-        gateway_id: string
-            The id of the gateway with format: '/api/v1/workers/[0-9]+'
-        wait_for_delete_secs: int
-            For many secs to wait for the delete to happen.
-            wait_for_delete_secs > 0 `calls wait_for_delete()`
-            If 0 return immediately after calling delete.
-        """
-        try:
-            get_client().gateway.delete(gateway_id)
-        except APIException as e:
-            print(e.message)
-            sys.exit(1)
-
-        if wait_for_delete_secs > 0:
-            self.wait_for_delete(
-                gateway_id=gateway_id, timeout_secs=wait_for_delete_secs,
-            )
-
     def wait_for_delete(
         self, gateway_id, timeout_secs=1200,
     ):
@@ -426,13 +444,6 @@ class K8sWorkerProxy(BaseProxy):
         print(
             yaml.dump(yaml.load(json.dumps(worker), Loader=yaml.FullLoader,))
         )
-
-    def delete(self, k8sworker_id):
-        """Delete a K8s Worker.
-
-        :param k8sworker_id: the worker ID
-        """
-        print(get_client().k8s_worker.delete(worker_id=k8sworker_id))
 
     def set_storage(
         self, k8sworker_id, ephemeral_disks, persistent_disks=None,
@@ -559,20 +570,6 @@ class K8sClusterProxy(BaseProxy):
             )
         )
 
-    def get(
-        self, k8scluster_id,
-    ):
-        """Retrieve a K8s Cluster.
-
-        :param k8scluster_id: the cluster ID
-        """
-        response = (
-            get_client().k8s_cluster.get(k8scluster_id=k8scluster_id).json
-        )
-        print(
-            yaml.dump(yaml.load(json.dumps(response), Loader=yaml.FullLoader,))
-        )
-
     def admin_kube_config(
         self, k8scluster_id,
     ):
@@ -614,25 +611,6 @@ class K8sClusterProxy(BaseProxy):
             .json["dashboard_token"]
         )
         print(base64.b64decode(token).decode("utf-8"))
-
-    def delete(
-        self, k8scluster_id,
-    ):
-        """Delete a K8s Cluster.
-
-        :param k8scluster_id: the cluster ID
-        """
-        try:
-            get_client().k8s_cluster.delete(id=k8scluster_id)
-        except APIItemNotFoundException:
-            print("'{}' does not exist".format(k8scluster_id), file=sys.stderr)
-            sys.exit(1)
-        except Exception:
-            print(
-                "Unknow error. To debug run with env var LOG_LEVEL=DEBUG",
-                file=sys.stderr,
-            )
-            sys.exit(1)
 
     def wait_for_status(
         self, k8scluster_id, status=[], timeout_secs=60,
