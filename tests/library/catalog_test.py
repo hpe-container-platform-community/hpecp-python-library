@@ -35,6 +35,7 @@ from hpecp.base_resource import ResourceList
 
 from .base_test import BaseTestCase
 
+
 class MockResponse:
     def __init__(
         self,
@@ -402,7 +403,6 @@ class TestCatalogRefresh(unittest.TestCase):
 
 
 class TestCLI(BaseTestCase):
-
     def mocked_requests_get(*args, **kwargs):
         if args[0] == "https://127.0.0.1:8080/api/v1/catalog":
             return MockResponse(
@@ -420,15 +420,15 @@ class TestCLI(BaseTestCase):
         hpecp.catalog.list(columns=["label_name", "label_description"])
 
         output = self.out.getvalue().strip()
-        
+
         self.assertEqual(
             output,
-           "+------------+--------------------------------------------------------------------------------+\n"+
-           "| label_name |                               label_description                                |\n"+
-           "+------------+--------------------------------------------------------------------------------+\n"+
-           "|  Spark240  | Spark240 multirole with Jupyter Notebook, Jupyterhub with SSL and gateway node |\n"+
-           "+------------+--------------------------------------------------------------------------------+"
-           )
+            "+------------+--------------------------------------------------------------------------------+\n"
+            + "| label_name |                               label_description                                |\n"
+            + "+------------+--------------------------------------------------------------------------------+\n"
+            + "|  Spark240  | Spark240 multirole with Jupyter Notebook, Jupyterhub with SSL and gateway node |\n"
+            + "+------------+--------------------------------------------------------------------------------+",
+        )
 
     @patch("requests.post", side_effect=mocked_requests_post)
     @patch("requests.get", side_effect=mocked_requests_get)
@@ -439,12 +439,8 @@ class TestCLI(BaseTestCase):
         hpecp = self.cli.CLI()
         hpecp.catalog.list(columns=["label_name", "distro_id"], output="text")
 
-        output = self.out.getvalue().strip()        
-        self.assertEqual(
-            output,
-           "Spark240  bluedata/spark240juphub7xssl"
-           )
-
+        output = self.out.getvalue().strip()
+        self.assertEqual(output, "Spark240  bluedata/spark240juphub7xssl")
 
     @patch("requests.post", side_effect=mocked_requests_post)
     @patch("requests.get", side_effect=mocked_requests_get)
@@ -453,7 +449,9 @@ class TestCLI(BaseTestCase):
         self.maxDiff = None
 
         hpecp = self.cli.CLI()
-        hpecp.catalog.list(query="[*][_links.self.href, distro_id]", output="json")
+        hpecp.catalog.list(
+            query="[*][_links.self.href, distro_id]", output="json"
+        )
 
         output = self.out.getvalue().strip()
 
@@ -461,8 +459,7 @@ class TestCLI(BaseTestCase):
             json.loads(output)
         except Exception:
             self.fail("Output should be valid json")
-        
+
         self.assertEqual(
-            output,
-            '[["/api/v1/catalog/29", "bluedata/spark240juphub7xssl"]]'
-            )
+            output, '[["/api/v1/catalog/29", "bluedata/spark240juphub7xssl"]]'
+        )

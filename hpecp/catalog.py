@@ -54,22 +54,22 @@ class Catalog(AbstractResource):
     @property
     def label_name(self):
         """@Field: from json['label']['name']"""
-        return self.json['label']['name']
+        return self.json["label"]["name"]
 
     @property
     def label_description(self):
         """@Field: from json['label']['description']"""
-        return self.json['label']['description']
+        return self.json["label"]["description"]
 
     @property
     def self_href(self):
         """@Field: from json['_links']['self']['href']"""
-        return self.json['_links']['self']['href']
+        return self.json["_links"]["self"]["href"]
 
     @property
     def feed(self):
         """@Field: from json['_links']['feed']"""
-        return self.json['_links']['feed']
+        return self.json["_links"]["feed"]
 
     @property
     def distro_id(self):

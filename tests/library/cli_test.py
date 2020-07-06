@@ -44,7 +44,6 @@ except Exception:
 
 
 class TestCLI(BaseTestCase):
-
     def test_config_file_missing(self):
 
         with self.assertRaises(SystemExit) as cm:
@@ -193,7 +192,6 @@ def session_mock_response():
 
 
 class TestCLIHttpClient(BaseTestCase):
- 
     def mocked_requests_post(*args, **kwargs):
         if args[0] == "https://127.0.0.1:8080/api/v1/login":
             return session_mock_response()

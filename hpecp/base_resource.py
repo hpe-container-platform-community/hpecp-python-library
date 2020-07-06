@@ -28,7 +28,7 @@ from tabulate import tabulate
 from hpecp.exceptions import APIItemNotFoundException
 from .logger import Logger
 
-_log = Logger().get_logger(__file__)                    
+_log = Logger().get_logger(__file__)
 
 
 @six.add_metaclass(abc.ABCMeta)
@@ -483,7 +483,11 @@ class ResourceList:
             row = []
             for col in columns:
                 if not hasattr(resource, col):
-                    _log.warn("Field {} not found in {} - json {}".format(col, resource, self.json))
+                    _log.warn(
+                        "Field {} not found in {} - json {}".format(
+                            col, resource, self.json
+                        )
+                    )
                 row.append(getattr(resource, col, ""))
             table.append(row)
 
@@ -493,7 +497,6 @@ class ResourceList:
             output = tabulate(table, tablefmt=style)
 
         if six.PY2:
-            return output.encode(encoding='UTF-8',errors='strict')
+            return output.encode(encoding="UTF-8", errors="strict")
         else:
             return output
-

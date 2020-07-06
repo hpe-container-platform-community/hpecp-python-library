@@ -1009,11 +1009,8 @@ class TestCLI(TestCase):
     @patch("requests.get", side_effect=mocked_requests_get)
     def test_k8scluster_list(self, mock_post, mock_get):
 
-        if six.PY2:
-            return
-
         hpecp = self.cli.CLI()
-        hpecp.k8scluster.list()
+        hpecp.k8scluster.list(columns=["id", "name", "description", "status"])
 
         output = self.out.getvalue().strip()
         self.assertEqual(

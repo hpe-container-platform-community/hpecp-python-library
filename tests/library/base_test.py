@@ -73,6 +73,7 @@ class MockResponse:
     def json(self):
         return self.json_data
 
+
 def get_client():
     client = ContainerPlatformClient(
         username="admin",
@@ -83,7 +84,6 @@ def get_client():
     )
     client.create_session()
     return client
-
 
 
 @six.add_metaclass(abc.ABCMeta)

@@ -43,13 +43,8 @@ from hpecp import (
     ContainerPlatformClient,
     ContainerPlatformClientException,
 )
-from hpecp.catalog import Catalog
-from hpecp.exceptions import APIItemNotFoundException
-from hpecp.gateway import Gateway, GatewayStatus
-from hpecp.k8s_cluster import K8sClusterHostConfig, K8sClusterStatus
 from hpecp.k8s_worker import WorkerK8sStatus
 from hpecp.logger import Logger
-from hpecp.user import User
 
 if sys.version_info[0] >= 3:
     unicode = str
@@ -77,6 +72,7 @@ else:
         )
     )
 
+
 def get_client():
     """Retrieve a reference to an authenticated client object."""
     try:
@@ -92,15 +88,13 @@ def get_client():
         print(e.message)
         sys.exit(1)
 
+
 @six.add_metaclass(abc.ABCMeta)
 class BaseProxy:
-
     def new_instance(self, client_module_name=""):
         self.client_module_name = client_module_name
 
-    def list(
-        self, output="table", columns=[], query={}
-    ):
+    def list(self, output="table", columns=[], query={}):
         """Retrieve the list of resources.
 
         Parameters
@@ -114,36 +108,40 @@ class BaseProxy:
             Query in jmespath (https://jmespath.org/) format, by default {}
         """
 
-        assert columns is not [] and query is not {}, (
-            "You must only provide 'columns' OR 'query' parameters."
-        )
+        assert (
+            columns is not [] and query is not {}
+        ), "You must only provide 'columns' OR 'query' parameters."
 
         self.client = get_client()
-        self.client_module_property = getattr(self.client, self.client_module_name)
+        self.client_module_property = getattr(
+            self.client, self.client_module_name
+        )
 
         # use tabulate for simplified user output
         if len(query) == 0:
-            assert output in [ "table", "text" ], (
-                "If you provide a columns list, the output must be 'table' or 'text'"
+            assert output in ["table", "text",], (
+                "If you provide a columns list, the output must be 'table'"
+                " or 'text'"
             )
+
             if output == "table":
                 print(
                     self.client_module_property.list().tabulate(
                         columns=columns
-                        )
                     )
+                )
             else:
                 print(
                     self.client_module_property.list().tabulate(
                         columns=columns, style="plain", display_headers=False
-                        )
                     )
+                )
 
         # user has provided a jmes query
         else:
-            assert output in [ "json" ], (
-                "If you provide a jmes query, the output must be 'json'"
-            )
+            assert output in [
+                "json"
+            ], "If you provide a jmes query, the output must be 'json'"
             data = self.client_module_property.list().json
             print(json.dumps(jmespath.search(str(query), data)))
 
@@ -197,8 +195,12 @@ class CatalogProxy(BaseProxy):
             print(e.message)
             sys.exit(1)
 
-class GatewayProxy():
+
+class GatewayProxy(BaseProxy):
     """Proxy object to :py:attr:`<hpecp.client.gateway>`."""
+
+    def __init__(self):
+        super(GatewayProxy, self).new_instance("gateway")
 
     def create_with_ssh_key(
         self,
@@ -278,43 +280,6 @@ class GatewayProxy():
         else:
             print(response.json)
 
-    def list(
-        self, output="table", columns=Gateway.default_display_fields, query={}
-    ):
-        """Retrieve the list of Gateways.
-
-        :param output: how to display the output [text|table|json]
-        :param query: jmespath (https://jmespath.org/) query
-
-        Example::
-
-        > hpecp gateway list --output json --query '[0].ip'
-
-        10.1.0.185
-
-        > hpecp gateway list --output json --query
-            '[*].[ip, purpose, state, hostname]'
-
-        [['10.1.0.185', 'proxy', 'installed',
-            'ip-10-1-0-185.us-west-2.compute.internal']]
-        """  # noqa: W293
-        if output == "table":
-            print(get_client().gateway.list().tabulate(columns=columns))
-        elif output == "text":
-            print(
-                get_client()
-                .gateway.list()
-                .tabulate(
-                    columns=columns, style="plain", display_headers=False,
-                )
-            )
-        else:
-            data = get_client().gateway.list().json
-            if query:
-                print(json.dumps(jmespath.search(str(query), data)))
-            else:
-                print(data)
-
     def delete(
         self, gateway_id, wait_for_delete_secs=0,
     ):
@@ -387,8 +352,11 @@ class GatewayProxy():
         print([s.name for s in GatewayStatus])
 
 
-class K8sWorkerProxy(object):
+class K8sWorkerProxy(BaseProxy):
     """Proxy object to :py:attr:`<hpecp.client.k8s_worker>`."""
+
+    def __init__(self):
+        super(K8sWorkerProxy, self).new_instance("k8s_worker")
 
     def create_with_ssh_key(
         self, ip=None, ssh_key=None, ssh_key_file=None, tags=[],
@@ -432,56 +400,6 @@ class K8sWorkerProxy(object):
     def create_with_ssh_password(self,):
         """Not yet implemented."""
         raise NotImplementedError("Not yet implemented")
-
-    def list(
-        self,
-        all_columns=False,
-        columns=["id", "description"],
-        output="table",
-        query={},
-    ):
-        """Display a table of K8s Workers.
-
-        :param all_columns: (True/False) set to True to return all columns
-        :param columns: (aaa) afadsfs
-        :param output: how to display the output [text|table|json]
-        :param query: jmespath (https://jmespath.org/) query
-
-        Example::
-
-        > hpecp k8sworker list --output json --query '[0].ip'
-        10.1.0.185
-
-        > hpecp k8sworker list --output json --query "[*].[status, hostname,
-            ipaddr]"
-
-        [['configured', 'ip-10-1-0-72.us-west-2.compute.internal', '10.1.0.72']
-            ,['configured', 'ip-10-1-0-238.us-west-2.compute.internal',
-            '10.1.0.238']]
-
-        # Using jq to convert the json output to a table
-        > hpecp k8sworker list --output json --query "[*].[status, hostname,
-            ipaddr]" | jq -r '.[] | @csv'
-        "configured","ip-10-1-0-72.us-west-2.compute.internal","10.1.0.72"
-        "configured","ip-10-1-0-238.us-west-2.compute.internal","10.1.0.238"
-
-        """  # noqa: W293
-        if output == "table":
-            print(get_client().k8s_worker.list().tabulate(columns=columns))
-        elif output == "text":
-            print(
-                get_client()
-                .k8s_worker.list()
-                .tabulate(
-                    columns=columns, style="plain", display_headers=False
-                )
-            )
-        else:
-            data = get_client().k8s_worker.list().json
-            if query:
-                print(json.dumps(jmespath.search(str(query), data)))
-            else:
-                print(data)
 
     def get(self, k8sworker_id):
         """Retrieve a K8s Worker.
@@ -572,8 +490,11 @@ class K8sWorkerProxy(object):
         print([s.name for s in WorkerK8sStatus])
 
 
-class K8sClusterProxy(object):
+class K8sClusterProxy(BaseProxy):
     """Proxy object to :py:attr:`<hpecp.client.k8s_cluster>`."""
+
+    def __init__(self):
+        super(K8sClusterProxy, self).new_instance("k8s_cluster")
 
     def create(
         self,
@@ -620,42 +541,6 @@ class K8sClusterProxy(object):
                 k8shosts_config=host_config,
             )
         )
-
-    def list(
-        self,
-        all_columns=False,
-        columns=["id", "name", "description", "status"],
-        output="table",
-        query={},
-    ):
-        """Print a table of K8s Clusters.
-
-        :param all_columns: (True/False) set to True to return all columns
-        :param columns: list of columns to output
-        :param output: table|text
-        :param query: JMESPATH query
-        """
-        if all_columns:
-            print(get_client().k8s_cluster.list().tabulate())
-        else:
-            if query:
-                raw_data = get_client().k8s_cluster.list().json
-                queried_data = jmespath.search(str(query), raw_data)
-                if output == "text":
-                    for row in queried_data:
-                        print(" ".join(map(str, row)))
-                else:
-                    print(json.dumps(queried_data))
-            else:
-                if output == "text":
-                    tabulate_style = "plain"
-                else:
-                    tabulate_style = "pretty"
-                print(
-                    get_client()
-                    .k8s_cluster.list()
-                    .tabulate(columns=columns, style=tabulate_style)
-                )
 
     def get(
         self, k8scluster_id,
@@ -1068,8 +953,11 @@ class HttpClientProxy(object):
         print(response.text)
 
 
-class UserProxy:
+class UserProxy(BaseProxy):
     """Proxy object to :py:attr:`<hpecp.client.user>`."""
+
+    def __init__(self):
+        super(UserProxy, self).new_instance("user")
 
     def create(
         self, name, description, is_external=False,
@@ -1088,26 +976,6 @@ class UserProxy:
         except APIItemConflictException:
             print("User already exists.")
             sys.exit(1)
-
-    def list(
-        self, output="table", columns=User.default_display_fields,
-    ):
-        """Retrieve the list of Users.
-
-        :param output: how to display the output [text|table|json]
-        """
-        if output == "table":
-            print(get_client().user.list().tabulate(columns=columns))
-        elif output == "text":
-            print(
-                get_client()
-                .user.list()
-                .tabulate(
-                    columns=columns, style="plain", display_headers=False,
-                )
-            )
-        else:
-            print(get_client().user.list().json)
 
 
 class RoleProxy(object):
