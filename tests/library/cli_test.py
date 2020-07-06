@@ -162,18 +162,23 @@ class MockResponse:
         status_code,
         headers,
         raise_for_status_flag=False,
+        raise_connection_error=False,
         text_data="",
     ):
         self.json_data = json_data
         self.text = text_data
         self.status_code = status_code
         self.raise_for_status_flag = raise_for_status_flag
+        self.raise_connection_error = raise_connection_error
         self.headers = headers
 
     def raise_for_status(self):
         if self.raise_for_status_flag:
             self.text = "some error occurred"
             raise requests.exceptions.HTTPError()
+        if self.raise_connection_error:
+            self.text = "Simulating a connection error"
+            raise requests.exceptions.ConnectionError()
         else:
             return
 
@@ -206,6 +211,35 @@ class TestCLIHttpClient(BaseTestCase):
                 headers=dict(),
             )
         raise RuntimeError("Unhandle GET request: " + args[0])
+
+    def mocked_requests_failed_login(*args, **kwargs):
+        if args[0] == "https://127.0.0.1:8080/api/v1/login":
+            return MockResponse(
+                json_data={"foo": "bar"},
+                text_data='{"foo":"bar"}',
+                raise_connection_error=True,
+                status_code=500,
+                headers=dict(),
+            )
+        raise RuntimeError("Unhandle POST request: " + args[0])
+
+    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=mocked_requests_failed_login)
+    def test_get_failed_login(self, mock_get, mock_post):
+
+        # TODO move this to TestCLI class
+
+        with self.assertRaises(SystemExit) as cm:
+            hpecp = self.cli.CLI()
+            hpecp.httpclient.get("/") # our mock raises an exception on login
+
+        self.assertEqual(cm.exception.code, 1)
+
+        self.assertEqual(
+            self.out.getvalue(),
+            'Could not connect to controller - set LOG_LEVEL=DEBUG to see more detail.\n'
+            )
+
 
     @patch("requests.get", side_effect=mocked_requests_get)
     @patch("requests.post", side_effect=mocked_requests_post)
