@@ -52,8 +52,10 @@ class TestCLI(BaseTestCase):
 
         self.assertEqual(cm.exception.code, 1)
 
+        self.assertEqual(self.out.getvalue(), "")
+
         self.assertEqual(
-            self.out.getvalue(),
+            self.err.getvalue(),
             "Could not find configuration file 'this_file_should_not_exist'\n",
         )
 
@@ -235,8 +237,10 @@ class TestCLIHttpClient(BaseTestCase):
 
         self.assertEqual(cm.exception.code, 1)
 
+        self.assertEqual(self.out.getvalue(), "")
+
         self.assertEqual(
-            self.out.getvalue(),
+            self.err.getvalue(),
             "Could not connect to controller - set LOG_LEVEL=DEBUG to see more detail.\n",
         )
 

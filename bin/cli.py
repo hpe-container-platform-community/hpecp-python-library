@@ -85,12 +85,10 @@ def get_client():
         client.create_session()
         return client
     except APIException as e:
-        # TODO print to stderr
-        print(e.message)
+        print(e.message, file=sys.stderr)
         sys.exit(1)
     except ContainerPlatformClientException as e:
-        # TODO print to stderr
-        print(e.message)
+        print(e.message, file=sys.stderr)
         sys.exit(1)
 
 
