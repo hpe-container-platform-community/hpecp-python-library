@@ -677,3 +677,19 @@ version: '2.8'"""
                 },
             },
         )
+
+    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=mocked_requests_get)
+    def test_get_output_with_invalid_catalog_id(self, mock_post, mock_get):
+
+        with self.assertRaises(SystemExit) as cm:
+            hpecp = self.cli.CLI()
+            hpecp.catalog.get("/api/v1/catalog/101")
+
+        self.assertEqual(cm.exception.code, 1)
+
+        output = self.out.getvalue().strip()
+
+        expected = "'/api/v1/catalog/101' does not exist."
+
+        self.assertEqual(output, expected)
