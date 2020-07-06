@@ -25,6 +25,7 @@ from enum import Enum
 from .exceptions import APIItemNotFoundException
 
 from .base_resource import AbstractWaitableResourceController, AbstractResource
+from hpecp.base_resource import ResourceList
 
 try:
     basestring
@@ -140,7 +141,7 @@ class Gateway(AbstractResource):
     @property
     def proxy_nodes_hostname(self):
         """@Field: from json['proxy_nodes_hostname']"""
-        return self.json["proxy_nodes_hostname"]
+        return getattr(self.json, "proxy_nodes_hostname", "")
 
     @property
     def hostname(self):
@@ -278,6 +279,28 @@ class GatewayController(AbstractWaitableResourceController):
                 request_url=id,
             )
         return worker
+
+    def list(self):
+        """Make an API call to retrieve a list of Resources.
+
+        Returns
+        -------
+        ResourceList
+            The ResourceList will contain instances of the class defined by
+            the property self.resource_class
+        """
+        response = self.client._request(
+            url=self.base_resource_path,
+            http_method="get",
+            description=self.__class__.__name__ + "/list",
+        )
+
+        jsondata = response.json()["_embedded"][self.resource_list_path]
+        for worker in jsondata:
+            if worker.purpose != "proxy":
+                del jsondata[worker]
+
+        return ResourceList(self.resource_class, jsondata)
 
     # TODO refactor clients so implementation not required
     def wait_for_state(self, gateway_id, state=[], timeout_secs=1200):
