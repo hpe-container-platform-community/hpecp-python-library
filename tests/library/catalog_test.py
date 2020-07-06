@@ -35,6 +35,7 @@ import tempfile
 from hpecp.base_resource import ResourceList
 
 from .base_test import BaseTestCase
+import six
 
 
 class MockResponse:
@@ -693,14 +694,16 @@ version: '2.8'"""
 
         self.assertEqual(cm.exception.code, 1)
 
-        output = self.out.getvalue().strip()
-        error = self.err.getvalue().strip()
+        stdout = self.out.getvalue().strip()
+        stderr = self.err.getvalue().strip()
 
         expected_stdout = ""  # we don't want error output going to stdout
         expected_stderr = "'/api/v1/catalog/101' does not exist."
 
-        self.assertEqual(output, expected_stdout)
-        self.assertEqual(error, expected_stderr)
+        self.assertEqual(stdout, expected_stdout)
+
+        # coverage seems to populate standard error (issues 93)
+        self.assertTrue(stderr.endswith(expected_stderr))
 
     def mocked_requests_garbage_data(*args, **kwargs):
         if args[0] == "https://127.0.0.1:8080/api/v1/catalog/100":
@@ -728,4 +731,6 @@ version: '2.8'"""
         )
 
         self.assertEqual(stdout, expected_stdout)
-        self.assertEqual(stderr, expected_stderr)
+
+        # coverage seems to populate standard error (issues 93)
+        self.assertTrue(stderr.endswith(expected_stderr))

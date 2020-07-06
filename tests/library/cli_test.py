@@ -239,9 +239,11 @@ class TestCLIHttpClient(BaseTestCase):
 
         self.assertEqual(self.out.getvalue(), "")
 
-        self.assertEqual(
-            self.err.getvalue(),
-            "Could not connect to controller - set LOG_LEVEL=DEBUG to see more detail.\n",
+        # coverage seems to populate standard error (issues 93)
+        self.assertTrue(
+            self.err.getvalue().endswith(
+                "Could not connect to controller - set LOG_LEVEL=DEBUG to see more detail.\n"
+            )
         )
 
     @patch("requests.get", side_effect=mocked_requests_get)
