@@ -85,9 +85,11 @@ def get_client():
         client.create_session()
         return client
     except APIException as e:
+        # TODO print to stderr
         print(e.message)
         sys.exit(1)
     except ContainerPlatformClientException as e:
+        # TODO print to stderr
         print(e.message)
         sys.exit(1)
 
@@ -126,11 +128,11 @@ class BaseProxy:
         try:
             response = self.client_module_property.get(id)
         except APIItemNotFoundException:
-            print("'{}' does not exist.".format(id))
+            print("'{}' does not exist.".format(id), file=sys.stderr)
             sys.exit(1)
         except Exception:
             print(
-                "Unknow error. To debug run with env var LOG_LEVEL=DEBUG",
+                "Unknown error. To debug run with env var LOG_LEVEL=DEBUG",
                 file=sys.stderr,
             )
             sys.exit(1)

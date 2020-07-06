@@ -123,6 +123,10 @@ class BaseTestCase(unittest.TestCase):
         self.out = StringIO()
         sys.stdout = self.out
 
+        self.saved_stderr = sys.stderr
+        self.err = StringIO()
+        sys.stderr = self.err
+
         sys.path.insert(0, os.path.abspath("../../"))
         from bin import cli
 
@@ -132,3 +136,4 @@ class BaseTestCase(unittest.TestCase):
     def tearDown(self):
         self.tmpFile.close()
         sys.stdout = self.saved_stdout
+        sys.stderr = self.saved_stderr
