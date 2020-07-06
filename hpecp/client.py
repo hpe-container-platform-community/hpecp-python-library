@@ -515,7 +515,7 @@ class ContainerPlatformClient(object):
             elif http_method == "put":
                 self.log.debug(
                     "REQ: {} : {} {} {}".format(
-                        description, http_method, url, data
+                        description, http_method, url, json.dumps(data)
                     )
                 )
                 response = requests.put(
@@ -527,7 +527,7 @@ class ContainerPlatformClient(object):
             elif http_method == "post":
                 self.log.debug(
                     "REQ: {} : {} {} {}".format(
-                        description, http_method, url, data
+                        description, http_method, url, json.dumps(data)
                     )
                 )
                 response = requests.post(
