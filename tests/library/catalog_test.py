@@ -505,6 +505,7 @@ class TestCLIList(BaseTestCase):
             output, '[["/api/v1/catalog/29", "bluedata/spark240juphub7xssl"]]'
         )
 
+
 class TestCLIGet(BaseTestCase):
     def mocked_requests_get(*args, **kwargs):
         if args[0] == "https://127.0.0.1:8080/api/v1/catalog/100":
@@ -529,9 +530,7 @@ class TestCLIGet(BaseTestCase):
                     "distro_id": "bluedata/spark240juphub7xssl",
                     "label": {
                         "name": "Spark240",
-                        "description": (
-                            "The description"
-                        ),
+                        "description": ("The description"),
                     },
                     "version": "2.8",
                     "timestamp": 0,
@@ -581,7 +580,6 @@ class TestCLIGet(BaseTestCase):
         except Exception:
             self.fail("Output should be valid yaml")
 
-
     @patch("requests.post", side_effect=mocked_requests_post)
     @patch("requests.get", side_effect=mocked_requests_get)
     def test_get_yaml_output_is_valid(self, mock_post, mock_get):
@@ -597,7 +595,8 @@ class TestCLIGet(BaseTestCase):
         except Exception:
             self.fail("Output should be valid yaml")
 
-        expected_yaml = dedent("""\
+        expected_yaml = dedent(
+            """\
 _links:
     feed:
          - href: https://s3.amazonaws.com/bluedata-catalog/bundles/catalog/external/docker/EPIC-5.0/feeds/feed.json
@@ -622,12 +621,13 @@ osclass:
 state: initialized
 state_info: ''
 timestamp: 0
-version: '2.8'""")
+version: '2.8'"""
+        )
 
         # remove spaces to make testing easier
         self.assertEqual(
             yaml.dump(yaml.load(output, Loader=yaml.FullLoader)),
-            yaml.dump(yaml.load(expected_yaml, Loader=yaml.FullLoader))
+            yaml.dump(yaml.load(expected_yaml, Loader=yaml.FullLoader)),
         )
 
     @patch("requests.post", side_effect=mocked_requests_post)
@@ -675,5 +675,5 @@ version: '2.8'""")
                     ],
                     "self": {"href": "/api/v1/catalog/100"},
                 },
-            }
+            },
         )
