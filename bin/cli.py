@@ -116,7 +116,7 @@ class BaseProxy:
         id: string
             the id of the resource with format: '/api/path/[0-9]+'
         output: string
-            how to display the output, either 'yaml' or 'json'
+            how to display the output, either 'yaml' or 'json', default 'yaml'
         """
         self.client = get_client()
         self.client_module_property = getattr(
