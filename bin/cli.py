@@ -221,6 +221,48 @@ class BaseProxy:
             data = self.client_module_property.list().json
             print(json.dumps(jmespath.search(str(query), data)))
 
+    def wait_for_state(
+        self, id, state=[], timeout_secs=60,
+    ):
+        """See wait_for_status()."""
+        self.wait_for_status(id, state, timeout_secs)
+
+    def wait_for_status(
+        self, id, status=[], timeout_secs=60,
+    ):
+        """Wait for resource to have one or more statuses.
+
+        :param id: Resource id with format: /api/path/[0-9]+
+        :param status: status(es) to wait for with format:
+            ['status1', 'status2', 'statusn']
+        :param timeout_secs: how many secs to wait before exiting
+        :returns True/False if status was found within timeout_secs. May
+            raise APIException.
+        """
+        self.client = get_client()
+        self.client_module_property = getattr(
+            self.client, self.client_module_name
+        )
+
+        resource_status = [
+            self.client_module_property.status_class[s] for s in status
+        ]
+
+        try:
+            success = self.client_module_property.wait_for_status(
+                id=id, status=resource_status, timeout_secs=timeout_secs,
+            )
+        except Exception:
+            success = False
+
+        if not success:
+            print(
+                "Failed to reach state(s) {} in {}".format(
+                    str(status), str(timeout_secs),
+                )
+            )
+            sys.exit(1)
+
 
 class CatalogProxy(BaseProxy):
     """Proxy object to :py:attr:`<hpecp.client.catalog>`."""
@@ -228,6 +270,11 @@ class CatalogProxy(BaseProxy):
     def __init__(self):
         """Initiate this proxy class with the client module name."""
         super(CatalogProxy, self).new_instance("catalog")
+
+    @property
+    def delete(self, id):
+        """Not implemented."""
+        raise AttributeError("'CatalogProxy' object has no attribute 'delete'")
 
     def refresh(self, catalog_id):
         """Refresh a catalog.
@@ -349,37 +396,6 @@ class GatewayProxy(BaseProxy):
             gateway_id=gateway_id, timeout_secs=timeout_secs,
         )
 
-    def wait_for_state(
-        self, gateway_id, states=[], timeout_secs=1200,
-    ):
-        """Wait for Gateway to have one or more statuses.
-
-        :param gateway_id: Cluster id with format: /api/v1/workers/[0-9]+
-        :param status: status(es) to wait for with format: ['status1',
-            'status2', 'statusn'] - set to [] to wait for item to be deleted
-        :param timeout_secs: how many secs to wait before exiting
-        :returns True/False if status was found within timeout_secs. May raise
-            APIException.
-
-        See also: `hpecp gateway states`
-        """
-        gateway_states = [GatewayStatus[s] for s in states]
-
-        try:
-            success = get_client().gateway.wait_for_state(
-                gateway_id=gateway_id, state=gateway_states,
-            )
-        except Exception:
-            success = False
-
-        if not success:
-            print(
-                "Failed to reach state(s) {} in {}".format(
-                    str(states), str(timeout_secs),
-                )
-            )
-            sys.exit(1)
-
     def states(self,):
         """Return a list of valid states."""
         print([s.name for s in GatewayStatus])
@@ -476,41 +492,6 @@ class K8sWorkerProxy(BaseProxy):
             persistent_disks=p_disks,
             ephemeral_disks=e_disks,
         )
-
-    def wait_for_status(
-        self, worker_id, status=[], timeout_secs=1200,
-    ):
-        """Wait for Worker to have one or more statuses.
-
-        :param worker_id: Worker id with format: /api/v1/workers/[0-9]+
-        :param status: status(es) to wait for with format: ['status1',
-            'status2', 'statusn'] - set to [] to wait for item to be deleted
-        :param timeout_secs: how many secs to wait before exiting
-        :returns True/False if status was found within timeout_secs. May raise
-            APIException.
-
-        See also: `hpecp k8sworker states`
-        """
-        worker_statuses = [WorkerK8sStatus[s] for s in status]
-
-        client = get_client()
-        try:
-            success = client.k8s_worker.wait_for_status(
-                worker_id=worker_id,
-                status=worker_statuses,
-                timeout_secs=timeout_secs,
-            )
-        except Exception as e:
-            client.log.debug(e)
-            success = False
-
-        if not success:
-            print(
-                "Failed to reach state(s) {} in {}".format(
-                    str(status), str(timeout_secs),
-                )
-            )
-            sys.exit(1)
 
     def statuses(self,):
         """Return a list of valid statuses."""
@@ -611,37 +592,6 @@ class K8sClusterProxy(BaseProxy):
             .json["dashboard_token"]
         )
         print(base64.b64decode(token).decode("utf-8"))
-
-    def wait_for_status(
-        self, k8scluster_id, status=[], timeout_secs=60,
-    ):
-        """Wait for K8s Cluster to have one or more statuses.
-
-        :param k8scluster_id: Cluster id with format: /api/v2/k8scluster/[0-9]+
-        :param status: status(es) to wait for with format:
-            ['status1', 'status2', 'statusn']
-        :param timeout_secs: how many secs to wait before exiting
-        :returns True/False if status was found within timeout_secs. May
-            raise APIException.
-        """
-        cluster_status = [K8sClusterStatus[s] for s in status]
-
-        try:
-            success = get_client().k8s_cluster.wait_for_status(
-                id=k8scluster_id,
-                status=cluster_status,
-                timeout_secs=timeout_secs,
-            )
-        except Exception:
-            success = False
-
-        if not success:
-            print(
-                "Failed to reach state(s) {} in {}".format(
-                    str(status), str(timeout_secs),
-                )
-            )
-            sys.exit(1)
 
     def statuses(self,):
         """Return a list of valid statuses."""
