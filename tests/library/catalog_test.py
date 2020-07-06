@@ -708,6 +708,7 @@ version: '2.8'"""
                 status_code=500,
                 headers=dict(),
             )
+
     @patch("requests.post", side_effect=mocked_requests_connection_error)
     @patch("requests.get", side_effect=mocked_requests_get)
     def test_get_output_with_unknown_exception(self, mock_post, mock_get):
@@ -720,6 +721,6 @@ version: '2.8'"""
 
         output = self.out.getvalue().strip()
 
-        expected = 'Could not connect to controller - set LOG_LEVEL=DEBUG to see more detail.'
+        expected = "Could not connect to controller - set LOG_LEVEL=DEBUG to see more detail."
 
         self.assertEqual(output, expected)
