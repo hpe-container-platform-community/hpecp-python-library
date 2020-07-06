@@ -231,15 +231,14 @@ class TestCLIHttpClient(BaseTestCase):
 
         with self.assertRaises(SystemExit) as cm:
             hpecp = self.cli.CLI()
-            hpecp.httpclient.get("/") # our mock raises an exception on login
+            hpecp.httpclient.get("/")  # our mock raises an exception on login
 
         self.assertEqual(cm.exception.code, 1)
 
         self.assertEqual(
             self.out.getvalue(),
-            'Could not connect to controller - set LOG_LEVEL=DEBUG to see more detail.\n'
-            )
-
+            "Could not connect to controller - set LOG_LEVEL=DEBUG to see more detail.\n",
+        )
 
     @patch("requests.get", side_effect=mocked_requests_get)
     @patch("requests.post", side_effect=mocked_requests_post)
