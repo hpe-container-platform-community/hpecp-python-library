@@ -615,16 +615,28 @@ class TestWaitForClusterStatus(TestCase):
 
 class TestDeleteCluster(TestCase):
 
+    non_existent_cluster_url = "/api/v2/k8scluster/999"
+
+    existing_cluster_url = "/api/v2/k8scluster/123"
+
     # pylint: disable=no-method-argument
     def mocked_requests_delete(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v2/k8scluster/999":
+        if (
+            args[0]
+            == "https://127.0.0.1:8080"
+            + TestDeleteCluster.non_existent_cluster_url
+        ):
             return MockResponse(
                 json_data={},
                 status_code=404,
                 raise_for_status_flag=True,
                 headers={},
             )
-        if args[0] == "https://127.0.0.1:8080/api/v2/k8scluster/123":
+        if (
+            args[0]
+            == "https://127.0.0.1:8080"
+            + TestDeleteCluster.existing_cluster_url
+        ):
             return MockResponse(
                 json_data={
                     "_links": {"self": {"href": "/api/v2/k8scluster/123"}},
@@ -712,9 +724,13 @@ class TestDeleteCluster(TestCase):
             get_client().k8s_cluster.delete(id="garbage")
 
         with self.assertRaises(APIItemNotFoundException):
-            get_client().k8s_cluster.delete(id="/api/v2/k8scluster/999")
+            get_client().k8s_cluster.delete(
+                id=TestDeleteCluster.non_existent_cluster_url
+            )
 
-        get_client().k8s_cluster.delete(id="/api/v2/k8scluster/123")
+        get_client().k8s_cluster.delete(
+            id=TestDeleteCluster.existing_cluster_url
+        )
 
     @patch("requests.delete", side_effect=mocked_requests_delete)
     @patch("requests.post", side_effect=mocked_requests_post)
@@ -722,7 +738,7 @@ class TestDeleteCluster(TestCase):
 
         try:
             hpecp = self.cli.CLI()
-            hpecp.k8scluster.delete(k8scluster_id="/api/v2/k8scluster/123")
+            hpecp.k8scluster.delete(id=TestDeleteCluster.existing_cluster_url)
 
             self.maxDiff = None
 
@@ -731,6 +747,7 @@ class TestDeleteCluster(TestCase):
 
             # FIXME: This is failing on Python 3x because stderr seems to contain
             #        the unitest framework output.
+
             # error = self.err.getvalue().strip()
             # self.assertEqual(error, "")
 
@@ -743,7 +760,9 @@ class TestDeleteCluster(TestCase):
 
         with self.assertRaises(SystemExit) as cm:
             hpecp = self.cli.CLI()
-            hpecp.k8scluster.delete(k8scluster_id="/api/v2/k8scluster/999")
+            hpecp.k8scluster.delete(
+                id=TestDeleteCluster.non_existent_cluster_url
+            )
 
             self.maxDiff = None
 
