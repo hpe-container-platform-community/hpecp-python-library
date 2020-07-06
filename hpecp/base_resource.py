@@ -26,6 +26,9 @@ import six
 
 from tabulate import tabulate
 from hpecp.exceptions import APIItemNotFoundException
+from .logger import Logger
+
+_log = Logger().get_logger(__file__)                    
 
 
 @six.add_metaclass(abc.ABCMeta)
@@ -410,7 +413,7 @@ class ResourceList:
         """Retrieve a field value."""
         return self.resources[item]
 
-    def tabulate(self, columns=[], style="pretty"):
+    def tabulate(self, columns=[], style="pretty", display_headers=True):
         """Return a tabule output of the ResourceList.
 
         Parameters
@@ -479,7 +482,18 @@ class ResourceList:
         for resource in self.resources:
             row = []
             for col in columns:
-                row.append(getattr(resource, col))
+                if not hasattr(resource, col):
+                    _log.warn("Field {} not found in {} - json {}".format(col, resource, self.json))
+                row.append(getattr(resource, col, ""))
             table.append(row)
 
-        return tabulate(table, headers=columns, tablefmt=style)
+        if display_headers:
+            output = tabulate(table, headers=columns, tablefmt=style)
+        else:
+            output = tabulate(table, tablefmt=style)
+
+        if six.PY2:
+            return output.encode(encoding='UTF-8',errors='strict')
+        else:
+            return output
+

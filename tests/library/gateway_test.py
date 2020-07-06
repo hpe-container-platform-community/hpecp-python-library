@@ -34,6 +34,8 @@ import os
 import sys
 import six
 
+from .base_test import BaseTestCase
+
 if six.PY2:
     from io import BytesIO as StringIO
 else:
@@ -1243,7 +1245,7 @@ class TestDeleteGateway(TestCase):
         get_client().gateway.delete(id="/api/v1/workers/123")
 
 
-class TestCliCreate(TestCase):
+class TestCliCreate(BaseTestCase):
     def setUp(self):
         file_data = dedent(
             """[default]

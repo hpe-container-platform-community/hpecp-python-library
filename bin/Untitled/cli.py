@@ -77,6 +77,7 @@ else:
         )
     )
 
+
 def get_client():
     """Retrieve a reference to an authenticated client object."""
     try:
@@ -93,10 +94,15 @@ def get_client():
         sys.exit(1)
 
 @six.add_metaclass(abc.ABCMeta)
-class BaseProxy:
+class AbstractProxy:
 
-    def new_instance(self, client_module_name=""):
-        self.client_module_name = client_module_name
+    @abc.abstractmethod
+    def __init__(self, client_module_property):
+        client = get_client()
+        assert(
+            hasattr(client, client_module_property)
+        )
+        self.client_module_property = getattr(client, client_module_property)
 
     def list(
         self, output="table", columns=[], query={}
@@ -113,13 +119,10 @@ class BaseProxy:
         query : dict, optional
             Query in jmespath (https://jmespath.org/) format, by default {}
         """
-
+        
         assert columns is not [] and query is not {}, (
             "You must only provide 'columns' OR 'query' parameters."
         )
-
-        self.client = get_client()
-        self.client_module_property = getattr(self.client, self.client_module_name)
 
         # use tabulate for simplified user output
         if len(query) == 0:
@@ -148,11 +151,12 @@ class BaseProxy:
             print(json.dumps(jmespath.search(str(query), data)))
 
 
-class CatalogProxy(BaseProxy):
+
+class CatalogProxy(AbstractProxy):
     """Proxy object to :py:attr:`<hpecp.client.catalog>`."""
 
-    def __init__(self):
-        super(CatalogProxy, self).new_instance("catalog")
+    # def __init__(self):
+    #     super(CatalogProxy, self).__init__('catalog')
 
     def refresh(self, catalog_id):
         """Refresh a catalog.
@@ -197,7 +201,8 @@ class CatalogProxy(BaseProxy):
             print(e.message)
             sys.exit(1)
 
-class GatewayProxy():
+
+class GatewayProxy(object):
     """Proxy object to :py:attr:`<hpecp.client.gateway>`."""
 
     def create_with_ssh_key(

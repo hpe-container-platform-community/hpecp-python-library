@@ -31,11 +31,8 @@ class Catalog(AbstractResource):
         "label_name",
         "label_description",
         "self_href",
-        "feed_href",
-        "feed_name",
+        "feed",
         "distro_id",
-        "name",
-        "description",
         "version",
         "timestamp",
         "isdebug",
@@ -55,14 +52,84 @@ class Catalog(AbstractResource):
     default_display_fields = all_fields
 
     @property
+    def label_name(self):
+        """@Field: from json['label']['name']"""
+        return self.json['label']['name']
+
+    @property
+    def label_description(self):
+        """@Field: from json['label']['description']"""
+        return self.json['label']['description']
+
+    @property
+    def self_href(self):
+        """@Field: from json['_links']['self']['href']"""
+        return self.json['_links']['self']['href']
+
+    @property
+    def feed(self):
+        """@Field: from json['_links']['feed']"""
+        return self.json['_links']['feed']
+
+    @property
     def distro_id(self):
         """@Field: from json['distro_id']"""
         return self.json["distro_id"]
 
     @property
+    def version(self):
+        """@Field: from json['version']"""
+        return self.json["version"]
+
+    @property
+    def timestamp(self):
+        """@Field: from json['timestamp']"""
+        return self.json["timestamp"]
+
+    @property
+    def isdebug(self):
+        """@Field: from json['isdebug']"""
+        return self.json["isdebug"]
+
+    @property
+    def osclass(self):
+        """@Field: from json['osclass']"""
+        return self.json["osclass"]
+
+    @property
+    def logo_checksum(self):
+        """@Field: from json['logo']['checksum']"""
+        return self.json["logo"]["checksum"]
+
+    @property
+    def logo_url(self):
+        """@Field: from json['logo']['url']"""
+        return self.json["logo"]["url"]
+
+    @property
+    def documentation_checksum(self):
+        """@Field: from json['documentation']['checksum']"""
+        return self.json["documentation"]["checksum"]
+
+    @property
+    def documentation_mimetype(self):
+        """@Field: from json['documentation']['mimetype']"""
+        return self.json["documentation"]["mimetype"]
+
+    @property
+    def documentation_file(self):
+        """@Field: from json['documentation']['file']"""
+        return self.json["documentation"]["file"]
+
+    @property
     def state(self):
         """@Field: from json['state']"""
         return self.json["state"]
+
+    @property
+    def state_info(self):
+        """@Field: from json['state_info']"""
+        return self.json["state_info"]
 
 
 class CatalogController(AbstractResourceController):
