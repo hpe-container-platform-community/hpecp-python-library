@@ -44,18 +44,23 @@ class MockResponse:
         status_code,
         headers,
         raise_for_status_flag=False,
+        raise_connection_error=False,
         text_data="",
     ):
         self.json_data = json_data
         self.text = text_data
         self.status_code = status_code
         self.raise_for_status_flag = raise_for_status_flag
+        self.raise_connection_error = raise_connection_error
         self.headers = headers
 
     def raise_for_status(self):
         if self.raise_for_status_flag:
             self.text = "some error occurred"
             raise requests.exceptions.HTTPError()
+        if self.raise_connection_error:
+            self.text = "Simulating a connection error"
+            raise requests.exceptions.ConnectionError()
         else:
             return
 
@@ -677,3 +682,45 @@ version: '2.8'"""
                 },
             },
         )
+
+    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=mocked_requests_get)
+    def test_get_output_with_invalid_catalog_id(self, mock_post, mock_get):
+
+        with self.assertRaises(SystemExit) as cm:
+            hpecp = self.cli.CLI()
+            hpecp.catalog.get("/api/v1/catalog/101")
+
+        self.assertEqual(cm.exception.code, 1)
+
+        output = self.out.getvalue().strip()
+
+        expected = "'/api/v1/catalog/101' does not exist."
+
+        self.assertEqual(output, expected)
+
+    def mocked_requests_connection_error(*args, **kwargs):
+        if args[0] == "https://127.0.0.1:8080/api/v1/login":
+            return MockResponse(
+                json_data={"foo": "bar"},
+                text_data='{"foo":"bar"}',
+                raise_connection_error=True,
+                status_code=500,
+                headers=dict(),
+            )
+
+    @patch("requests.post", side_effect=mocked_requests_connection_error)
+    @patch("requests.get", side_effect=mocked_requests_get)
+    def test_get_output_with_unknown_exception(self, mock_post, mock_get):
+
+        with self.assertRaises(SystemExit) as cm:
+            hpecp = self.cli.CLI()
+            hpecp.catalog.get("/api/v1/catalog/101")
+
+        self.assertEqual(cm.exception.code, 1)
+
+        output = self.out.getvalue().strip()
+
+        expected = "Could not connect to controller - set LOG_LEVEL=DEBUG to see more detail."
+
+        self.assertEqual(output, expected)
