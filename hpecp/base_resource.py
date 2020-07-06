@@ -281,7 +281,7 @@ class AbstractWaitableResourceController(AbstractResourceController):
             If the item is not found and status is not empty
             APIException: if a generic API exception occurred
         """
-        # Raise APIItemNotFoundException if Gateway Id doesn't exist
+        # Raise APIItemNotFoundException if resource Id doesn't exist
         self.get(id)
 
         assert isinstance(status, list), "'status' must be a list"
@@ -296,6 +296,11 @@ class AbstractWaitableResourceController(AbstractResourceController):
 
         # if status is empty return success when resource id not found
         if len(status) == 0:
+            _log.debug(
+                "waiting {}s for item {} to cease existence".format(
+                    timeout_secs, id
+                )
+            )
 
             def item_not_exists():
                 try:
@@ -318,6 +323,13 @@ class AbstractWaitableResourceController(AbstractResourceController):
         # if state is not empty return success when resource current state is
         # in desired state
         else:
+            waiting_for_status = [s.name for s in status]
+
+            _log.debug(
+                "waiting {}s for item {} to have status in {}".format(
+                    timeout_secs, id, waiting_for_status
+                )
+            )
             try:
 
                 def get_status():
@@ -325,13 +337,23 @@ class AbstractWaitableResourceController(AbstractResourceController):
                     return status
 
                 polling.poll(
-                    lambda: (get_status() in [s.name for s in status]),
+                    lambda: (get_status() in waiting_for_status),
                     step=10,
                     poll_forever=False,
                     timeout=timeout_secs,
                 )
+                _log.debug(
+                    "Found item {} with status in {}".format(
+                        id, waiting_for_status
+                    )
+                )
                 return True
             except polling.TimeoutException:
+                _log.debug(
+                    "Timed out waiting for {} to have status in {}".format(
+                        id, waiting_for_status
+                    )
+                )
                 return False
 
 

@@ -248,6 +248,8 @@ class BaseProxy:
             self.client_module_property.status_class[s] for s in status
         ]
 
+        _log.debug("resource_status = {}".format(resource_status))
+
         try:
             success = self.client_module_property.wait_for_status(
                 id=id, status=resource_status, timeout_secs=timeout_secs,
