@@ -327,7 +327,7 @@
 <span class="sd">            If the item is not found and status is not empty</span>
 <span class="sd">            APIException: if a generic API exception occurred</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># Raise APIItemNotFoundException if Gateway Id doesn&#39;t exist</span>
+        <span class="c1"># Raise APIItemNotFoundException if resource Id doesn&#39;t exist</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
 
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span> <span class="s2">&quot;&#39;status&#39; must be a list&quot;</span>
@@ -342,6 +342,11 @@
 
         <span class="c1"># if status is empty return success when resource id not found</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">status</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="s2">&quot;waiting </span><span class="si">{}</span><span class="s2">s for item </span><span class="si">{}</span><span class="s2"> to cease existence&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">timeout_secs</span><span class="p">,</span> <span class="nb">id</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
 
             <span class="k">def</span> <span class="nf">item_not_exists</span><span class="p">():</span>
                 <span class="k">try</span><span class="p">:</span>
@@ -364,6 +369,13 @@
         <span class="c1"># if state is not empty return success when resource current state is</span>
         <span class="c1"># in desired state</span>
         <span class="k">else</span><span class="p">:</span>
+            <span class="n">waiting_for_status</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">status</span><span class="p">]</span>
+
+            <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="s2">&quot;waiting </span><span class="si">{}</span><span class="s2">s for item </span><span class="si">{}</span><span class="s2"> to have status in </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">timeout_secs</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">waiting_for_status</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
             <span class="k">try</span><span class="p">:</span>
 
                 <span class="k">def</span> <span class="nf">get_status</span><span class="p">():</span>
@@ -371,13 +383,23 @@
                     <span class="k">return</span> <span class="n">status</span>
 
                 <span class="n">polling</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span>
-                    <span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="n">get_status</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">status</span><span class="p">]),</span>
+                    <span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="n">get_status</span><span class="p">()</span> <span class="ow">in</span> <span class="n">waiting_for_status</span><span class="p">),</span>
                     <span class="n">step</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
                     <span class="n">poll_forever</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                     <span class="n">timeout</span><span class="o">=</span><span class="n">timeout_secs</span><span class="p">,</span>
                 <span class="p">)</span>
+                <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                    <span class="s2">&quot;Found item </span><span class="si">{}</span><span class="s2"> with status in </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="nb">id</span><span class="p">,</span> <span class="n">waiting_for_status</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
                 <span class="k">return</span> <span class="kc">True</span>
             <span class="k">except</span> <span class="n">polling</span><span class="o">.</span><span class="n">TimeoutException</span><span class="p">:</span>
+                <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                    <span class="s2">&quot;Timed out waiting for </span><span class="si">{}</span><span class="s2"> to have status in </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="nb">id</span><span class="p">,</span> <span class="n">waiting_for_status</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
                 <span class="k">return</span> <span class="kc">False</span></div></div>
 
 
