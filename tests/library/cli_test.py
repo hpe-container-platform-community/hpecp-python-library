@@ -52,8 +52,10 @@ class TestCLI(BaseTestCase):
 
         self.assertEqual(cm.exception.code, 1)
 
+        self.assertEqual(self.out.getvalue(), "")
+
         self.assertEqual(
-            self.out.getvalue(),
+            self.err.getvalue(),
             "Could not find configuration file 'this_file_should_not_exist'\n",
         )
 
@@ -235,9 +237,13 @@ class TestCLIHttpClient(BaseTestCase):
 
         self.assertEqual(cm.exception.code, 1)
 
-        self.assertEqual(
-            self.out.getvalue(),
-            "Could not connect to controller - set LOG_LEVEL=DEBUG to see more detail.\n",
+        self.assertEqual(self.out.getvalue(), "")
+
+        # coverage seems to populate standard error (issues 93)
+        self.assertTrue(
+            self.err.getvalue().endswith(
+                "Could not connect to controller - set LOG_LEVEL=DEBUG to see more detail.\n"
+            )
         )
 
     @patch("requests.get", side_effect=mocked_requests_get)

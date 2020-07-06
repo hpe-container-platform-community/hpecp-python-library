@@ -35,6 +35,7 @@ import tempfile
 from hpecp.base_resource import ResourceList
 
 from .base_test import BaseTestCase
+import six
 
 
 class MockResponse:
@@ -693,24 +694,26 @@ version: '2.8'"""
 
         self.assertEqual(cm.exception.code, 1)
 
-        output = self.out.getvalue().strip()
+        stdout = self.out.getvalue().strip()
+        stderr = self.err.getvalue().strip()
 
-        expected = "'/api/v1/catalog/101' does not exist."
+        expected_stdout = ""  # we don't want error output going to stdout
+        expected_stderr = "'/api/v1/catalog/101' does not exist."
 
-        self.assertEqual(output, expected)
+        self.assertEqual(stdout, expected_stdout)
 
-    def mocked_requests_connection_error(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v1/login":
+        # coverage seems to populate standard error (issues 93)
+        self.assertTrue(stderr.endswith(expected_stderr))
+
+    def mocked_requests_garbage_data(*args, **kwargs):
+        if args[0] == "https://127.0.0.1:8080/api/v1/catalog/100":
             return MockResponse(
-                json_data={"foo": "bar"},
-                text_data='{"foo":"bar"}',
-                raise_connection_error=True,
-                status_code=500,
-                headers=dict(),
+                json_data={"garbage"}, status_code=200, headers=dict(),
             )
+        raise RuntimeError("Unhandle GET request: " + args[0])
 
-    @patch("requests.post", side_effect=mocked_requests_connection_error)
-    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=mocked_requests_garbage_data)
     def test_get_output_with_unknown_exception(self, mock_post, mock_get):
 
         with self.assertRaises(SystemExit) as cm:
@@ -719,8 +722,15 @@ version: '2.8'"""
 
         self.assertEqual(cm.exception.code, 1)
 
-        output = self.out.getvalue().strip()
+        stdout = self.out.getvalue().strip()
+        stderr = self.err.getvalue().strip()
 
-        expected = "Could not connect to controller - set LOG_LEVEL=DEBUG to see more detail."
+        expected_stdout = ""  # we don't want error output going to stdout
+        expected_stderr = (
+            "Unknown error. To debug run with env var LOG_LEVEL=DEBUG"
+        )
 
-        self.assertEqual(output, expected)
+        self.assertEqual(stdout, expected_stdout)
+
+        # coverage seems to populate standard error (issues 93)
+        self.assertTrue(stderr.endswith(expected_stderr))
