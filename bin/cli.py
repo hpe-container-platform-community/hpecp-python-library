@@ -45,6 +45,9 @@ from hpecp import (
 )
 from hpecp.k8s_worker import WorkerK8sStatus
 from hpecp.logger import Logger
+from hpecp.gateway import GatewayStatus
+from hpecp.k8s_cluster import K8sClusterHostConfig, K8sClusterStatus
+from hpecp.exceptions import APIItemNotFoundException
 
 if sys.version_info[0] >= 3:
     unicode = str
@@ -91,8 +94,19 @@ def get_client():
 
 @six.add_metaclass(abc.ABCMeta)
 class BaseProxy:
-    def new_instance(self, client_module_name=""):
+    """Base 'proxy' class for generic calls to API."""
+
+    def new_instance(self, client_module_name):
+        """Create a new instance (constructor).
+
+        Parameters
+        ----------
+        client_module_name : str
+            Name of the property in the ContainerPlatformClient that
+            points to the different modules (user, gateway, cluster, etc)
+        """
         self.client_module_name = client_module_name
+        super(BaseProxy, self).__init__()
 
     def list(self, output="table", columns=[], query={}):
         """Retrieve the list of resources.
@@ -107,7 +121,6 @@ class BaseProxy:
         query : dict, optional
             Query in jmespath (https://jmespath.org/) format, by default {}
         """
-
         assert (
             columns is not [] and query is not {}
         ), "You must only provide 'columns' OR 'query' parameters."
@@ -119,7 +132,7 @@ class BaseProxy:
 
         # use tabulate for simplified user output
         if len(query) == 0:
-            assert output in ["table", "text",], (
+            assert output in ["table", "text"], (
                 "If you provide a columns list, the output must be 'table'"
                 " or 'text'"
             )
@@ -150,6 +163,7 @@ class CatalogProxy(BaseProxy):
     """Proxy object to :py:attr:`<hpecp.client.catalog>`."""
 
     def __init__(self):
+        """Initiate this proxy class with the client module name."""
         super(CatalogProxy, self).new_instance("catalog")
 
     def refresh(self, catalog_id):
@@ -200,6 +214,7 @@ class GatewayProxy(BaseProxy):
     """Proxy object to :py:attr:`<hpecp.client.gateway>`."""
 
     def __init__(self):
+        """Initiate this proxy class with the client module name."""
         super(GatewayProxy, self).new_instance("gateway")
 
     def create_with_ssh_key(
@@ -356,6 +371,7 @@ class K8sWorkerProxy(BaseProxy):
     """Proxy object to :py:attr:`<hpecp.client.k8s_worker>`."""
 
     def __init__(self):
+        """Initiate this proxy class with the client module name."""
         super(K8sWorkerProxy, self).new_instance("k8s_worker")
 
     def create_with_ssh_key(
@@ -494,6 +510,7 @@ class K8sClusterProxy(BaseProxy):
     """Proxy object to :py:attr:`<hpecp.client.k8s_cluster>`."""
 
     def __init__(self):
+        """Initiate this proxy class with the client module name."""
         super(K8sClusterProxy, self).new_instance("k8s_cluster")
 
     def create(
@@ -957,6 +974,7 @@ class UserProxy(BaseProxy):
     """Proxy object to :py:attr:`<hpecp.client.user>`."""
 
     def __init__(self):
+        """Initiate this proxy class with the client module name."""
         super(UserProxy, self).new_instance("user")
 
     def create(
