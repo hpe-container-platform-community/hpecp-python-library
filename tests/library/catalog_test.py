@@ -228,21 +228,61 @@ class TestCatalogGet(unittest.TestCase):
         ):
             get_client().catalog.get("garbage")
 
-    # @unittest.skip("This does not work yet!")
     @patch("requests.get", side_effect=mocked_requests_get)
     @patch("requests.post", side_effect=mocked_requests_post)
     def test_get_catalog(self, mock_get, mock_post):
 
         catalog = get_client().catalog.get("/api/v1/catalog/99")
 
-        self.assertEqual(catalog.id, "/api/v1/catalog/99")
-
-        # TODO: test other property accessors
         with self.assertRaisesRegexp(
             APIItemNotFoundException,
             "'catalog not found with id: " + r"\/api\/v1\/catalog\/101",
         ):
             get_client().catalog.get("/api/v1/catalog/101")
+
+    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_get_catalog_attributes(self, mock_get, mock_post):
+
+        catalog = get_client().catalog.get("/api/v1/catalog/99")
+        self.assertEqual(catalog.distro_id, "bluedata/spark240juphub7xssl")
+        self.assertEqual(
+            catalog.documentation_checksum, "52f53f1b2845463b9e370d17fb80bea6"
+        )
+        self.assertEqual(
+            catalog.documentation_file,
+            "/opt/bluedata/catalog/documentation/bluedata-spark240juphub7xssl-2.8",
+        )
+        self.assertEqual(catalog.documentation_mimetype, "text/markdown")
+        self.assertEqual(
+            catalog.feed,
+            [
+                {
+                    "href": "https://s3.amazonaws.com/bluedata-catalog/bundles/catalog/external/docker/EPIC-5.0/feeds/feed.json",
+                    "name": "BlueData EPIC-5.0 catalog feed for docker",
+                }
+            ],
+        )
+        self.assertEqual(catalog.id, "/api/v1/catalog/99")
+        self.assertEqual(catalog.isdebug, False)
+        self.assertEqual(
+            catalog.label_description,
+            "Spark240 multirole with Jupyter Notebook, Jupyterhub with SSL and gateway node",
+        )
+        self.assertEqual(catalog.label_name, "Spark240")
+        self.assertEqual(
+            catalog.logo_checksum, "1471eb59356066ed4a06130566764ea6"
+        )
+        self.assertEqual(
+            catalog.logo_url,
+            "http://10.1.0.53/catalog/logos/bluedata-spark240juphub7xssl-2.8",
+        )
+        self.assertEqual(catalog.osclass, ["centos"])
+        self.assertEqual(catalog.self_href, "/api/v1/catalog/99")
+        self.assertEqual(catalog.state, "initialized")
+        self.assertEqual(catalog.state_info, "")
+        self.assertEqual(catalog.timestamp, 0)
+        self.assertEqual(catalog.version, "2.8")
 
 
 catalog_list_json = {
