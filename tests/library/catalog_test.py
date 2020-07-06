@@ -24,6 +24,7 @@ import sys
 import unittest
 from textwrap import dedent
 import json
+import yaml
 
 import requests
 from mock import patch
@@ -442,7 +443,7 @@ class TestCatalogRefresh(unittest.TestCase):
         client.catalog.refresh("/api/v1/catalog/99")
 
 
-class TestCLI(BaseTestCase):
+class TestCLIList(BaseTestCase):
     def mocked_requests_get(*args, **kwargs):
         if args[0] == "https://127.0.0.1:8080/api/v1/catalog":
             return MockResponse(
@@ -452,7 +453,7 @@ class TestCLI(BaseTestCase):
 
     @patch("requests.post", side_effect=mocked_requests_post)
     @patch("requests.get", side_effect=mocked_requests_get)
-    def test_cli_with_columns_and_table_output(self, mock_post, mock_get):
+    def test_list_with_columns_and_table_output(self, mock_post, mock_get):
 
         self.maxDiff = None
 
@@ -472,7 +473,7 @@ class TestCLI(BaseTestCase):
 
     @patch("requests.post", side_effect=mocked_requests_post)
     @patch("requests.get", side_effect=mocked_requests_get)
-    def test_cli_with_columns_and_text_output(self, mock_post, mock_get):
+    def test_list_with_columns_and_text_output(self, mock_post, mock_get):
 
         self.maxDiff = None
 
@@ -484,7 +485,7 @@ class TestCLI(BaseTestCase):
 
     @patch("requests.post", side_effect=mocked_requests_post)
     @patch("requests.get", side_effect=mocked_requests_get)
-    def test_cli_with_query(self, mock_post, mock_get):
+    def test_list_with_query(self, mock_post, mock_get):
 
         self.maxDiff = None
 
@@ -502,4 +503,177 @@ class TestCLI(BaseTestCase):
 
         self.assertEqual(
             output, '[["/api/v1/catalog/29", "bluedata/spark240juphub7xssl"]]'
+        )
+
+class TestCLIGet(BaseTestCase):
+    def mocked_requests_get(*args, **kwargs):
+        if args[0] == "https://127.0.0.1:8080/api/v1/catalog/100":
+            return MockResponse(
+                json_data={
+                    "_links": {
+                        "self": {"href": "/api/v1/catalog/100"},
+                        "feed": [
+                            {
+                                "href": (
+                                    "https://s3.amazonaws.com/bluedata-catalog/"
+                                    "bundles/catalog/external/docker/EPIC-5.0/"
+                                    "feeds/feed.json"
+                                ),
+                                "name": (
+                                    "BlueData EPIC-5.0 catalog feed for docker"
+                                ),
+                            }
+                        ],
+                    },
+                    "id": "/api/v1/catalog/100",
+                    "distro_id": "bluedata/spark240juphub7xssl",
+                    "label": {
+                        "name": "Spark240",
+                        "description": (
+                            "The description"
+                        ),
+                    },
+                    "version": "2.8",
+                    "timestamp": 0,
+                    "isdebug": False,
+                    "osclass": ["centos"],
+                    "logo": {
+                        "checksum": "1471eb59356066ed4a06130566764ea6",
+                        "url": (
+                            "http://10.1.0.53/catalog/logos/"
+                            "bluedata-spark240juphub7xssl-2.8"
+                        ),
+                    },
+                    "documentation": {
+                        "checksum": "52f53f1b2845463b9e370d17fb80bea6",
+                        "mimetype": "text/markdown",
+                        "file": (
+                            "/opt/bluedata/catalog/documentation/"
+                            "bluedata-spark240juphub7xssl-2.8"
+                        ),
+                    },
+                    "state": "initialized",
+                    "state_info": "",
+                },
+                status_code=200,
+                headers=dict(),
+            )
+        if args[0] == "https://127.0.0.1:8080/api/v1/catalog/101":
+            raise APIItemNotFoundException(
+                message="catalog not found with id: " + "/api/v1/catalog/101",
+                request_method="get",
+                request_url=args[0],
+            )
+        raise RuntimeError("Unhandle GET request: " + args[0])
+
+    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=mocked_requests_get)
+    def test_get_output_is_valid_yaml(self, mock_post, mock_get):
+
+        self.maxDiff = None
+
+        hpecp = self.cli.CLI()
+        hpecp.catalog.get("/api/v1/catalog/100")
+
+        output = self.out.getvalue().strip()
+        try:
+            yaml.load(output, Loader=yaml.FullLoader)
+        except Exception:
+            self.fail("Output should be valid yaml")
+
+
+    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=mocked_requests_get)
+    def test_get_yaml_output_is_valid(self, mock_post, mock_get):
+
+        self.maxDiff = None
+
+        hpecp = self.cli.CLI()
+        hpecp.catalog.get("/api/v1/catalog/100")
+
+        output = self.out.getvalue().strip()
+        try:
+            yaml.load(output, Loader=yaml.FullLoader)
+        except Exception:
+            self.fail("Output should be valid yaml")
+
+        expected_yaml = dedent("""\
+_links:
+    feed:
+         - href: https://s3.amazonaws.com/bluedata-catalog/bundles/catalog/external/docker/EPIC-5.0/feeds/feed.json
+           name: BlueData EPIC-5.0 catalog feed for docker
+    self:
+        href: /api/v1/catalog/100
+distro_id: bluedata/spark240juphub7xssl
+documentation:
+    checksum: 52f53f1b2845463b9e370d17fb80bea6
+    file: /opt/bluedata/catalog/documentation/bluedata-spark240juphub7xssl-2.8
+    mimetype: text/markdown
+id: /api/v1/catalog/100
+isdebug: false
+label:
+    description: The description
+    name: Spark240
+logo:
+    checksum: 1471eb59356066ed4a06130566764ea6
+    url: http://10.1.0.53/catalog/logos/bluedata-spark240juphub7xssl-2.8
+osclass:
+     - centos
+state: initialized
+state_info: ''
+timestamp: 0
+version: '2.8'""")
+
+        # remove spaces to make testing easier
+        self.assertEqual(
+            yaml.dump(yaml.load(output, Loader=yaml.FullLoader)),
+            yaml.dump(yaml.load(expected_yaml, Loader=yaml.FullLoader))
+        )
+
+    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=mocked_requests_get)
+    def test_get_json_output(self, mock_post, mock_get):
+
+        self.maxDiff = None
+
+        hpecp = self.cli.CLI()
+        hpecp.catalog.get("/api/v1/catalog/100", output="json")
+
+        output = self.out.getvalue().strip()
+
+        # remove spaces to make testing easier
+        self.assertEqual(
+            json.loads(output),
+            {
+                "timestamp": 0,
+                "logo": {
+                    "url": "http://10.1.0.53/catalog/logos/bluedata-spark240juphub7xssl-2.8",
+                    "checksum": "1471eb59356066ed4a06130566764ea6",
+                },
+                "osclass": ["centos"],
+                "id": "/api/v1/catalog/100",
+                "state_info": "",
+                "isdebug": False,
+                "documentation": {
+                    "mimetype": "text/markdown",
+                    "checksum": "52f53f1b2845463b9e370d17fb80bea6",
+                    "file": "/opt/bluedata/catalog/documentation/bluedata-spark240juphub7xssl-2.8",
+                },
+                "distro_id": "bluedata/spark240juphub7xssl",
+                "label": {
+                    "name": "Spark240",
+                    "description": "The description",
+                },
+                "state": "initialized",
+                "version": "2.8",
+                "_links": {
+                    "feed": [
+                        {
+                            "href": "https://s3.amazonaws.com/bluedata-catalog/bundles/catalog/external/docker/EPIC-5.0/feeds/feed.json",
+                            "name": "BlueData EPIC-5.0 catalog feed for docker",
+                        }
+                    ],
+                    "self": {"href": "/api/v1/catalog/100"},
+                },
+            }
         )
