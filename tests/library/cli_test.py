@@ -28,6 +28,8 @@ import requests
 import six
 from mock import mock, mock_open, patch
 
+from .base_test import BaseTestCase
+
 if six.PY2:
     from io import BytesIO as StringIO  # noqa: F811
     from test.test_support import EnvironmentVarGuard
@@ -41,38 +43,7 @@ except Exception:
     from importlib import reload
 
 
-class TestCLI(TestCase):
-    def setUp(self):
-        file_data = dedent(
-            """                [default]
-                api_host = 127.0.0.1
-                api_port = 8080
-                use_ssl = True
-                verify_ssl = False
-                warn_ssl = True
-                username = admin
-                password = admin123"""
-        )
-
-        self.tmpFile = tempfile.NamedTemporaryFile(delete=True)
-        self.tmpFile.write(file_data.encode("utf-8"))
-        self.tmpFile.flush()
-
-        sys.path.insert(0, os.path.abspath("../../"))
-        from bin import cli
-
-        self.cli = cli
-        self.cli.HPECP_CONFIG_FILE = self.tmpFile.name
-
-        self.saved_stdout = sys.stdout
-        self.out = StringIO()
-        sys.stdout = self.out
-
-    def tearDown(self):
-        self.tmpFile.close()
-        sys.stdout = self.saved_stdout
-        del self.cli.HPECP_CONFIG_FILE
-
+class TestCLI(BaseTestCase):
     def test_config_file_missing(self):
 
         with self.assertRaises(SystemExit) as cm:
@@ -220,37 +191,7 @@ def session_mock_response():
     )
 
 
-class TestCLIHttpClient(TestCase):
-    def setUp(self):
-        file_data = dedent(
-            """                        [default]
-                        api_host = 127.0.0.1
-                        api_port = 8080
-                        use_ssl = True
-                        verify_ssl = False
-                        warn_ssl = True
-                        username = admin
-                        password = admin123"""
-        )
-
-        self.tmpFile = tempfile.NamedTemporaryFile(delete=True)
-        self.tmpFile.write(file_data.encode("utf-8"))
-        self.tmpFile.flush()
-
-        sys.path.insert(0, os.path.abspath("../../"))
-        from bin import cli
-
-        self.cli = cli
-        self.cli.HPECP_CONFIG_FILE = self.tmpFile.name
-
-        self.saved_stdout = sys.stdout
-        self.out = StringIO()
-        sys.stdout = self.out
-
-    def tearDown(self):
-        self.tmpFile.close()
-        sys.stdout = self.saved_stdout
-
+class TestCLIHttpClient(BaseTestCase):
     def mocked_requests_post(*args, **kwargs):
         if args[0] == "https://127.0.0.1:8080/api/v1/login":
             return session_mock_response()
