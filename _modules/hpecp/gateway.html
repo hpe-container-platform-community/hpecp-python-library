@@ -71,6 +71,7 @@
 <span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">APIItemNotFoundException</span>
 
 <span class="kn">from</span> <span class="nn">.base_resource</span> <span class="kn">import</span> <span class="n">AbstractWaitableResourceController</span><span class="p">,</span> <span class="n">AbstractResource</span>
+<span class="kn">from</span> <span class="nn">hpecp.base_resource</span> <span class="kn">import</span> <span class="n">ResourceList</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="n">basestring</span>
@@ -186,7 +187,7 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">proxy_nodes_hostname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;@Field: from json[&#39;proxy_nodes_hostname&#39;]&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;proxy_nodes_hostname&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">,</span> <span class="s2">&quot;proxy_nodes_hostname&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">hostname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -324,6 +325,28 @@
                 <span class="n">request_url</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="k">return</span> <span class="n">worker</span></div>
+
+<div class="viewcode-block" id="GatewayController.list"><a class="viewcode-back" href="../../hpecp.gateway.html#hpecp.gateway.GatewayController.list">[docs]</a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Make an API call to retrieve a list of Resources.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ResourceList</span>
+<span class="sd">            The ResourceList will contain instances of the class defined by</span>
+<span class="sd">            the property self.resource_class</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
+            <span class="n">url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">base_resource_path</span><span class="p">,</span>
+            <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;get&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s2">&quot;/list&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">jsondata</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;_embedded&quot;</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">resource_list_path</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">worker</span> <span class="ow">in</span> <span class="n">jsondata</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">worker</span><span class="o">.</span><span class="n">purpose</span> <span class="o">!=</span> <span class="s2">&quot;proxy&quot;</span><span class="p">:</span>
+                <span class="k">del</span> <span class="n">jsondata</span><span class="p">[</span><span class="n">worker</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">ResourceList</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resource_class</span><span class="p">,</span> <span class="n">jsondata</span><span class="p">)</span></div>
 
     <span class="c1"># TODO refactor clients so implementation not required</span>
 <div class="viewcode-block" id="GatewayController.wait_for_state"><a class="viewcode-back" href="../../hpecp.gateway.html#hpecp.gateway.GatewayController.wait_for_state">[docs]</a>    <span class="k">def</span> <span class="nf">wait_for_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gateway_id</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="p">[],</span> <span class="n">timeout_secs</span><span class="o">=</span><span class="mi">1200</span><span class="p">):</span>
