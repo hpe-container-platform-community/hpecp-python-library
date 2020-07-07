@@ -320,15 +320,8 @@
 <span class="sd">        -------</span>
 <span class="sd">        bool</span>
 <span class="sd">            True if status was found before timeout, otherwise False</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        APIItemNotFoundException</span>
-<span class="sd">            If the item is not found and status is not empty</span>
-<span class="sd">            APIException: if a generic API exception occurred</span>
+<span class="sd">            True if item does not exist before timeout and status is empty</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># Raise APIItemNotFoundException if resource Id doesn&#39;t exist</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
 
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span> <span class="s2">&quot;&#39;status&#39; must be a list&quot;</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">status</span><span class="p">):</span>

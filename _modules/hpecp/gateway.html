@@ -335,18 +335,9 @@
 <span class="sd">            The ResourceList will contain instances of the class defined by</span>
 <span class="sd">            the property self.resource_class</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
-            <span class="n">url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">base_resource_path</span><span class="p">,</span>
-            <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;get&quot;</span><span class="p">,</span>
-            <span class="n">description</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s2">&quot;/list&quot;</span><span class="p">,</span>
-        <span class="p">)</span>
-
-        <span class="n">jsondata</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;_embedded&quot;</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">resource_list_path</span><span class="p">]</span>
-        <span class="k">for</span> <span class="n">worker</span> <span class="ow">in</span> <span class="n">jsondata</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">worker</span><span class="o">.</span><span class="n">purpose</span> <span class="o">!=</span> <span class="s2">&quot;proxy&quot;</span><span class="p">:</span>
-                <span class="k">del</span> <span class="n">jsondata</span><span class="p">[</span><span class="n">worker</span><span class="p">]</span>
-
-        <span class="k">return</span> <span class="n">ResourceList</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resource_class</span><span class="p">,</span> <span class="n">jsondata</span><span class="p">)</span></div>
+        <span class="n">resourceList</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">GatewayController</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+        <span class="n">gateways</span> <span class="o">=</span> <span class="p">[</span><span class="n">gw</span> <span class="k">for</span> <span class="n">gw</span> <span class="ow">in</span> <span class="n">resourceList</span><span class="o">.</span><span class="n">json</span> <span class="k">if</span> <span class="n">gw</span><span class="p">[</span><span class="s2">&quot;purpose&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;proxy&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">ResourceList</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resource_class</span><span class="p">,</span> <span class="n">gateways</span><span class="p">)</span></div>
 
     <span class="c1"># TODO refactor clients so implementation not required</span>
 <div class="viewcode-block" id="GatewayController.wait_for_state"><a class="viewcode-back" href="../../hpecp.gateway.html#hpecp.gateway.GatewayController.wait_for_state">[docs]</a>    <span class="k">def</span> <span class="nf">wait_for_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gateway_id</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="p">[],</span> <span class="n">timeout_secs</span><span class="o">=</span><span class="mi">1200</span><span class="p">):</span>
