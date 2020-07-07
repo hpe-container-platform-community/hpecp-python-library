@@ -273,7 +273,6 @@ class CatalogProxy(BaseProxy):
         """Initiate this proxy class with the client module name."""
         super(CatalogProxy, self).new_instance("catalog")
 
-    @property
     def delete(self, id):
         """Not implemented."""
         raise AttributeError("'CatalogProxy' object has no attribute 'delete'")
