@@ -260,9 +260,10 @@ class BaseProxy:
 
         if not success:
             print(
-                "Failed to reach state(s) {} in {}".format(
+                "Failed to reach state(s) {} in {}s".format(
                     str(status), str(timeout_secs),
-                )
+                ),
+                file=sys.stderr,
             )
             sys.exit(1)
 
