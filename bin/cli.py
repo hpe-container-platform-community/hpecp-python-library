@@ -222,10 +222,10 @@ class BaseProxy:
             print(json.dumps(jmespath.search(str(query), data)))
 
     def wait_for_state(
-        self, id, state=[], timeout_secs=60,
+        self, id, states=[], timeout_secs=60,
     ):
         """See wait_for_status()."""
-        self.wait_for_status(id, state, timeout_secs)
+        self.wait_for_status(id, states, timeout_secs)
 
     def wait_for_status(
         self, id, status=[], timeout_secs=60,
