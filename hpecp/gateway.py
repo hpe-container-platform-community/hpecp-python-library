@@ -289,18 +289,9 @@ class GatewayController(AbstractWaitableResourceController):
             The ResourceList will contain instances of the class defined by
             the property self.resource_class
         """
-        response = self.client._request(
-            url=self.base_resource_path,
-            http_method="get",
-            description=self.__class__.__name__ + "/list",
-        )
-
-        jsondata = response.json()["_embedded"][self.resource_list_path]
-        for worker in jsondata:
-            if worker.purpose != "proxy":
-                del jsondata[worker]
-
-        return ResourceList(self.resource_class, jsondata)
+        resourceList = super(GatewayController, self).list()
+        gateways = [gw for gw in resourceList.json if gw["purpose"] == "proxy"]
+        return ResourceList(self.resource_class, gateways)
 
     # TODO refactor clients so implementation not required
     def wait_for_state(self, gateway_id, state=[], timeout_secs=1200):
