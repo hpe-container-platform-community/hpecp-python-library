@@ -1290,6 +1290,12 @@ class TestWaitForGatewayStatus(BaseTestCase):
             )
         self.assertEqual(cm.exception.code, 1)
 
+    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_wait_for_status_gateway_cli_gateway_id_does_not_exist_and_no_status(
+        self, mock_get, mock_post
+    ):
+
         # Get the status of a Cluster ID that doesn't
         # exist - without providing a status
         try:
@@ -1299,6 +1305,25 @@ class TestWaitForGatewayStatus(BaseTestCase):
             )
         except SystemExit:
             self.fail("Should not raise a SystemExit")
+
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_get_states(self, mock_post):
+
+        hpecp = self.cli.CLI()
+        hpecp.gateway.states()
+
+        stdout = self.out.getvalue().strip()
+
+        expected_stdout = (
+            "['bundle', 'installing', 'installed', 'ready', "
+            "'unlicensed', 'configuring', 'configured', 'error', "
+            "'sysinfo', 'unconfiguring', 'deleting', "
+            "'storage_pending', 'storage_configuring', "
+            "'storage_error', 'decommission_in_progress', "
+            "'delete_in_progress']"
+        )
+
+        self.assertEqual(stdout, expected_stdout)
 
 
 class TestDeleteGateway(TestCase):
