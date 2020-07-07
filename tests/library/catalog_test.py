@@ -734,3 +734,14 @@ version: '2.8'"""
 
         # coverage seems to populate standard error (issues 93)
         self.assertTrue(stderr.endswith(expected_stderr))
+
+
+class TestCLIDelete(BaseTestCase):
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_delete(self, mock_post):
+
+        with self.assertRaisesRegexp(
+            AttributeError, "'CatalogProxy' object has no attribute 'delete'",
+        ):
+            hpecp = self.cli.CLI()
+            hpecp.catalog.delete("/any/id")

@@ -128,11 +128,12 @@ class BaseProxy:
         except APIItemNotFoundException:
             print("'{}' does not exist.".format(id), file=sys.stderr)
             sys.exit(1)
-        except Exception:
+        except Exception as e:
             print(
                 "Unknown error. To debug run with env var LOG_LEVEL=DEBUG",
                 file=sys.stderr,
             )
+            _log.error(e)
             sys.exit(1)
 
         if output == "yaml":
@@ -165,7 +166,7 @@ class BaseProxy:
             sys.exit(1)
         except Exception as e:
             print(
-                "Unknow error. To debug run with env var LOG_LEVEL=DEBUG",
+                "Unknown error. To debug run with env var LOG_LEVEL=DEBUG",
                 file=sys.stderr,
             )
             _log.error(e)
@@ -273,7 +274,6 @@ class CatalogProxy(BaseProxy):
         """Initiate this proxy class with the client module name."""
         super(CatalogProxy, self).new_instance("catalog")
 
-    @property
     def delete(self, id):
         """Not implemented."""
         raise AttributeError("'CatalogProxy' object has no attribute 'delete'")
