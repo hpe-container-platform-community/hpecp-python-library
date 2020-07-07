@@ -59,6 +59,8 @@ class GatewayStatus(Enum):
     storage_pending = 12
     storage_configuring = 13
     storage_error = 14
+    decommission_in_progress = 15
+    delete_in_progress = 16
 
 
 class Gateway(AbstractResource):
