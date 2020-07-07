@@ -276,7 +276,6 @@ class AbstractWaitableResourceController(AbstractResourceController):
             True if status was found before timeout, otherwise False
             True if item does not exist before timeout and status is empty
         """
-
         assert isinstance(status, list), "'status' must be a list"
         for i, s in enumerate(status):
             assert isinstance(
