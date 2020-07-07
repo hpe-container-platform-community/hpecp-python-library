@@ -765,7 +765,7 @@ class TestCreateGateway(TestCase):
         pass
 
 
-class TestWaitForGatewayStatus(TestCase):
+class TestWaitForGatewayStatus(BaseTestCase):
 
     # pylint: disable=no-method-argument
     def mocked_requests_get(*args, **kwargs):
@@ -1088,7 +1088,7 @@ class TestWaitForGatewayStatus(TestCase):
 
     @patch("requests.get", side_effect=mocked_requests_get)
     @patch("requests.post", side_effect=mocked_requests_post)
-    def test_wait_for_status_gateway(self, mock_get, mock_post):
+    def test_wait_for_status_gateway_assertions(self, mock_get, mock_post):
 
         # FIXME speed these tests up
 
@@ -1134,6 +1134,10 @@ class TestWaitForGatewayStatus(TestCase):
             get_client().gateway.wait_for_state(
                 gateway_id="/api/v1/workers/123", timeout_secs=1, state=["abc"]
             )
+
+    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_wait_for_status_gateway(self, mock_get, mock_post):
 
         self.assertTrue(
             get_client().gateway.wait_for_state(
@@ -1182,6 +1186,71 @@ class TestWaitForGatewayStatus(TestCase):
                 gateway_id="/api/v1/workers/999", timeout_secs=1, state=[]
             )
         )
+
+    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_wait_for_status_gateway_cli(self, mock_get, mock_post):
+
+        try:
+            hpecp = self.cli.CLI()
+            hpecp.gateway.wait_for_state(
+                id="/api/v1/workers/123",
+                timeout_secs=1,
+                states=[GatewayStatus.installed.name],
+            )
+        except SystemExit:
+            self.fail("Should not raise a SystemExit")
+
+        with self.assertRaises(SystemExit) as cm:
+            hpecp = self.cli.CLI()
+            hpecp.gateway.wait_for_state(
+                id="/api/v1/workers/123",
+                timeout_secs=1,
+                states=[GatewayStatus.deleting.name],
+            )
+        self.assertEqual(cm.exception.code, 1)
+
+        try:
+            hpecp = self.cli.CLI()
+            hpecp.gateway.wait_for_state(
+                id="/api/v1/workers/123",
+                timeout_secs=1,
+                states=[
+                    GatewayStatus.installed.name,
+                    GatewayStatus.deleting.name,
+                ],
+            )
+        except SystemExit:
+            self.fail("Should not raise a SystemExit")
+
+        with self.assertRaises(SystemExit) as cm:
+            hpecp = self.cli.CLI()
+            hpecp.gateway.wait_for_state(
+                id="/api/v1/workers/123",
+                timeout_secs=1,
+                states=[GatewayStatus.error.name, GatewayStatus.deleting.name],
+            )
+        self.assertEqual(cm.exception.code, 1)
+
+        # Get the status of a ID that doesn't exist
+        with self.assertRaises(SystemExit) as cm:
+            hpecp = self.cli.CLI()
+            hpecp.gateway.wait_for_state(
+                id="/api/v1/workers/999",
+                timeout_secs=1,
+                states=[GatewayStatus.installed.name],
+            )
+        self.assertEqual(cm.exception.code, 1)
+
+        # Get the status of a Cluster ID that doesn't
+        # exist - without providing a status
+        try:
+            hpecp = self.cli.CLI()
+            hpecp.gateway.wait_for_state(
+                id="/api/v1/workers/999", timeout_secs=1, states=[]
+            )
+        except SystemExit:
+            self.fail("Should not raise a SystemExit")
 
 
 class TestDeleteGateway(TestCase):
