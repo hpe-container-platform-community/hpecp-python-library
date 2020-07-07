@@ -49,18 +49,23 @@ class MockResponse:
         status_code,
         headers,
         raise_for_status_flag=False,
+        raise_exception=False,
         text_data="",
     ):
         self.json_data = json_data
         self.text = text_data
         self.status_code = status_code
         self.raise_for_status_flag = raise_for_status_flag
+        self.raise_exception = raise_exception
         self.headers = headers
 
     def raise_for_status(self):
         if self.raise_for_status_flag:
             self.text = "some error occurred"
             raise requests.exceptions.HTTPError()
+        elif self.raise_exception:
+            self.text = "some error occurred"
+            raise Exception()
         else:
             return
 
@@ -1345,3 +1350,56 @@ class TestCliCreate(BaseTestCase):
     def test_with_only_ssh_key_file_provided(self):
         # TODO
         pass
+
+
+class TestCliDelete(BaseTestCase):
+    def mocked_requests_post(*args, **kwargs):
+        if args[0] == "https://127.0.0.1:8080/api/v1/login":
+            return MockResponse(
+                json_data={},
+                status_code=200,
+                headers={
+                    "location": (
+                        "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    )
+                },
+            )
+        raise RuntimeError("Unhandle POST request: " + args[0])
+
+    # # pylint: disable=no-method-argument
+    # def mocked_requests_delete(*args, **kwargs):
+    #     if args[0] == "https://127.0.0.1:8080/api/v1/workers/999":
+    #         return MockResponse(
+    #             text_data="Not found.",
+    #             json_data={},
+    #             status_code=404,
+    #             raise_exception=True,
+    #             headers={},
+    #         )
+    #     raise RuntimeError("Unhandle DEL request: " + args[0])
+
+    @patch("requests.post", side_effect=mocked_requests_post)
+    # @patch("requests.del", side_effect=mocked_requests_delete)
+    def test_delete_with_unknown_exception(self, mock_post):
+        @patch("hpecp.base_resource.AbstractController")
+        def delete(self, id):
+            raise Exception()
+
+        with self.assertRaises(SystemExit) as cm:
+            hpecp = self.cli.CLI()
+            hpecp.gateway.delete("/api/v1/workers/1")
+
+        self.assertEqual(cm.exception.code, 1)
+
+        stdout = self.out.getvalue().strip()
+        stderr = self.err.getvalue().strip()
+
+        expected_stdout = ""  # we don't want error output going to stdout
+        expected_stderr = (
+            "Unknown error. To debug run with env var LOG_LEVEL=DEBUG"
+        )
+
+        self.assertEqual(stdout, expected_stdout)
+
+        # coverage seems to populate standard error (issues 93)
+        self.assertTrue(stderr.endswith(expected_stderr))
