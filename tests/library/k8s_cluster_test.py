@@ -607,10 +607,11 @@ class TestWaitForClusterStatus(TestCase):
 
         # Get the status of a Cluster ID that doesn't exist
         # without providing a status
-        with self.assertRaises(APIItemNotFoundException):
+        self.assertTrue(
             get_client().k8s_cluster.wait_for_status(
                 id="/api/v2/k8scluster/999", timeout_secs=1, status=[],
             )
+        )
 
 
 class TestDeleteCluster(TestCase):
