@@ -1201,6 +1201,12 @@ class TestWaitForGatewayStatus(BaseTestCase):
         except SystemExit:
             self.fail("Should not raise a SystemExit")
 
+    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_wait_for_status_gateway_cli_fail_to_reach_state(
+        self, mock_get, mock_post
+    ):
+
         with self.assertRaises(SystemExit) as cm:
             hpecp = self.cli.CLI()
             hpecp.gateway.wait_for_state(
@@ -1209,6 +1215,23 @@ class TestWaitForGatewayStatus(BaseTestCase):
                 states=[GatewayStatus.deleting.name],
             )
         self.assertEqual(cm.exception.code, 1)
+
+        stdout = self.out.getvalue().strip()
+        stderr = self.err.getvalue().strip()
+
+        expected_stdout = ""  # we don't want error output going to stdout
+        expected_stderr = "Failed to reach state(s) ['deleting'] in 1s"
+
+        self.assertEqual(stdout, expected_stdout)
+
+        # coverage seems to populate standard error (issues 93)
+        self.assertTrue(stderr.endswith(expected_stderr))
+
+    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_wait_for_status_gateway_cli_multiple_states(
+        self, mock_get, mock_post
+    ):
 
         try:
             hpecp = self.cli.CLI()
@@ -1223,6 +1246,12 @@ class TestWaitForGatewayStatus(BaseTestCase):
         except SystemExit:
             self.fail("Should not raise a SystemExit")
 
+    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_wait_for_status_gateway_cli_fail_to_reach_state_with_multiple_states(
+        self, mock_get, mock_post
+    ):
+
         with self.assertRaises(SystemExit) as cm:
             hpecp = self.cli.CLI()
             hpecp.gateway.wait_for_state(
@@ -1231,6 +1260,25 @@ class TestWaitForGatewayStatus(BaseTestCase):
                 states=[GatewayStatus.error.name, GatewayStatus.deleting.name],
             )
         self.assertEqual(cm.exception.code, 1)
+
+        stdout = self.out.getvalue().strip()
+        stderr = self.err.getvalue().strip()
+
+        expected_stdout = ""  # we don't want error output going to stdout
+        expected_stderr = (
+            "Failed to reach state(s) ['error', 'deleting'] in 1s"
+        )
+
+        self.assertEqual(stdout, expected_stdout)
+
+        # coverage seems to populate standard error (issues 93)
+        self.assertTrue(stderr.endswith(expected_stderr))
+
+    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_wait_for_status_gateway_cli_gateway_id_does_not_exist(
+        self, mock_get, mock_post
+    ):
 
         # Get the status of a ID that doesn't exist
         with self.assertRaises(SystemExit) as cm:
@@ -1242,6 +1290,12 @@ class TestWaitForGatewayStatus(BaseTestCase):
             )
         self.assertEqual(cm.exception.code, 1)
 
+    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_wait_for_status_gateway_cli_gateway_id_does_not_exist_and_no_status(
+        self, mock_get, mock_post
+    ):
+
         # Get the status of a Cluster ID that doesn't
         # exist - without providing a status
         try:
@@ -1251,6 +1305,25 @@ class TestWaitForGatewayStatus(BaseTestCase):
             )
         except SystemExit:
             self.fail("Should not raise a SystemExit")
+
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_get_states(self, mock_post):
+
+        hpecp = self.cli.CLI()
+        hpecp.gateway.states()
+
+        stdout = self.out.getvalue().strip()
+
+        expected_stdout = (
+            "['bundle', 'installing', 'installed', 'ready', "
+            "'unlicensed', 'configuring', 'configured', 'error', "
+            "'sysinfo', 'unconfiguring', 'deleting', "
+            "'storage_pending', 'storage_configuring', "
+            "'storage_error', 'decommission_in_progress', "
+            "'delete_in_progress']"
+        )
+
+        self.assertEqual(stdout, expected_stdout)
 
 
 class TestDeleteGateway(TestCase):
