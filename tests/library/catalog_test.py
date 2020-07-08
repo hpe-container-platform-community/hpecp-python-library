@@ -383,7 +383,7 @@ class TestCatalogList(unittest.TestCase):
         self.assertIsInstance(catalog_list, ResourceList)
 
 
-class TestCatalogInstall(unittest.TestCase):
+class TestCatalogInstall(BaseTestCase):
     def mocked_requests_install(*args, **kwargs):
         if args[0] == "https://127.0.0.1:8080/api/v1/catalog/99":
             return MockResponse(json_data={}, status_code=204, headers=dict())
@@ -414,6 +414,75 @@ class TestCatalogInstall(unittest.TestCase):
             client.catalog.install("/api/v1/catalog/101")
 
         client.catalog.install("/api/v1/catalog/99")
+
+    @patch("requests.post", side_effect=mocked_requests_install)
+    @patch("requests.get", side_effect=mocked_requests_get)
+    def test_catalog_install_cli_with_parameter_assertion_error(
+        self, mock_get, mock_post
+    ):
+
+        with self.assertRaises(SystemExit) as cm:
+            hpecp = self.cli.CLI()
+            hpecp.catalog.install("garbage")
+
+        self.assertEqual(cm.exception.code, 1)
+
+        stdout = self.out.getvalue().strip()
+        stderr = self.err.getvalue().strip()
+
+        expected_stdout = ""  # we don't want error output going to stdout
+        expected_stderr = "'id' does not start with '/api/v1/catalog'"
+
+        self.assertEqual(stdout, expected_stdout)
+
+        # coverage seems to populate standard error (issues 93)
+        self.assertTrue(stderr.endswith(expected_stderr))
+
+    @patch("requests.post", side_effect=mocked_requests_install)
+    @patch("requests.get", side_effect=mocked_requests_get)
+    def test_catalog_install_cli_with_catalog_id_not_found(
+        self, mock_get, mock_post
+    ):
+
+        with self.assertRaises(SystemExit) as cm:
+            hpecp = self.cli.CLI()
+            hpecp.catalog.install("/api/v1/catalog/101")
+
+        self.assertEqual(cm.exception.code, 1)
+
+        stdout = self.out.getvalue().strip()
+        stderr = self.err.getvalue().strip()
+
+        expected_stdout = ""  # we don't want error output going to stdout
+        expected_stderr = "catalog not found with id: /api/v1/catalog/101"
+
+        self.assertEqual(stdout, expected_stdout)
+
+        # coverage seems to populate standard error (issues 93)
+        self.assertTrue(
+            stderr.endswith(expected_stderr),
+            (
+                "stderr = `{}`\n".format(stderr)
+                + "stderr does not end with `{}`".format(expected_stderr)
+            ),
+        )
+
+    @patch("requests.post", side_effect=mocked_requests_install)
+    @patch("requests.get", side_effect=mocked_requests_get)
+    def test_catalog_install_cli_success(self, mock_get, mock_post):
+
+        try:
+            hpecp = self.cli.CLI()
+            hpecp.catalog.install("/api/v1/catalog/99")
+        except Exception:
+            self.fail("Unexpected exception")
+
+        stdout = self.out.getvalue().strip()
+
+        # successful refresh should not output anything
+        expected_stdout = ""
+
+        self.assertEqual(stdout, "")
 
 
 class TestCatalogRefresh(BaseTestCase):
