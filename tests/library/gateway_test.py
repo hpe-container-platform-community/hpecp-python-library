@@ -1630,11 +1630,7 @@ class TestCliCreate(BaseTestCase):
 
         stdout = self.out.getvalue().strip()
 
-        self.assertEqual(
-            stdout,
-            "/api/v1/workers/1",
-            "stdout should be empty, but is `{}`".format(stdout),
-        )
+        self.assertEqual(stdout, "/api/v1/workers/1")
 
         ssh_key_file.close()
 
