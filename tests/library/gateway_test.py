@@ -1407,9 +1407,16 @@ class TestCliCreate(BaseTestCase):
 
         self.assertEqual(cm.exception.code, 1)
 
-        self.assertEqual(
-            self.out.getvalue(),
-            "Either ssh_key or ssh_key_file must be provided\n",
+        actual_err = self.err.getvalue().strip()
+        expected_err = "Either ssh_key or ssh_key_file must be provided"
+
+        self.assertEqual(self.out.getvalue(), "", "stdout should be empty")
+
+        self.assertTrue(
+            actual_err.endswith(expected_err),
+            "Actual stderr: `{}` Expected stderr: `{}`".format(
+                actual_err, expected_err
+            ),
         )
 
     def test_key_and_keycontent_provided(self,):
@@ -1425,9 +1432,16 @@ class TestCliCreate(BaseTestCase):
 
         self.assertEqual(cm.exception.code, 1)
 
-        self.assertEqual(
-            self.out.getvalue(),
-            "Either ssh_key or ssh_key_file must be provided\n",
+        actual_err = self.err.getvalue().strip()
+        expected_err = "Either ssh_key or ssh_key_file must be provided"
+
+        self.assertEqual(self.out.getvalue(), "", "stdout should be empty")
+
+        self.assertTrue(
+            actual_err.endswith(expected_err),
+            "Actual stderr: `{}` Expected stderr: `{}`".format(
+                actual_err, expected_err
+            ),
         )
 
     def mocked_requests_post(*args, **kwargs):
@@ -1448,23 +1462,70 @@ class TestCliCreate(BaseTestCase):
             "create_with_ssh_key",
             return_value="/api/v1/workers/1",
         ) as mock_create_with_ssh_key:
-            hpecp = self.cli.CLI()
-            hpecp.gateway.create_with_ssh_key(
-                ip="127.0.0.1",
-                proxy_node_hostname="somehost",
-                ssh_key="test_ssh_key",
-            )
+            try:
+                hpecp = self.cli.CLI()
+                hpecp.gateway.create_with_ssh_key(
+                    ip="127.0.0.1",
+                    proxy_node_hostname="somehost",
+                    ssh_key="test_ssh_key",
+                )
+            except Exception:
+                self.fail("Unexpected exception.")
 
-            mock_create_with_ssh_key.assert_called_once_with(
-                ip="127.0.0.1",
-                proxy_node_hostname="somehost",
-                ssh_key_data="test_ssh_key",
-                tags=[],
-            )
+        mock_create_with_ssh_key.assert_called_once_with(
+            ip="127.0.0.1",
+            proxy_node_hostname="somehost",
+            ssh_key_data="test_ssh_key",
+            tags=[],
+        )
 
-    def test_with_only_ssh_key_file_provided(self):
-        # TODO
-        pass
+        stdout = self.out.getvalue().strip()
+
+        self.assertEqual(
+            stdout,
+            "/api/v1/workers/1",
+            "stdout should be empty, but is `{}`".format(stdout),
+        )
+
+    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("hpecp.gateway")
+    def test_with_only_ssh_key_file_provided(self, mock_post, mock_gateway):
+
+        ssh_key_file = tempfile.NamedTemporaryFile(delete=True)
+        ssh_key_file.write("test_ssh_key_file_data")
+        ssh_key_file.flush()
+
+        with patch.object(
+            GatewayController,
+            "create_with_ssh_key",
+            return_value="/api/v1/workers/1",
+        ) as mock_create_with_ssh_key:
+            try:
+                hpecp = self.cli.CLI()
+                hpecp.gateway.create_with_ssh_key(
+                    ip="127.0.0.1",
+                    proxy_node_hostname="somehost",
+                    ssh_key_file=ssh_key_file.name,
+                )
+            except Exception as e:
+                self.fail("Unexpected exception. {}".format(e))
+
+        mock_create_with_ssh_key.assert_called_once_with(
+            ip="127.0.0.1",
+            proxy_node_hostname="somehost",
+            ssh_key_data="test_ssh_key_file_data",
+            tags=[],
+        )
+
+        stdout = self.out.getvalue().strip()
+
+        self.assertEqual(
+            stdout,
+            "/api/v1/workers/1",
+            "stdout should be empty, but is `{}`".format(stdout),
+        )
+
+        ssh_key_file.close()
 
 
 class TestCliDelete(BaseTestCase):
