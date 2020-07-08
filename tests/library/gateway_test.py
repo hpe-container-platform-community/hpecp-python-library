@@ -1307,6 +1307,13 @@ class TestWaitForGatewayStatus(BaseTestCase):
         except SystemExit:
             self.fail("Should not raise a SystemExit")
 
+
+    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_wait_for_delete_gateway_cli_gateway_id_does_not_exist_and_no_status(
+        self, mock_get, mock_post
+    ):
+
         try:
             hpecp = self.cli.CLI()
             hpecp.gateway.wait_for_delete(
