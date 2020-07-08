@@ -320,9 +320,12 @@ class CatalogProxy(BaseProxy):
             get_client().catalog.install(catalog_id)
 
             # TODO: Implement a way to check if the installation is actually
-            # successful (and maybe report progress?)
+            # successful (and maybe report progress?) - wait_for_state()?
+        except AssertionError as ae:
+            print(ae, file=sys.stderr)
+            sys.exit(1)
         except (APIException, APIItemNotFoundException) as e:
-            print(e.message)
+            print(e.message, file=sys.stderr)
             sys.exit(1)
 
 
