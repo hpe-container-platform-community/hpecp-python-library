@@ -454,16 +454,6 @@ class K8sWorkerProxy(BaseProxy):
         """Not yet implemented."""
         raise NotImplementedError("Not yet implemented")
 
-    def get(self, k8sworker_id):
-        """Retrieve a K8s Worker.
-
-        :param k8sworker_id: the worker ID
-        """
-        worker = get_client().k8s_worker.get(worker_id=k8sworker_id).json
-        print(
-            yaml.dump(yaml.load(json.dumps(worker), Loader=yaml.FullLoader,))
-        )
-
     def set_storage(
         self, k8sworker_id, ephemeral_disks, persistent_disks=None,
     ):

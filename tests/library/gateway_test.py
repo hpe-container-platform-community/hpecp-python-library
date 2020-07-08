@@ -1309,6 +1309,9 @@ class TestWaitForGatewayStatus(BaseTestCase):
     @patch("requests.post", side_effect=mocked_requests_post)
     def test_get_states(self, mock_post):
 
+        # TODO move me - I don't really belong in the
+        #      wait_for_state test cases
+
         hpecp = self.cli.CLI()
         hpecp.gateway.states()
 
