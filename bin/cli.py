@@ -405,16 +405,16 @@ class GatewayProxy(BaseProxy):
             sys.exit(1)
 
     def wait_for_delete(
-        self, gateway_id, timeout_secs=1200,
+        self, id, timeout_secs=1200,
     ):
         """Wait for Gateway to be deleted.
 
-        :param gateway_id: Cluster id with format: /api/v1/workers/[0-9]+
+        :param id: Cluster id with format: /api/v1/workers/[0-9]+
         :param timeout_secs: how many secs to wait before exiting
         :returns True if gateway was deleted within timeout_secs.
         """
         self.wait_for_state(
-            gateway_id=gateway_id, timeout_secs=timeout_secs,
+            id=id, timeout_secs=timeout_secs,
         )
 
     def states(self,):
