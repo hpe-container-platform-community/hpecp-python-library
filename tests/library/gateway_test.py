@@ -1307,6 +1307,14 @@ class TestWaitForGatewayStatus(BaseTestCase):
         except SystemExit:
             self.fail("Should not raise a SystemExit")
 
+        try:
+            hpecp = self.cli.CLI()
+            hpecp.gateway.wait_for_delete(
+                id="/api/v1/workers/999", timeout_secs=1
+            )
+        except SystemExit:
+            self.fail("Should not raise a SystemExit")
+
     @patch("requests.post", side_effect=mocked_requests_post)
     def test_get_states(self, mock_post):
 
@@ -1638,18 +1646,6 @@ class TestCliDelete(BaseTestCase):
                 },
             )
         raise RuntimeError("Unhandle POST request: " + args[0])
-
-    # # pylint: disable=no-method-argument
-    # def mocked_requests_delete(*args, **kwargs):
-    #     if args[0] == "https://127.0.0.1:8080/api/v1/workers/999":
-    #         return MockResponse(
-    #             text_data="Not found.",
-    #             json_data={},
-    #             status_code=404,
-    #             raise_exception=True,
-    #             headers={},
-    #         )
-    #     raise RuntimeError("Unhandle DEL request: " + args[0])
 
     @patch("requests.post", side_effect=mocked_requests_post)
     # @patch("requests.del", side_effect=mocked_requests_delete)
