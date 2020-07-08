@@ -787,7 +787,8 @@ class LicenseProxy(object):
     #     Workaround:
     #     -----------
     #      - scp your license to '/srv/bluedata/license/' on the controller
-    #      - run client.license.register(server_filename) to register the license
+    #      - run client.license.register(server_filename) to register
+    #        the license
     #     """
     #     raise Exception(
     #         "Not implemented yet! Workaround: scp your license to"
@@ -808,7 +809,8 @@ class LicenseProxy(object):
     #     Workaround:
     #     -----------
     #      - scp your license to '/srv/bluedata/license/' on the controller
-    #      - run client.license.register(server_filename) to register the license
+    #      - run client.license.register(server_filename) to register
+    #        the license
     #     """
     #     raise Exception(
     #         "Not implemented yet! Workaround: scp your license to"
