@@ -448,29 +448,41 @@ class K8sWorkerProxy(BaseProxy):
             Tags to use, e.g. "{ "tag1": "foo", "tag2": "bar"}", by default []
         """
         if ssh_key is None and ssh_key_file is None:
-            print("Either ssh_key or ssh_key_file must be provided")
+            print(
+                "Either ssh_key or ssh_key_file must be provided",
+                file=sys.stderr,
+            )
             sys.exit(1)
 
         if ssh_key is not None and ssh_key_file is not None:
-            print("Please provide only of one ssh_key or ssh_key_file")
+            print(
+                "Either ssh_key or ssh_key_file must be provided",
+                file=sys.stderr,
+            )
             sys.exit(1)
 
-        if ssh_key_file is not None:
+        if ssh_key_file:
             with open(ssh_key_file) as f:
-                ssh_key_data = f.read()
+                ssh_key = f.read()
 
         try:
             worker_id = get_client().k8s_worker.create_with_ssh_key(
-                ip=ip, ssh_key_data=ssh_key_data, tags=tags,
+                ip=ip, ssh_key_data=ssh_key, tags=tags,
             )
             print(worker_id)
-        except APIItemConflictException:
-            print("Worker already exists.")
+        except AssertionError as e:
+            print(e, file=sys.stderr)
             sys.exit(1)
-
-    def create_with_ssh_password(self,):
-        """Not yet implemented."""
-        raise NotImplementedError("Not yet implemented")
+        except APIItemConflictException:
+            print("Worker already exists.", file=sys.stderr)
+            sys.exit(1)
+        except Exception as e:
+            print(
+                "Unknown error. To debug run with env var LOG_LEVEL=DEBUG",
+                file=sys.stderr,
+            )
+            _log.error(e)
+            sys.exit(1)
 
     def set_storage(
         self, k8sworker_id, ephemeral_disks, persistent_disks=None,

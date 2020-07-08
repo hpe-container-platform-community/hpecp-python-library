@@ -1,11 +1,12 @@
 from unittest import TestCase
-
 import requests
 from mock import patch
 
 from hpecp import ContainerPlatformClient
-from hpecp.k8s_worker import WorkerK8sStatus
-from hpecp.exceptions import APIItemNotFoundException
+from hpecp.k8s_worker import K8sWorkerController, WorkerK8sStatus
+from hpecp.exceptions import APIItemConflictException, APIItemNotFoundException
+from .base_test import session_mock_response, BaseTestCase
+import tempfile
 
 
 class MockResponse:
@@ -264,3 +265,208 @@ class TestWorkers(TestCase):
             worker_id="/api/v2/worker/k8shost/5",
             ephemeral_disks=_sample_ep_disks,
         )
+
+
+class TestCliCreate(BaseTestCase):
+    def test_key_or_keycontent_provided(self,):
+
+        hpecp = self.cli.CLI()
+        with self.assertRaises(SystemExit) as cm:
+            hpecp.k8sworker.create_with_ssh_key(ip="127.0.0.1")
+
+        self.assertEqual(cm.exception.code, 1)
+
+        actual_err = self.err.getvalue().strip()
+        expected_err = "Either ssh_key or ssh_key_file must be provided"
+
+        self.assertEqual(self.out.getvalue(), "", "stdout should be empty")
+
+        self.assertTrue(
+            actual_err.endswith(expected_err),
+            "Actual stderr: `{}` Expected stderr: `{}`".format(
+                actual_err, expected_err
+            ),
+        )
+
+    def test_key_and_keycontent_provided(self,):
+
+        hpecp_cli = self.cli.CLI()
+        with self.assertRaises(SystemExit) as cm:
+            hpecp_cli.k8sworker.create_with_ssh_key(
+                ip="127.0.0.1", ssh_key="foobar", ssh_key_file="foobar"
+            )
+
+        self.assertEqual(cm.exception.code, 1)
+
+        actual_err = self.err.getvalue().strip()
+        expected_err = "Either ssh_key or ssh_key_file must be provided"
+
+        self.assertEqual(self.out.getvalue(), "", "stdout should be empty")
+
+        self.assertTrue(
+            actual_err.endswith(expected_err),
+            "Actual stderr: `{}` Expected stderr: `{}`".format(
+                actual_err, expected_err
+            ),
+        )
+
+    def mocked_requests_post(*args, **kwargs):
+        if args[0] == "https://127.0.0.1:8080/api/v1/login":
+            return session_mock_response()
+        raise RuntimeError("Unhandle POST request: " + args[0])
+
+    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("hpecp.k8s_worker")
+    def test_with_only_ssh_key_content_provided(
+        self, mock_post, mock_k8sworker
+    ):
+
+        """Test that the ssh key content provided by the 'ssh_key' parameter
+        is passed to the library method 'create_with_ssh_key()'.
+        """
+
+        with patch.object(
+            K8sWorkerController,
+            "create_with_ssh_key",
+            return_value="/api/v2/worker/k8shost/1",
+        ) as mock_create_with_ssh_key:
+            try:
+                hpecp_cli = self.cli.CLI()
+                hpecp_cli.k8sworker.create_with_ssh_key(
+                    ip="127.0.0.1", ssh_key="test_ssh_key",
+                )
+            except Exception:
+                self.fail("Unexpected exception.")
+
+        mock_create_with_ssh_key.assert_called_once_with(
+            ip="127.0.0.1", ssh_key_data="test_ssh_key", tags=[],
+        )
+
+        stdout = self.out.getvalue().strip()
+
+        self.assertEqual(stdout, "/api/v2/worker/k8shost/1")
+
+    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("hpecp.k8s_worker")
+    def test_with_only_ssh_key_content_provided_raises_assertion_error(
+        self, mock_post, mock_k8sworker
+    ):
+
+        with patch.object(
+            K8sWorkerController,
+            "create_with_ssh_key",
+            side_effect=AssertionError("TEST_ASSERTION"),
+        ):
+            with self.assertRaises(SystemExit) as cm:
+                hpecp_cli = self.cli.CLI()
+                hpecp_cli.k8sworker.create_with_ssh_key(
+                    ip="127.0.0.1", ssh_key="test_ssh_key",
+                )
+
+        self.assertEqual(cm.exception.code, 1)
+
+        stdout = self.out.getvalue().strip()
+        stderr = self.err.getvalue().strip()
+
+        expected_err = "TEST_ASSERTION"
+
+        self.assertEqual(stdout, "")
+        self.assertTrue(
+            stderr.endswith(expected_err),
+            "Expected: `{}`, Actual: `{}`".format(expected_err, stderr),
+        )
+
+    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("hpecp.k8s_worker")
+    def test_with_only_ssh_key_content_provided_raises_conflict_exception(
+        self, mock_post, mock_k8sworker
+    ):
+
+        with patch.object(
+            K8sWorkerController,
+            "create_with_ssh_key",
+            side_effect=APIItemConflictException(
+                message="MESSAGE", request_method="METHOD", request_url="URL",
+            ),
+        ):
+            with self.assertRaises(SystemExit) as cm:
+                hpecp_cli = self.cli.CLI()
+                hpecp_cli.k8sworker.create_with_ssh_key(
+                    ip="127.0.0.1", ssh_key="test_ssh_key",
+                )
+
+        self.assertEqual(cm.exception.code, 1)
+
+        stdout = self.out.getvalue().strip()
+        stderr = self.err.getvalue().strip()
+
+        expected_err = "Worker already exists."
+
+        self.assertEqual(stdout, "")
+        self.assertTrue(
+            stderr.endswith(expected_err),
+            "Expected: `{}`, Actual: `{}`".format(expected_err, stderr),
+        )
+
+    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("hpecp.k8s_worker")
+    def test_with_only_ssh_key_content_provided_raises_general_exception(
+        self, mock_post, mock_k8sworker
+    ):
+
+        with patch.object(
+            K8sWorkerController,
+            "create_with_ssh_key",
+            side_effect=Exception("TEST_EXCEPTION"),
+        ):
+            with self.assertRaises(SystemExit) as cm:
+                hpecp_cli = self.cli.CLI()
+                hpecp_cli.k8sworker.create_with_ssh_key(
+                    ip="127.0.0.1", ssh_key="test_ssh_key",
+                )
+
+        self.assertEqual(cm.exception.code, 1)
+
+        stdout = self.out.getvalue().strip()
+        stderr = self.err.getvalue().strip()
+
+        expected_err = (
+            "Unknown error. To debug run with env var LOG_LEVEL=DEBUG"
+        )
+
+        self.assertEqual(stdout, "")
+        self.assertTrue(
+            stderr.endswith(expected_err),
+            "Expected: `{}`, Actual: `{}`".format(expected_err, stderr),
+        )
+
+    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("hpecp.k8s_worker")
+    def test_with_only_ssh_key_file_provided(self, mock_post, mock_k8sworker):
+
+        ssh_key_file = tempfile.NamedTemporaryFile(delete=True, mode="w")
+        ssh_key_file.write("test_ssh_key_file_data")
+        ssh_key_file.flush()
+
+        with patch.object(
+            K8sWorkerController,
+            "create_with_ssh_key",
+            return_value="/api/v1/workers/1",
+        ) as mock_create_with_ssh_key:
+            try:
+                hpecp_cli = self.cli.CLI()
+                hpecp_cli.k8sworker.create_with_ssh_key(
+                    ip="127.0.0.1", ssh_key_file=ssh_key_file.name,
+                )
+            except Exception as e:
+                self.fail("Unexpected exception. {}".format(e))
+
+        mock_create_with_ssh_key.assert_called_once_with(
+            ip="127.0.0.1", ssh_key_data="test_ssh_key_file_data", tags=[],
+        )
+
+        stdout = self.out.getvalue().strip()
+
+        self.assertEqual(stdout, "/api/v1/workers/1")
+
+        ssh_key_file.close()
