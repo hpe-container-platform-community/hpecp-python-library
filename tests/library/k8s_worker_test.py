@@ -470,3 +470,25 @@ class TestCliCreate(BaseTestCase):
         self.assertEqual(stdout, "/api/v2/worker/k8shost/1")
 
         ssh_key_file.close()
+
+
+class TestCliStates(BaseTestCase):
+    @patch("requests.post", side_effect=session_mock_response)
+    def test_get_states(self, mock_post):
+
+        self.maxDiff = None
+
+        hpecp = self.cli.CLI()
+        hpecp.k8sworker.statuses()
+
+        stdout = self.out.getvalue().strip()
+
+        expected_stdout = (
+            "['bundle', 'installing', 'installed', 'ready', "
+            "'unlicensed', 'configuring', 'configured', 'error', "
+            "'sysinfo', 'unconfiguring', 'deleting', "
+            "'storage_pending', 'storage_configuring', "
+            "'storage_error']"
+        )
+
+        self.assertEqual(stdout, expected_stdout)
