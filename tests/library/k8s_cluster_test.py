@@ -30,6 +30,8 @@ import requests
 import six
 from mock import patch
 
+from .base_test import BaseTestCase, session_mock_response
+
 from hpecp import (
     APIException,
     APIItemNotFoundException,
@@ -1055,3 +1057,28 @@ class TestCLI(TestCase):
         self.assertEqual(
             output, "['1.14.10', '1.15.7', '1.16.4', '1.17.0', '1.18.0']",
         )
+
+
+class TestCliStates(BaseTestCase):
+    @patch("requests.post", side_effect=session_mock_response)
+    def test_get_states(self, mock_post):
+
+        self.maxDiff = None
+
+        hpecp = self.cli.CLI()
+        hpecp.k8scluster.statuses()
+        stdout = self.out.getvalue().strip()
+
+        expected_stdout = str(
+            [
+                "ready",
+                "creating",
+                "updating",
+                "upgrading",
+                "deleting",
+                "error",
+                "warning",
+            ]
+        )
+
+        self.assertEqual(stdout, expected_stdout)

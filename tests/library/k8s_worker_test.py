@@ -451,7 +451,7 @@ class TestCliCreate(BaseTestCase):
         with patch.object(
             K8sWorkerController,
             "create_with_ssh_key",
-            return_value="/api/v1/workers/1",
+            return_value="/api/v2/worker/k8shost/1",
         ) as mock_create_with_ssh_key:
             try:
                 hpecp_cli = self.cli.CLI()
@@ -467,6 +467,28 @@ class TestCliCreate(BaseTestCase):
 
         stdout = self.out.getvalue().strip()
 
-        self.assertEqual(stdout, "/api/v1/workers/1")
+        self.assertEqual(stdout, "/api/v2/worker/k8shost/1")
 
         ssh_key_file.close()
+
+
+class TestCliStates(BaseTestCase):
+    @patch("requests.post", side_effect=session_mock_response)
+    def test_get_states(self, mock_post):
+
+        self.maxDiff = None
+
+        hpecp = self.cli.CLI()
+        hpecp.k8sworker.statuses()
+
+        stdout = self.out.getvalue().strip()
+
+        expected_stdout = (
+            "['bundle', 'installing', 'installed', 'ready', "
+            "'unlicensed', 'configuring', 'configured', 'error', "
+            "'sysinfo', 'unconfiguring', 'deleting', "
+            "'storage_pending', 'storage_configuring', "
+            "'storage_error']"
+        )
+
+        self.assertEqual(stdout, expected_stdout)
