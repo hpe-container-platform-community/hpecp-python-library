@@ -1574,7 +1574,9 @@ class TestCliCreate(BaseTestCase):
         stdout = self.out.getvalue().strip()
         stderr = self.err.getvalue().strip()
 
-        expected_err = "Unknown error. To debug run with env var LOG_LEVEL=DEBUG"
+        expected_err = (
+            "Unknown error. To debug run with env var LOG_LEVEL=DEBUG"
+        )
 
         self.assertEqual(stdout, "")
         self.assertTrue(
