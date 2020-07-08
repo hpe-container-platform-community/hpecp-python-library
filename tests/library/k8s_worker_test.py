@@ -451,7 +451,7 @@ class TestCliCreate(BaseTestCase):
         with patch.object(
             K8sWorkerController,
             "create_with_ssh_key",
-            return_value="/api/v1/workers/1",
+            return_value="/api/v2/worker/k8shost/1",
         ) as mock_create_with_ssh_key:
             try:
                 hpecp_cli = self.cli.CLI()
@@ -467,6 +467,6 @@ class TestCliCreate(BaseTestCase):
 
         stdout = self.out.getvalue().strip()
 
-        self.assertEqual(stdout, "/api/v1/workers/1")
+        self.assertEqual(stdout, "/api/v2/worker/k8shost/1")
 
         ssh_key_file.close()
