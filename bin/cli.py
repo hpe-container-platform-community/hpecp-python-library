@@ -365,14 +365,20 @@ class GatewayProxy(BaseProxy):
             "{ 'tag1': 'foo', 'tag2', 'bar' }".
         """
         if ssh_key is None and ssh_key_file is None:
-            print("Either ssh_key or ssh_key_file must be provided")
+            print(
+                "Either ssh_key or ssh_key_file must be provided",
+                file=sys.stderr,
+            )
             sys.exit(1)
 
         if ssh_key is not None and ssh_key_file is not None:
-            print("Either ssh_key or ssh_key_file must be provided")
+            print(
+                "Either ssh_key or ssh_key_file must be provided",
+                file=sys.stderr,
+            )
             sys.exit(1)
 
-        if ssh_key_file is not None:
+        if ssh_key_file:
             with open(ssh_key_file) as f:
                 ssh_key = f.read()
 
@@ -384,13 +390,12 @@ class GatewayProxy(BaseProxy):
                 tags=tags,
             )
             print(gateway_id)
-        except APIItemConflictException:
-            print("Gateway already exists.")
+        except AssertionError as e:
+            print(e, file=sys.stderr)
             sys.exit(1)
-
-    def create_with_ssh_password(self,):
-        """Not yet implemented."""
-        raise NotImplementedError("Not yet implemented")
+        except APIItemConflictException:
+            print("Gateway already exists.", file=sys.stderr)
+            sys.exit(1)
 
     def wait_for_delete(
         self, gateway_id, timeout_secs=1200,
