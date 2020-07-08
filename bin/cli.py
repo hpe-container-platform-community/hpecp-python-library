@@ -296,8 +296,11 @@ class CatalogProxy(BaseProxy):
             get_client().catalog.refresh(catalog_id)
 
             # TODO: Report progress of the refresh workflow
+        except AssertionError as ae:
+            print(ae, file=sys.stderr)
+            sys.exit(1)
         except (APIException, APIItemNotFoundException) as e:
-            print(e.message)
+            print(e.message, file=sys.stderr)
             sys.exit(1)
 
     def install(self, catalog_id):
