@@ -1491,7 +1491,7 @@ class TestCliCreate(BaseTestCase):
     @patch("hpecp.gateway")
     def test_with_only_ssh_key_file_provided(self, mock_post, mock_gateway):
 
-        ssh_key_file = tempfile.NamedTemporaryFile(delete=True)
+        ssh_key_file = tempfile.NamedTemporaryFile(delete=True, mode = "w")
         ssh_key_file.write("test_ssh_key_file_data")
         ssh_key_file.flush()
 
