@@ -396,6 +396,13 @@ class GatewayProxy(BaseProxy):
         except APIItemConflictException:
             print("Gateway already exists.", file=sys.stderr)
             sys.exit(1)
+        except Exception as e:
+            print(
+                "Unknown error. To debug run with env var LOG_LEVEL=DEBUG",
+                file=sys.stderr,
+            )
+            _log.error(e)
+            sys.exit(1)
 
     def wait_for_delete(
         self, gateway_id, timeout_secs=1200,

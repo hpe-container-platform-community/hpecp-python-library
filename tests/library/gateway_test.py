@@ -21,7 +21,7 @@
 from unittest import TestCase
 
 import requests
-from mock import patch
+from mock import Mock, patch
 
 from hpecp import (
     APIItemNotFoundException,
@@ -35,6 +35,7 @@ import sys
 import six
 
 from .base_test import BaseTestCase
+from hpecp.exceptions import APIItemConflictException
 
 if six.PY2:
     from io import BytesIO as StringIO
@@ -1481,10 +1482,104 @@ class TestCliCreate(BaseTestCase):
 
         stdout = self.out.getvalue().strip()
 
-        self.assertEqual(
-            stdout,
-            "/api/v1/workers/1",
-            "stdout should be empty, but is `{}`".format(stdout),
+        self.assertEqual(stdout, "/api/v1/workers/1")
+
+    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("hpecp.gateway")
+    def test_with_only_ssh_key_content_provided_raises_assertion_error(
+        self, mock_post, mock_gateway
+    ):
+
+        with patch.object(
+            GatewayController,
+            "create_with_ssh_key",
+            side_effect=AssertionError("TEST_ASSERTION"),
+        ):
+            with self.assertRaises(SystemExit) as cm:
+                hpecp = self.cli.CLI()
+                hpecp.gateway.create_with_ssh_key(
+                    ip="127.0.0.1",
+                    proxy_node_hostname="somehost",
+                    ssh_key="test_ssh_key",
+                )
+
+        self.assertEqual(cm.exception.code, 1)
+
+        stdout = self.out.getvalue().strip()
+        stderr = self.err.getvalue().strip()
+
+        expected_err = "TEST_ASSERTION"
+
+        self.assertEqual(stdout, "")
+        self.assertTrue(
+            stderr.endswith(expected_err),
+            "Expected: `{}`, Actual: `{}`".format(expected_err, stderr),
+        )
+
+    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("hpecp.gateway")
+    def test_with_only_ssh_key_content_provided_raises_conflict_exception(
+        self, mock_post, mock_gateway
+    ):
+
+        with patch.object(
+            GatewayController,
+            "create_with_ssh_key",
+            side_effect=APIItemConflictException(
+                message="MESSAGE", request_method="METHOD", request_url="URL",
+            ),
+        ):
+            with self.assertRaises(SystemExit) as cm:
+                hpecp = self.cli.CLI()
+                hpecp.gateway.create_with_ssh_key(
+                    ip="127.0.0.1",
+                    proxy_node_hostname="somehost",
+                    ssh_key="test_ssh_key",
+                )
+
+        self.assertEqual(cm.exception.code, 1)
+
+        stdout = self.out.getvalue().strip()
+        stderr = self.err.getvalue().strip()
+
+        expected_err = "Gateway already exists."
+
+        self.assertEqual(stdout, "")
+        self.assertTrue(
+            stderr.endswith(expected_err),
+            "Expected: `{}`, Actual: `{}`".format(expected_err, stderr),
+        )
+
+    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("hpecp.gateway")
+    def test_with_only_ssh_key_content_provided_raises_general_exception(
+        self, mock_post, mock_gateway
+    ):
+
+        with patch.object(
+            GatewayController,
+            "create_with_ssh_key",
+            side_effect=Exception("TEST_EXCEPTION"),
+        ):
+            with self.assertRaises(SystemExit) as cm:
+                hpecp = self.cli.CLI()
+                hpecp.gateway.create_with_ssh_key(
+                    ip="127.0.0.1",
+                    proxy_node_hostname="somehost",
+                    ssh_key="test_ssh_key",
+                )
+
+        self.assertEqual(cm.exception.code, 1)
+
+        stdout = self.out.getvalue().strip()
+        stderr = self.err.getvalue().strip()
+
+        expected_err = "Unknown error. To debug run with env var LOG_LEVEL=DEBUG"
+
+        self.assertEqual(stdout, "")
+        self.assertTrue(
+            stderr.endswith(expected_err),
+            "Expected: `{}`, Actual: `{}`".format(expected_err, stderr),
         )
 
     @patch("requests.post", side_effect=mocked_requests_post)
