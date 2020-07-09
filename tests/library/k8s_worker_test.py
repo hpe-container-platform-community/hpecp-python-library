@@ -537,8 +537,9 @@ class TestCliSetStorage(BaseTestCase):
             "Expected: `{}` Actual: `{}`".format(exptected_stderr, stderr),
         )
 
+    @patch("requests.post", side_effect=session_mock_response)
     @patch("hpecp.k8s_worker")
-    def test_with_exception(self, mock_k8sworker):
+    def test_with_exception(self, mock_post, mock_k8sworker):
 
         with patch.object(
             K8sWorkerController,
@@ -562,7 +563,9 @@ class TestCliSetStorage(BaseTestCase):
         stdout = self.out.getvalue().strip()
         stderr = self.err.getvalue().strip()
 
-        exptected_stderr = "Could not connect to controller - set LOG_LEVEL=DEBUG to see more detail."
+        exptected_stderr = (
+            "Unknown error. To debug run with env var LOG_LEVEL=DEBUG"
+        )
 
         self.assertEqual(stdout, "")
         self.assertTrue(
