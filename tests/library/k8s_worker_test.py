@@ -47,105 +47,102 @@ def get_client():
     return client
 
 
-class TestWorkers(TestCase):
-    def mocked_requests_get(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v2/worker/k8shost":
-            return MockResponse(
-                json_data={
-                    "_embedded": {
-                        "k8shosts": [
-                            {
-                                "status": "unlicensed",
-                                "propinfo": {
-                                    "bds_storage_apollo": "false",
-                                    "bds_network_publicinterface": "ens5",
-                                },
-                                "approved_worker_pubkey": [],
-                                "tags": [],
-                                "hostname": (
-                                    "ip-10-1-0-238.eu-west-2.compute.internal"
-                                ),
-                                "ipaddr": "10.1.0.238",
-                                "setup_log": (
-                                    "/var/log/bluedata/install/"
-                                    "k8shost_setup_10.1.0.238-"
-                                    "2020-4-26-18-41-16"
-                                ),
-                                "_links": {
-                                    "self": {
-                                        "href": "/api/v2/worker/k8shost/4"
-                                    }
-                                },
-                                "sysinfo": {
-                                    "network": [],
-                                    "keys": {
-                                        "reported_worker_public_key": (
-                                            "ssh-rsa ...== server\n"
-                                        )
-                                    },
-                                    "storage": [],
-                                    "swap": {"swap_total": 0},
-                                    "memory": {"mem_total": 65842503680},
-                                    "gpu": {"gpu_count": 0},
-                                    "cpu": {
-                                        "cpu_logical_cores": 16,
-                                        "cpu_count": 8,
-                                        "cpu_physical_cores": 8,
-                                        "cpu_sockets": 1,
-                                    },
-                                    "mountpoint": [],
-                                },
+def mocked_requests_get(*args, **kwargs):
+    if args[0] == "https://127.0.0.1:8080/api/v2/worker/k8shost":
+        return MockResponse(
+            json_data={
+                "_embedded": {
+                    "k8shosts": [
+                        {
+                            "status": "unlicensed",
+                            "propinfo": {
+                                "bds_storage_apollo": "false",
+                                "bds_network_publicinterface": "ens5",
                             },
-                            {
-                                "status": "bundle",
-                                "approved_worker_pubkey": [],
-                                "tags": [],
-                                "hostname": "",
-                                "ipaddr": "10.1.0.186",
-                                "setup_log": (
-                                    "/var/log/bluedata/install/"
-                                    "k8shost_setup_10.1.0.186-"
-                                    "2020-4-26-18-49-10"
-                                ),
-                                "_links": {
-                                    "self": {
-                                        "href": "/api/v2/worker/k8shost/5"
-                                    }
-                                },
+                            "approved_worker_pubkey": [],
+                            "tags": [],
+                            "hostname": (
+                                "ip-10-1-0-238.eu-west-2.compute.internal"
+                            ),
+                            "ipaddr": "10.1.0.238",
+                            "setup_log": (
+                                "/var/log/bluedata/install/"
+                                "k8shost_setup_10.1.0.238-"
+                                "2020-4-26-18-41-16"
+                            ),
+                            "_links": {
+                                "self": {"href": "/api/v2/worker/k8shost/4"}
                             },
-                        ]
-                    }
-                },
-                status_code=200,
-                headers={},
-            )
-        elif args[0] == "https://127.0.0.1:8080/api/v2/worker/k8shost/5":
-            return MockResponse(
-                json_data={
-                    "status": "bundle",
-                    "approved_worker_pubkey": [],
-                    "tags": [],
-                    "hostname": "",
-                    "ipaddr": "10.1.0.186",
-                    "setup_log": (
-                        "/var/log/bluedata/install/"
-                        "k8shost_setup_10.1.0.186-"
-                        "2020-4-26-18-49-10"
-                    ),
-                    "_links": {"self": {"href": "/api/v2/worker/k8shost/5"}},
-                },
-                status_code=200,
-                headers={},
-            )
-        elif args[0] == "https://127.0.0.1:8080/api/v2/worker/k8shost/8":
-            return MockResponse(
-                json_data={},
-                status_code=404,
-                raise_for_status_flag=True,
-                headers={},
-            )
-        raise RuntimeError("Unhandle GET request: " + args[0])
+                            "sysinfo": {
+                                "network": [],
+                                "keys": {
+                                    "reported_worker_public_key": (
+                                        "ssh-rsa ...== server\n"
+                                    )
+                                },
+                                "storage": [],
+                                "swap": {"swap_total": 0},
+                                "memory": {"mem_total": 65842503680},
+                                "gpu": {"gpu_count": 0},
+                                "cpu": {
+                                    "cpu_logical_cores": 16,
+                                    "cpu_count": 8,
+                                    "cpu_physical_cores": 8,
+                                    "cpu_sockets": 1,
+                                },
+                                "mountpoint": [],
+                            },
+                        },
+                        {
+                            "status": "bundle",
+                            "approved_worker_pubkey": [],
+                            "tags": [],
+                            "hostname": "",
+                            "ipaddr": "10.1.0.186",
+                            "setup_log": (
+                                "/var/log/bluedata/install/"
+                                "k8shost_setup_10.1.0.186-"
+                                "2020-4-26-18-49-10"
+                            ),
+                            "_links": {
+                                "self": {"href": "/api/v2/worker/k8shost/5"}
+                            },
+                        },
+                    ]
+                }
+            },
+            status_code=200,
+            headers={},
+        )
+    elif args[0] == "https://127.0.0.1:8080/api/v2/worker/k8shost/5":
+        return MockResponse(
+            json_data={
+                "status": "bundle",
+                "approved_worker_pubkey": [],
+                "tags": [],
+                "hostname": "",
+                "ipaddr": "10.1.0.186",
+                "setup_log": (
+                    "/var/log/bluedata/install/"
+                    "k8shost_setup_10.1.0.186-"
+                    "2020-4-26-18-49-10"
+                ),
+                "_links": {"self": {"href": "/api/v2/worker/k8shost/5"}},
+            },
+            status_code=200,
+            headers={},
+        )
+    elif args[0] == "https://127.0.0.1:8080/api/v2/worker/k8shost/8":
+        return MockResponse(
+            json_data={},
+            status_code=404,
+            raise_for_status_flag=True,
+            headers={},
+        )
+    raise RuntimeError("Unhandle GET request: " + args[0])
 
+
+class TestWorkers(BaseTestCase):
     def mocked_requests_post(*args, **kwargs):
         if args[0] == "https://127.0.0.1:8080/api/v1/login":
             return MockResponse(
@@ -265,6 +262,20 @@ class TestWorkers(TestCase):
             worker_id="/api/v2/worker/k8shost/5",
             ephemeral_disks=_sample_ep_disks,
         )
+
+    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_cli(self, mock_get, mock_post):
+
+        try:
+            hpecp_cli = self.cli.CLI()
+            hpecp_cli.k8sworker.set_storage(
+                id="/api/v2/worker/k8shost/5",
+                ephemeral_disks="abc,def",
+                persistent_disks="ghi,jkl",
+            )
+        except Exception as e:
+            self.fail("Unexpected exception: {}".format(e))
 
 
 class TestCliCreate(BaseTestCase):
@@ -492,3 +503,69 @@ class TestCliStates(BaseTestCase):
         )
 
         self.assertEqual(stdout, expected_stdout)
+
+
+class TestCliSetStorage(BaseTestCase):
+    @patch("hpecp.k8s_worker")
+    def test_wwithout_ephemeral_storage_prints_err(self, mock_k8sworker):
+
+        with patch.object(
+            K8sWorkerController, "set_storage", return_value=None,
+        ) as mock_k8s_worker:
+
+            with self.assertRaises(SystemExit) as cm:
+                try:
+                    hpecp_cli = self.cli.CLI()
+                    hpecp_cli.k8sworker.set_storage(
+                        id="12345",
+                        ephemeral_disks=None,
+                        persistent_disks=None,
+                    )
+                except Exception as e:
+                    self.fail("Unexpected exception: {}".format(e))
+
+        self.assertEqual(cm.exception.code, 1)
+
+        stdout = self.out.getvalue().strip()
+        stderr = self.err.getvalue().strip()
+
+        exptected_stderr = "'ephemeral_disks' must be provided"
+
+        self.assertEqual(stdout, "")
+        self.assertTrue(
+            stderr.endswith(exptected_stderr),
+            "Expected: `{}` Actual: `{}`".format(exptected_stderr, stderr),
+        )
+
+    @patch("hpecp.k8s_worker")
+    def test_with_exception(self, mock_k8sworker):
+
+        with patch.object(
+            K8sWorkerController,
+            "set_storage",
+            side_effect=Exception("TEST_EXCEPTION"),
+        ) as mock_k8s_worker:
+
+            with self.assertRaises(SystemExit) as cm:
+                try:
+                    hpecp_cli = self.cli.CLI()
+                    hpecp_cli.k8sworker.set_storage(
+                        id="12345",
+                        ephemeral_disks="abc,def",
+                        persistent_disks="ghi,jkl",
+                    )
+                except Exception as e:
+                    self.fail("Unexpected exception: {}".format(e))
+
+        self.assertEqual(cm.exception.code, 1)
+
+        stdout = self.out.getvalue().strip()
+        stderr = self.err.getvalue().strip()
+
+        exptected_stderr = "Could not connect to controller - set LOG_LEVEL=DEBUG to see more detail."
+
+        self.assertEqual(stdout, "")
+        self.assertTrue(
+            stderr.endswith(exptected_stderr),
+            "Expected: `{}` Actual: `{}`".format(exptected_stderr, stderr),
+        )

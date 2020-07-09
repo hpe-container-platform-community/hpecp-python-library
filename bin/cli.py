@@ -485,13 +485,13 @@ class K8sWorkerProxy(BaseProxy):
             sys.exit(1)
 
     def set_storage(
-        self, k8sworker_id, ephemeral_disks, persistent_disks=None,
+        self, id, ephemeral_disks, persistent_disks=None,
     ):
         """Set storage for a k8s worker.
 
         Parameters
         ----------
-        k8sworker_id : str
+        id : str
             The k8s worker ID
         ephemeral_disks : str
             Comma separated string containing ephemeral disks.
@@ -502,7 +502,7 @@ class K8sWorkerProxy(BaseProxy):
             e.g: "/dev/nvme1n1,/dev/nvme1n2"
         """
         if not ephemeral_disks:
-            print("`ephemeral_disks` must be provided")
+            print("'ephemeral_disks' must be provided", file=sys.stderr)
             sys.exit(1)
 
         p_disks = (
@@ -510,11 +510,19 @@ class K8sWorkerProxy(BaseProxy):
         )
         e_disks = ephemeral_disks.split(",")
 
-        get_client().k8s_worker.set_storage(
-            worker_id=k8sworker_id,
-            persistent_disks=p_disks,
-            ephemeral_disks=e_disks,
-        )
+        try:
+            get_client().k8s_worker.set_storage(
+                worker_id=id,
+                persistent_disks=p_disks,
+                ephemeral_disks=e_disks,
+            )
+        except Exception as e:
+            print(
+                "Unknown error. To debug run with env var LOG_LEVEL=DEBUG",
+                file=sys.stderr,
+            )
+            _log.error(e)
+            sys.exit(1)
 
     def statuses(self,):
         """Return a list of valid statuses."""
