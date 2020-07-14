@@ -34,6 +34,8 @@ from collections import OrderedDict
 
 import fire
 import jmespath
+
+from jinja2 import Environment
 import six
 import yaml
 
@@ -48,6 +50,7 @@ from hpecp.logger import Logger
 from hpecp.gateway import GatewayStatus
 from hpecp.k8s_cluster import K8sClusterHostConfig, K8sClusterStatus
 from hpecp.exceptions import APIItemNotFoundException
+from textwrap import dedent
 
 if sys.version_info[0] >= 3:
     unicode = str
@@ -268,6 +271,7 @@ class BaseProxy:
             sys.exit(1)
 
 
+# @cli_module
 class CatalogProxy(BaseProxy):
     """Proxy object to :py:attr:`<hpecp.client.catalog>`."""
 
@@ -275,6 +279,18 @@ class CatalogProxy(BaseProxy):
         """Initiate this proxy class with the client module name."""
         super(CatalogProxy, self).new_instance("catalog")
 
+    def __dir__(self):
+        """Return the CLI method names."""
+        return [
+            "get",
+            "list",
+            "delete",
+            "wait_for_state",
+            "refresh",
+            "install",
+        ]
+
+    # @cli_method
     def delete(self, id):
         """Not implemented."""
         raise AttributeError("'CatalogProxy' object has no attribute 'delete'")
@@ -331,6 +347,17 @@ class CatalogProxy(BaseProxy):
 
 class GatewayProxy(BaseProxy):
     """Proxy object to :py:attr:`<hpecp.client.gateway>`."""
+
+    def __dir__(self):
+        """Return the CLI method names."""
+        return [
+            "create_with_ssh_key",
+            "delete",
+            "get",
+            "list",
+            "states",
+            "wait_for_state",
+        ]
 
     def __init__(self):
         """Initiate this proxy class with the client module name."""
@@ -424,6 +451,18 @@ class GatewayProxy(BaseProxy):
 
 class K8sWorkerProxy(BaseProxy):
     """Proxy object to :py:attr:`<hpecp.client.k8s_worker>`."""
+
+    def __dir__(self):
+        """Return the CLI method names."""
+        return [
+            "create_with_ssh_key",
+            "delete",
+            "get",
+            "list",
+            "set_storage",
+            "statuses",
+            "wait_for_status",
+        ]
 
     def __init__(self):
         """Initiate this proxy class with the client module name."""
@@ -531,6 +570,21 @@ class K8sWorkerProxy(BaseProxy):
 
 class K8sClusterProxy(BaseProxy):
     """Proxy object to :py:attr:`<hpecp.client.k8s_cluster>`."""
+
+    def __dir__(self):
+        """Return the CLI method names."""
+        return [
+            "admin_kube_config",
+            "create",
+            "dashboard_url",
+            "dashboard_token",
+            "delete",
+            "get",
+            "k8s_supported_versions",
+            "list",
+            "statuses",
+            "wait_for_status",
+        ]
 
     def __init__(self):
         """Initiate this proxy class with the client module name."""
@@ -691,6 +745,15 @@ class K8sClusterProxy(BaseProxy):
 class LockProxy(object):
     """Proxy object to :py:attr:`<hpecp.client.lock>`."""
 
+    def __dir__(self):
+        """Return the CLI method names."""
+        return [
+            "create",
+            "delete",
+            "get",
+            "list",
+        ]
+
     def get(
         self, output="yaml",
     ):
@@ -740,6 +803,10 @@ class LockProxy(object):
 
 class LicenseProxy(object):
     """Proxy object to :py:attr:`<hpecp.client.license>`."""
+
+    def __dir__(self):
+        """Return the CLI method names."""
+        return ["delete", "delete_all", "list", "platform_id", "register"]
 
     def platform_id(self,):
         """Get the platform ID."""
@@ -853,6 +920,10 @@ class LicenseProxy(object):
 class HttpClientProxy(object):
     """Proxy object to :py:attr:`<hpecp.client._request>`."""
 
+    def __dir__(self):
+        """Return the CLI method names."""
+        return ["delete", "get", "post", "put"]
+
     def get(
         self, url,
     ):
@@ -936,6 +1007,10 @@ class HttpClientProxy(object):
 class UserProxy(BaseProxy):
     """Proxy object to :py:attr:`<hpecp.client.user>`."""
 
+    def __dir__(self):
+        """Return the CLI method names."""
+        return ["create"]
+
     def __init__(self):
         """Initiate this proxy class with the client module name."""
         super(UserProxy, self).new_instance("user")
@@ -962,6 +1037,10 @@ class UserProxy(BaseProxy):
 class RoleProxy(object):
     """Proxy object to :py:attr:`<hpecp.client.role>`."""
 
+    def __dir__(self):
+        """Return the CLI method names."""
+        return ["get"]
+
     def get(
         self, role_id, output="yaml",
     ):
@@ -981,97 +1060,6 @@ class RoleProxy(object):
             )
         else:
             print(response.json)
-
-
-class AutoComplete:
-    """Shell autocompletion scripts.
-
-    Example Usage:
-
-    hpecp autocomplete bash > hpecp-bash.sh && source hpecp-bash.sh
-    """
-
-    def bash(self,):
-        """Create autocompletion script for bash."""
-        print(
-            """_hpecp_complete()
-{
-    local cur prev BASE_LEVEL
-
-    COMPREPLY=()
-    cur=${COMP_WORDS[COMP_CWORD]}
-    prev=${COMP_WORDS[COMP_CWORD-1]}
-
-    COMP_WORDS_AS_STRING=$(IFS=, ; echo "${COMP_WORDS[*]}")
-
-    case "$COMP_WORDS_AS_STRING" in
-
-        ###############
-        ### gateway ###
-        ###############
-
-        *"hpecp,gateway,create-with-ssh-key"*)
-            COMPREPLY=( $(compgen \
-                        -f -W "--ip --proxy-node-hostname --ssh-key --ssh-key-file --tags" \
-                        -- $cur) )
-            ;;
-        *"hpecp,gateway"*)
-            COMPREPLY=( $(compgen \
-                        -W "create-with-ssh-key create-with-ssh-password delete get list states wait-for-delete wait-for-state" \
-                        -- $cur) )
-            ;;
-
-        ###############
-        ### k8sworker ###
-        ###############
-
-        *"hpecp,k8sworker,create-with-ssh-key"*)
-            COMPREPLY=( $(compgen \
-                        -f  -W "--ip --ssh-key --ssh-key-file --tags" \
-                        -- $cur) )
-            ;;
-        *"hpecp,k8sworker"*)
-            COMPREPLY=( $(compgen \
-                        -W "create-with-ssh-key delete get list " \
-                        -- $cur) )
-            ;;
-
-
-        ###############
-        ### license ###
-        ###############
-
-        *"hpecp,license"*)
-            COMPREPLY=( $(compgen \
-                        -W "delete delete-all list platform-id register upload-with-ssh-key upload-with-ssh-pass" \
-                        -- $cur) )
-            ;;
-
-        ####################
-        ### autocomplete ###
-        ####################
-
-        *"hpecp,autocomplete,bash"*)
-            COMPREPLY=( )
-            ;;
-        *"hpecp,autocomplete"*)
-            COMPREPLY=( $(compgen \
-                        -W "bash" \
-                        -- $cur) )
-            ;;
-        *"hpecp"*)
-            COMPREPLY=( $(compgen \
-                      -W "autocomplete configure-cli gateway httpclient k8scluster k8sworker license lock" \
-                      -- $cur) )
-            ;;
-    esac
-
-    return 0
-
-} &&
-complete -F _hpecp_complete hpecp
-        """  # noqa: E501
-        )
 
 
 def configure_cli():
@@ -1153,11 +1141,136 @@ def configure_cli():
         config.write(config_file)
 
 
+class AutoComplete:
+    """Shell autocompletion scripts.
+
+    Example Usage:
+
+    hpecp autocomplete bash > hpecp-bash.sh && source hpecp-bash.sh
+    """
+
+    def __dir__(self):
+        """Return the CLI method names."""
+        return ["bash"]
+
+    def __init__(self, cli):
+        """Create AutoCompletion class instance.
+
+        Parameters
+        ----------
+        cli : CLI
+            the owning cli instance
+        """
+        self.cli = cli
+
+    def bash(self,):
+        """Create autocompletion script for bash."""
+        __bash_template = dedent(
+            """\
+            _hpecp_complete()
+                {
+                local cur prev BASE_LEVEL
+
+                COMPREPLY=()
+                cur=${COMP_WORDS[COMP_CWORD]}
+                prev=${COMP_WORDS[COMP_CWORD-1]}
+
+                COMP_WORDS_AS_STRING=$(IFS=, ; echo "${COMP_WORDS[*]}")
+
+                case "$COMP_WORDS_AS_STRING" in
+
+                # 'catalog': {
+                #   'delete': ['--id'],
+                #   'get': ['--id', '--output', '--response', '--e'],
+                #   'install': ['--catalog_id', '--ae', '--e'],
+                #   'list': ['--output', '--columns', '--query', '--data'],
+                #   'refresh': ['--catalog_id', '--ae', '--e'],
+                #   'wait_for_state': ['--id', '--states', '--timeout_secs']
+                # }
+
+                {% set module_names = " ".join(modules.keys()) %}
+
+                {% for module_name in modules %} {# e.g. 'catalog' #}
+
+                    {% set function_names = " ".join(modules[module_name].keys()) %}
+
+                    {% for function_name in modules[module_name] %}  {# e.g. mod = 'delete' #}
+
+                        {% set param_names = " ".join(modules[module_name][function_name]).replace('_', '-') %}
+
+                    *"hpecp,{{module_name}},{{function_name}}"*)
+                        {% if "file" in param_names %}
+                        COMPREPLY=( $(compgen -f -W "{{ param_names }}" -- $cur) )
+                        {% else %}
+                        COMPREPLY=( $(compgen -W "{{ param_names }}" -- $cur) )
+                        {% endif %}
+                        ;;
+                    {% endfor %}
+
+                    *"hpecp,{{module_name}}"*)
+                        COMPREPLY=( $(compgen -W "{{ function_names }}" -- $cur) )
+                        ;;
+                {% endfor %}
+
+                    *"hpecp,autocomplete,bash"*)
+                        COMPREPLY=( )
+                        ;;
+                    *"hpecp,autocomplete"*)
+                        COMPREPLY=( $(compgen -W "bash" -- $cur) )
+                        ;;
+                    *"hpecp"*)
+                        COMPREPLY=( $(compgen -W "{{ module_names }}" -- $cur) )
+                    ;;
+
+                esac
+
+                return 0
+
+            } &&
+            complete -F _hpecp_complete hpecp
+        """  # noqa: E501
+        )
+
+        modules = {}
+        for module_name in self.cli.__dict__.keys():
+
+            if module_name in ["autocomplete", "configure_cli"]:
+                continue
+
+            module = getattr(self.cli, module_name)
+            function_names = dir(module)
+
+            function_parameters = {}
+            for function_name in function_names:
+                function = getattr(module, function_name)
+                parameter_names = list(function.__code__.co_varnames)
+                parameter_names.remove("self")
+
+                # prefix parameter names with '--'
+                parameter_names = list(map("--".__add__, parameter_names))
+
+                function_parameters.update({function_name: parameter_names})
+
+            modules[module_name] = function_parameters
+
+        # print(modules)
+
+        print(
+            Environment().from_string(__bash_template).render(modules=modules)
+        )
+
+
 class CLI(object):
     """Command Line Interface for the HPE Container Platform."""
 
+    def __dir__(self):
+        """Return modules names."""
+        return vars(self)
+
     def __init__(self,):
         """Create a CLI instance."""
+        self.autocomplete = AutoComplete(self)
+        self.configure_cli = configure_cli
         self.catalog = CatalogProxy()
         self.k8sworker = K8sWorkerProxy()
         self.k8scluster = K8sClusterProxy()
@@ -1167,8 +1280,6 @@ class CLI(object):
         self.httpclient = HttpClientProxy()
         self.user = UserProxy()
         self.role = RoleProxy()
-        self.autocomplete = AutoComplete()
-        self.configure_cli = configure_cli
 
 
 if __name__ == "__main__":
