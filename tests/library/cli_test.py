@@ -133,12 +133,13 @@ class TestCLI(BaseTestCase):
 
     def test_autocomplete_bash(self):
 
-        try:
-            hpecp = self.cli.CLI()
-            hpecp.autocomplete.bash()
-        except Exception as e:
-            # Unexpected Exception
-            self.fail(e)
+        if six.PY3:
+            try:
+                hpecp = self.cli.CLI()
+                hpecp.autocomplete.bash()
+            except Exception as e:
+                # Unexpected Exception
+                self.fail(e)
 
 
 class TestCLIUsingCfgFileEnvVar(TestCase):
