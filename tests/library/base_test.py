@@ -95,6 +95,7 @@ def get_client():
     client.create_session()
     return client
 
+
 # pylint: disable=no-method-argument
 def mocked_login_post(*args, **kwargs):
     if args[0] == "https://127.0.0.1:8080/api/v1/login":
