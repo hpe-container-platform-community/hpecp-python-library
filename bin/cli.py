@@ -1254,10 +1254,8 @@ class AutoComplete:
             modules[module_name] = function_parameters
 
         print(
-            Environment()
-            .from_string(__bash_template)
-            .render(modules=modules)
-            .encode("utf-8")
+            Environment().from_string(__bash_template).render(modules=modules),
+            file=sys.stdout,
         )
 
 
