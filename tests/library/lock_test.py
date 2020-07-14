@@ -34,7 +34,7 @@ from hpecp.exceptions import APIItemNotFoundException
 import tempfile
 from hpecp.base_resource import ResourceList
 
-from .base_test import BaseTestCase, MockResponse
+from .base_test import BaseTestCase, MockResponse, mocked_login_post
 import six
 
 
@@ -52,7 +52,7 @@ class TestCLIList(BaseTestCase):
             )
         raise RuntimeError("Unhandle GET request: " + args[0])
 
-    @patch("requests.post", side_effect=BaseTestCase.mocked_requests_post)
+    @patch("requests.post", side_effect=mocked_login_post)
     @patch("requests.get", side_effect=mocked_requests_get)
     def test_list(self, mock_post, mock_get):
 

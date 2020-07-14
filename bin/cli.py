@@ -770,7 +770,7 @@ class LockProxy(object):
             "list",
         ]
 
-    def get(
+    def list(
         self, output="yaml",
     ):
         """Get the system and user locks.
@@ -787,15 +787,6 @@ class LockProxy(object):
             )
         else:
             print(response)
-
-    def list(
-        self, output="yaml",
-    ):
-        """List the system and user locks.
-
-        :param output: how to display the output ['yaml'|'json']
-        """
-        self.get(output=output)
 
     def create(
         self, reason,
