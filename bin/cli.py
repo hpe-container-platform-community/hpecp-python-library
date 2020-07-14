@@ -711,20 +711,28 @@ class K8sClusterProxy(BaseProxy):
         hpecp k8scluster k8s_supported_versions --major-filter 1
             --minor-filter 17
         """
-        assert output in [
+        if output not in [
             "json",
             "text",
-        ], "'output' parameter ust be 'json' or 'text'"
+        ]:
+            print(
+                "'output' parameter ust be 'json' or 'text'", file=sys.stderr
+            )
+            sys.exit(1)
 
-        assert major_filter is None or isinstance(
-            major_filter, int
-        ), "'major_filter' if provided must be an int"
-        assert minor_filter is None or isinstance(
-            minor_filter, int
-        ), "'minor_filter' if provided must be an int"
-        assert patch_filter is None or isinstance(
+        if major_filter is not None and not isinstance(major_filter, int):
+            print("'major_filter' if provided must be an int", file=sys.stderr)
+            sys.exit(1)
+
+        if minor_filter is not None and not isinstance(minor_filter, int):
+            print("'minor_filter' if provided must be an int")
+            sys.exit(1)
+
+        if patch_filter is not None and not isinstance(
             patch_filter, int
-        ), "'patch_filter' if provided must be an int"
+        ):
+            print("'patch_filter' if provided must be an int")
+            sys.exit(1)
 
         vers = []
         for v in get_client().k8s_cluster.k8s_supported_versions():
