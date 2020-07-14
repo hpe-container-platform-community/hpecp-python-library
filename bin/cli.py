@@ -204,8 +204,8 @@ class BaseProxy:
         if len(query) == 0:
             if output not in ["table", "text"]:
                 print(
-                    "If you provide a columns list, the output must be 'table'"
-                    " or 'text'",
+                    "When --columns param = [], the --output param must be"
+                    " 'table' or 'text'",
                     file=sys.stderr,
                 )
                 sys.exit(1)
