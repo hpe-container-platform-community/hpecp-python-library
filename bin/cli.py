@@ -1253,10 +1253,11 @@ class AutoComplete:
 
             modules[module_name] = function_parameters
 
-        # print(modules)
-
         print(
-            Environment().from_string(__bash_template).render(modules=modules)
+            Environment()
+            .from_string(__bash_template)
+            .render(modules=modules)
+            .encode("utf-8")
         )
 
 

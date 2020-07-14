@@ -136,8 +136,9 @@ class TestCLI(BaseTestCase):
         try:
             hpecp = self.cli.CLI()
             hpecp.autocomplete.bash()
-        except Exception:
-            self.fail("Unexpected exception.")
+        except Exception as e:
+            # Unexpected Exception
+            self.fail(e)
 
 
 class TestCLIUsingCfgFileEnvVar(TestCase):
