@@ -188,9 +188,12 @@ class BaseProxy:
         query : dict, optional
             Query in jmespath (https://jmespath.org/) format, by default {}
         """
-        assert (
-            columns is not [] and query is not {}
-        ), "You must only provide 'columns' OR 'query' parameters."
+        if columns is [] and query is {}:
+            print(
+                "You must only provide '--columns' OR '--query' parameters.",
+                file=sys.stderr,
+            )
+            sys.exit(1)
 
         self.client = get_client()
         self.client_module_property = getattr(
@@ -199,10 +202,13 @@ class BaseProxy:
 
         # use tabulate for simplified user output
         if len(query) == 0:
-            assert output in ["table", "text"], (
-                "If you provide a columns list, the output must be 'table'"
-                " or 'text'"
-            )
+            if output not in ["table", "text"]:
+                print(
+                    "If you provide a columns list, the output must be 'table'"
+                    " or 'text'",
+                    file=sys.stderr,
+                )
+                sys.exit(1)
 
             if output == "table":
                 print(
@@ -219,9 +225,13 @@ class BaseProxy:
 
         # user has provided a jmes query
         else:
-            assert output in [
-                "json"
-            ], "If you provide a jmes query, the output must be 'json'"
+            if output not in ["json"]:
+                print(
+                    "If you provide a jmes query, the output must be 'json'",
+                    file=sys.stderr,
+                )
+                sys.exit(1)
+
             data = self.client_module_property.list().json
             print(json.dumps(jmespath.search(str(query), data)))
 
