@@ -7,3 +7,4 @@ polling
 pyyaml
 fire
 jmespath
+jinja2
