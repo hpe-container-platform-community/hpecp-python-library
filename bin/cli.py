@@ -728,9 +728,7 @@ class K8sClusterProxy(BaseProxy):
             print("'minor_filter' if provided must be an int")
             sys.exit(1)
 
-        if patch_filter is not None and not isinstance(
-            patch_filter, int
-        ):
+        if patch_filter is not None and not isinstance(patch_filter, int):
             print("'patch_filter' if provided must be an int")
             sys.exit(1)
 
