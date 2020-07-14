@@ -766,11 +766,10 @@ class LockProxy(object):
         return [
             "create",
             "delete",
-            "get",
             "list",
         ]
 
-    def get(
+    def list(
         self, output="yaml",
     ):
         """Get the system and user locks.
@@ -788,27 +787,18 @@ class LockProxy(object):
         else:
             print(response)
 
-    def list(
-        self, output="yaml",
-    ):
-        """List the system and user locks.
-
-        :param output: how to display the output ['yaml'|'json']
-        """
-        self.get(output=output)
-
     def create(
         self, reason,
     ):
         """Create a lock."""
+        # TODO return lock ID
         get_client().lock.create(reason)
-        print("Done")
 
     def delete(
-        self, lock_id,
+        self, id,
     ):
         """Delete a user lock."""
-        print(get_client().lock.delete(lock_id))
+        get_client().lock.delete(id)
 
     def delete_all(
         self, timeout_secs=300,
