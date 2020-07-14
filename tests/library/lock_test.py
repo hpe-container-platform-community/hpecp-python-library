@@ -82,3 +82,32 @@ locked: false"""
         # coverage seems to populate standard error on PY3 (issues 93)
         if six.PY2:
             self.assertEqual(stderr, expected_stderr)
+
+
+class TestCLIDelete(BaseTestCase):
+    def mocked_requests_delete(*args, **kwargs):
+        if args[0] == "https://127.0.0.1:8080/api/v1/lock/1":
+            return MockResponse(json_data={}, status_code=201, headers=dict(),)
+        raise RuntimeError("Unhandle DELETE request: " + args[0])
+
+    @patch("requests.post", side_effect=mocked_login_post)
+    @patch("requests.delete", side_effect=mocked_requests_delete)
+    def test_delete(self, mock_post, mock_delete):
+
+        try:
+            hpecp = self.cli.CLI()
+            hpecp.lock.delete(id="/api/v1/lock/1")
+        except Exception as e:
+            # Unexpected Exception
+            self.fail(e)
+
+        stdout = self.out.getvalue().strip()
+        stderr = self.err.getvalue().strip()
+
+        expected_stdout = ""
+        expected_stderr = ""
+
+        # coverage seems to populate standard error on PY3 (issues 93)
+        if six.PY2:
+            self.assertEqual(stdout, expected_stdout)
+            self.assertEqual(stderr, expected_stderr)

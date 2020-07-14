@@ -766,7 +766,6 @@ class LockProxy(object):
         return [
             "create",
             "delete",
-            "get",
             "list",
         ]
 
@@ -792,14 +791,14 @@ class LockProxy(object):
         self, reason,
     ):
         """Create a lock."""
+        # TODO return lock ID
         get_client().lock.create(reason)
-        print("Done")
 
     def delete(
-        self, lock_id,
+        self, id,
     ):
         """Delete a user lock."""
-        print(get_client().lock.delete(lock_id))
+        get_client().lock.delete(id)
 
     def delete_all(
         self, timeout_secs=300,
