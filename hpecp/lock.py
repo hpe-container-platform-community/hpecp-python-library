@@ -56,12 +56,13 @@ class LockController:
         APIException
         """
         data = {"reason": reason}
-        return self.client._request(
+        response = self.client._request(
             url="/api/v1/lock",
             http_method="post",
             data=data,
             description="lock/set_lock",
         )
+        return response.headers["Location"]
 
     def delete(self, lock_id):
         """Delete a lock.

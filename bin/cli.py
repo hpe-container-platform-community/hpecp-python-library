@@ -791,8 +791,15 @@ class LockProxy(object):
         self, reason,
     ):
         """Create a lock."""
-        # TODO return lock ID
-        get_client().lock.create(reason)
+        try:
+            print(get_client().lock.create(reason), file=sys.stdout)
+        except Exception as e:
+            print(
+                "Unknown error. To debug run with env var LOG_LEVEL=DEBUG",
+                file=sys.stderr,
+            )
+            _log.error(e)
+            sys.exit(1)
 
     def delete(
         self, id,
@@ -905,9 +912,6 @@ class LicenseProxy(object):
 
         :param license_key: The license key, e.g. '1234 1234 ... 1234
             "SOMETEXT"'
-
-        TIP: use `hpecp license list --license_key_only True` to get the
-            license key
         """
         get_client().license.delete(license_key=license_key)
         print("Delete submitted - verify with: `hpecp license list`")

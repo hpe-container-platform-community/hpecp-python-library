@@ -111,3 +111,45 @@ class TestCLIDelete(BaseTestCase):
         if six.PY2:
             self.assertEqual(stdout, expected_stdout)
             self.assertEqual(stderr, expected_stderr)
+
+
+class TestCLICreate(BaseTestCase):
+    def mocked_requests_post(*args, **kwargs):
+        if args[0] == "https://127.0.0.1:8080/api/v1/login":
+            return MockResponse(
+                json_data={},
+                status_code=200,
+                headers={
+                    "location": (
+                        "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    )
+                },
+            )
+        elif args[0] == "https://127.0.0.1:8080/api/v1/lock":
+            return MockResponse(
+                json_data={},
+                status_code=201,
+                headers={"Location": "/test_location/1"},
+            )
+        raise RuntimeError("Unhandle GET request: " + args[0])
+
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_create(self, mock_post):
+
+        try:
+            hpecp = self.cli.CLI()
+            hpecp.lock.create(reason="update")
+        except Exception as e:
+            # Unexpected Exception
+            self.fail(e)
+
+        stdout = self.out.getvalue().strip()
+        stderr = self.err.getvalue().strip()
+
+        expected_stdout = "/test_location/1"
+        expected_stderr = ""
+
+        # coverage seems to populate standard error on PY3 (issues 93)
+        if six.PY2:
+            self.assertEqual(stdout, expected_stdout)
+            self.assertEqual(stderr, expected_stderr)
