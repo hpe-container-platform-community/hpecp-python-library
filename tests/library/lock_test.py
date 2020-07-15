@@ -107,9 +107,10 @@ class TestCLIDelete(BaseTestCase):
         expected_stdout = ""
         expected_stderr = ""
 
+        self.assertEqual(stdout, expected_stdout)
+
         # coverage seems to populate standard error on PY3 (issues 93)
         if six.PY2:
-            self.assertEqual(stdout, expected_stdout)
             self.assertEqual(stderr, expected_stderr)
 
 
@@ -149,7 +150,53 @@ class TestCLICreate(BaseTestCase):
         expected_stdout = "/test_location/1"
         expected_stderr = ""
 
+        self.assertEqual(stdout, expected_stdout)
+
         # coverage seems to populate standard error on PY3 (issues 93)
         if six.PY2:
-            self.assertEqual(stdout, expected_stdout)
             self.assertEqual(stderr, expected_stderr)
+
+    def mocked_requests_post_with_exception(*args, **kwargs):
+        if args[0] == "https://127.0.0.1:8080/api/v1/login":
+            return MockResponse(
+                json_data={},
+                status_code=200,
+                headers={
+                    "location": (
+                        "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    )
+                },
+            )
+        elif args[0] == "https://127.0.0.1:8080/api/v1/lock":
+            return MockResponse(
+                json_data={},
+                status_code=400,
+                raise_for_status_flag=True,
+                headers={},
+            )
+        raise RuntimeError("Unhandle GET request: " + args[0])
+
+    @patch("requests.post", side_effect=mocked_requests_post_with_exception)
+    def test_create_with_exception(self, mock_post):
+
+        with self.assertRaises(SystemExit) as cm:
+            hpecp = self.cli.CLI()
+            hpecp.lock.create(reason="update")
+
+        self.assertEqual(cm.exception.code, 1)
+
+        stdout = self.out.getvalue().strip()
+        stderr = self.err.getvalue().strip()
+
+        expected_stdout = ""
+        expected_stderr = (
+            "Unknown error. To debug run with env var LOG_LEVEL=DEBUG"
+        )
+
+        self.assertEqual(stdout, expected_stdout)
+
+        # coverage seems to populate standard error on PY3 (issues 93)
+        self.assertTrue(
+            stderr.endswith(expected_stderr),
+            "expected: `{}` actual: `{}`".format(expected_stderr, stderr),
+        )
