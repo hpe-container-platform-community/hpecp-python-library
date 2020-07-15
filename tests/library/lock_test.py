@@ -150,9 +150,11 @@ class TestCLICreate(BaseTestCase):
         expected_stdout = "/test_location/1"
         expected_stderr = ""
 
-        # coverage seems to populate standard error on PY3 (issues 93)
         self.assertEqual(stdout, expected_stdout)
-        self.assertEqual(stderr, expected_stderr)
+
+        # coverage seems to populate standard error on PY3 (issues 93)
+        if six.PY2:
+            self.assertEqual(stderr, expected_stderr)
 
     def mocked_requests_post_with_exception(*args, **kwargs):
         if args[0] == "https://127.0.0.1:8080/api/v1/login":
