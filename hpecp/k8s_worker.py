@@ -93,9 +93,10 @@ class K8sWorkerController(AbstractWaitableResourceController):
 
     status_fieldname = "status"
 
-    def create_with_ssh_password(self, username, password):
-        """Not Implemented yet"""
-        raise NotImplementedError()
+    # TODO implement me!
+    # def create_with_ssh_password(self, username, password):
+    #     """Not Implemented yet"""
+    #     raise NotImplementedError()
 
     def create_with_ssh_key(self, ip, ssh_key_data, tags=[]):
         """Create a gateway instance using SSH key credentials to access the host.
