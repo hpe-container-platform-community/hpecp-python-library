@@ -134,7 +134,7 @@ class TestCLICreate(BaseTestCase):
         raise RuntimeError("Unhandle GET request: " + args[0])
 
     @patch("requests.post", side_effect=mocked_requests_post)
-    def test_delete(self, mock_post):
+    def test_create(self, mock_post):
 
         try:
             hpecp = self.cli.CLI()
