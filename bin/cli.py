@@ -64,7 +64,7 @@ _log.debug(
 )
 
 if "HPECP_CONFIG_FILE" in os.environ:
-    HPECP_CONFIG_FILE = os.getenv("HPECP_CONFIG_FILE")
+    HPECP_CONFIG_FILE = os.path.expandvars(os.getenv("HPECP_CONFIG_FILE"))
     _log.debug(
         "HPECP_CONFIG_FILE env variable exists with value '{}'".format(
             HPECP_CONFIG_FILE
@@ -79,13 +79,14 @@ else:
     )
 
 
-def get_client():
+def get_client(start_session=True):
     """Retrieve a reference to an authenticated client object."""
     try:
         client = ContainerPlatformClient.create_from_config_file(
             config_file=HPECP_CONFIG_FILE, profile=PROFILE,
         )
-        client.create_session()
+        if start_session:
+            client.create_session()
         return client
     except APIException as e:
         print(e.message, file=sys.stderr)
@@ -110,6 +111,19 @@ class BaseProxy:
         """
         self.client_module_name = client_module_name
         super(BaseProxy, self).__init__()
+
+    def all_fields(self):
+        """Retrieve Entity columns."""
+        try:
+            self.client_module_property = getattr(
+                get_client(start_session=False), self.client_module_name
+            )
+            self.columns = getattr(
+                self.client_module_property, "resource_class"
+            ).all_fields
+            return self.columns
+        except Exception:
+            return []
 
     def get(
         self, id, output="yaml",
@@ -1189,7 +1203,6 @@ class AutoComplete:
 
                 case "$COMP_WORDS_AS_STRING" in
 
-
                 {#
                     Example module dict:
 
@@ -1203,6 +1216,10 @@ class AutoComplete:
                         'wait_for_state': ['--id', '--states', '--timeout_secs']
                         }
                     }
+
+                    Example columns dict:
+
+                    {'catalog': ('label_name', 'label_description',  ...}
                 #}
 
                 {% set module_names = " ".join(modules.keys()) %}
@@ -1214,6 +1231,15 @@ class AutoComplete:
                     {% for function_name in modules[module_name] %}  {# e.g. mod = 'delete' #}
 
                         {% set param_names = " ".join(modules[module_name][function_name]).replace('_', '-') %}
+
+                        {% for param_name in modules[module_name][function_name] %}
+                            {% if param_name == "--columns" %}
+                                {% set column_names = " ".join(columns[module_name]) %}
+                    *"hpecp,{{module_name}},{{function_name}},{{param_name}}"*)
+                        COMPREPLY=( $(compgen -W "{{column_names}}" -- $cur) )
+                        ;;
+                            {% endif %}
+                        {% endfor %}
 
                     *"hpecp,{{module_name}},{{function_name}}"*)
                         COMPREPLY=( $(compgen -W "{{ param_names }}" -- $cur) )
@@ -1244,6 +1270,7 @@ class AutoComplete:
         """  # noqa: E501
         )
 
+        columns = {}
         modules = {}
         for module_name in self.cli.__dict__.keys():
 
@@ -1252,6 +1279,9 @@ class AutoComplete:
 
             module = getattr(self.cli, module_name)
             function_names = dir(module)
+
+            if hasattr(module, "all_fields"):
+                all_fields = getattr(module, "all_fields")()
 
             function_parameters = {}
             for function_name in function_names:
@@ -1265,9 +1295,14 @@ class AutoComplete:
                 function_parameters.update({function_name: parameter_names})
 
             modules[module_name] = function_parameters
+            columns[module_name] = all_fields
+
+        # print(columns)
 
         print(
-            Environment().from_string(__bash_template).render(modules=modules),
+            Environment()
+            .from_string(__bash_template)
+            .render(modules=modules, columns=columns),
             file=sys.stdout,
         )
 
