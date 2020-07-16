@@ -1189,14 +1189,21 @@ class AutoComplete:
 
                 case "$COMP_WORDS_AS_STRING" in
 
-                # 'catalog': {
-                #   'delete': ['--id'],
-                #   'get': ['--id', '--output', '--response', '--e'],
-                #   'install': ['--catalog_id', '--ae', '--e'],
-                #   'list': ['--output', '--columns', '--query', '--data'],
-                #   'refresh': ['--catalog_id', '--ae', '--e'],
-                #   'wait_for_state': ['--id', '--states', '--timeout_secs']
-                # }
+
+                {# 
+                    Example module dict:
+
+                    {
+                        'catalog': {
+                        'delete': ['--id'],
+                        'get': ['--id', '--output', '--response', '--e'],
+                        'install': ['--catalog_id', '--ae', '--e'],
+                        'list': ['--output', '--columns', '--query', '--data'],
+                        'refresh': ['--catalog_id', '--ae', '--e'],
+                        'wait_for_state': ['--id', '--states', '--timeout_secs']
+                        }
+                    }
+                #}
 
                 {% set module_names = " ".join(modules.keys()) %}
 
@@ -1209,11 +1216,7 @@ class AutoComplete:
                         {% set param_names = " ".join(modules[module_name][function_name]).replace('_', '-') %}
 
                     *"hpecp,{{module_name}},{{function_name}}"*)
-                        {% if "file" in param_names %}
-                        COMPREPLY=( $(compgen -f -W "{{ param_names }}" -- $cur) )
-                        {% else %}
                         COMPREPLY=( $(compgen -W "{{ param_names }}" -- $cur) )
-                        {% endif %}
                         ;;
                     {% endfor %}
 
