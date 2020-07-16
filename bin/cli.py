@@ -82,23 +82,6 @@ else:
     )
 
 
-def get_client(start_session=True):
-    """Retrieve a reference to an authenticated client object."""
-    try:
-        client = ContainerPlatformClient.create_from_config_file(
-            config_file=HPECP_CONFIG_FILE, profile=PROFILE,
-        )
-        if start_session:
-            client.create_session()
-        return client
-    except APIException as e:
-        print(e.message, file=sys.stderr)
-        sys.exit(1)
-    except ContainerPlatformClientException as e:
-        print(e.message, file=sys.stderr)
-        sys.exit(1)
-
-
 @wrapt.decorator
 def intercept_exception(wrapped, instance, args, kwargs):
     """Handle Exceptions."""
@@ -107,7 +90,11 @@ def intercept_exception(wrapped, instance, args, kwargs):
     except AssertionError as ae:
         print(ae, file=sys.stderr)
         sys.exit(1)
-    except (APIException, APIItemNotFoundException) as e:
+    except (
+        APIException,
+        APIItemNotFoundException,
+        ContainerPlatformClientException,
+    ) as e:
         print(e.message, file=sys.stderr)
         sys.exit(1)
     except Exception as ge:
@@ -119,18 +106,15 @@ def intercept_exception(wrapped, instance, args, kwargs):
         sys.exit(1)
 
 
-# def intercept_exception(exc):
-#     """Handle Generic Exception."""
-#     if isinstance(exc, APIItemNotFoundException):
-#         print(exc.message, file=sys.stderr)
-#         sys.exit(1)
-#     else:
-#         print(
-#             "Unknown error. To debug run with env var LOG_LEVEL=DEBUG",
-#             file=sys.stderr,
-#         )
-#         _log.error(exc)
-#         sys.exit(1)
+@intercept_exception
+def get_client(start_session=True):
+    """Retrieve a reference to an authenticated client object."""
+    client = ContainerPlatformClient.create_from_config_file(
+        config_file=HPECP_CONFIG_FILE, profile=PROFILE,
+    )
+    if start_session:
+        client.create_session()
+    return client
 
 
 @six.add_metaclass(abc.ABCMeta)
@@ -560,6 +544,7 @@ class K8sWorkerProxy(BaseProxy):
             _log.error(e)
             sys.exit(1)
 
+    @intercept_exception
     def set_storage(
         self, id, ephemeral_disks, persistent_disks=None,
     ):
@@ -586,19 +571,9 @@ class K8sWorkerProxy(BaseProxy):
         )
         e_disks = ephemeral_disks.split(",")
 
-        try:
-            get_client().k8s_worker.set_storage(
-                worker_id=id,
-                persistent_disks=p_disks,
-                ephemeral_disks=e_disks,
-            )
-        except Exception as e:
-            print(
-                "Unknown error. To debug run with env var LOG_LEVEL=DEBUG",
-                file=sys.stderr,
-            )
-            _log.error(e)
-            sys.exit(1)
+        get_client().k8s_worker.set_storage(
+            worker_id=id, persistent_disks=p_disks, ephemeral_disks=e_disks,
+        )
 
     def statuses(self,):
         """Return a list of valid statuses."""
@@ -627,6 +602,7 @@ class K8sClusterProxy(BaseProxy):
         """Initiate this proxy class with the client module name."""
         super(K8sClusterProxy, self).new_instance("k8s_cluster")
 
+    @intercept_exception
     def create(
         self,
         name,
