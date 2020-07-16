@@ -1190,7 +1190,7 @@ class AutoComplete:
                 case "$COMP_WORDS_AS_STRING" in
 
 
-                {# 
+                {#
                     Example module dict:
 
                     {
