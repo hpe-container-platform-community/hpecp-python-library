@@ -1282,6 +1282,8 @@ class AutoComplete:
 
             if hasattr(module, "all_fields"):
                 all_fields = getattr(module, "all_fields")()
+            else:
+                all_fields = []
 
             function_parameters = {}
             for function_name in function_names:
