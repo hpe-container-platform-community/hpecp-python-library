@@ -8,4 +8,4 @@ pyyaml
 fire
 jmespath
 jinja2
-pydecor
+wrapt

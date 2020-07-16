@@ -36,9 +36,9 @@ import fire
 import jmespath
 
 from jinja2 import Environment
-from pydecor import intercept
 import six
 import yaml
+import wrapt
 
 from hpecp import (
     APIException,
@@ -52,6 +52,7 @@ from hpecp.gateway import GatewayStatus
 from hpecp.k8s_cluster import K8sClusterHostConfig, K8sClusterStatus
 from hpecp.exceptions import APIItemNotFoundException
 from textwrap import dedent
+import inspect
 
 
 if sys.version_info[0] >= 3:
@@ -81,35 +82,39 @@ else:
     )
 
 
-def get_client(start_session=True):
-    """Retrieve a reference to an authenticated client object."""
+@wrapt.decorator
+def intercept_exception(wrapped, instance, args, kwargs):
+    """Handle Exceptions."""
     try:
-        client = ContainerPlatformClient.create_from_config_file(
-            config_file=HPECP_CONFIG_FILE, profile=PROFILE,
-        )
-        if start_session:
-            client.create_session()
-        return client
-    except APIException as e:
+        return wrapped(*args, **kwargs)
+    except AssertionError as ae:
+        print(ae, file=sys.stderr)
+        sys.exit(1)
+    except (
+        APIException,
+        APIItemNotFoundException,
+        ContainerPlatformClientException,
+    ) as e:
         print(e.message, file=sys.stderr)
         sys.exit(1)
-    except ContainerPlatformClientException as e:
-        print(e.message, file=sys.stderr)
-        sys.exit(1)
-
-
-def intercept_exception(exc):
-    """Handle Generic Exception."""
-    if isinstance(exc, APIItemNotFoundException):
-        print(exc.message, file=sys.stderr)
-        sys.exit(1)
-    else:
+    except Exception as ge:
         print(
             "Unknown error. To debug run with env var LOG_LEVEL=DEBUG",
             file=sys.stderr,
         )
-        _log.error(exc)
+        _log.error(ge)
         sys.exit(1)
+
+
+@intercept_exception
+def get_client(start_session=True):
+    """Retrieve a reference to an authenticated client object."""
+    client = ContainerPlatformClient.create_from_config_file(
+        config_file=HPECP_CONFIG_FILE, profile=PROFILE,
+    )
+    if start_session:
+        client.create_session()
+    return client
 
 
 @six.add_metaclass(abc.ABCMeta)
@@ -134,14 +139,13 @@ class BaseProxy:
             self.client_module_property = getattr(
                 get_client(start_session=False), self.client_module_name
             )
-            self.columns = getattr(
+            return getattr(
                 self.client_module_property, "resource_class"
             ).all_fields
-            return self.columns
         except Exception:
             return []
 
-    @intercept(catch=Exception, handler=intercept_exception)
+    @intercept_exception
     def get(
         self, id, output="yaml",
     ):
@@ -156,19 +160,7 @@ class BaseProxy:
         self.client_module_property = getattr(
             self.client, self.client_module_name
         )
-
-        # try:
         response = self.client_module_property.get(id)
-        # except APIItemNotFoundException:
-        #     print("'{}' does not exist.".format(id), file=sys.stderr)
-        #     sys.exit(1)
-        # except Exception as e:
-        #     print(
-        #         "Unknown error. To debug run with env var LOG_LEVEL=DEBUG",
-        #         file=sys.stderr,
-        #     )
-        #     _log.error(e)
-        #     sys.exit(1)
 
         if output == "yaml":
             print(
@@ -181,7 +173,7 @@ class BaseProxy:
         else:
             print(json.dumps(response.json))
 
-    @intercept(catch=Exception, handler=intercept_exception)
+    @intercept_exception
     def delete(
         self, id,
     ):
@@ -193,21 +185,9 @@ class BaseProxy:
         self.client_module_property = getattr(
             self.client, self.client_module_name
         )
-
-        # try:
         self.client_module_property.delete(id=id)
-        # except APIItemNotFoundException:
-        #     print("'{}' does not exist".format(id), file=sys.stderr)
-        #     sys.exit(1)
-        # except Exception as e:
-        #     print(
-        #         "Unknown error. To debug run with env var LOG_LEVEL=DEBUG",
-        #         file=sys.stderr,
-        #     )
-        #     _log.error(e)
-        #     sys.exit(1)
 
-    @intercept(catch=Exception, handler=intercept_exception)
+    @intercept_exception
     def list(self, output="table", columns=[], query={}):
         """Retrieve the list of resources.
 
@@ -314,7 +294,6 @@ class BaseProxy:
             sys.exit(1)
 
 
-# @cli_module
 class CatalogProxy(BaseProxy):
     """Proxy object to :py:attr:`<hpecp.client.catalog>`."""
 
@@ -333,7 +312,6 @@ class CatalogProxy(BaseProxy):
             "install",
         ]
 
-    # @cli_method
     def delete(self, id):
         """Not implemented."""
         raise AttributeError("'CatalogProxy' object has no attribute 'delete'")
@@ -566,6 +544,7 @@ class K8sWorkerProxy(BaseProxy):
             _log.error(e)
             sys.exit(1)
 
+    @intercept_exception
     def set_storage(
         self, id, ephemeral_disks, persistent_disks=None,
     ):
@@ -592,19 +571,9 @@ class K8sWorkerProxy(BaseProxy):
         )
         e_disks = ephemeral_disks.split(",")
 
-        try:
-            get_client().k8s_worker.set_storage(
-                worker_id=id,
-                persistent_disks=p_disks,
-                ephemeral_disks=e_disks,
-            )
-        except Exception as e:
-            print(
-                "Unknown error. To debug run with env var LOG_LEVEL=DEBUG",
-                file=sys.stderr,
-            )
-            _log.error(e)
-            sys.exit(1)
+        get_client().k8s_worker.set_storage(
+            worker_id=id, persistent_disks=p_disks, ephemeral_disks=e_disks,
+        )
 
     def statuses(self,):
         """Return a list of valid statuses."""
@@ -633,6 +602,7 @@ class K8sClusterProxy(BaseProxy):
         """Initiate this proxy class with the client module name."""
         super(K8sClusterProxy, self).new_instance("k8s_cluster")
 
+    @intercept_exception
     def create(
         self,
         name,
@@ -1294,26 +1264,39 @@ class AutoComplete:
         modules = {}
         for module_name in self.cli.__dict__.keys():
 
+            # we manually define autocomplete for these methods
             if module_name in ["autocomplete", "configure_cli"]:
                 continue
 
             module = getattr(self.cli, module_name)
             function_names = dir(module)
 
-            if hasattr(module, "all_fields"):
+            try:
                 all_fields = getattr(module, "all_fields")()
-            else:
+            except Exception:
                 all_fields = []
+
+            print(module_name, all_fields)
 
             function_parameters = {}
             for function_name in function_names:
                 function = getattr(module, function_name)
-                parameter_names = list(function.__code__.co_varnames)
+
+                if six.PY2:
+                    parameter_names = list(inspect.getargspec(function).args)
+                else:
+                    parameter_names = list(
+                        inspect.getfullargspec(function).args
+                    )
+
+                # parameter_names = list(function.__code__.co_varnames)
                 if "self" in parameter_names:
                     parameter_names.remove("self")
 
                 # prefix parameter names with '--'
                 parameter_names = list(map("--".__add__, parameter_names))
+
+                print(module_name, function_name, parameter_names)
 
                 function_parameters.update({function_name: parameter_names})
 
@@ -1321,6 +1304,7 @@ class AutoComplete:
             columns[module_name] = all_fields
 
         # print(columns)
+        # print(modules)
 
         print(
             Environment()
