@@ -476,6 +476,7 @@ class K8sWorkerProxy(BaseProxy):
         """Initiate this proxy class with the client module name."""
         super(K8sWorkerProxy, self).new_instance("k8s_worker")
 
+    @intercept_exception
     def create_with_ssh_key(
         self, ip=None, ssh_key=None, ssh_key_file=None, tags=[],
     ):
@@ -512,24 +513,24 @@ class K8sWorkerProxy(BaseProxy):
             with open(ssh_key_file) as f:
                 ssh_key = f.read()
 
-        try:
-            worker_id = get_client().k8s_worker.create_with_ssh_key(
-                ip=ip, ssh_key_data=ssh_key, tags=tags,
-            )
-            print(worker_id)
-        except AssertionError as e:
-            print(e, file=sys.stderr)
-            sys.exit(1)
-        except APIItemConflictException:
-            print("Worker already exists.", file=sys.stderr)
-            sys.exit(1)
-        except Exception as e:
-            print(
-                "Unknown error. To debug run with env var LOG_LEVEL=DEBUG",
-                file=sys.stderr,
-            )
-            _log.error(e)
-            sys.exit(1)
+        # try:
+        worker_id = get_client().k8s_worker.create_with_ssh_key(
+            ip=ip, ssh_key_data=ssh_key, tags=tags,
+        )
+        print(worker_id)
+        # except AssertionError as e:
+        #     print(e, file=sys.stderr)
+        #     sys.exit(1)
+        # except APIItemConflictException:
+        #     print("Worker already exists.", file=sys.stderr)
+        #     sys.exit(1)
+        # except Exception as e:
+        #     print(
+        #         "Unknown error. To debug run with env var LOG_LEVEL=DEBUG",
+        #         file=sys.stderr,
+        #     )
+        #     _log.error(e)
+        #     sys.exit(1)
 
     @intercept_exception
     def set_storage(

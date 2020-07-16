@@ -1540,7 +1540,9 @@ class TestCliCreate(BaseTestCase):
             GatewayController,
             "create_with_ssh_key",
             side_effect=APIItemConflictException(
-                message="APIItemConflictException.message", request_method="METHOD", request_url="URL",
+                message="APIItemConflictException.message",
+                request_method="METHOD",
+                request_url="URL",
             ),
         ):
             with self.assertRaises(SystemExit) as cm:
