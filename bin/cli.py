@@ -36,9 +36,9 @@ import fire
 import jmespath
 
 from jinja2 import Environment
-from pydecor import intercept
 import six
 import yaml
+import wrapt
 
 from hpecp import (
     APIException,
@@ -98,18 +98,38 @@ def get_client(start_session=True):
         sys.exit(1)
 
 
-def intercept_exception(exc):
-    """Handle Generic Exception."""
-    if isinstance(exc, APIItemNotFoundException):
-        print(exc.message, file=sys.stderr)
+@wrapt.decorator
+def intercept_exception(wrapped, instance, args, kwargs):
+    """Handle Exceptions."""
+    try:
+        return wrapped(*args, **kwargs)
+    except AssertionError as ae:
+        print(ae, file=sys.stderr)
         sys.exit(1)
-    else:
+    except (APIException, APIItemNotFoundException) as e:
+        print(e.message, file=sys.stderr)
+        sys.exit(1)
+    except Exception as ge:
         print(
             "Unknown error. To debug run with env var LOG_LEVEL=DEBUG",
             file=sys.stderr,
         )
-        _log.error(exc)
+        _log.error(ge)
         sys.exit(1)
+
+
+# def intercept_exception(exc):
+#     """Handle Generic Exception."""
+#     if isinstance(exc, APIItemNotFoundException):
+#         print(exc.message, file=sys.stderr)
+#         sys.exit(1)
+#     else:
+#         print(
+#             "Unknown error. To debug run with env var LOG_LEVEL=DEBUG",
+#             file=sys.stderr,
+#         )
+#         _log.error(exc)
+#         sys.exit(1)
 
 
 @six.add_metaclass(abc.ABCMeta)
@@ -141,7 +161,7 @@ class BaseProxy:
         except Exception:
             return []
 
-    @intercept(catch=Exception, handler=intercept_exception)
+    @intercept_exception
     def get(
         self, id, output="yaml",
     ):
@@ -181,7 +201,7 @@ class BaseProxy:
         else:
             print(json.dumps(response.json))
 
-    @intercept(catch=Exception, handler=intercept_exception)
+    @intercept_exception
     def delete(
         self, id,
     ):
@@ -207,7 +227,7 @@ class BaseProxy:
         #     _log.error(e)
         #     sys.exit(1)
 
-    @intercept(catch=Exception, handler=intercept_exception)
+    @intercept_exception
     def list(self, output="table", columns=[], query={}):
         """Retrieve the list of resources.
 
@@ -314,7 +334,6 @@ class BaseProxy:
             sys.exit(1)
 
 
-# @cli_module
 class CatalogProxy(BaseProxy):
     """Proxy object to :py:attr:`<hpecp.client.catalog>`."""
 
@@ -333,7 +352,6 @@ class CatalogProxy(BaseProxy):
             "install",
         ]
 
-    # @cli_method
     def delete(self, id):
         """Not implemented."""
         raise AttributeError("'CatalogProxy' object has no attribute 'delete'")
