@@ -52,6 +52,7 @@ from hpecp.gateway import GatewayStatus
 from hpecp.k8s_cluster import K8sClusterHostConfig, K8sClusterStatus
 from hpecp.exceptions import APIItemNotFoundException
 from textwrap import dedent
+import inspect
 
 
 if sys.version_info[0] >= 3:
@@ -154,10 +155,9 @@ class BaseProxy:
             self.client_module_property = getattr(
                 get_client(start_session=False), self.client_module_name
             )
-            self.columns = getattr(
+            return getattr(
                 self.client_module_property, "resource_class"
             ).all_fields
-            return self.columns
         except Exception:
             return []
 
@@ -176,19 +176,7 @@ class BaseProxy:
         self.client_module_property = getattr(
             self.client, self.client_module_name
         )
-
-        # try:
         response = self.client_module_property.get(id)
-        # except APIItemNotFoundException:
-        #     print("'{}' does not exist.".format(id), file=sys.stderr)
-        #     sys.exit(1)
-        # except Exception as e:
-        #     print(
-        #         "Unknown error. To debug run with env var LOG_LEVEL=DEBUG",
-        #         file=sys.stderr,
-        #     )
-        #     _log.error(e)
-        #     sys.exit(1)
 
         if output == "yaml":
             print(
@@ -213,19 +201,7 @@ class BaseProxy:
         self.client_module_property = getattr(
             self.client, self.client_module_name
         )
-
-        # try:
         self.client_module_property.delete(id=id)
-        # except APIItemNotFoundException:
-        #     print("'{}' does not exist".format(id), file=sys.stderr)
-        #     sys.exit(1)
-        # except Exception as e:
-        #     print(
-        #         "Unknown error. To debug run with env var LOG_LEVEL=DEBUG",
-        #         file=sys.stderr,
-        #     )
-        #     _log.error(e)
-        #     sys.exit(1)
 
     @intercept_exception
     def list(self, output="table", columns=[], query={}):
@@ -1312,26 +1288,39 @@ class AutoComplete:
         modules = {}
         for module_name in self.cli.__dict__.keys():
 
+            # we manually define autocomplete for these methods
             if module_name in ["autocomplete", "configure_cli"]:
                 continue
 
             module = getattr(self.cli, module_name)
             function_names = dir(module)
 
-            if hasattr(module, "all_fields"):
+            try:
                 all_fields = getattr(module, "all_fields")()
-            else:
+            except Exception:
                 all_fields = []
+
+            print(module_name, all_fields)
 
             function_parameters = {}
             for function_name in function_names:
                 function = getattr(module, function_name)
-                parameter_names = list(function.__code__.co_varnames)
+
+                if six.PY2:
+                    parameter_names = list(inspect.getargspec(function).args)
+                else:
+                    parameter_names = list(
+                        inspect.getfullargspec(function).args
+                    )
+
+                # parameter_names = list(function.__code__.co_varnames)
                 if "self" in parameter_names:
                     parameter_names.remove("self")
 
                 # prefix parameter names with '--'
                 parameter_names = list(map("--".__add__, parameter_names))
+
+                print(module_name, function_name, parameter_names)
 
                 function_parameters.update({function_name: parameter_names})
 
@@ -1339,6 +1328,7 @@ class AutoComplete:
             columns[module_name] = all_fields
 
         # print(columns)
+        # print(modules)
 
         print(
             Environment()
