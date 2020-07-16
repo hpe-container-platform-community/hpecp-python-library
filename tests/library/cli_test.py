@@ -288,7 +288,7 @@ class TestBash(BaseTestCase):
 
         self.assertEquals(columns["gateway"], hpecp.gateway.all_fields())
 
-        # test introspection of CLI gateway.list() parameter names
+        # test the introspection of CLI gateway.list() parameter names
         self.assertEquals(
             modules["gateway"]["list"], ["--output", "--columns", "--query"]
         )
