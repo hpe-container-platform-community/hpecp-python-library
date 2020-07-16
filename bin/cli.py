@@ -136,8 +136,19 @@ class BaseProxy:
     def all_fields(self):
         """Retrieve Entity columns."""
         try:
+            # contstruct a dummy client to retrieve the
+            # field metadata
+            dummy_client = ContainerPlatformClient(
+                api_host="127.0.0.1",
+                api_port=8080,
+                use_ssl=False,
+                verify_ssl=False,
+                warn_ssl=False,
+                username="dummyuser",
+                password="dummypassword",
+            )
             self.client_module_property = getattr(
-                get_client(start_session=False), self.client_module_name
+                dummy_client, self.client_module_name
             )
             return getattr(
                 self.client_module_property, "resource_class"
@@ -1169,8 +1180,6 @@ class AutoComplete:
             except Exception:
                 all_fields = []
 
-            print(module_name, all_fields)
-
             function_parameters = {}
             for function_name in function_names:
                 function = getattr(module, function_name)
@@ -1188,16 +1197,13 @@ class AutoComplete:
 
                 # prefix parameter names with '--'
                 parameter_names = list(map("--".__add__, parameter_names))
-
-                print(module_name, function_name, parameter_names)
-
                 function_parameters.update({function_name: parameter_names})
 
             modules[module_name] = function_parameters
             columns[module_name] = all_fields
 
-            _log.debug(modules)
-            _log.debug(columns)
+            # _log.debug(modules)
+            # _log.debug(columns)
 
         return (modules, columns)
 
@@ -1250,7 +1256,7 @@ class AutoComplete:
                             {% if param_name == "--columns" %}
                                 {% set column_names = " ".join(columns[module_name]) %}
                     *"hpecp,{{module_name}},{{function_name}},{{param_name}}"*)
-                        COMPREPLY=( $(compgen -W "{{column_names}}" -- $cur) )
+                        COMPREPLY=( $(compgen -W "{{column_names}} {{param_names}}" -- $cur) )
                         ;;
                             {% endif %}
                         {% endfor %}
