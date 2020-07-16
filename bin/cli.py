@@ -36,6 +36,7 @@ import fire
 import jmespath
 
 from jinja2 import Environment
+from pydecor import intercept
 import six
 import yaml
 
@@ -51,6 +52,7 @@ from hpecp.gateway import GatewayStatus
 from hpecp.k8s_cluster import K8sClusterHostConfig, K8sClusterStatus
 from hpecp.exceptions import APIItemNotFoundException
 from textwrap import dedent
+
 
 if sys.version_info[0] >= 3:
     unicode = str
@@ -96,6 +98,20 @@ def get_client(start_session=True):
         sys.exit(1)
 
 
+def intercept_exception(exc):
+    """Handle Generic Exception."""
+    if isinstance(exc, APIItemNotFoundException):
+        print(exc.message, file=sys.stderr)
+        sys.exit(1)
+    else:
+        print(
+            "Unknown error. To debug run with env var LOG_LEVEL=DEBUG",
+            file=sys.stderr,
+        )
+        _log.error(exc)
+        sys.exit(1)
+
+
 @six.add_metaclass(abc.ABCMeta)
 class BaseProxy:
     """Base 'proxy' class for generic calls to API."""
@@ -125,6 +141,7 @@ class BaseProxy:
         except Exception:
             return []
 
+    @intercept(catch=Exception, handler=intercept_exception)
     def get(
         self, id, output="yaml",
     ):
@@ -140,18 +157,18 @@ class BaseProxy:
             self.client, self.client_module_name
         )
 
-        try:
-            response = self.client_module_property.get(id)
-        except APIItemNotFoundException:
-            print("'{}' does not exist.".format(id), file=sys.stderr)
-            sys.exit(1)
-        except Exception as e:
-            print(
-                "Unknown error. To debug run with env var LOG_LEVEL=DEBUG",
-                file=sys.stderr,
-            )
-            _log.error(e)
-            sys.exit(1)
+        # try:
+        response = self.client_module_property.get(id)
+        # except APIItemNotFoundException:
+        #     print("'{}' does not exist.".format(id), file=sys.stderr)
+        #     sys.exit(1)
+        # except Exception as e:
+        #     print(
+        #         "Unknown error. To debug run with env var LOG_LEVEL=DEBUG",
+        #         file=sys.stderr,
+        #     )
+        #     _log.error(e)
+        #     sys.exit(1)
 
         if output == "yaml":
             print(
@@ -164,6 +181,7 @@ class BaseProxy:
         else:
             print(json.dumps(response.json))
 
+    @intercept(catch=Exception, handler=intercept_exception)
     def delete(
         self, id,
     ):
@@ -176,19 +194,20 @@ class BaseProxy:
             self.client, self.client_module_name
         )
 
-        try:
-            self.client_module_property.delete(id=id)
-        except APIItemNotFoundException:
-            print("'{}' does not exist".format(id), file=sys.stderr)
-            sys.exit(1)
-        except Exception as e:
-            print(
-                "Unknown error. To debug run with env var LOG_LEVEL=DEBUG",
-                file=sys.stderr,
-            )
-            _log.error(e)
-            sys.exit(1)
+        # try:
+        self.client_module_property.delete(id=id)
+        # except APIItemNotFoundException:
+        #     print("'{}' does not exist".format(id), file=sys.stderr)
+        #     sys.exit(1)
+        # except Exception as e:
+        #     print(
+        #         "Unknown error. To debug run with env var LOG_LEVEL=DEBUG",
+        #         file=sys.stderr,
+        #     )
+        #     _log.error(e)
+        #     sys.exit(1)
 
+    @intercept(catch=Exception, handler=intercept_exception)
     def list(self, output="table", columns=[], query={}):
         """Retrieve the list of resources.
 
@@ -1290,7 +1309,8 @@ class AutoComplete:
             for function_name in function_names:
                 function = getattr(module, function_name)
                 parameter_names = list(function.__code__.co_varnames)
-                parameter_names.remove("self")
+                if "self" in parameter_names:
+                    parameter_names.remove("self")
 
                 # prefix parameter names with '--'
                 parameter_names = list(map("--".__add__, parameter_names))
