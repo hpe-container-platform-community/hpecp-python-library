@@ -98,16 +98,10 @@ def get_client(start_session=True):
         sys.exit(1)
 
 
-# def intercept_api_item_not_found(exc):
-#     """Handle APIItemNotFoundException."""
-#     print("item does not exist.", file=sys.stderr)
-#     sys.exit(1)
-
-
 def intercept_exception(exc):
     """Handle Generic Exception."""
     if isinstance(exc, APIItemNotFoundException):
-        print("item does not exist.", file=sys.stderr)
+        print(exc.message, file=sys.stderr)
         sys.exit(1)
     else:
         print(
@@ -187,6 +181,7 @@ class BaseProxy:
         else:
             print(json.dumps(response.json))
 
+    @intercept(catch=Exception, handler=intercept_exception)
     def delete(
         self, id,
     ):
@@ -199,19 +194,20 @@ class BaseProxy:
             self.client, self.client_module_name
         )
 
-        try:
-            self.client_module_property.delete(id=id)
-        except APIItemNotFoundException:
-            print("'{}' does not exist".format(id), file=sys.stderr)
-            sys.exit(1)
-        except Exception as e:
-            print(
-                "Unknown error. To debug run with env var LOG_LEVEL=DEBUG",
-                file=sys.stderr,
-            )
-            _log.error(e)
-            sys.exit(1)
+        # try:
+        self.client_module_property.delete(id=id)
+        # except APIItemNotFoundException:
+        #     print("'{}' does not exist".format(id), file=sys.stderr)
+        #     sys.exit(1)
+        # except Exception as e:
+        #     print(
+        #         "Unknown error. To debug run with env var LOG_LEVEL=DEBUG",
+        #         file=sys.stderr,
+        #     )
+        #     _log.error(e)
+        #     sys.exit(1)
 
+    @intercept(catch=Exception, handler=intercept_exception)
     def list(self, output="table", columns=[], query={}):
         """Retrieve the list of resources.
 
