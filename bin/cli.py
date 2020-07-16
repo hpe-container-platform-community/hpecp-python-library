@@ -766,7 +766,7 @@ class LockProxy(object):
         return [
             "create",
             "delete",
-            "delete-all",
+            "delete_all",
             "list",
         ]
 
