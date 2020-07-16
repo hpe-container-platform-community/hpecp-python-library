@@ -482,6 +482,48 @@ class TestCliCreate(BaseTestCase):
 
         ssh_key_file.close()
 
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_ip_not_provided(self, mocked_requests_post):
+
+        hpecp = self.cli.CLI()
+        with self.assertRaises(SystemExit) as cm:
+            hpecp.k8sworker.create_with_ssh_key(ssh_key="test data", ip=None)
+
+        self.assertEqual(cm.exception.code, 1)
+
+        actual_err = self.err.getvalue().strip()
+        expected_err = "'ip' must be provided and must be a string"
+
+        self.assertEqual(self.out.getvalue(), "", "stdout should be empty")
+
+        self.assertTrue(
+            actual_err.endswith(expected_err),
+            "Actual stderr: `{}` Expected stderr: `{}`".format(
+                actual_err, expected_err
+            ),
+        )
+
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_ssh_key_not_a_string(self, mocked_requests_post):
+
+        hpecp = self.cli.CLI()
+        with self.assertRaises(SystemExit) as cm:
+            hpecp.k8sworker.create_with_ssh_key(ssh_key=123, ip="127.0.0.1")
+
+        self.assertEqual(cm.exception.code, 1)
+
+        actual_err = self.err.getvalue().strip()
+        expected_err = "'ssh_key_data' must be provided and must be a string"
+
+        self.assertEqual(self.out.getvalue(), "", "stdout should be empty")
+
+        self.assertTrue(
+            actual_err.endswith(expected_err),
+            "Actual stderr: `{}` Expected stderr: `{}`".format(
+                actual_err, expected_err
+            ),
+        )
+
 
 class TestCliStates(BaseTestCase):
     @patch("requests.post", side_effect=session_mock_response)
