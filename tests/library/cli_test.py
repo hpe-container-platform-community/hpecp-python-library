@@ -29,6 +29,7 @@ import six
 from mock import mock, mock_open, patch
 
 from .base_test import BaseTestCase
+from hpecp.gateway import Gateway
 
 if six.PY2:
     from io import BytesIO as StringIO  # noqa: F811
@@ -277,3 +278,12 @@ class TestCLIHttpClient(BaseTestCase):
         self.assertEqual(self.out.getvalue(), '{"foo":"bar"}\n')
 
     # TODO - add tests for POST and PUT
+
+
+class TestBash(BaseTestCase):
+    def test_get_metadata(self):
+
+        hpecp = self.cli.CLI()
+        (modules, columns) = hpecp.autocomplete._get_metadata()
+
+        self.assertEquals(columns["gateway"], hpecp.gateway.all_fields())

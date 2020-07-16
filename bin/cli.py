@@ -513,24 +513,10 @@ class K8sWorkerProxy(BaseProxy):
             with open(ssh_key_file) as f:
                 ssh_key = f.read()
 
-        # try:
         worker_id = get_client().k8s_worker.create_with_ssh_key(
             ip=ip, ssh_key_data=ssh_key, tags=tags,
         )
         print(worker_id)
-        # except AssertionError as e:
-        #     print(e, file=sys.stderr)
-        #     sys.exit(1)
-        # except APIItemConflictException:
-        #     print("Worker already exists.", file=sys.stderr)
-        #     sys.exit(1)
-        # except Exception as e:
-        #     print(
-        #         "Unknown error. To debug run with env var LOG_LEVEL=DEBUG",
-        #         file=sys.stderr,
-        #     )
-        #     _log.error(e)
-        #     sys.exit(1)
 
     @intercept_exception
     def set_storage(
@@ -1165,6 +1151,56 @@ class AutoComplete:
         """
         self.cli = cli
 
+    def _get_metadata(self):
+
+        modules = {}
+        columns = {}
+        for module_name in self.cli.__dict__.keys():
+
+            # we manually define autocomplete for these methods
+            if module_name in ["autocomplete", "configure_cli"]:
+                continue
+
+            module = getattr(self.cli, module_name)
+            function_names = dir(module)
+
+            try:
+                all_fields = getattr(module, "all_fields")()
+            except Exception:
+                all_fields = []
+
+            print(module_name, all_fields)
+
+            function_parameters = {}
+            for function_name in function_names:
+                function = getattr(module, function_name)
+
+                if six.PY2:
+                    parameter_names = list(inspect.getargspec(function).args)
+                else:
+                    parameter_names = list(
+                        inspect.getfullargspec(function).args
+                    )
+
+                # parameter_names = list(function.__code__.co_varnames)
+                if "self" in parameter_names:
+                    parameter_names.remove("self")
+
+                # prefix parameter names with '--'
+                parameter_names = list(map("--".__add__, parameter_names))
+
+                print(module_name, function_name, parameter_names)
+
+                function_parameters.update({function_name: parameter_names})
+
+            modules[module_name] = function_parameters
+            columns[module_name] = all_fields
+
+            _log.debug(modules)
+            _log.debug(columns)
+
+        return (modules, columns)
+
     def bash(self,):
         """Create autocompletion script for bash."""
         __bash_template = dedent(
@@ -1248,51 +1284,7 @@ class AutoComplete:
         """  # noqa: E501
         )
 
-        columns = {}
-        modules = {}
-        for module_name in self.cli.__dict__.keys():
-
-            # we manually define autocomplete for these methods
-            if module_name in ["autocomplete", "configure_cli"]:
-                continue
-
-            module = getattr(self.cli, module_name)
-            function_names = dir(module)
-
-            try:
-                all_fields = getattr(module, "all_fields")()
-            except Exception:
-                all_fields = []
-
-            print(module_name, all_fields)
-
-            function_parameters = {}
-            for function_name in function_names:
-                function = getattr(module, function_name)
-
-                if six.PY2:
-                    parameter_names = list(inspect.getargspec(function).args)
-                else:
-                    parameter_names = list(
-                        inspect.getfullargspec(function).args
-                    )
-
-                # parameter_names = list(function.__code__.co_varnames)
-                if "self" in parameter_names:
-                    parameter_names.remove("self")
-
-                # prefix parameter names with '--'
-                parameter_names = list(map("--".__add__, parameter_names))
-
-                print(module_name, function_name, parameter_names)
-
-                function_parameters.update({function_name: parameter_names})
-
-            modules[module_name] = function_parameters
-            columns[module_name] = all_fields
-
-        # print(columns)
-        # print(modules)
+        (modules, columns) = self._get_metadata()
 
         print(
             Environment()
