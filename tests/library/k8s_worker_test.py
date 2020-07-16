@@ -156,8 +156,27 @@ class TestWorkers(BaseTestCase):
             )
         elif args[0] == "https://127.0.0.1:8080/api/v2/worker/k8shost/5":
             return MockResponse(json_data={}, status_code=204, headers={})
+        elif args[0] == "https://127.0.0.1:8080/api/v2/worker/k8shost/":
+            return MockResponse(
+                json_data={},
+                status_code=201,
+                headers={"location": "/new/cluster/id"},
+            )
 
         raise RuntimeError("Unhandled POST request: " + args[0])
+
+    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_create_with_ssh_key_data(self, mock_get, mock_post):
+
+        client = get_client()
+
+        # Makes GET Request: https://127.0.0.1:8080/api/v2/worker/k8shost/
+        worker_id = client.k8s_worker.create_with_ssh_key(
+            ip="127.0.0.1", ssh_key_data="test ssh key"
+        )
+
+        self.assertEqual(worker_id, "/new/cluster/id")
 
     @patch("requests.get", side_effect=mocked_requests_get)
     @patch("requests.post", side_effect=mocked_requests_post)
