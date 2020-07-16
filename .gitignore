@@ -109,3 +109,4 @@ hpecp.egg-info/
 docs/build/
 .noseids
 bin/hpecp
+.pytest_cache/
