@@ -1309,7 +1309,8 @@ class AutoComplete:
             for function_name in function_names:
                 function = getattr(module, function_name)
                 parameter_names = list(function.__code__.co_varnames)
-                parameter_names.remove("self")
+                if "self" in parameter_names:
+                    parameter_names.remove("self")
 
                 # prefix parameter names with '--'
                 parameter_names = list(map("--".__add__, parameter_names))
