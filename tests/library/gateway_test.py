@@ -1540,7 +1540,7 @@ class TestCliCreate(BaseTestCase):
             GatewayController,
             "create_with_ssh_key",
             side_effect=APIItemConflictException(
-                message="MESSAGE", request_method="METHOD", request_url="URL",
+                message="APIItemConflictException.message", request_method="METHOD", request_url="URL",
             ),
         ):
             with self.assertRaises(SystemExit) as cm:
@@ -1556,7 +1556,7 @@ class TestCliCreate(BaseTestCase):
         stdout = self.out.getvalue().strip()
         stderr = self.err.getvalue().strip()
 
-        expected_err = "Gateway already exists."
+        expected_err = "APIItemConflictException.message"
 
         self.assertEqual(stdout, "")
         self.assertTrue(
