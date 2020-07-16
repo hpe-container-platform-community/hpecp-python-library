@@ -287,3 +287,8 @@ class TestBash(BaseTestCase):
         (modules, columns) = hpecp.autocomplete._get_metadata()
 
         self.assertEquals(columns["gateway"], hpecp.gateway.all_fields())
+
+        # test the introspection of CLI gateway.list() parameter names
+        self.assertEquals(
+            modules["gateway"]["list"], ["--output", "--columns", "--query"]
+        )
