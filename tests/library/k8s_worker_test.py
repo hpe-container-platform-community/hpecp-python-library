@@ -132,6 +132,24 @@ def mocked_requests_get(*args, **kwargs):
             status_code=200,
             headers={},
         )
+    elif args[0] == "https://127.0.0.1:8080/api/v2/worker/k8shost/5?setup_log":
+        return MockResponse(
+            json_data={
+                "status": "bundle",
+                "approved_worker_pubkey": [],
+                "tags": [],
+                "hostname": "",
+                "ipaddr": "10.1.0.186",
+                "setup_log": (
+                    "/var/log/bluedata/install/"
+                    "k8shost_setup_10.1.0.186-"
+                    "2020-4-26-18-49-10"
+                ),
+                "_links": {"self": {"href": "/api/v2/worker/k8shost/5"}},
+            },
+            status_code=200,
+            headers={},
+        )
     elif args[0] == "https://127.0.0.1:8080/api/v2/worker/k8shost/8":
         return MockResponse(
             json_data={},
@@ -204,6 +222,19 @@ class TestWorkers(BaseTestCase):
             4,
             5,
         ]
+
+    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_get_k8shosts_with_setup_log(self, mock_get, mock_post):
+
+        client = get_client()
+        worker = client.k8s_worker.get(
+            id="/api/v2/worker/k8shost/5", setup_log=True
+        )
+
+        self.assertEquals(
+            worker.ipaddr, "10.1.0.186",
+        )
 
     @patch("requests.get", side_effect=mocked_requests_get)
     @patch("requests.post", side_effect=mocked_requests_post)
