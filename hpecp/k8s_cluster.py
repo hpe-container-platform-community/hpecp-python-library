@@ -202,7 +202,7 @@ class K8sClusterHostConfig:
 
         assert (
             len(noderole) == 2
-        ), "'noderole' list must have two values [  node, role ]"
+        ), "'noderole' list must have two values [ node, role ]"
         return K8sClusterHostConfig(node=noderole[0], role=noderole[1])
 
     def __init__(self, node, role):
