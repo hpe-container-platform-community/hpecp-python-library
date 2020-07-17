@@ -29,6 +29,7 @@ jobs:
           pip install polling
       - name: Build Docs
         run: |
+          pip install fire
           cd docs
           make html
           touch ./build/html/.nojekyll
