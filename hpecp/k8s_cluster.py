@@ -378,14 +378,22 @@ class K8sClusterController(AbstractWaitableResourceController):
         )
         return response.headers["Location"]
 
-    def get(self, id, setup_log=False):
+    def get(self, id, params={}, setup_log=False):
+        """Retrieve a K8s Cluster.
 
-        if setup_log is True:
-            params = "?setup_log"
-        else:
-            params = ""
+        Parameters
+        ----------
+        id: str
+            The k8s cluster ID
+        params:
+            To retrieve the setup_log use:
 
-        return super(K8sClusterController, self).get(id, params)
+            { setup_log: None }
+        """
+        if setup_log:
+            params["setup_log"] = None
+
+        return super(K8sClusterController, self).get(id=id, params=params)
 
     def k8s_supported_versions(self):
         """Retrieve list of K8S Supported Versions.

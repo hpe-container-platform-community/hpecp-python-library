@@ -132,7 +132,10 @@ def mocked_requests_get(*args, **kwargs):
             status_code=200,
             headers={},
         )
-    elif args[0] == "https://127.0.0.1:8080/api/v2/worker/k8shost/5?setup_log":
+    elif (
+        args[0]
+        == "https://127.0.0.1:8080/api/v2/worker/k8shost/5?setup_log=true"
+    ):
         return MockResponse(
             json_data={
                 "status": "bundle",

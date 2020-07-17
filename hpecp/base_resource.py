@@ -27,6 +27,7 @@ import six
 from tabulate import tabulate
 from hpecp.exceptions import APIItemNotFoundException
 from .logger import Logger
+import urllib
 
 _log = Logger().get_logger(__file__)
 
@@ -118,7 +119,7 @@ class AbstractResourceController:
         """
         self.client = client
 
-    def get(self, id, params=None):
+    def get(self, id, params={}):
         """Make an API call to retrieve a Resource.
 
         Parameters
@@ -146,11 +147,16 @@ class AbstractResourceController:
             self.base_resource_path
         ), "'id' does not start with '{}'".format(self.base_resource_path)
 
-        if params is None:
-            params = ""
+        if params:
+            if six.PY2:
+                p = "?" + urllib.urlencode(params)
+            else:
+                p = "?" + urllib.parse.urlencode(params)
+        else:
+            p = ""
 
         response = self.client._request(
-            url="{}{}".format(id, params),
+            url="{}{}".format(id, p),
             http_method="get",
             description=self.__class__.__name__ + "/get",
         )
