@@ -1268,7 +1268,14 @@ class AutoComplete:
                         {% endfor %}
 
                     *"hpecp,{{module_name}},{{function_name}}"*)
-                        COMPREPLY=( $(compgen -W "{{ param_names }}" -- $cur) )
+
+                        # if last parameter is "--columns"
+                        # COMPREPLY=( $(compgen -W "{{column_names}}" -- $cur) )
+                        # else
+                        # COMPREPLY=( $(compgen -W "{{param_names}}" -- $cur) )
+                        # fi
+                        
+                        COMPREPLY=( $(compgen -W "{{param_names}}" -- $cur) )
                         ;;
                     {% endfor %}
 
