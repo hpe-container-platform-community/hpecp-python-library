@@ -21,7 +21,10 @@
 import unittest
 from mock import MagicMock
 
-from hpecp.base_resource import AbstractResourceController, AbstractWaitableResourceController
+from hpecp.base_resource import (
+    AbstractResourceController,
+    AbstractWaitableResourceController,
+)
 from hpecp.client import ContainerPlatformClient
 
 
@@ -38,24 +41,35 @@ class TestBaseResource(unittest.TestCase):
         )
 
         class ImplClass(AbstractResourceController):
-            base_resource_path = "test_base_resource_path"
-            resource_class = "test_resource_class"
-            resource_list_path = "test_resource_list_path"
+            base_resource_path = "abc"
+            resource_class = "abc"
+            resource_list_path = "abc"
 
         c = ImplClass(client)
 
-        self.assertEqual(c.base_resource_path, "test_base_resource_path")
-        self.assertEqual(c.resource_class, "test_resource_class")
-        self.assertEqual(c.resource_list_path, "test_resource_list_path")
+        c._set_base_resource_path("test_base_resource_path")
+        c._set_resource_class("test_resource_class")
+        c._set_resource_list_path("test_resource_list_path")
+
+        self.assertEqual(
+            c._get_base_resource_path(), "test_base_resource_path"
+        )
+        self.assertEqual(c._get_resource_class(), "test_resource_class")
+        self.assertEqual(
+            c._get_resource_list_path(), "test_resource_list_path"
+        )
 
         class ImplWaitClass(AbstractWaitableResourceController):
-            status_class = "test_status_class"
-            status_fieldname = "test_status_fieldname"
-            base_resource_path = "test_base_resource_path"
-            resource_class = "test_resource_class"
-            resource_list_path = "test_resource_list_path"
+            status_class = "abc"
+            status_fieldname = "abc"
+            base_resource_path = "abc"
+            resource_class = "abc"
+            resource_list_path = "abc"
 
         c = ImplWaitClass(client)
 
-        self.assertEqual(c.status_class, "test_status_class")
-        self.assertEqual(c.status_fieldname, "test_status_fieldname")
+        c._set_status_class("test_status_class")
+        c._set_status_fieldname("test_status_fieldname")
+
+        self.assertEqual(c._get_status_class(), "test_status_class")
+        self.assertEqual(c._get_status_fieldname(), "test_status_fieldname")
