@@ -157,9 +157,7 @@ class BaseProxy:
             return []
 
     @intercept_exception
-    def get(
-        self, id, output="yaml",
-    ):
+    def get(self, id, output="yaml", params=None):
         """Retrieve a Resource by ID.
 
         id: string
@@ -171,7 +169,7 @@ class BaseProxy:
         self.client_module_property = getattr(
             self.client, self.client_module_name
         )
-        response = self.client_module_property.get(id)
+        response = self.client_module_property.get(id=id, params=params)
 
         if output == "yaml":
             print(
@@ -528,6 +526,14 @@ class K8sWorkerProxy(BaseProxy):
             ip=ip, ssh_key_data=ssh_key, tags=tags,
         )
         print(worker_id)
+
+    def get(self, id, setup_log=False):
+        """Get a K8SWorker."""
+        if setup_log is True:
+            params = "?setup_log"
+        else:
+            params = ""
+        return super(K8sWorkerProxy, self).get(id, params)
 
     @intercept_exception
     def set_storage(
