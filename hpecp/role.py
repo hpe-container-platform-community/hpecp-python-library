@@ -108,21 +108,6 @@ class Role:
         self.json = json
         self.display_columns = Role.default_display_fields
 
-    def __repr__(self):
-        return "<Role id:{} description:{}>".format(self.id, self.description)
-
-    def __str__(self):
-        return "Role(id={}, description={})".format(self.id, self.description)
-
-    def __dir__(self):
-        return self.display_columns
-
-    def __getitem__(self, item):
-        return getattr(self, self.display_columns[item])
-
-    def __len__(self):
-        return len(dir(self))
-
     @property
     def id(self):
         """@Field: from json['_links']['self']['href'] - id format:
