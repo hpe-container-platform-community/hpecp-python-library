@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CLI Docs &#8212; HPE Container Platform Python Library  documentation</title>
+    <title>cli module &#8212; HPE Container Platform Python Library  documentation</title>
     <link rel="stylesheet" href="_static/bizstyle.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
@@ -18,7 +18,7 @@
     <script src="_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Source Repository" href="github.html" />
+    <link rel="next" title="CLI Docs" href="cli_overview.html" />
     <link rel="prev" title="hpecp.exceptions module" href="hpecp.exceptions.html" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <!--[if lt IE 9]>
@@ -35,13 +35,14 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="github.html" title="Source Repository"
+          <a href="cli_overview.html" title="CLI Docs"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="hpecp.exceptions.html" title="hpecp.exceptions module"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">HPE Container Platform Python Library  documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">CLI Docs</a></li> 
+          <li class="nav-item nav-item-1"><a href="hpecp.html" accesskey="U">Library API Docs</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">cli module</a></li> 
       </ul>
     </div>  
 
@@ -50,144 +51,545 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="cli-docs">
-<h1>CLI Docs<a class="headerlink" href="#cli-docs" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="setup">
-<h2>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h2>
-<p>Install the library:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># ensure you have an up-to-date pip</span>
-pip3 install -U pip
+  <div class="section" id="module-bin.cli">
+<span id="cli-module"></span><h1>cli module<a class="headerlink" href="#module-bin.cli" title="Permalink to this headline">¶</a></h1>
+<p>HPE Container Platform CLI.</p>
+<dl class="py function">
+<dt id="bin.cli.intercept_exception">
+<code class="sig-prename descclassname">bin.cli.</code><code class="sig-name descname">intercept_exception</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">wrapper</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">enabled</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">adapter</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#intercept_exception"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.intercept_exception" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle Exceptions.</p>
+</dd></dl>
 
-pip3 install --upgrade git+https://github.com/hpe-container-platform-community/hpecp-client@master
-</pre></div>
-</div>
-<p>Create a configuration file:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cat &gt; ~/.hpecp.conf <span class="s">&lt;&lt;EOF</span>
-<span class="s">[default]</span>
-<span class="s">api_host = 127.0.0.1</span>
-<span class="s">api_port = 8080</span>
-<span class="s">use_ssl = True</span>
-<span class="s">verify_ssl = False</span>
-<span class="s">warn_ssl = False</span>
-<span class="s">username = admin</span>
-<span class="s">password = admin123</span>
-<span class="s">EOF</span>
-</pre></div>
-</div>
-<p><strong>NOTE:</strong> you can specify a different config file location with the environment variables <cite>HPECP_CONFIG_FILE</cite>.</p>
-<p>Test your connectivity:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>hpecp license platform-id
+<dl class="py function">
+<dt id="bin.cli.get_client">
+<code class="sig-prename descclassname">bin.cli.</code><code class="sig-name descname">get_client</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">start_session</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#get_client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.get_client" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve a reference to an authenticated client object.</p>
+</dd></dl>
 
-&gt;&gt;&gt; aa8716be-bc74-4ffa-b838-d92e6934d224
-</pre></div>
-</div>
-</div>
-<div class="section" id="logging-level">
-<h2>Logging Level<a class="headerlink" href="#logging-level" title="Permalink to this headline">¶</a></h2>
-<p>Log level is controlled with the environment variable <cite>LOG_LEVEL</cite>.</p>
-<p>Typical valid values are <cite>ERROR</cite>, <cite>WARNING</cite>, <cite>INFO</cite>, <cite>DEBUG</cite> - the default value is <cite>INFO</cite>.</p>
-<ul class="simple">
-<li><p><cite>INFO</cite> = Significant Events</p></li>
-<li><p><cite>DEBUG</cite> = API Requests</p></li>
+<dl class="py class">
+<dt id="bin.cli.BaseProxy">
+<em class="property">class </em><code class="sig-prename descclassname">bin.cli.</code><code class="sig-name descname">BaseProxy</code><a class="reference internal" href="_modules/bin/cli.html#BaseProxy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.BaseProxy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base ‘proxy’ class for generic calls to API.</p>
+<dl class="py method">
+<dt id="bin.cli.BaseProxy.new_instance">
+<code class="sig-name descname">new_instance</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">client_module_name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#BaseProxy.new_instance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.BaseProxy.new_instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new instance (constructor).</p>
+<dl class="simple">
+<dt>client_module_name<span class="classifier">str</span></dt><dd><p>Name of the property in the ContainerPlatformClient that
+points to the different modules (user, gateway, cluster, etc)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bin.cli.BaseProxy.all_fields">
+<code class="sig-name descname">all_fields</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#BaseProxy.all_fields"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.BaseProxy.all_fields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve Entity columns.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bin.cli.BaseProxy.get">
+<code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">output</span><span class="o">=</span><span class="default_value">'yaml'</span></em>, <em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#BaseProxy.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.BaseProxy.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve a Resource by ID.</p>
+<dl class="simple">
+<dt>id: string</dt><dd><p>the id of the resource with format: ‘/api/path/[0-9]+’</p>
+</dd>
+<dt>output: string</dt><dd><p>how to display the output, either ‘yaml’ or ‘json’, default ‘yaml’</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bin.cli.BaseProxy.delete">
+<code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#BaseProxy.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.BaseProxy.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete a resource.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> – the resource ID</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bin.cli.BaseProxy.list">
+<code class="sig-name descname">list</code><span class="sig-paren">(</span><em class="sig-param">output='table'</em>, <em class="sig-param">columns=&lt;function BaseProxy.all_fields&gt;</em>, <em class="sig-param">query={}</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#BaseProxy.list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.BaseProxy.list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve the list of resources.</p>
+<dl class="simple">
+<dt>output<span class="classifier">str, optional</span></dt><dd><p>Define how the output should be printed, by default “json”</p>
+</dd>
+<dt>columns<span class="classifier">list/tuple, optional</span></dt><dd><p>List of specific columns to be displayed, by default []
+<cite>Catalog.default_display_fields</cite></p>
+</dd>
+<dt>query<span class="classifier">dict, optional</span></dt><dd><p>Query in jmespath (<a class="reference external" href="https://jmespath.org/">https://jmespath.org/</a>) format, by default {}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bin.cli.BaseProxy.wait_for_state">
+<code class="sig-name descname">wait_for_state</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">states</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">timeout_secs</span><span class="o">=</span><span class="default_value">60</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#BaseProxy.wait_for_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.BaseProxy.wait_for_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>See wait_for_status().</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bin.cli.BaseProxy.wait_for_status">
+<code class="sig-name descname">wait_for_status</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">status</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">timeout_secs</span><span class="o">=</span><span class="default_value">60</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#BaseProxy.wait_for_status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.BaseProxy.wait_for_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wait for resource to have one or more statuses.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> – Resource id with format: /api/path/[0-9]+</p></li>
+<li><p><strong>status</strong> – status(es) to wait for with format:
+[‘status1’, ‘status2’, ‘statusn’]</p></li>
+<li><p><strong>timeout_secs</strong> – how many secs to wait before exiting</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">LOG_LEVEL</span><span class="o">=</span>DEBUG
-hpecp license platform-id
+</dd>
+</dl>
+<dl class="simple">
+<dt>:returns True/False if status was found within timeout_secs. May</dt><dd><p>raise APIException.</p>
+</dd>
+</dl>
+</dd></dl>
 
-&gt;&gt;&gt; <span class="m">2020</span>-05-12 <span class="m">12</span>:58:00,251 - ContainerPlatformClient - DEBUG - ContainerPlatformClient<span class="o">()</span> created with username<span class="o">[</span><span class="s1">&#39;admin&#39;</span><span class="o">]</span>
-&gt;&gt;&gt; <span class="m">2020</span>-05-12 <span class="m">12</span>:58:00,923 - ContainerPlatformClient - DEBUG - REQ: license/get_platform_id : get https://35.163.22.120:8080/api/v1/license
-&gt;&gt;&gt; <span class="m">2020</span>-05-12 <span class="m">12</span>:58:01,571 - ContainerPlatformClient - DEBUG - RES: license/get_platform_id : get https://35.163.22.120:8080/api/v1/license : <span class="m">200</span> <span class="o">{</span><span class="s2">&quot;state&quot;</span>: <span class="s2">&quot;unlicensed&quot;</span>, <span class="s2">&quot;_links&quot;</span>: <span class="o">{</span><span class="s2">&quot;self&quot;</span>: <span class="o">{</span><span class="s2">&quot;href&quot;</span>: <span class="s2">&quot;/api/v1/license&quot;</span><span class="o">}}</span>, <span class="s2">&quot;uuid&quot;</span>: <span class="s2">&quot;aa8716be-bc74-4ffa-b838-d92e6934d224&quot;</span><span class="o">}</span>
-&gt;&gt;&gt; aa8716be-bc74-4ffa-b838-d92e6934d224
-</pre></div>
-</div>
-<p>See <a class="reference external" href="https://docs.python.org/3.7/howto/logging.html">https://docs.python.org/3.7/howto/logging.html</a> for much more info on logging.</p>
-</div>
-<div class="section" id="cli-help">
-<h2>CLI Help<a class="headerlink" href="#cli-help" title="Permalink to this headline">¶</a></h2>
-<p>Run <cite>hpecp</cite> without any arguments to retrieve a list of command groups:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">hpecp</span>
-</pre></div>
-</div>
-<p>Returns:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">NAME</span>
-    <span class="n">hpecp</span>
+</dd></dl>
 
-<span class="n">SYNOPSIS</span>
-    <span class="n">hpecp</span> <span class="n">GROUP</span>
+<dl class="py class">
+<dt id="bin.cli.CatalogProxy">
+<em class="property">class </em><code class="sig-prename descclassname">bin.cli.</code><code class="sig-name descname">CatalogProxy</code><a class="reference internal" href="_modules/bin/cli.html#CatalogProxy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.CatalogProxy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Proxy object to <code class="xref py py-attr docutils literal notranslate"><span class="pre">&lt;hpecp.client.catalog&gt;</span></code>.</p>
+<dl class="py method">
+<dt id="bin.cli.CatalogProxy.delete">
+<code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#CatalogProxy.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.CatalogProxy.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Not implemented.</p>
+</dd></dl>
 
-<span class="n">GROUPS</span>
-    <span class="n">GROUP</span> <span class="ow">is</span> <span class="n">one</span> <span class="n">of</span> <span class="n">the</span> <span class="n">following</span><span class="p">:</span>
+<dl class="py method">
+<dt id="bin.cli.CatalogProxy.refresh">
+<code class="sig-name descname">refresh</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">catalog_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#CatalogProxy.refresh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.CatalogProxy.refresh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Refresh a catalog.</p>
+<dl class="simple">
+<dt>catalog_id<span class="classifier">str</span></dt><dd><p>The ID of the catalog - format: ‘/api/v1/catalog/[0-9]+’</p>
+</dd>
+</dl>
+<p>&gt; hpecp catalog refresh /api/v1/catalog/99</p>
+</dd></dl>
 
-    <span class="n">gateway</span>
-    <span class="o">...</span>
-</pre></div>
-</div>
-<p>Similary to see a list of subcommands (e.g. for the gateway command):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">hpecp</span> <span class="n">gateway</span> <span class="o">--</span><span class="n">help</span>
-</pre></div>
-</div>
-<p>Returns:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">NAME</span>
-    <span class="n">hpecp</span> <span class="n">gateway</span>
+<dl class="py method">
+<dt id="bin.cli.CatalogProxy.install">
+<code class="sig-name descname">install</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">catalog_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#CatalogProxy.install"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.CatalogProxy.install" title="Permalink to this definition">¶</a></dt>
+<dd><p>Install a catalog.</p>
+<dl class="simple">
+<dt>catalog_id<span class="classifier">str</span></dt><dd><p>The ID of the catalog - format: ‘/api/v1/catalog/[0-9]+’</p>
+</dd>
+</dl>
+<p>&gt; hpecp catalog install /api/v1/catalog/99</p>
+</dd></dl>
 
-<span class="n">SYNOPSIS</span>
-    <span class="n">hpecp</span> <span class="n">gateway</span> <span class="n">COMMAND</span>
+</dd></dl>
 
-<span class="n">COMMANDS</span>
-    <span class="n">COMMAND</span> <span class="ow">is</span> <span class="n">one</span> <span class="n">of</span> <span class="n">the</span> <span class="n">following</span><span class="p">:</span>
+<dl class="py class">
+<dt id="bin.cli.GatewayProxy">
+<em class="property">class </em><code class="sig-prename descclassname">bin.cli.</code><code class="sig-name descname">GatewayProxy</code><a class="reference internal" href="_modules/bin/cli.html#GatewayProxy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.GatewayProxy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Proxy object to <code class="xref py py-attr docutils literal notranslate"><span class="pre">&lt;hpecp.client.gateway&gt;</span></code>.</p>
+<dl class="py method">
+<dt id="bin.cli.GatewayProxy.create_with_ssh_key">
+<code class="sig-name descname">create_with_ssh_key</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ip</span></em>, <em class="sig-param"><span class="n">proxy_node_hostname</span></em>, <em class="sig-param"><span class="n">ssh_key</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ssh_key_file</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">tags</span><span class="o">=</span><span class="default_value">[]</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#GatewayProxy.create_with_ssh_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.GatewayProxy.create_with_ssh_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a Gateway using SSH key authentication.</p>
+<dl class="simple">
+<dt>ip<span class="classifier">string</span></dt><dd><p>The IP address of the proxy host.  Used for internal
+communication.</p>
+</dd>
+<dt>proxy_node_hostname: string</dt><dd><p>Clients will access cluster services will be accessed
+using this name.</p>
+</dd>
+<dt>ssh_key: string</dt><dd><p>The ssh key data as a string.  Alternatively, use the
+ssh_key_file parameter.</p>
+</dd>
+<dt>ssh_key_file: string</dt><dd><p>The file path to the ssh key.  Alternatively, use the
+ssh_key parameter.</p>
+</dd>
+<dt>tags: string</dt><dd><p>Tags to add to the gateway, for example:
+“{ ‘tag1’: ‘foo’, ‘tag2’, ‘bar’ }”.</p>
+</dd>
+</dl>
+</dd></dl>
 
-    <span class="n">create_with_ssh_key</span>
-    <span class="n">Create</span> <span class="n">a</span> <span class="n">Gateway</span> <span class="n">using</span> <span class="n">SSH</span> <span class="n">key</span> <span class="n">authentication</span>
+<dl class="py method">
+<dt id="bin.cli.GatewayProxy.wait_for_delete">
+<code class="sig-name descname">wait_for_delete</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">timeout_secs</span><span class="o">=</span><span class="default_value">1200</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#GatewayProxy.wait_for_delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.GatewayProxy.wait_for_delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wait for Gateway to be deleted.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> – Cluster id with format: /api/v1/workers/[0-9]+</p></li>
+<li><p><strong>timeout_secs</strong> – how many secs to wait before exiting</p></li>
+</ul>
+</dd>
+</dl>
+<p>:returns True if gateway was deleted within timeout_secs.</p>
+</dd></dl>
 
-    <span class="n">create_with_ssh_password</span>
-    <span class="n">Not</span> <span class="n">yet</span> <span class="n">implemented</span>
+<dl class="py method">
+<dt id="bin.cli.GatewayProxy.states">
+<code class="sig-name descname">states</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#GatewayProxy.states"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.GatewayProxy.states" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of valid states.</p>
+</dd></dl>
 
-    <span class="n">delete</span>
-    <span class="n">Retrieve</span> <span class="n">a</span> <span class="n">Gateway</span> <span class="n">by</span> <span class="n">Id</span>
+</dd></dl>
 
-    <span class="n">get</span>
-    <span class="n">Retrieve</span> <span class="n">a</span> <span class="n">Gateway</span> <span class="n">by</span> <span class="n">Id</span>
-    <span class="o">...</span>
-</pre></div>
-</div>
-<p>And to see a subcommand’s (e.g. get) arguments:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">hpecp</span> <span class="n">gateway</span> <span class="n">get</span> <span class="o">--</span><span class="n">help</span>
-</pre></div>
-</div>
-<p>Returns:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">NAME</span>
-    <span class="n">hpecp</span> <span class="n">gateway</span> <span class="n">get</span> <span class="o">-</span> <span class="n">Retrieve</span> <span class="n">a</span> <span class="n">Gateway</span> <span class="n">by</span> <span class="n">Id</span>
+<dl class="py class">
+<dt id="bin.cli.K8sWorkerProxy">
+<em class="property">class </em><code class="sig-prename descclassname">bin.cli.</code><code class="sig-name descname">K8sWorkerProxy</code><a class="reference internal" href="_modules/bin/cli.html#K8sWorkerProxy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.K8sWorkerProxy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Proxy object to <code class="xref py py-attr docutils literal notranslate"><span class="pre">&lt;hpecp.client.k8s_worker&gt;</span></code>.</p>
+<dl class="py method">
+<dt id="bin.cli.K8sWorkerProxy.create_with_ssh_key">
+<code class="sig-name descname">create_with_ssh_key</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ip</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ssh_key</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ssh_key_file</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">tags</span><span class="o">=</span><span class="default_value">[]</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#K8sWorkerProxy.create_with_ssh_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.K8sWorkerProxy.create_with_ssh_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a K8s Worker using SSH key authentication.</p>
+<dl class="simple">
+<dt>ip<span class="classifier">str, optional</span></dt><dd><p>The IP address of the host, this is used for internal
+communication, by default None.</p>
+</dd>
+<dt>ssh_key<span class="classifier">str, optional</span></dt><dd><p>The SSH key data as a string, instead of this location to a key
+file may also be provided, by default None.</p>
+</dd>
+<dt>ssh_key_file<span class="classifier">str, optional</span></dt><dd><p>The SSH key file path, by default None</p>
+</dd>
+<dt>tags<span class="classifier">list, optional</span></dt><dd><p>Tags to use, e.g. “{ “tag1”: “foo”, “tag2”: “bar”}”, by default []</p>
+</dd>
+</dl>
+</dd></dl>
 
-<span class="n">SYNOPSIS</span>
-    <span class="n">hpecp</span> <span class="n">gateway</span> <span class="n">get</span> <span class="n">GATEWAY_ID</span> <span class="o">&lt;</span><span class="n">flags</span><span class="o">&gt;</span>
+<dl class="py method">
+<dt id="bin.cli.K8sWorkerProxy.get">
+<code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">setup_log</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#K8sWorkerProxy.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.K8sWorkerProxy.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a K8SWorker.</p>
+</dd></dl>
 
-<span class="n">DESCRIPTION</span>
-    <span class="n">Retrieve</span> <span class="n">a</span> <span class="n">Gateway</span> <span class="n">by</span> <span class="n">Id</span>
+<dl class="py method">
+<dt id="bin.cli.K8sWorkerProxy.set_storage">
+<code class="sig-name descname">set_storage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">ephemeral_disks</span></em>, <em class="sig-param"><span class="n">persistent_disks</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#K8sWorkerProxy.set_storage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.K8sWorkerProxy.set_storage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set storage for a k8s worker.</p>
+<dl class="simple">
+<dt>id<span class="classifier">str</span></dt><dd><p>The k8s worker ID</p>
+</dd>
+<dt>ephemeral_disks<span class="classifier">str</span></dt><dd><p>Comma separated string containing ephemeral disks.
+e.g: “/dev/nvme2n1,/dev/nvme2n2”</p>
+</dd>
+<dt>persistent_disks<span class="classifier">str, optional</span></dt><dd><p>Comma separated string containing persistent disks, by default
+None.
+e.g: “/dev/nvme1n1,/dev/nvme1n2”</p>
+</dd>
+</dl>
+</dd></dl>
 
-<span class="n">POSITIONAL</span> <span class="n">ARGUMENTS</span>
-    <span class="n">GATEWAY_ID</span>
-        <span class="n">the</span> <span class="nb">id</span> <span class="n">of</span> <span class="n">the</span> <span class="n">gateway</span> <span class="k">with</span> <span class="nb">format</span><span class="p">:</span> <span class="s1">&#39;/api/v1/workers/[0-9]+&#39;</span>
+<dl class="py method">
+<dt id="bin.cli.K8sWorkerProxy.statuses">
+<code class="sig-name descname">statuses</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#K8sWorkerProxy.statuses"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.K8sWorkerProxy.statuses" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of valid statuses.</p>
+</dd></dl>
 
-<span class="n">FLAGS</span>
-    <span class="o">--</span><span class="n">output</span><span class="o">=</span><span class="n">OUTPUT</span>
-        <span class="n">how</span> <span class="n">to</span> <span class="n">display</span> <span class="n">the</span> <span class="n">output</span> <span class="p">[</span><span class="s1">&#39;yaml&#39;</span><span class="o">|</span><span class="s1">&#39;json&#39;</span><span class="p">]</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="example">
-<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
-<img alt="CLI Example" src="_images/cli_example.gif" />
-</div>
-<div class="section" id="autocompletion">
-<h2>Autocompletion<a class="headerlink" href="#autocompletion" title="Permalink to this headline">¶</a></h2>
-<p>(this is currently broken - awaiting: <a class="reference external" href="https://github.com/google/python-fire/issues/255">https://github.com/google/python-fire/issues/255</a>)</p>
-<p>The CLI supports auto completion, for bash use:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>hpecp -- --completion bash &gt; ~/.hpecp_completion
-<span class="nb">echo</span> <span class="nb">source</span> ~/.hpecp_completion &gt;&gt; ~/.bash_profile
-</pre></div>
-</div>
-<p>For zsh, or fish, change the command from <cite>bash</cite> to <cite>zsh</cite> or <cite>fish</cite> in the first command and
-add the completion script to your shell init script, <cite>~/.zshrc</cite> or <cite>~/.config/fish/config.fish</cite>.</p>
-</div>
+</dd></dl>
+
+<dl class="py class">
+<dt id="bin.cli.K8sClusterProxy">
+<em class="property">class </em><code class="sig-prename descclassname">bin.cli.</code><code class="sig-name descname">K8sClusterProxy</code><a class="reference internal" href="_modules/bin/cli.html#K8sClusterProxy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.K8sClusterProxy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Proxy object to <code class="xref py py-attr docutils literal notranslate"><span class="pre">&lt;hpecp.client.k8s_cluster&gt;</span></code>.</p>
+<dl class="py method">
+<dt id="bin.cli.K8sClusterProxy.create">
+<code class="sig-name descname">create</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">k8shosts_config</span></em>, <em class="sig-param"><span class="n">description</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">k8s_version</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pod_network_range</span><span class="o">=</span><span class="default_value">'10.192.0.0/12'</span></em>, <em class="sig-param"><span class="n">service_network_range</span><span class="o">=</span><span class="default_value">'10.96.0.0/12'</span></em>, <em class="sig-param"><span class="n">pod_dns_domain</span><span class="o">=</span><span class="default_value">'cluster.local'</span></em>, <em class="sig-param"><span class="n">persistent_storage_local</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">persistent_storage_nimble_csi</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#K8sClusterProxy.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.K8sClusterProxy.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a K8s Cluster.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – the cluster name</p></li>
+<li><p><strong>k8shosts_config</strong> – k8s host ids and roles ‘id1:master|worker,id2:
+master|worker,…’</p></li>
+<li><p><strong>description</strong> – the cluster descripton</p></li>
+<li><p><strong>k8s_version</strong> – e.g. 1.17.0</p></li>
+<li><p><strong>pod_network_range</strong> – the pod network range,
+default=’10.192.0.0/12’</p></li>
+<li><p><strong>service_network_range</strong> – the service network range,
+default=’10.96.0.0/12’</p></li>
+<li><p><strong>pod_dns_domain</strong> – the pod dns domain, default=’cluster.local’</p></li>
+<li><p><strong>persistent_storage_local</strong> – True/False</p></li>
+<li><p><strong>persistent_storage_nimble_csi</strong> – True/False</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bin.cli.K8sClusterProxy.admin_kube_config">
+<code class="sig-name descname">admin_kube_config</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">k8scluster_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#K8sClusterProxy.admin_kube_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.K8sClusterProxy.admin_kube_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve a K8s Cluster Admin Kube Config.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>k8scluster_id</strong> – the cluster ID</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bin.cli.K8sClusterProxy.dashboard_url">
+<code class="sig-name descname">dashboard_url</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">k8scluster_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#K8sClusterProxy.dashboard_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.K8sClusterProxy.dashboard_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve a K8s Cluster Dashboard URL.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>k8scluster_id</strong> – the cluster ID</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bin.cli.K8sClusterProxy.dashboard_token">
+<code class="sig-name descname">dashboard_token</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">k8scluster_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#K8sClusterProxy.dashboard_token"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.K8sClusterProxy.dashboard_token" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve a K8s Cluster Dashboard Token.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>k8scluster_id</strong> – the cluster ID</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bin.cli.K8sClusterProxy.statuses">
+<code class="sig-name descname">statuses</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#K8sClusterProxy.statuses"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.K8sClusterProxy.statuses" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of valid statuses.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bin.cli.K8sClusterProxy.k8s_supported_versions">
+<code class="sig-name descname">k8s_supported_versions</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">output</span><span class="o">=</span><span class="default_value">'json'</span></em>, <em class="sig-param"><span class="n">major_filter</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">minor_filter</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">patch_filter</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#K8sClusterProxy.k8s_supported_versions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.K8sClusterProxy.k8s_supported_versions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print a list of supported k8s versions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output</strong> – how to print the output, ‘json’ or ‘text’</p></li>
+<li><p><strong>major_filter</strong> – only return versions matching major_filter</p></li>
+<li><p><strong>minor_filter</strong> – only return versions matching minor_filter</p></li>
+<li><p><strong>patch_filter</strong> – only return versions matching patch_filter</p></li>
+</ul>
+</dd>
+</dl>
+<p>Example:</p>
+<dl class="simple">
+<dt>hpecp k8scluster k8s_supported_versions –major-filter 1</dt><dd><p>–minor-filter 17</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="bin.cli.LockProxy">
+<em class="property">class </em><code class="sig-prename descclassname">bin.cli.</code><code class="sig-name descname">LockProxy</code><a class="reference internal" href="_modules/bin/cli.html#LockProxy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.LockProxy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Proxy object to <code class="xref py py-attr docutils literal notranslate"><span class="pre">&lt;hpecp.client.lock&gt;</span></code>.</p>
+<dl class="py method">
+<dt id="bin.cli.LockProxy.list">
+<code class="sig-name descname">list</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">output</span><span class="o">=</span><span class="default_value">'yaml'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#LockProxy.list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.LockProxy.list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the system and user locks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>output</strong> – how to display the output [‘yaml’|’json’]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bin.cli.LockProxy.create">
+<code class="sig-name descname">create</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">reason</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#LockProxy.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.LockProxy.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a lock.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bin.cli.LockProxy.delete">
+<code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#LockProxy.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.LockProxy.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete a user lock.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bin.cli.LockProxy.delete_all">
+<code class="sig-name descname">delete_all</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">timeout_secs</span><span class="o">=</span><span class="default_value">300</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#LockProxy.delete_all"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.LockProxy.delete_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete all locks.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="bin.cli.LicenseProxy">
+<em class="property">class </em><code class="sig-prename descclassname">bin.cli.</code><code class="sig-name descname">LicenseProxy</code><a class="reference internal" href="_modules/bin/cli.html#LicenseProxy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.LicenseProxy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Proxy object to <code class="xref py py-attr docutils literal notranslate"><span class="pre">&lt;hpecp.client.license&gt;</span></code>.</p>
+<dl class="py method">
+<dt id="bin.cli.LicenseProxy.platform_id">
+<code class="sig-name descname">platform_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#LicenseProxy.platform_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.LicenseProxy.platform_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the platform ID.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bin.cli.LicenseProxy.list">
+<code class="sig-name descname">list</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">output</span><span class="o">=</span><span class="default_value">'yaml'</span></em>, <em class="sig-param"><span class="n">license_key_only</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#LicenseProxy.list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.LicenseProxy.list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve the list of licenses.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>output</strong> – how to display the output [‘yaml’|’json’]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bin.cli.LicenseProxy.register">
+<code class="sig-name descname">register</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">server_filename</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#LicenseProxy.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.LicenseProxy.register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a license.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>server_filename</strong> – Filepath to the license on the server, e.g.
+‘/srv/bluedata/license/LICENSE-1.txt’</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bin.cli.LicenseProxy.delete">
+<code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">license_key</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#LicenseProxy.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.LicenseProxy.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete a license by LicenseKey.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>license_key</strong> – The license key, e.g. ‘1234 1234 … 1234
+“SOMETEXT”’</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bin.cli.LicenseProxy.delete_all">
+<code class="sig-name descname">delete_all</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#LicenseProxy.delete_all"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.LicenseProxy.delete_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete all licenses.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="bin.cli.HttpClientProxy">
+<em class="property">class </em><code class="sig-prename descclassname">bin.cli.</code><code class="sig-name descname">HttpClientProxy</code><a class="reference internal" href="_modules/bin/cli.html#HttpClientProxy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.HttpClientProxy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Proxy object to <code class="xref py py-attr docutils literal notranslate"><span class="pre">&lt;hpecp.client._request&gt;</span></code>.</p>
+<dl class="py method">
+<dt id="bin.cli.HttpClientProxy.get">
+<code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">url</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#HttpClientProxy.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.HttpClientProxy.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make HTTP GET request.</p>
+<p>$ hpecp httpclient get /api/v1/workers</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bin.cli.HttpClientProxy.delete">
+<code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">url</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#HttpClientProxy.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.HttpClientProxy.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make HTTP DELETE request.</p>
+<p>$ hpecp httpclient delete /api/v1/workers/1</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bin.cli.HttpClientProxy.post">
+<code class="sig-name descname">post</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">url</span></em>, <em class="sig-param"><span class="n">json_file</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#HttpClientProxy.post"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.HttpClientProxy.post" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make HTTP POST request.</p>
+<dl>
+<dt>$ cat &gt; my.json &lt;&lt;-EOF</dt><dd><dl>
+<dt>{</dt><dd><dl class="simple">
+<dt>“external_identity_server”:  {</dt><dd><p>“bind_pwd”:”5ambaPwd&#64;”,
+“user_attribute”:”sAMAccountName”,
+“bind_type”:”search_bind”,
+“bind_dn”:”cn=Administrator,CN=Users,DC=samdom,DC=example,DC=com”,
+“host”:”10.1.0.77”,
+“security_protocol”:”ldaps”,
+“base_dn”:”CN=Users,DC=samdom,DC=example,DC=com”,
+“verify_peer”: false,
+“type”:”Active Directory”,
+“port”:636</p>
+</dd>
+</dl>
+<p>}</p>
+</dd>
+</dl>
+<p>}
+EOF</p>
+<p>hpecp httpclient post /api/v2/config/auth –json-file my.json</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bin.cli.HttpClientProxy.put">
+<code class="sig-name descname">put</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">url</span></em>, <em class="sig-param"><span class="n">json_file</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#HttpClientProxy.put"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.HttpClientProxy.put" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make HTTP PUT request.</p>
+<p>$ hpecp httpclient put /api/v2/config/auth –json-file my.json</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="bin.cli.UserProxy">
+<em class="property">class </em><code class="sig-prename descclassname">bin.cli.</code><code class="sig-name descname">UserProxy</code><a class="reference internal" href="_modules/bin/cli.html#UserProxy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.UserProxy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Proxy object to <code class="xref py py-attr docutils literal notranslate"><span class="pre">&lt;hpecp.client.user&gt;</span></code>.</p>
+<dl class="py method">
+<dt id="bin.cli.UserProxy.create">
+<code class="sig-name descname">create</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">description</span></em>, <em class="sig-param"><span class="n">is_external</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#UserProxy.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.UserProxy.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a User.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – the user name</p></li>
+<li><p><strong>description</strong> – the user descripton</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="bin.cli.RoleProxy">
+<em class="property">class </em><code class="sig-prename descclassname">bin.cli.</code><code class="sig-name descname">RoleProxy</code><a class="reference internal" href="_modules/bin/cli.html#RoleProxy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.RoleProxy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Proxy object to <code class="xref py py-attr docutils literal notranslate"><span class="pre">&lt;hpecp.client.role&gt;</span></code>.</p>
+<dl class="py method">
+<dt id="bin.cli.RoleProxy.get">
+<code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">role_id</span></em>, <em class="sig-param"><span class="n">output</span><span class="o">=</span><span class="default_value">'yaml'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#RoleProxy.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.RoleProxy.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve a Role by Id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>role_id</strong> – the id of the role with format: ‘/api/v1/role/[0-9]+’</p></li>
+<li><p><strong>output</strong> – how to display the output [‘yaml’|’json’]</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="bin.cli.configure_cli">
+<code class="sig-prename descclassname">bin.cli.</code><code class="sig-name descname">configure_cli</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#configure_cli"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.configure_cli" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure the CLI.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="bin.cli.AutoComplete">
+<em class="property">class </em><code class="sig-prename descclassname">bin.cli.</code><code class="sig-name descname">AutoComplete</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cli</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#AutoComplete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.AutoComplete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shell autocompletion scripts.</p>
+<p>Example Usage:</p>
+<p>hpecp autocomplete bash &gt; hpecp-bash.sh &amp;&amp; source hpecp-bash.sh</p>
+<dl class="py method">
+<dt id="bin.cli.AutoComplete.bash">
+<code class="sig-name descname">bash</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#AutoComplete.bash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.AutoComplete.bash" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create autocompletion script for bash.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="bin.cli.CLI">
+<em class="property">class </em><code class="sig-prename descclassname">bin.cli.</code><code class="sig-name descname">CLI</code><a class="reference internal" href="_modules/bin/cli.html#CLI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.CLI" title="Permalink to this definition">¶</a></dt>
+<dd><p>Command Line Interface for the HPE Container Platform.</p>
+</dd></dl>
+
 </div>
 
 
@@ -200,15 +602,12 @@ add the completion script to your shell init script, <cite>~/.zshrc</cite> or <c
 <h3><a href="index.html">Table of Contents</a></h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="hpecp.html">API Docs</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">CLI Docs</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#setup">Setup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#logging-level">Logging Level</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#cli-help">CLI Help</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#example">Example</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#autocompletion">Autocompletion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hpecp.html">Library API Docs</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="hpecp.html#cli-api-docs">CLI API Docs</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">cli module</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="cli_overview.html">CLI Docs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="github.html">Source Repository</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">Apache License</a></li>
 </ul>
@@ -217,8 +616,8 @@ add the completion script to your shell init script, <cite>~/.zshrc</cite> or <c
   <p class="topless"><a href="hpecp.exceptions.html"
                         title="previous chapter">hpecp.exceptions module</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="github.html"
-                        title="next chapter">Source Repository</a></p>
+  <p class="topless"><a href="cli_overview.html"
+                        title="next chapter">CLI Docs</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -250,13 +649,14 @@ add the completion script to your shell init script, <cite>~/.zshrc</cite> or <c
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="github.html" title="Source Repository"
+          <a href="cli_overview.html" title="CLI Docs"
              >next</a> |</li>
         <li class="right" >
           <a href="hpecp.exceptions.html" title="hpecp.exceptions module"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">HPE Container Platform Python Library  documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">CLI Docs</a></li> 
+          <li class="nav-item nav-item-1"><a href="hpecp.html" >Library API Docs</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">cli module</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

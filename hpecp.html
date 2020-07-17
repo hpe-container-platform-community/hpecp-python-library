@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>API Docs &#8212; HPE Container Platform Python Library  documentation</title>
+    <title>Library API Docs &#8212; HPE Container Platform Python Library  documentation</title>
     <link rel="stylesheet" href="_static/bizstyle.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
@@ -41,7 +41,7 @@
           <a href="installation.html" title="Installation"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">HPE Container Platform Python Library  documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">API Docs</a></li> 
+        <li class="nav-item nav-item-this"><a href="">Library API Docs</a></li> 
       </ul>
     </div>  
 
@@ -50,8 +50,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="api-docs">
-<span id="apidocs"></span><h1>API Docs<a class="headerlink" href="#api-docs" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="library-api-docs">
+<span id="apidocs"></span><h1>Library API Docs<a class="headerlink" href="#library-api-docs" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 <p class="caption"><span class="caption-text">Completed APIs</span></p>
 <ul>
@@ -60,33 +60,29 @@
 <li class="toctree-l1"><a class="reference internal" href="hpecp.lock.html">hpecp.lock module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hpecp.gateway.html">hpecp.gateway module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hpecp.base_resource.html">hpecp.base_resource module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="hpecp.k8s_cluster.html">hpecp.k8s_cluster module</a></li>
 </ul>
 </div>
 <div class="toctree-wrapper compound">
 <p class="caption"><span class="caption-text">Work-in-progress APIs</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="hpecp.k8s_worker.html">hpecp.k8s_worker module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hpecp.k8s_cluster.html">hpecp.k8s_cluster module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hpecp.config.html">hpecp.config module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hpecp.tag.html">hpecp.tag module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hpecp.tenant.html">hpecp.tenant module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hpecp.exceptions.html">hpecp.exceptions module</a></li>
 </ul>
 </div>
-<div class="section" id="logging">
-<h2>Logging<a class="headerlink" href="#logging" title="Permalink to this headline">¶</a></h2>
-<p>You may set log level programmatically in your code:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;LOG_LEVEL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;DEBUG&quot;</span>
-</pre></div>
 </div>
-<p>Log level is also controlled with the environment variable <cite>LOG_LEVEL</cite> - the default value is <cite>INFO</cite>.</p>
-<ul class="simple">
-<li><p><cite>INFO</cite> = Significant Events</p></li>
-<li><p><cite>DEBUG</cite> = API Requests</p></li>
+<div class="section" id="cli-api-docs">
+<h1>CLI API Docs<a class="headerlink" href="#cli-api-docs" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">cli module</a></li>
 </ul>
-<p>See <a class="reference external" href="https://docs.python.org/3.7/howto/logging.html">https://docs.python.org/3.7/howto/logging.html</a> for much more info on logging.</p>
 </div>
+</div></blockquote>
 </div>
 
 
@@ -99,22 +95,25 @@
 <h3><a href="index.html">Table of Contents</a></h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">API Docs</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Library API Docs</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="hpecp.client.html">hpecp.client module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hpecp.license.html">hpecp.license module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hpecp.lock.html">hpecp.lock module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hpecp.gateway.html">hpecp.gateway module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hpecp.base_resource.html">hpecp.base_resource module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hpecp.k8s_cluster.html">hpecp.k8s_cluster module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hpecp.k8s_worker.html">hpecp.k8s_worker module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hpecp.k8s_cluster.html">hpecp.k8s_cluster module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hpecp.config.html">hpecp.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hpecp.tag.html">hpecp.tag module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hpecp.tenant.html">hpecp.tenant module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hpecp.exceptions.html">hpecp.exceptions module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#logging">Logging</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="cli.html">CLI Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#cli-api-docs">CLI API Docs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cli.html">cli module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cli_overview.html">CLI Docs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="github.html">Source Repository</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">Apache License</a></li>
 </ul>
@@ -162,7 +161,7 @@
           <a href="installation.html" title="Installation"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">HPE Container Platform Python Library  documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">API Docs</a></li> 
+        <li class="nav-item nav-item-this"><a href="">Library API Docs</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

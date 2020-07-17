@@ -73,6 +73,7 @@
 <span class="kn">from</span> <span class="nn">tabulate</span> <span class="kn">import</span> <span class="n">tabulate</span>
 <span class="kn">from</span> <span class="nn">hpecp.exceptions</span> <span class="kn">import</span> <span class="n">APIItemNotFoundException</span>
 <span class="kn">from</span> <span class="nn">.logger</span> <span class="kn">import</span> <span class="n">Logger</span>
+<span class="kn">import</span> <span class="nn">urllib</span>
 
 <span class="n">_log</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
 
@@ -164,7 +165,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">client</span>
 
-<div class="viewcode-block" id="AbstractResourceController.get"><a class="viewcode-back" href="../../hpecp.base_resource.html#hpecp.base_resource.AbstractResourceController.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="AbstractResourceController.get"><a class="viewcode-back" href="../../hpecp.base_resource.html#hpecp.base_resource.AbstractResourceController.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{}):</span>
         <span class="sd">&quot;&quot;&quot;Make an API call to retrieve a Resource.</span>
 
 <span class="sd">        Parameters</span>
@@ -192,11 +193,16 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">base_resource_path</span>
         <span class="p">),</span> <span class="s2">&quot;&#39;id&#39; does not start with &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_resource_path</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">params</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">params</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">params</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">six</span><span class="o">.</span><span class="n">PY2</span><span class="p">:</span>
+                <span class="n">p</span> <span class="o">=</span> <span class="s2">&quot;?&quot;</span> <span class="o">+</span> <span class="n">urllib</span><span class="o">.</span><span class="n">urlencode</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">p</span> <span class="o">=</span> <span class="s2">&quot;?&quot;</span> <span class="o">+</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urlencode</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
-            <span class="n">url</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">{}{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">params</span><span class="p">),</span>
+            <span class="n">url</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">{}{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">p</span><span class="p">),</span>
             <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;get&quot;</span><span class="p">,</span>
             <span class="n">description</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s2">&quot;/get&quot;</span><span class="p">,</span>
         <span class="p">)</span>
@@ -571,8 +577,9 @@
 <h3><a href="../../index.html">Table of Contents</a></h3>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../hpecp.html">API Docs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../cli.html">CLI Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hpecp.html">Library API Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hpecp.html#cli-api-docs">CLI API Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cli_overview.html">CLI Docs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../github.html">Source Repository</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../license.html">Apache License</a></li>
 </ul>

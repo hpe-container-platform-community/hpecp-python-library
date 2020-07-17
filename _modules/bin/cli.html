@@ -1,0 +1,1441 @@
+
+
+<!doctype html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bin.cli &#8212; HPE Container Platform Python Library  documentation</title>
+    <link rel="stylesheet" href="../../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">HPE Container Platform Python Library  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">bin.cli</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for bin.cli</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+
+<span class="c1"># (C) Copyright [2020] Hewlett Packard Enterprise Development LP</span>
+<span class="c1">#</span>
+<span class="c1"># Permission is hereby granted, free of charge, to any person obtaining a</span>
+<span class="c1"># copy of this software and associated documentation files (the &quot;Software&quot;),</span>
+<span class="c1"># to deal in the Software without restriction, including without limitation</span>
+<span class="c1"># the rights to use, copy, modify, merge, publish, distribute, sublicense,</span>
+<span class="c1"># and/or sell copies of the Software, and to permit persons to whom the</span>
+<span class="c1"># Software is furnished to do so, subject to the following conditions:</span>
+<span class="c1">#</span>
+<span class="c1"># The above copyright notice and this permission notice shall be included</span>
+<span class="c1"># in all copies or substantial portions of the Software.</span>
+<span class="c1">#</span>
+<span class="c1"># THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="c1"># IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="c1"># FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL</span>
+<span class="c1"># THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR</span>
+<span class="c1"># OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,</span>
+<span class="c1"># ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR</span>
+<span class="c1"># OTHER DEALINGS IN THE SOFTWARE.</span>
+
+<span class="sd">&quot;&quot;&quot;HPE Container Platform CLI.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+
+<span class="kn">import</span> <span class="nn">abc</span>
+<span class="kn">import</span> <span class="nn">base64</span>
+<span class="kn">import</span> <span class="nn">configparser</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+
+<span class="kn">import</span> <span class="nn">fire</span>
+<span class="kn">import</span> <span class="nn">jmespath</span>
+
+<span class="kn">from</span> <span class="nn">jinja2</span> <span class="kn">import</span> <span class="n">Environment</span>
+<span class="kn">import</span> <span class="nn">six</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">import</span> <span class="nn">wrapt</span>
+
+<span class="kn">from</span> <span class="nn">hpecp</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">APIException</span><span class="p">,</span>
+    <span class="n">APIItemConflictException</span><span class="p">,</span>
+    <span class="n">ContainerPlatformClient</span><span class="p">,</span>
+    <span class="n">ContainerPlatformClientException</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">hpecp.k8s_worker</span> <span class="kn">import</span> <span class="n">WorkerK8sStatus</span>
+<span class="kn">from</span> <span class="nn">hpecp.logger</span> <span class="kn">import</span> <span class="n">Logger</span>
+<span class="kn">from</span> <span class="nn">hpecp.gateway</span> <span class="kn">import</span> <span class="n">GatewayStatus</span>
+<span class="kn">from</span> <span class="nn">hpecp.k8s_cluster</span> <span class="kn">import</span> <span class="n">K8sClusterHostConfig</span><span class="p">,</span> <span class="n">K8sClusterStatus</span>
+<span class="kn">from</span> <span class="nn">hpecp.exceptions</span> <span class="kn">import</span> <span class="n">APIItemNotFoundException</span>
+<span class="kn">from</span> <span class="nn">textwrap</span> <span class="kn">import</span> <span class="n">dedent</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+
+
+<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
+    <span class="n">unicode</span> <span class="o">=</span> <span class="nb">str</span>
+
+<span class="n">_log</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
+
+<span class="n">PROFILE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;PROFILE&quot;</span><span class="p">,</span> <span class="s2">&quot;default&quot;</span><span class="p">,)</span>
+
+<span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+    <span class="s2">&quot;PROFILE envirionment variable exists with value &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">PROFILE</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="k">if</span> <span class="s2">&quot;HPECP_CONFIG_FILE&quot;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+    <span class="n">HPECP_CONFIG_FILE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expandvars</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;HPECP_CONFIG_FILE&quot;</span><span class="p">))</span>
+    <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+        <span class="s2">&quot;HPECP_CONFIG_FILE env variable exists with value &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">HPECP_CONFIG_FILE</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">HPECP_CONFIG_FILE</span> <span class="o">=</span> <span class="s2">&quot;~/.hpecp.conf&quot;</span>
+    <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+        <span class="s2">&quot;HPECP_CONFIG_FILE env variable not found, setting to &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">HPECP_CONFIG_FILE</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+
+
+<div class="viewcode-block" id="intercept_exception"><a class="viewcode-back" href="../../cli.html#bin.cli.intercept_exception">[docs]</a><span class="nd">@wrapt</span><span class="o">.</span><span class="n">decorator</span>
+<span class="k">def</span> <span class="nf">intercept_exception</span><span class="p">(</span><span class="n">wrapped</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Handle Exceptions.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">wrapped</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">AssertionError</span> <span class="k">as</span> <span class="n">ae</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">ae</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span>
+        <span class="n">APIException</span><span class="p">,</span>
+        <span class="n">APIItemNotFoundException</span><span class="p">,</span>
+        <span class="n">ContainerPlatformClientException</span><span class="p">,</span>
+    <span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;Unknown error. To debug run with env var LOG_LEVEL=DEBUG&quot;</span><span class="p">,</span>
+            <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">tb</span> <span class="o">=</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()</span>
+        <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">tb</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_client"><a class="viewcode-back" href="../../cli.html#bin.cli.get_client">[docs]</a><span class="nd">@intercept_exception</span>
+<span class="k">def</span> <span class="nf">get_client</span><span class="p">(</span><span class="n">start_session</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Retrieve a reference to an authenticated client object.&quot;&quot;&quot;</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">ContainerPlatformClient</span><span class="o">.</span><span class="n">create_from_config_file</span><span class="p">(</span>
+        <span class="n">config_file</span><span class="o">=</span><span class="n">HPECP_CONFIG_FILE</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="n">PROFILE</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">start_session</span><span class="p">:</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">create_session</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">client</span></div>
+
+
+<div class="viewcode-block" id="BaseProxy"><a class="viewcode-back" href="../../cli.html#bin.cli.BaseProxy">[docs]</a><span class="nd">@six</span><span class="o">.</span><span class="n">add_metaclass</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">BaseProxy</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Base &#39;proxy&#39; class for generic calls to API.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="BaseProxy.new_instance"><a class="viewcode-back" href="../../cli.html#bin.cli.BaseProxy.new_instance">[docs]</a>    <span class="k">def</span> <span class="nf">new_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client_module_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a new instance (constructor).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        client_module_name : str</span>
+<span class="sd">            Name of the property in the ContainerPlatformClient that</span>
+<span class="sd">            points to the different modules (user, gateway, cluster, etc)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client_module_name</span> <span class="o">=</span> <span class="n">client_module_name</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">BaseProxy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="BaseProxy.all_fields"><a class="viewcode-back" href="../../cli.html#bin.cli.BaseProxy.all_fields">[docs]</a>    <span class="k">def</span> <span class="nf">all_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve Entity columns.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># contstruct a dummy client to retrieve the</span>
+            <span class="c1"># field metadata</span>
+            <span class="n">dummy_client</span> <span class="o">=</span> <span class="n">ContainerPlatformClient</span><span class="p">(</span>
+                <span class="n">api_host</span><span class="o">=</span><span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span>
+                <span class="n">api_port</span><span class="o">=</span><span class="mi">8080</span><span class="p">,</span>
+                <span class="n">use_ssl</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">verify_ssl</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">warn_ssl</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">username</span><span class="o">=</span><span class="s2">&quot;dummyuser&quot;</span><span class="p">,</span>
+                <span class="n">password</span><span class="o">=</span><span class="s2">&quot;dummypassword&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client_module_property</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
+                <span class="n">dummy_client</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_module_name</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">client_module_property</span><span class="p">,</span> <span class="s2">&quot;resource_class&quot;</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">all_fields</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span></div>
+
+<div class="viewcode-block" id="BaseProxy.get"><a class="viewcode-back" href="../../cli.html#bin.cli.BaseProxy.get">[docs]</a>    <span class="nd">@intercept_exception</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s2">&quot;yaml&quot;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve a Resource by ID.</span>
+
+<span class="sd">        id: string</span>
+<span class="sd">            the id of the resource with format: &#39;/api/path/[0-9]+&#39;</span>
+<span class="sd">        output: string</span>
+<span class="sd">            how to display the output, either &#39;yaml&#39; or &#39;json&#39;, default &#39;yaml&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">get_client</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client_module_property</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_module_name</span>
+        <span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_module_property</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">output</span> <span class="o">==</span> <span class="s2">&quot;yaml&quot;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span>
+                    <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span>
+                        <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">),</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="BaseProxy.delete"><a class="viewcode-back" href="../../cli.html#bin.cli.BaseProxy.delete">[docs]</a>    <span class="nd">@intercept_exception</span>
+    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Delete a resource.</span>
+
+<span class="sd">        :param id: the resource ID</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">get_client</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client_module_property</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_module_name</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client_module_property</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseProxy.list"><a class="viewcode-back" href="../../cli.html#bin.cli.BaseProxy.list">[docs]</a>    <span class="nd">@intercept_exception</span>
+    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s2">&quot;table&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">all_fields</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="p">{}):</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve the list of resources.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        output : str, optional</span>
+<span class="sd">            Define how the output should be printed, by default &quot;json&quot;</span>
+<span class="sd">        columns : list/tuple, optional</span>
+<span class="sd">            List of specific columns to be displayed, by default []</span>
+<span class="sd">            `Catalog.default_display_fields`</span>
+<span class="sd">        query : dict, optional</span>
+<span class="sd">            Query in jmespath (https://jmespath.org/) format, by default {}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">columns</span> <span class="ow">is</span> <span class="p">[]</span> <span class="ow">and</span> <span class="n">query</span> <span class="ow">is</span> <span class="p">{}:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;You must only provide &#39;--columns&#39; OR &#39;--query&#39; parameters.&quot;</span><span class="p">,</span>
+                <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">get_client</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client_module_property</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_module_name</span>
+        <span class="p">)</span>
+
+        <span class="c1"># use tabulate for simplified user output</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">query</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">output</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;table&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">]:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;When --columns param = [], the --output param must be&quot;</span>
+                    <span class="s2">&quot; &#39;table&#39; or &#39;text&#39;&quot;</span><span class="p">,</span>
+                    <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">output</span> <span class="o">==</span> <span class="s2">&quot;table&quot;</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">client_module_property</span><span class="o">.</span><span class="n">list</span><span class="p">()</span><span class="o">.</span><span class="n">tabulate</span><span class="p">(</span>
+                        <span class="n">columns</span><span class="o">=</span><span class="n">columns</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">client_module_property</span><span class="o">.</span><span class="n">list</span><span class="p">()</span><span class="o">.</span><span class="n">tabulate</span><span class="p">(</span>
+                        <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;plain&quot;</span><span class="p">,</span> <span class="n">display_headers</span><span class="o">=</span><span class="kc">False</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+
+        <span class="c1"># user has provided a jmes query</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">output</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;json&quot;</span><span class="p">]:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;If you provide a jmes query, the output must be &#39;json&#39;&quot;</span><span class="p">,</span>
+                    <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_module_property</span><span class="o">.</span><span class="n">list</span><span class="p">()</span><span class="o">.</span><span class="n">json</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">jmespath</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">query</span><span class="p">),</span> <span class="n">data</span><span class="p">)))</span></div>
+
+<div class="viewcode-block" id="BaseProxy.wait_for_state"><a class="viewcode-back" href="../../cli.html#bin.cli.BaseProxy.wait_for_state">[docs]</a>    <span class="k">def</span> <span class="nf">wait_for_state</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">states</span><span class="o">=</span><span class="p">[],</span> <span class="n">timeout_secs</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;See wait_for_status().&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait_for_status</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">timeout_secs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseProxy.wait_for_status"><a class="viewcode-back" href="../../cli.html#bin.cli.BaseProxy.wait_for_status">[docs]</a>    <span class="k">def</span> <span class="nf">wait_for_status</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="p">[],</span> <span class="n">timeout_secs</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Wait for resource to have one or more statuses.</span>
+
+<span class="sd">        :param id: Resource id with format: /api/path/[0-9]+</span>
+<span class="sd">        :param status: status(es) to wait for with format:</span>
+<span class="sd">            [&#39;status1&#39;, &#39;status2&#39;, &#39;statusn&#39;]</span>
+<span class="sd">        :param timeout_secs: how many secs to wait before exiting</span>
+<span class="sd">        :returns True/False if status was found within timeout_secs. May</span>
+<span class="sd">            raise APIException.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">get_client</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client_module_property</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_module_name</span>
+        <span class="p">)</span>
+
+        <span class="n">resource_status</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client_module_property</span><span class="o">.</span><span class="n">status_class</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">status</span>
+        <span class="p">]</span>
+
+        <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;resource_status = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resource_status</span><span class="p">))</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">success</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_module_property</span><span class="o">.</span><span class="n">wait_for_status</span><span class="p">(</span>
+                <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">resource_status</span><span class="p">,</span> <span class="n">timeout_secs</span><span class="o">=</span><span class="n">timeout_secs</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">success</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">success</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;Failed to reach state(s) </span><span class="si">{}</span><span class="s2"> in </span><span class="si">{}</span><span class="s2">s&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="nb">str</span><span class="p">(</span><span class="n">status</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">timeout_secs</span><span class="p">),</span>
+                <span class="p">),</span>
+                <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="CatalogProxy"><a class="viewcode-back" href="../../cli.html#bin.cli.CatalogProxy">[docs]</a><span class="k">class</span> <span class="nc">CatalogProxy</span><span class="p">(</span><span class="n">BaseProxy</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Proxy object to :py:attr:`&lt;hpecp.client.catalog&gt;`.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initiate this proxy class with the client module name.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">CatalogProxy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">new_instance</span><span class="p">(</span><span class="s2">&quot;catalog&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__dir__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the CLI method names.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="s2">&quot;get&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;list&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;delete&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;wait_for_state&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;refresh&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;install&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+
+<div class="viewcode-block" id="CatalogProxy.delete"><a class="viewcode-back" href="../../cli.html#bin.cli.CatalogProxy.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Not implemented.&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;&#39;CatalogProxy&#39; object has no attribute &#39;delete&#39;&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CatalogProxy.refresh"><a class="viewcode-back" href="../../cli.html#bin.cli.CatalogProxy.refresh">[docs]</a>    <span class="k">def</span> <span class="nf">refresh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">catalog_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Refresh a catalog.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        catalog_id : str</span>
+<span class="sd">            The ID of the catalog - format: &#39;/api/v1/catalog/[0-9]+&#39;</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt; hpecp catalog refresh /api/v1/catalog/99</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">catalog</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span><span class="n">catalog_id</span><span class="p">)</span>
+
+            <span class="c1"># TODO: Report progress of the refresh workflow</span>
+        <span class="k">except</span> <span class="ne">AssertionError</span> <span class="k">as</span> <span class="n">ae</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">ae</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="n">APIException</span><span class="p">,</span> <span class="n">APIItemNotFoundException</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CatalogProxy.install"><a class="viewcode-back" href="../../cli.html#bin.cli.CatalogProxy.install">[docs]</a>    <span class="k">def</span> <span class="nf">install</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">catalog_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Install a catalog.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        catalog_id : str</span>
+<span class="sd">            The ID of the catalog - format: &#39;/api/v1/catalog/[0-9]+&#39;</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt; hpecp catalog install /api/v1/catalog/99</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">catalog</span><span class="o">.</span><span class="n">install</span><span class="p">(</span><span class="n">catalog_id</span><span class="p">)</span>
+
+            <span class="c1"># TODO: Implement a way to check if the installation is actually</span>
+            <span class="c1"># successful (and maybe report progress?) - wait_for_state()?</span>
+        <span class="k">except</span> <span class="ne">AssertionError</span> <span class="k">as</span> <span class="n">ae</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">ae</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="n">APIException</span><span class="p">,</span> <span class="n">APIItemNotFoundException</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="GatewayProxy"><a class="viewcode-back" href="../../cli.html#bin.cli.GatewayProxy">[docs]</a><span class="k">class</span> <span class="nc">GatewayProxy</span><span class="p">(</span><span class="n">BaseProxy</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Proxy object to :py:attr:`&lt;hpecp.client.gateway&gt;`.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__dir__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the CLI method names.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="s2">&quot;create_with_ssh_key&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;delete&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;get&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;list&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;states&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;wait_for_state&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initiate this proxy class with the client module name.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">GatewayProxy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">new_instance</span><span class="p">(</span><span class="s2">&quot;gateway&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="GatewayProxy.create_with_ssh_key"><a class="viewcode-back" href="../../cli.html#bin.cli.GatewayProxy.create_with_ssh_key">[docs]</a>    <span class="nd">@intercept_exception</span>
+    <span class="k">def</span> <span class="nf">create_with_ssh_key</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">ip</span><span class="p">,</span>
+        <span class="n">proxy_node_hostname</span><span class="p">,</span>
+        <span class="n">ssh_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">ssh_key_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">tags</span><span class="o">=</span><span class="p">[],</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a Gateway using SSH key authentication.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ip : string</span>
+<span class="sd">            The IP address of the proxy host.  Used for internal</span>
+<span class="sd">            communication.</span>
+<span class="sd">        proxy_node_hostname: string</span>
+<span class="sd">            Clients will access cluster services will be accessed</span>
+<span class="sd">            using this name.</span>
+<span class="sd">        ssh_key: string</span>
+<span class="sd">            The ssh key data as a string.  Alternatively, use the</span>
+<span class="sd">            ssh_key_file parameter.</span>
+<span class="sd">        ssh_key_file: string</span>
+<span class="sd">            The file path to the ssh key.  Alternatively, use the</span>
+<span class="sd">            ssh_key parameter.</span>
+<span class="sd">        tags: string</span>
+<span class="sd">            Tags to add to the gateway, for example:</span>
+<span class="sd">            &quot;{ &#39;tag1&#39;: &#39;foo&#39;, &#39;tag2&#39;, &#39;bar&#39; }&quot;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">ssh_key</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ssh_key_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;Either ssh_key or ssh_key_file must be provided&quot;</span><span class="p">,</span>
+                <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">ssh_key</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ssh_key_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;Either ssh_key or ssh_key_file must be provided&quot;</span><span class="p">,</span>
+                <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">ssh_key_file</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">ssh_key_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">ssh_key</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+        <span class="n">gateway_id</span> <span class="o">=</span> <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">gateway</span><span class="o">.</span><span class="n">create_with_ssh_key</span><span class="p">(</span>
+            <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span>
+            <span class="n">proxy_node_hostname</span><span class="o">=</span><span class="n">proxy_node_hostname</span><span class="p">,</span>
+            <span class="n">ssh_key_data</span><span class="o">=</span><span class="n">ssh_key</span><span class="p">,</span>
+            <span class="n">tags</span><span class="o">=</span><span class="n">tags</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">gateway_id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GatewayProxy.wait_for_delete"><a class="viewcode-back" href="../../cli.html#bin.cli.GatewayProxy.wait_for_delete">[docs]</a>    <span class="k">def</span> <span class="nf">wait_for_delete</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">timeout_secs</span><span class="o">=</span><span class="mi">1200</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Wait for Gateway to be deleted.</span>
+
+<span class="sd">        :param id: Cluster id with format: /api/v1/workers/[0-9]+</span>
+<span class="sd">        :param timeout_secs: how many secs to wait before exiting</span>
+<span class="sd">        :returns True if gateway was deleted within timeout_secs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait_for_state</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">timeout_secs</span><span class="o">=</span><span class="n">timeout_secs</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="GatewayProxy.states"><a class="viewcode-back" href="../../cli.html#bin.cli.GatewayProxy.states">[docs]</a>    <span class="k">def</span> <span class="nf">states</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
+        <span class="sd">&quot;&quot;&quot;Return a list of valid states.&quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">([</span><span class="n">s</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">GatewayStatus</span><span class="p">])</span></div></div>
+
+
+<div class="viewcode-block" id="K8sWorkerProxy"><a class="viewcode-back" href="../../cli.html#bin.cli.K8sWorkerProxy">[docs]</a><span class="k">class</span> <span class="nc">K8sWorkerProxy</span><span class="p">(</span><span class="n">BaseProxy</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Proxy object to :py:attr:`&lt;hpecp.client.k8s_worker&gt;`.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__dir__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the CLI method names.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="s2">&quot;create_with_ssh_key&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;delete&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;get&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;list&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;set_storage&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;statuses&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;wait_for_status&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initiate this proxy class with the client module name.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">K8sWorkerProxy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">new_instance</span><span class="p">(</span><span class="s2">&quot;k8s_worker&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="K8sWorkerProxy.create_with_ssh_key"><a class="viewcode-back" href="../../cli.html#bin.cli.K8sWorkerProxy.create_with_ssh_key">[docs]</a>    <span class="nd">@intercept_exception</span>
+    <span class="k">def</span> <span class="nf">create_with_ssh_key</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ssh_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ssh_key_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[],</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a K8s Worker using SSH key authentication.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ip : str, optional</span>
+<span class="sd">            The IP address of the host, this is used for internal</span>
+<span class="sd">            communication, by default None.</span>
+<span class="sd">        ssh_key : str, optional</span>
+<span class="sd">            The SSH key data as a string, instead of this location to a key</span>
+<span class="sd">            file may also be provided, by default None.</span>
+<span class="sd">        ssh_key_file : str, optional</span>
+<span class="sd">            The SSH key file path, by default None</span>
+<span class="sd">        tags : list, optional</span>
+<span class="sd">            Tags to use, e.g. &quot;{ &quot;tag1&quot;: &quot;foo&quot;, &quot;tag2&quot;: &quot;bar&quot;}&quot;, by default []</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">ssh_key</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ssh_key_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;Either ssh_key or ssh_key_file must be provided&quot;</span><span class="p">,</span>
+                <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">ssh_key</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ssh_key_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;Either ssh_key or ssh_key_file must be provided&quot;</span><span class="p">,</span>
+                <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">ssh_key_file</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">ssh_key_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">ssh_key</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+        <span class="n">worker_id</span> <span class="o">=</span> <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">k8s_worker</span><span class="o">.</span><span class="n">create_with_ssh_key</span><span class="p">(</span>
+            <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">ssh_key_data</span><span class="o">=</span><span class="n">ssh_key</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="n">tags</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">worker_id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="K8sWorkerProxy.get"><a class="viewcode-back" href="../../cli.html#bin.cli.K8sWorkerProxy.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">setup_log</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get a K8SWorker.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">setup_log</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;setup_log&quot;</span><span class="p">:</span> <span class="s2">&quot;true&quot;</span><span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">K8sWorkerProxy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="K8sWorkerProxy.set_storage"><a class="viewcode-back" href="../../cli.html#bin.cli.K8sWorkerProxy.set_storage">[docs]</a>    <span class="nd">@intercept_exception</span>
+    <span class="k">def</span> <span class="nf">set_storage</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">ephemeral_disks</span><span class="p">,</span> <span class="n">persistent_disks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set storage for a k8s worker.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        id : str</span>
+<span class="sd">            The k8s worker ID</span>
+<span class="sd">        ephemeral_disks : str</span>
+<span class="sd">            Comma separated string containing ephemeral disks.</span>
+<span class="sd">            e.g: &quot;/dev/nvme2n1,/dev/nvme2n2&quot;</span>
+<span class="sd">        persistent_disks : str, optional</span>
+<span class="sd">            Comma separated string containing persistent disks, by default</span>
+<span class="sd">            None.</span>
+<span class="sd">            e.g: &quot;/dev/nvme1n1,/dev/nvme1n2&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ephemeral_disks</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&#39;ephemeral_disks&#39; must be provided&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">p_disks</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">persistent_disks</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">persistent_disks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[]</span>
+        <span class="p">)</span>
+        <span class="n">e_disks</span> <span class="o">=</span> <span class="n">ephemeral_disks</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+
+        <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">k8s_worker</span><span class="o">.</span><span class="n">set_storage</span><span class="p">(</span>
+            <span class="n">worker_id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">persistent_disks</span><span class="o">=</span><span class="n">p_disks</span><span class="p">,</span> <span class="n">ephemeral_disks</span><span class="o">=</span><span class="n">e_disks</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="K8sWorkerProxy.statuses"><a class="viewcode-back" href="../../cli.html#bin.cli.K8sWorkerProxy.statuses">[docs]</a>    <span class="k">def</span> <span class="nf">statuses</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
+        <span class="sd">&quot;&quot;&quot;Return a list of valid statuses.&quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">([</span><span class="n">s</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">WorkerK8sStatus</span><span class="p">])</span></div></div>
+
+
+<div class="viewcode-block" id="K8sClusterProxy"><a class="viewcode-back" href="../../cli.html#bin.cli.K8sClusterProxy">[docs]</a><span class="k">class</span> <span class="nc">K8sClusterProxy</span><span class="p">(</span><span class="n">BaseProxy</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Proxy object to :py:attr:`&lt;hpecp.client.k8s_cluster&gt;`.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__dir__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the CLI method names.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="s2">&quot;admin_kube_config&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;create&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;dashboard_url&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;dashboard_token&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;delete&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;get&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;k8s_supported_versions&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;list&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;statuses&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;wait_for_status&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initiate this proxy class with the client module name.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">K8sClusterProxy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">new_instance</span><span class="p">(</span><span class="s2">&quot;k8s_cluster&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="K8sClusterProxy.create"><a class="viewcode-back" href="../../cli.html#bin.cli.K8sClusterProxy.create">[docs]</a>    <span class="nd">@intercept_exception</span>
+    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">,</span>
+        <span class="n">k8shosts_config</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">k8s_version</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">pod_network_range</span><span class="o">=</span><span class="s2">&quot;10.192.0.0/12&quot;</span><span class="p">,</span>
+        <span class="n">service_network_range</span><span class="o">=</span><span class="s2">&quot;10.96.0.0/12&quot;</span><span class="p">,</span>
+        <span class="n">pod_dns_domain</span><span class="o">=</span><span class="s2">&quot;cluster.local&quot;</span><span class="p">,</span>
+        <span class="n">persistent_storage_local</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">persistent_storage_nimble_csi</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a K8s Cluster.</span>
+
+<span class="sd">        :param name: the cluster name</span>
+<span class="sd">        :param k8shosts_config: k8s host ids and roles &#39;id1:master|worker,id2:</span>
+<span class="sd">            master|worker,...&#39;</span>
+<span class="sd">        :param description: the cluster descripton</span>
+<span class="sd">        :param k8s_version: e.g. 1.17.0</span>
+<span class="sd">        :param pod_network_range: the pod network range,</span>
+<span class="sd">            default=&#39;10.192.0.0/12&#39;</span>
+<span class="sd">        :param service_network_range: the service network range,</span>
+<span class="sd">            default=&#39;10.96.0.0/12&#39;</span>
+<span class="sd">        :param pod_dns_domain: the pod dns domain, default=&#39;cluster.local&#39;</span>
+<span class="sd">        :param persistent_storage_local: True/False</span>
+<span class="sd">        :param persistent_storage_nimble_csi: True/False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">host_config</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">K8sClusterHostConfig</span><span class="o">.</span><span class="n">create_from_list</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">k8shosts_config</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+        <span class="p">]</span>
+
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">k8s_cluster</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">,</span>
+                <span class="n">k8s_version</span><span class="o">=</span><span class="n">k8s_version</span><span class="p">,</span>
+                <span class="n">pod_network_range</span><span class="o">=</span><span class="n">pod_network_range</span><span class="p">,</span>
+                <span class="n">service_network_range</span><span class="o">=</span><span class="n">service_network_range</span><span class="p">,</span>
+                <span class="n">pod_dns_domain</span><span class="o">=</span><span class="n">pod_dns_domain</span><span class="p">,</span>
+                <span class="n">persistent_storage_local</span><span class="o">=</span><span class="n">persistent_storage_local</span><span class="p">,</span>
+                <span class="n">persistent_storage_nimble_csi</span><span class="o">=</span><span class="n">persistent_storage_nimble_csi</span><span class="p">,</span>
+                <span class="n">k8shosts_config</span><span class="o">=</span><span class="n">host_config</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="K8sClusterProxy.admin_kube_config"><a class="viewcode-back" href="../../cli.html#bin.cli.K8sClusterProxy.admin_kube_config">[docs]</a>    <span class="k">def</span> <span class="nf">admin_kube_config</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">k8scluster_id</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve a K8s Cluster Admin Kube Config.</span>
+
+<span class="sd">        :param k8scluster_id: the cluster ID</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cfg</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">get_client</span><span class="p">()</span>
+            <span class="o">.</span><span class="n">k8s_cluster</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k8scluster_id</span><span class="o">=</span><span class="n">k8scluster_id</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;admin_kube_config&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">n&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,))</span></div>
+
+<div class="viewcode-block" id="K8sClusterProxy.dashboard_url"><a class="viewcode-back" href="../../cli.html#bin.cli.K8sClusterProxy.dashboard_url">[docs]</a>    <span class="k">def</span> <span class="nf">dashboard_url</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">k8scluster_id</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve a K8s Cluster Dashboard URL.</span>
+
+<span class="sd">        :param k8scluster_id: the cluster ID</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">get_client</span><span class="p">()</span>
+            <span class="o">.</span><span class="n">k8s_cluster</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k8scluster_id</span><span class="o">=</span><span class="n">k8scluster_id</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;dashboard_endpoint_access&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">url</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="K8sClusterProxy.dashboard_token"><a class="viewcode-back" href="../../cli.html#bin.cli.K8sClusterProxy.dashboard_token">[docs]</a>    <span class="k">def</span> <span class="nf">dashboard_token</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">k8scluster_id</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve a K8s Cluster Dashboard Token.</span>
+
+<span class="sd">        :param k8scluster_id: the cluster ID</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">get_client</span><span class="p">()</span>
+            <span class="o">.</span><span class="n">k8s_cluster</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k8scluster_id</span><span class="o">=</span><span class="n">k8scluster_id</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;dashboard_token&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">token</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="K8sClusterProxy.statuses"><a class="viewcode-back" href="../../cli.html#bin.cli.K8sClusterProxy.statuses">[docs]</a>    <span class="k">def</span> <span class="nf">statuses</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
+        <span class="sd">&quot;&quot;&quot;Return a list of valid statuses.&quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">([</span><span class="n">s</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">K8sClusterStatus</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="K8sClusterProxy.k8s_supported_versions"><a class="viewcode-back" href="../../cli.html#bin.cli.K8sClusterProxy.k8s_supported_versions">[docs]</a>    <span class="k">def</span> <span class="nf">k8s_supported_versions</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">output</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">,</span>
+        <span class="n">major_filter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">minor_filter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">patch_filter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Print a list of supported k8s versions.</span>
+
+<span class="sd">        :param output: how to print the output, &#39;json&#39; or &#39;text&#39;</span>
+<span class="sd">        :param major_filter: only return versions matching major_filter</span>
+<span class="sd">        :param minor_filter: only return versions matching minor_filter</span>
+<span class="sd">        :param patch_filter: only return versions matching patch_filter</span>
+
+<span class="sd">        Example::</span>
+
+<span class="sd">        hpecp k8scluster k8s_supported_versions --major-filter 1</span>
+<span class="sd">            --minor-filter 17</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">output</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="s2">&quot;json&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;text&quot;</span><span class="p">,</span>
+        <span class="p">]:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;&#39;output&#39; parameter ust be &#39;json&#39; or &#39;text&#39;&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span>
+            <span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">major_filter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">major_filter</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&#39;major_filter&#39; if provided must be an int&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">minor_filter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">minor_filter</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&#39;minor_filter&#39; if provided must be an int&quot;</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">patch_filter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">patch_filter</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&#39;patch_filter&#39; if provided must be an int&quot;</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">vers</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">k8s_cluster</span><span class="o">.</span><span class="n">k8s_supported_versions</span><span class="p">():</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="p">(</span>
+                    <span class="n">major_filter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                    <span class="ow">and</span> <span class="ow">not</span> <span class="n">v</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">major_filter</span><span class="p">))</span>
+                <span class="p">)</span>
+                <span class="ow">or</span> <span class="p">(</span>
+                    <span class="n">minor_filter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                    <span class="ow">and</span> <span class="ow">not</span> <span class="n">v</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">minor_filter</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+                <span class="p">)</span>
+                <span class="ow">or</span> <span class="p">(</span>
+                    <span class="n">patch_filter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                    <span class="ow">and</span> <span class="ow">not</span> <span class="n">v</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">patch_filter</span><span class="p">))</span>
+                <span class="p">)</span>
+            <span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">vers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">output</span> <span class="o">==</span> <span class="s2">&quot;json&quot;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">vers</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">vers</span><span class="p">))</span></div></div>
+
+
+<div class="viewcode-block" id="LockProxy"><a class="viewcode-back" href="../../cli.html#bin.cli.LockProxy">[docs]</a><span class="k">class</span> <span class="nc">LockProxy</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Proxy object to :py:attr:`&lt;hpecp.client.lock&gt;`.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__dir__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the CLI method names.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="s2">&quot;create&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;delete&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;delete_all&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;list&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+
+<div class="viewcode-block" id="LockProxy.list"><a class="viewcode-back" href="../../cli.html#bin.cli.LockProxy.list">[docs]</a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s2">&quot;yaml&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the system and user locks.</span>
+
+<span class="sd">        :param output: how to display the output [&#39;yaml&#39;|&#39;json&#39;]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">lock</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">output</span> <span class="o">==</span> <span class="s2">&quot;yaml&quot;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span>
+                    <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">response</span><span class="p">),</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">,)</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LockProxy.create"><a class="viewcode-back" href="../../cli.html#bin.cli.LockProxy.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">reason</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a lock.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">lock</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">reason</span><span class="p">),</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;Unknown error. To debug run with env var LOG_LEVEL=DEBUG&quot;</span><span class="p">,</span>
+                <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">_log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LockProxy.delete"><a class="viewcode-back" href="../../cli.html#bin.cli.LockProxy.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Delete a user lock.&quot;&quot;&quot;</span>
+        <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">lock</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LockProxy.delete_all"><a class="viewcode-back" href="../../cli.html#bin.cli.LockProxy.delete_all">[docs]</a>    <span class="k">def</span> <span class="nf">delete_all</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">timeout_secs</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Delete all locks.&quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">lock</span><span class="o">.</span><span class="n">delete_all</span><span class="p">(</span><span class="n">timeout_secs</span><span class="o">=</span><span class="mi">300</span><span class="p">))</span></div></div>
+
+
+<div class="viewcode-block" id="LicenseProxy"><a class="viewcode-back" href="../../cli.html#bin.cli.LicenseProxy">[docs]</a><span class="k">class</span> <span class="nc">LicenseProxy</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Proxy object to :py:attr:`&lt;hpecp.client.license&gt;`.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__dir__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the CLI method names.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;delete&quot;</span><span class="p">,</span> <span class="s2">&quot;delete_all&quot;</span><span class="p">,</span> <span class="s2">&quot;list&quot;</span><span class="p">,</span> <span class="s2">&quot;platform_id&quot;</span><span class="p">,</span> <span class="s2">&quot;register&quot;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="LicenseProxy.platform_id"><a class="viewcode-back" href="../../cli.html#bin.cli.LicenseProxy.platform_id">[docs]</a>    <span class="k">def</span> <span class="nf">platform_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
+        <span class="sd">&quot;&quot;&quot;Get the platform ID.&quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">license</span><span class="o">.</span><span class="n">platform_id</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="LicenseProxy.list"><a class="viewcode-back" href="../../cli.html#bin.cli.LicenseProxy.list">[docs]</a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s2">&quot;yaml&quot;</span><span class="p">,</span> <span class="n">license_key_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve the list of licenses.</span>
+
+<span class="sd">        :param output: how to display the output [&#39;yaml&#39;|&#39;json&#39;]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">license</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">license_key_only</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">unicode</span><span class="p">(</span><span class="n">li</span><span class="p">[</span><span class="s2">&quot;LicenseKey&quot;</span><span class="p">]))</span> <span class="k">for</span> <span class="n">li</span> <span class="ow">in</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;Licenses&quot;</span><span class="p">]</span>
+            <span class="p">]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">output</span> <span class="o">==</span> <span class="s2">&quot;yaml&quot;</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span>
+                        <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span>
+                            <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">response</span><span class="p">),</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">,</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">response</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="LicenseProxy.register"><a class="viewcode-back" href="../../cli.html#bin.cli.LicenseProxy.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">server_filename</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Register a license.</span>
+
+<span class="sd">        :param server_filename: Filepath to the license on the server, e.g.</span>
+<span class="sd">            &#39;/srv/bluedata/license/LICENSE-1.txt&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">license</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">server_filename</span><span class="o">=</span><span class="n">server_filename</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Done.&quot;</span><span class="p">)</span></div>
+
+    <span class="c1"># TODO implement me!</span>
+    <span class="c1"># def upload_with_ssh_key(</span>
+    <span class="c1">#     self,</span>
+    <span class="c1">#     server_filename,</span>
+    <span class="c1">#     ssh_key_file=None,</span>
+    <span class="c1">#     ssh_key_data=None,</span>
+    <span class="c1">#     license_file=None,</span>
+    <span class="c1">#     base64enc_license_data=None,</span>
+    <span class="c1"># ):</span>
+    <span class="c1">#     &quot;&quot;&quot;Not implemented yet.</span>
+
+    <span class="c1">#     Workaround:</span>
+    <span class="c1">#     -----------</span>
+    <span class="c1">#      - scp your license to &#39;/srv/bluedata/license/&#39; on the controller</span>
+    <span class="c1">#      - run client.license.register(server_filename) to register</span>
+    <span class="c1">#        the license</span>
+    <span class="c1">#     &quot;&quot;&quot;</span>
+    <span class="c1">#     raise Exception(</span>
+    <span class="c1">#         &quot;Not implemented yet! Workaround: scp your license to&quot;</span>
+    <span class="c1">#         &quot;&#39;/srv/bluedata/license/&#39;&quot;</span>
+    <span class="c1">#     )</span>
+
+    <span class="c1"># TODO implement me!</span>
+    <span class="c1"># def upload_with_ssh_pass(</span>
+    <span class="c1">#     self,</span>
+    <span class="c1">#     server_filename,</span>
+    <span class="c1">#     ssh_username,</span>
+    <span class="c1">#     ssh_password,</span>
+    <span class="c1">#     license_file=None,</span>
+    <span class="c1">#     base64enc_license_data=None,</span>
+    <span class="c1"># ):</span>
+    <span class="c1">#     &quot;&quot;&quot;Not implemented yet.</span>
+
+    <span class="c1">#     Workaround:</span>
+    <span class="c1">#     -----------</span>
+    <span class="c1">#      - scp your license to &#39;/srv/bluedata/license/&#39; on the controller</span>
+    <span class="c1">#      - run client.license.register(server_filename) to register</span>
+    <span class="c1">#        the license</span>
+    <span class="c1">#     &quot;&quot;&quot;</span>
+    <span class="c1">#     raise Exception(</span>
+    <span class="c1">#         &quot;Not implemented yet! Workaround: scp your license to&quot;</span>
+    <span class="c1">#         &quot;&#39;/srv/bluedata/license/&#39;&quot;</span>
+    <span class="c1">#     )</span>
+
+<div class="viewcode-block" id="LicenseProxy.delete"><a class="viewcode-back" href="../../cli.html#bin.cli.LicenseProxy.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">license_key</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Delete a license by LicenseKey.</span>
+
+<span class="sd">        :param license_key: The license key, e.g. &#39;1234 1234 ... 1234</span>
+<span class="sd">            &quot;SOMETEXT&quot;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">license</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">license_key</span><span class="o">=</span><span class="n">license_key</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Delete submitted - verify with: `hpecp license list`&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LicenseProxy.delete_all"><a class="viewcode-back" href="../../cli.html#bin.cli.LicenseProxy.delete_all">[docs]</a>    <span class="k">def</span> <span class="nf">delete_all</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
+        <span class="sd">&quot;&quot;&quot;Delete all licenses.&quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">license</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+        <span class="n">all_license_keys</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">unicode</span><span class="p">(</span><span class="n">li</span><span class="p">[</span><span class="s2">&quot;LicenseKey&quot;</span><span class="p">]))</span> <span class="k">for</span> <span class="n">li</span> <span class="ow">in</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;Licenses&quot;</span><span class="p">]</span>
+        <span class="p">]</span>
+        <span class="k">for</span> <span class="n">licence_key</span> <span class="ow">in</span> <span class="n">all_license_keys</span><span class="p">:</span>
+            <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">license</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">license_key</span><span class="o">=</span><span class="n">licence_key</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Delete submitted - verify with: `hpecp license list`&quot;</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="HttpClientProxy"><a class="viewcode-back" href="../../cli.html#bin.cli.HttpClientProxy">[docs]</a><span class="k">class</span> <span class="nc">HttpClientProxy</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Proxy object to :py:attr:`&lt;hpecp.client._request&gt;`.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__dir__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the CLI method names.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;delete&quot;</span><span class="p">,</span> <span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="s2">&quot;put&quot;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="HttpClientProxy.get"><a class="viewcode-back" href="../../cli.html#bin.cli.HttpClientProxy.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Make HTTP GET request.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        $ hpecp httpclient get /api/v1/workers</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
+            <span class="n">url</span><span class="p">,</span> <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;CLI HTTP GET&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HttpClientProxy.delete"><a class="viewcode-back" href="../../cli.html#bin.cli.HttpClientProxy.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Make HTTP DELETE request.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        $ hpecp httpclient delete /api/v1/workers/1</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
+            <span class="n">url</span><span class="p">,</span> <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;delete&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;CLI HTTP DELETE&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HttpClientProxy.post"><a class="viewcode-back" href="../../cli.html#bin.cli.HttpClientProxy.post">[docs]</a>    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">json_file</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Make HTTP POST request.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        $ cat &gt; my.json &lt;&lt;-EOF</span>
+<span class="sd">            {</span>
+<span class="sd">                &quot;external_identity_server&quot;:  {</span>
+<span class="sd">                    &quot;bind_pwd&quot;:&quot;5ambaPwd@&quot;,</span>
+<span class="sd">                    &quot;user_attribute&quot;:&quot;sAMAccountName&quot;,</span>
+<span class="sd">                    &quot;bind_type&quot;:&quot;search_bind&quot;,</span>
+<span class="sd">                    &quot;bind_dn&quot;:&quot;cn=Administrator,CN=Users,DC=samdom,DC=example,DC=com&quot;,</span>
+<span class="sd">                    &quot;host&quot;:&quot;10.1.0.77&quot;,</span>
+<span class="sd">                    &quot;security_protocol&quot;:&quot;ldaps&quot;,</span>
+<span class="sd">                    &quot;base_dn&quot;:&quot;CN=Users,DC=samdom,DC=example,DC=com&quot;,</span>
+<span class="sd">                    &quot;verify_peer&quot;: false,</span>
+<span class="sd">                    &quot;type&quot;:&quot;Active Directory&quot;,</span>
+<span class="sd">                    &quot;port&quot;:636</span>
+<span class="sd">                }</span>
+<span class="sd">            }</span>
+<span class="sd">            EOF</span>
+
+<span class="sd">            hpecp httpclient post /api/v2/config/auth --json-file my.json</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">json_file</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
+            <span class="n">url</span><span class="p">,</span> <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;CLI HTTP POST&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HttpClientProxy.put"><a class="viewcode-back" href="../../cli.html#bin.cli.HttpClientProxy.put">[docs]</a>    <span class="k">def</span> <span class="nf">put</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">json_file</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Make HTTP PUT request.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        $ hpecp httpclient put /api/v2/config/auth --json-file my.json</span>
+<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># noqa: W293</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">json_file</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
+            <span class="n">url</span><span class="p">,</span> <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;put&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;CLI HTTP PUT&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="UserProxy"><a class="viewcode-back" href="../../cli.html#bin.cli.UserProxy">[docs]</a><span class="k">class</span> <span class="nc">UserProxy</span><span class="p">(</span><span class="n">BaseProxy</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Proxy object to :py:attr:`&lt;hpecp.client.user&gt;`.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__dir__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the CLI method names.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;create&quot;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initiate this proxy class with the client module name.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">UserProxy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">new_instance</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="UserProxy.create"><a class="viewcode-back" href="../../cli.html#bin.cli.UserProxy.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">is_external</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a User.</span>
+
+<span class="sd">        :param name: the user name</span>
+<span class="sd">        :param description: the user descripton</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">user_id</span> <span class="o">=</span> <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">,</span> <span class="n">is_external</span><span class="o">=</span><span class="n">is_external</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">APIItemConflictException</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;User already exists.&quot;</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="RoleProxy"><a class="viewcode-back" href="../../cli.html#bin.cli.RoleProxy">[docs]</a><span class="k">class</span> <span class="nc">RoleProxy</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Proxy object to :py:attr:`&lt;hpecp.client.role&gt;`.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__dir__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the CLI method names.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;get&quot;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="RoleProxy.get"><a class="viewcode-back" href="../../cli.html#bin.cli.RoleProxy.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">role_id</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s2">&quot;yaml&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve a Role by Id.</span>
+
+<span class="sd">        :param role_id: the id of the role with format: &#39;/api/v1/role/[0-9]+&#39;</span>
+<span class="sd">        :param output: how to display the output [&#39;yaml&#39;|&#39;json&#39;]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">role_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">output</span> <span class="o">==</span> <span class="s2">&quot;yaml&quot;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span>
+                    <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span>
+                        <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">),</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="configure_cli"><a class="viewcode-back" href="../../cli.html#bin.cli.configure_cli">[docs]</a><span class="k">def</span> <span class="nf">configure_cli</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Configure the CLI.&quot;&quot;&quot;</span>
+    <span class="n">controller_api_host</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">controller_api_port</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">controller_use_ssl</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">controller_verify_ssl</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">controller_warn_ssl</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">controller_username</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">controller_password</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">config_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">),</span> <span class="s2">&quot;.hpecp.conf&quot;</span><span class="p">,)</span>
+
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">config_path</span><span class="p">):</span>
+        <span class="n">config_reader</span> <span class="o">=</span> <span class="n">ContainerPlatformClient</span><span class="o">.</span><span class="n">create_from_config_file</span><span class="p">()</span>
+        <span class="n">controller_api_host</span> <span class="o">=</span> <span class="n">config_reader</span><span class="o">.</span><span class="n">api_host</span>
+        <span class="n">controller_api_port</span> <span class="o">=</span> <span class="n">config_reader</span><span class="o">.</span><span class="n">api_port</span>
+        <span class="n">controller_use_ssl</span> <span class="o">=</span> <span class="n">config_reader</span><span class="o">.</span><span class="n">use_ssl</span>
+        <span class="n">controller_verify_ssl</span> <span class="o">=</span> <span class="n">config_reader</span><span class="o">.</span><span class="n">verify_ssl</span>
+        <span class="n">controller_warn_ssl</span> <span class="o">=</span> <span class="n">config_reader</span><span class="o">.</span><span class="n">warn_ssl</span>
+        <span class="n">controller_username</span> <span class="o">=</span> <span class="n">config_reader</span><span class="o">.</span><span class="n">username</span>
+        <span class="n">controller_password</span> <span class="o">=</span> <span class="n">config_reader</span><span class="o">.</span><span class="n">password</span>
+
+    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Controller API Host [</span><span class="si">{}</span><span class="s2">]: &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">controller_api_host</span><span class="p">))</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">six</span><span class="o">.</span><span class="n">moves</span><span class="o">.</span><span class="n">input</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">tmp</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+        <span class="n">controller_api_host</span> <span class="o">=</span> <span class="n">tmp</span>
+
+    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Controller API Port [</span><span class="si">{}</span><span class="s2">]: &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">controller_api_port</span><span class="p">))</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">six</span><span class="o">.</span><span class="n">moves</span><span class="o">.</span><span class="n">input</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">tmp</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+        <span class="n">controller_api_port</span> <span class="o">=</span> <span class="n">tmp</span>
+
+    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+        <span class="s2">&quot;Controller uses ssl (True|False) [</span><span class="si">{}</span><span class="s2">]: &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">controller_use_ssl</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">six</span><span class="o">.</span><span class="n">moves</span><span class="o">.</span><span class="n">input</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">tmp</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+        <span class="n">controller_use_ssl</span> <span class="o">=</span> <span class="n">tmp</span>
+
+    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+        <span class="s2">&quot;Controller verify ssl (True|False) [</span><span class="si">{}</span><span class="s2">]: &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">controller_verify_ssl</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">six</span><span class="o">.</span><span class="n">moves</span><span class="o">.</span><span class="n">input</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">tmp</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+        <span class="n">controller_verify_ssl</span> <span class="o">=</span> <span class="n">tmp</span>
+
+    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+        <span class="s2">&quot;Controller warn ssl (True|False) [</span><span class="si">{}</span><span class="s2">]: &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">controller_warn_ssl</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">six</span><span class="o">.</span><span class="n">moves</span><span class="o">.</span><span class="n">input</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">tmp</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+        <span class="n">controller_warn_ssl</span> <span class="o">=</span> <span class="n">tmp</span>
+
+    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Controller Username [</span><span class="si">{}</span><span class="s2">]: &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">controller_username</span><span class="p">))</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">six</span><span class="o">.</span><span class="n">moves</span><span class="o">.</span><span class="n">input</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">tmp</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+        <span class="n">controller_username</span> <span class="o">=</span> <span class="n">tmp</span>
+
+    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Controller Password [</span><span class="si">{}</span><span class="s2">]: &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">controller_password</span><span class="p">))</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">six</span><span class="o">.</span><span class="n">moves</span><span class="o">.</span><span class="n">input</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">tmp</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+        <span class="n">controller_password</span> <span class="o">=</span> <span class="n">tmp</span>
+
+    <span class="n">config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
+    <span class="n">config</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+    <span class="n">config</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">][</span><span class="s2">&quot;api_host&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">controller_api_host</span>
+    <span class="n">config</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">][</span><span class="s2">&quot;api_port&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">controller_api_port</span><span class="p">)</span>
+    <span class="n">config</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">][</span><span class="s2">&quot;use_ssl&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">controller_use_ssl</span><span class="p">)</span>
+    <span class="n">config</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">][</span><span class="s2">&quot;verify_ssl&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">controller_verify_ssl</span><span class="p">)</span>
+    <span class="n">config</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">][</span><span class="s2">&quot;warn_ssl&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">controller_warn_ssl</span><span class="p">)</span>
+    <span class="n">config</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">][</span><span class="s2">&quot;username&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">controller_username</span>
+    <span class="n">config</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">][</span><span class="s2">&quot;password&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">controller_password</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">config_file</span><span class="p">:</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">config_file</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AutoComplete"><a class="viewcode-back" href="../../cli.html#bin.cli.AutoComplete">[docs]</a><span class="k">class</span> <span class="nc">AutoComplete</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Shell autocompletion scripts.</span>
+
+<span class="sd">    Example Usage:</span>
+
+<span class="sd">    hpecp autocomplete bash &gt; hpecp-bash.sh &amp;&amp; source hpecp-bash.sh</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__dir__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the CLI method names.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;bash&quot;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cli</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create AutoCompletion class instance.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        cli : CLI</span>
+<span class="sd">            the owning cli instance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cli</span> <span class="o">=</span> <span class="n">cli</span>
+
+    <span class="k">def</span> <span class="nf">_get_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="n">modules</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">columns</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">module_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cli</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+
+            <span class="c1"># we manually define autocomplete for these methods</span>
+            <span class="k">if</span> <span class="n">module_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;autocomplete&quot;</span><span class="p">,</span> <span class="s2">&quot;configure_cli&quot;</span><span class="p">]:</span>
+                <span class="k">continue</span>
+
+            <span class="n">module</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cli</span><span class="p">,</span> <span class="n">module_name</span><span class="p">)</span>
+            <span class="n">function_names</span> <span class="o">=</span> <span class="nb">dir</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">all_fields</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s2">&quot;all_fields&quot;</span><span class="p">)()</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="n">all_fields</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="n">function_parameters</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">function_name</span> <span class="ow">in</span> <span class="n">function_names</span><span class="p">:</span>
+                <span class="n">function</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">function_name</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">six</span><span class="o">.</span><span class="n">PY2</span><span class="p">:</span>
+                    <span class="n">parameter_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getargspec</span><span class="p">(</span><span class="n">function</span><span class="p">)</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">parameter_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+                        <span class="n">inspect</span><span class="o">.</span><span class="n">getfullargspec</span><span class="p">(</span><span class="n">function</span><span class="p">)</span><span class="o">.</span><span class="n">args</span>
+                    <span class="p">)</span>
+
+                <span class="c1"># parameter_names = list(function.__code__.co_varnames)</span>
+                <span class="k">if</span> <span class="s2">&quot;self&quot;</span> <span class="ow">in</span> <span class="n">parameter_names</span><span class="p">:</span>
+                    <span class="n">parameter_names</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">&quot;self&quot;</span><span class="p">)</span>
+
+                <span class="c1"># prefix parameter names with &#39;--&#39;</span>
+                <span class="n">parameter_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="s2">&quot;--&quot;</span><span class="o">.</span><span class="fm">__add__</span><span class="p">,</span> <span class="n">parameter_names</span><span class="p">))</span>
+                <span class="n">function_parameters</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">function_name</span><span class="p">:</span> <span class="n">parameter_names</span><span class="p">})</span>
+
+            <span class="n">modules</span><span class="p">[</span><span class="n">module_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">function_parameters</span>
+            <span class="n">columns</span><span class="p">[</span><span class="n">module_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">all_fields</span>
+
+            <span class="c1"># _log.debug(modules)</span>
+            <span class="c1"># _log.debug(columns)</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">modules</span><span class="p">,</span> <span class="n">columns</span><span class="p">)</span>
+
+<div class="viewcode-block" id="AutoComplete.bash"><a class="viewcode-back" href="../../cli.html#bin.cli.AutoComplete.bash">[docs]</a>    <span class="k">def</span> <span class="nf">bash</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
+        <span class="sd">&quot;&quot;&quot;Create autocompletion script for bash.&quot;&quot;&quot;</span>
+        <span class="n">__bash_template</span> <span class="o">=</span> <span class="n">dedent</span><span class="p">(</span>
+            <span class="sd">&quot;&quot;&quot;\</span>
+<span class="sd">            _hpecp_complete()</span>
+<span class="sd">                {</span>
+<span class="sd">                local cur prev BASE_LEVEL</span>
+
+<span class="sd">                COMPREPLY=()</span>
+<span class="sd">                cur=${COMP_WORDS[COMP_CWORD]}</span>
+<span class="sd">                prev=${COMP_WORDS[COMP_CWORD-1]}</span>
+
+<span class="sd">                COMP_WORDS_AS_STRING=$(IFS=, ; echo &quot;${COMP_WORDS[*]}&quot;)</span>
+
+<span class="sd">                case &quot;$COMP_WORDS_AS_STRING&quot; in</span>
+
+<span class="sd">                {#</span>
+<span class="sd">                    Example module dict:</span>
+
+<span class="sd">                    {</span>
+<span class="sd">                        &#39;catalog&#39;: {</span>
+<span class="sd">                        &#39;delete&#39;: [&#39;--id&#39;],</span>
+<span class="sd">                        &#39;get&#39;: [&#39;--id&#39;, &#39;--output&#39;, &#39;--response&#39;, &#39;--e&#39;],</span>
+<span class="sd">                        &#39;install&#39;: [&#39;--catalog_id&#39;, &#39;--ae&#39;, &#39;--e&#39;],</span>
+<span class="sd">                        &#39;list&#39;: [&#39;--output&#39;, &#39;--columns&#39;, &#39;--query&#39;, &#39;--data&#39;],</span>
+<span class="sd">                        &#39;refresh&#39;: [&#39;--catalog_id&#39;, &#39;--ae&#39;, &#39;--e&#39;],</span>
+<span class="sd">                        &#39;wait_for_state&#39;: [&#39;--id&#39;, &#39;--states&#39;, &#39;--timeout_secs&#39;]</span>
+<span class="sd">                        }</span>
+<span class="sd">                    }</span>
+
+<span class="sd">                    Example columns dict:</span>
+
+<span class="sd">                    {&#39;catalog&#39;: (&#39;label_name&#39;, &#39;label_description&#39;,  ...}</span>
+<span class="sd">                #}</span>
+
+<span class="sd">                {% set module_names = &quot; &quot;.join(modules.keys()) %}</span>
+
+<span class="sd">                {% for module_name in modules %} {# e.g. &#39;catalog&#39; #}</span>
+
+<span class="sd">                    {% set function_names = &quot; &quot;.join(modules[module_name].keys()) %}</span>
+
+<span class="sd">                    {% for function_name in modules[module_name] %}  {# e.g. mod = &#39;delete&#39; #}</span>
+
+<span class="sd">                        {% set param_names = &quot; &quot;.join(modules[module_name][function_name]).replace(&#39;_&#39;, &#39;-&#39;) %}</span>
+
+<span class="sd">                        {% for param_name in modules[module_name][function_name] %}</span>
+<span class="sd">                            {% if param_name == &quot;--columns&quot; %}</span>
+<span class="sd">                                {% set column_names = &quot; &quot;.join(columns[module_name]) %}</span>
+<span class="sd">                    *&quot;hpecp,{{module_name}},{{function_name}},{{param_name}}&quot;*)</span>
+<span class="sd">                        COMPREPLY=( $(compgen -W &quot;{{column_names}} {{param_names}}&quot; -- $cur) )</span>
+<span class="sd">                        ;;</span>
+<span class="sd">                            {% endif %}</span>
+<span class="sd">                        {% endfor %}</span>
+
+<span class="sd">                    *&quot;hpecp,{{module_name}},{{function_name}}&quot;*)</span>
+
+<span class="sd">                        # we should be able to replace the above case statement with:</span>
+<span class="sd">                        #</span>
+<span class="sd">                        # if last parameter is &quot;--columns&quot;</span>
+<span class="sd">                        # COMPREPLY=( $(compgen -W &quot;{{column_names}}&quot; -- $cur) )</span>
+<span class="sd">                        # else</span>
+<span class="sd">                        # COMPREPLY=( $(compgen -W &quot;{{param_names}}&quot; -- $cur) )</span>
+<span class="sd">                        # fi</span>
+
+<span class="sd">                        COMPREPLY=( $(compgen -W &quot;{{param_names}}&quot; -- $cur) )</span>
+<span class="sd">                        ;;</span>
+<span class="sd">                    {% endfor %}</span>
+
+<span class="sd">                    *&quot;hpecp,{{module_name}}&quot;*)</span>
+<span class="sd">                        COMPREPLY=( $(compgen -W &quot;{{ function_names }}&quot; -- $cur) )</span>
+<span class="sd">                        ;;</span>
+<span class="sd">                {% endfor %}</span>
+
+<span class="sd">                    *&quot;hpecp,autocomplete,bash&quot;*)</span>
+<span class="sd">                        COMPREPLY=( )</span>
+<span class="sd">                        ;;</span>
+<span class="sd">                    *&quot;hpecp,autocomplete&quot;*)</span>
+<span class="sd">                        COMPREPLY=( $(compgen -W &quot;bash&quot; -- $cur) )</span>
+<span class="sd">                        ;;</span>
+<span class="sd">                    *&quot;hpecp&quot;*)</span>
+<span class="sd">                        COMPREPLY=( $(compgen -W &quot;{{ module_names }}&quot; -- $cur) )</span>
+<span class="sd">                    ;;</span>
+
+<span class="sd">                esac</span>
+
+<span class="sd">                return 0</span>
+
+<span class="sd">            } &amp;&amp;</span>
+<span class="sd">            complete -F _hpecp_complete hpecp</span>
+<span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
+        <span class="p">)</span>
+
+        <span class="p">(</span><span class="n">modules</span><span class="p">,</span> <span class="n">columns</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_metadata</span><span class="p">()</span>
+
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="n">Environment</span><span class="p">()</span>
+            <span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="n">__bash_template</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">modules</span><span class="o">=</span><span class="n">modules</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">),</span>
+            <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span>
+        <span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="CLI"><a class="viewcode-back" href="../../cli.html#bin.cli.CLI">[docs]</a><span class="k">class</span> <span class="nc">CLI</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Command Line Interface for the HPE Container Platform.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__dir__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return modules names.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
+        <span class="sd">&quot;&quot;&quot;Create a CLI instance.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">autocomplete</span> <span class="o">=</span> <span class="n">AutoComplete</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">configure_cli</span> <span class="o">=</span> <span class="n">configure_cli</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">catalog</span> <span class="o">=</span> <span class="n">CatalogProxy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k8sworker</span> <span class="o">=</span> <span class="n">K8sWorkerProxy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k8scluster</span> <span class="o">=</span> <span class="n">K8sClusterProxy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gateway</span> <span class="o">=</span> <span class="n">GatewayProxy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lock</span> <span class="o">=</span> <span class="n">LockProxy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">license</span> <span class="o">=</span> <span class="n">LicenseProxy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">httpclient</span> <span class="o">=</span> <span class="n">HttpClientProxy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">UserProxy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">role</span> <span class="o">=</span> <span class="n">RoleProxy</span><span class="p">()</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">fire</span><span class="o">.</span><span class="n">Fire</span><span class="p">(</span><span class="n">CLI</span><span class="p">)</span>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../index.html">Table of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hpecp.html">Library API Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hpecp.html#cli-api-docs">CLI API Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cli_overview.html">CLI Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../github.html">Source Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">Apache License</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">HPE Container Platform Python Library  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">bin.cli</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Chris Snow.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.2.
+    </div>
+  </body>
+</html>

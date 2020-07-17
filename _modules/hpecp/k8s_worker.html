@@ -189,11 +189,10 @@
 
 <div class="viewcode-block" id="K8sWorkerController.get"><a class="viewcode-back" href="../../hpecp.k8s_worker.html#hpecp.k8s_worker.K8sWorkerController.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">setup_log</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 
-        <span class="c1"># TODO is this a valid paramter for workers?</span>
         <span class="k">if</span> <span class="n">setup_log</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">params</span> <span class="o">=</span> <span class="s2">&quot;?setup_log&quot;</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;setup_log&quot;</span><span class="p">:</span> <span class="s2">&quot;true&quot;</span><span class="p">}</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">params</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">K8sWorkerController</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span></div>
 
@@ -258,8 +257,9 @@
 <h3><a href="../../index.html">Table of Contents</a></h3>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../hpecp.html">API Docs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../cli.html">CLI Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hpecp.html">Library API Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hpecp.html#cli-api-docs">CLI API Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cli_overview.html">CLI Docs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../github.html">Source Repository</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../license.html">Apache License</a></li>
 </ul>
