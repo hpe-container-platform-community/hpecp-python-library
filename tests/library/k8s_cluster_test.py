@@ -237,7 +237,6 @@ class TestClusterList(TestCase):
                                     },
                                 ],
                                 "status": "ready",
-                                "status_message": "really ready",
                                 "persistent_storage": {"nimble_csi": False},
                             }
                         ]
@@ -267,6 +266,7 @@ class TestClusterList(TestCase):
         self.assertEqual(clusters[0].dashboard_token, "")
         self.assertEqual(clusters[0].api_endpoint_access, "")
         self.assertEqual(clusters[0].dashboard_endpoint_access, "")
+        self.assertEqual(clusters[0].status_message, "")
 
     @patch("requests.get", side_effect=mocked_requests_get)
     @patch("requests.post", side_effect=mocked_requests_post)
