@@ -108,17 +108,15 @@ class TestGatewayGet(TestCase):
                         "bds_storage_apollo": "false",
                         "bds_network_publicinterface": "ens5",
                     },
-                    "approved_worker_pubkey": [],
+                    "approved_worker_pubkey": ["test pub key"],
                     "schedule": False,
                     "ip": "10.1.0.37",
-                    "proxy_nodes_hostname": (
-                        "ec2-35-165-137-87.us-west-2.compute.amazonaws.com"
-                    ),
+                    "proxy_nodes_hostname": "ec2-35-165-137-87.us-west-2.compute.amazonaws.com",
                     "hostname": "ip-10-1-0-37.us-west-2.compute.internal",
                     "state": "installed",
                     "_links": {"self": {"href": "/api/v1/workers/99"}},
                     "purpose": "proxy",
-                    "status_info": "",
+                    "status_info": "test status info",
                     "sysinfo": {
                         "network": [
                             {
@@ -390,7 +388,7 @@ class TestGatewayGet(TestCase):
                         },
                         "mountpoint": [],
                     },
-                    "tags": [],
+                    "tags": ["test tags"],
                 },
                 status_code=200,
                 headers={},
@@ -403,7 +401,7 @@ class TestGatewayGet(TestCase):
                         "bds_storage_apollo": "false",
                         "bds_network_publicinterface": "ens5",
                     },
-                    "approved_worker_pubkey": [],
+                    "approved_worker_pubkey": ["test pub key"],
                     "schedule": False,
                     "ip": "10.1.0.37",
                     "proxy_nodes_hostname": (
@@ -719,8 +717,27 @@ class TestGatewayGet(TestCase):
         gateway = get_client().gateway.get("/api/v1/workers/99")
 
         self.assertEqual(gateway.id, "/api/v1/workers/99")
-
-        # TODO test other property accessors
+        self.assertEqual(gateway.hacapable, True)
+        self.assertEqual(
+            gateway.propinfo,
+            {
+                "bds_network_publicinterface": "ens5",
+                "bds_storage_apollo": "false",
+            },
+        )
+        self.assertEqual(gateway.approved_worker_pubkey, ["test pub key"])
+        self.assertEqual(gateway.schedule, False)
+        self.assertEqual(gateway.ip, "10.1.0.37")
+        self.assertEqual(
+            gateway.proxy_nodes_hostname,
+            "ec2-35-165-137-87.us-west-2.compute.amazonaws.com",
+        )
+        self.assertEqual(
+            gateway.hostname, "ip-10-1-0-37.us-west-2.compute.internal"
+        )
+        self.assertEqual(gateway.purpose, "proxy")
+        self.assertEqual(gateway.status_info, "test status info")
+        self.assertEqual(gateway.tags, ["test tags"])
 
         # /api/v1/workers/100 has "'purpose': 'controller'" so it
         #  isn't a gateway

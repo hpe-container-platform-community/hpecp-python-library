@@ -517,7 +517,10 @@ class TestGetCluster(TestCase):
                 status_code=200,
                 headers={},
             )
-        if args[0] == "https://127.0.0.1:8080/api/v2/k8scluster/123?setup_log=true":
+        if (
+            args[0]
+            == "https://127.0.0.1:8080/api/v2/k8scluster/123?setup_log=true"
+        ):
             return MockResponse(
                 json_data={
                     "_links": {"self": {"href": "/api/v2/k8scluster/123"}},
@@ -608,7 +611,10 @@ class TestWaitForClusterStatus(TestCase):
                 status_code=200,
                 headers={},
             )
-        if args[0] == "https://127.0.0.1:8080/api/v2/k8scluster/123?setup_log=true":
+        if (
+            args[0]
+            == "https://127.0.0.1:8080/api/v2/k8scluster/123?setup_log=true"
+        ):
             return MockResponse(
                 json_data={
                     "_links": {"self": {"href": "/api/v2/k8scluster/123"}},
@@ -642,7 +648,10 @@ class TestWaitForClusterStatus(TestCase):
                 raise_for_status_flag=True,
                 headers={},
             )
-        if args[0] == "https://127.0.0.1:8080/api/v2/k8scluster/999?setup_log=true":
+        if (
+            args[0]
+            == "https://127.0.0.1:8080/api/v2/k8scluster/999?setup_log=true"
+        ):
             return MockResponse(
                 json_data={},
                 status_code=404,
