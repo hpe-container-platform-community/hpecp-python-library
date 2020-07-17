@@ -118,224 +118,6 @@ class TestGatewayGet(TestCase):
                     "purpose": "proxy",
                     "status_info": "test status info",
                     "sysinfo": {
-                        "network": [
-                            {
-                                "info": {
-                                    "IsVirtual": True,
-                                    "IpAddr": {},
-                                    "Mt": 9001,
-                                    "State": "up",
-                                    "Carrier": True,
-                                    "HwAddr": "7e:d0:19:00:a1:c0",
-                                    "Speed": "10000",
-                                },
-                                "name": "bds-flood-6-r",
-                            },
-                            {
-                                "info": {
-                                    "IsVirtual": True,
-                                    "IpAddr": {},
-                                    "Mt": 9001,
-                                    "State": "up",
-                                    "Carrier": True,
-                                    "HwAddr": "52:c4:7b:93:f2:0a",
-                                    "Speed": "10000",
-                                },
-                                "name": "bds-flood-2-r",
-                            },
-                            {
-                                "info": {
-                                    "IsVirtual": True,
-                                    "IpAddr": {},
-                                    "Mt": 9001,
-                                    "State": "up",
-                                    "Carrier": True,
-                                    "HwAddr": "b2:e6:2b:c5:7a:d4",
-                                    "Speed": "10000",
-                                },
-                                "name": "bds-flood-0-r",
-                            },
-                            {
-                                "info": {
-                                    "IsVirtual": True,
-                                    "IpAddr": {},
-                                    "Mt": 9001,
-                                    "State": "UNKNOWN",
-                                    "Carrier": "UNKNOWN",
-                                    "HwAddr": "c6:b3:cd:1b:7d:44",
-                                    "Speed": "UNKNOWN",
-                                },
-                                "name": "bds-flood",
-                            },
-                            {
-                                "info": {
-                                    "IsVirtual": True,
-                                    "IpAddr": {},
-                                    "Mt": 9001,
-                                    "State": "up",
-                                    "Carrier": True,
-                                    "HwAddr": "5a:16:20:0c:d7:f1",
-                                    "Speed": "10000",
-                                },
-                                "name": "bds-flood-1-r",
-                            },
-                            {
-                                "info": {
-                                    "IsVirtual": True,
-                                    "IpAddr": {},
-                                    "Mt": 9001,
-                                    "State": "up",
-                                    "Carrier": True,
-                                    "HwAddr": "c6:bf:e3:af:82:2f",
-                                    "Speed": "10000",
-                                },
-                                "name": "bds-flood-1-l",
-                            },
-                            {
-                                "info": {
-                                    "IsVirtual": True,
-                                    "IpAddr": {},
-                                    "Mt": 9001,
-                                    "State": "up",
-                                    "Carrier": True,
-                                    "HwAddr": "0e:d9:23:62:96:94",
-                                    "Speed": "10000",
-                                },
-                                "name": "bds-flood-0-l",
-                            },
-                            {
-                                "info": {
-                                    "IsVirtual": True,
-                                    "IpAddr": {},
-                                    "Mt": 9001,
-                                    "State": "up",
-                                    "Carrier": True,
-                                    "HwAddr": "e2:86:7e:62:c0:3c",
-                                    "Speed": "10000",
-                                },
-                                "name": "bds-flood-2-l",
-                            },
-                            {
-                                "info": {
-                                    "IsVirtual": True,
-                                    "IpAddr": {},
-                                    "Mt": 9001,
-                                    "State": "up",
-                                    "Carrier": True,
-                                    "HwAddr": "8e:92:dc:b9:b7:d7",
-                                    "Speed": "10000",
-                                },
-                                "name": "bds-flood-6-l",
-                            },
-                            {
-                                "info": {
-                                    "IsVirtual": False,
-                                    "IpAddr": {"dynamic": "10.1.0.37/24"},
-                                    "Mt": 9001,
-                                    "State": "up",
-                                    "Carrier": True,
-                                    "HwAddr": "02:72:98:8e:3b:86",
-                                    "Speed": "UNKNOWN",
-                                },
-                                "name": "ens5",
-                            },
-                            {
-                                "info": {
-                                    "IsVirtual": True,
-                                    "IpAddr": {},
-                                    "Mt": 9001,
-                                    "State": "up",
-                                    "Carrier": True,
-                                    "HwAddr": "2a:4a:c9:c6:d0:28",
-                                    "Speed": "10000",
-                                },
-                                "name": "bds-flood-4-r",
-                            },
-                            {
-                                "info": {
-                                    "IsVirtual": True,
-                                    "IpAddr": {},
-                                    "Mt": 9001,
-                                    "State": "up",
-                                    "Carrier": True,
-                                    "HwAddr": "7a:22:39:fc:11:7e",
-                                    "Speed": "10000",
-                                },
-                                "name": "bds-flood-5-r",
-                            },
-                            {
-                                "info": {
-                                    "IsVirtual": True,
-                                    "IpAddr": {},
-                                    "Mt": 9001,
-                                    "State": "up",
-                                    "Carrier": True,
-                                    "HwAddr": "9a:2f:6c:e6:74:30",
-                                    "Speed": "10000",
-                                },
-                                "name": "bds-flood-3-l",
-                            },
-                            {
-                                "info": {
-                                    "IsVirtual": True,
-                                    "IpAddr": {},
-                                    "Mt": 9001,
-                                    "State": "up",
-                                    "Carrier": True,
-                                    "HwAddr": "7e:ff:e4:5b:56:0d",
-                                    "Speed": "10000",
-                                },
-                                "name": "bds-flood-7-r",
-                            },
-                            {
-                                "info": {
-                                    "IsVirtual": True,
-                                    "IpAddr": {},
-                                    "Mt": 9001,
-                                    "State": "up",
-                                    "Carrier": True,
-                                    "HwAddr": "4a:f7:7e:95:14:2d",
-                                    "Speed": "10000",
-                                },
-                                "name": "bds-flood-7-l",
-                            },
-                            {
-                                "info": {
-                                    "IsVirtual": True,
-                                    "IpAddr": {},
-                                    "Mt": 9001,
-                                    "State": "up",
-                                    "Carrier": True,
-                                    "HwAddr": "36:5f:82:61:bf:5c",
-                                    "Speed": "10000",
-                                },
-                                "name": "bds-flood-3-r",
-                            },
-                            {
-                                "info": {
-                                    "IsVirtual": True,
-                                    "IpAddr": {},
-                                    "Mt": 9001,
-                                    "State": "up",
-                                    "Carrier": True,
-                                    "HwAddr": "6e:86:7d:52:94:5d",
-                                    "Speed": "10000",
-                                },
-                                "name": "bds-flood-5-l",
-                            },
-                            {
-                                "info": {
-                                    "IsVirtual": True,
-                                    "IpAddr": {},
-                                    "Mt": 9001,
-                                    "State": "up",
-                                    "Carrier": True,
-                                    "HwAddr": "e6:24:0f:54:99:a9",
-                                    "Speed": "10000",
-                                },
-                                "name": "bds-flood-4-l",
-                            },
-                        ],
                         "keys": {
                             "reported_worker_public_key": (
                                 "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDKonff"
@@ -688,6 +470,28 @@ class TestGatewayGet(TestCase):
                 status_code=200,
                 headers={},
             )
+        if args[0] == "https://127.0.0.1:8080/api/v1/workers/101":
+            return MockResponse(
+                json_data={
+                    "hacapable": True,
+                    "propinfo": {
+                        "bds_storage_apollo": "false",
+                        "bds_network_publicinterface": "ens5",
+                    },
+                    "approved_worker_pubkey": ["test pub key"],
+                    "schedule": False,
+                    "ip": "10.1.0.37",
+                    "hostname": "ip-10-1-0-37.us-west-2.compute.internal",
+                    "state": "installed",
+                    "_links": {"self": {"href": "/api/v1/workers/99"}},
+                    "purpose": "proxy",
+                    "status_info": "test status info",
+                    "sysinfo": "test sysinfo",
+                    "tags": ["test tags"],
+                },
+                status_code=200,
+                headers={},
+            )
         raise RuntimeError("Unhandle GET request: " + args[0])
 
     def mocked_requests_post(*args, **kwargs):
@@ -746,6 +550,15 @@ class TestGatewayGet(TestCase):
             "'gateway not found with id: /api/v1/workers/100'",
         ):
             get_client().gateway.get("/api/v1/workers/100")
+
+    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_get_gateway_sysinfo(self, mock_get, mock_post):
+
+        gateway = get_client().gateway.get("/api/v1/workers/101")
+
+        self.assertEqual(gateway.sysinfo, "test sysinfo")
+        self.assertEqual(gateway.proxy_nodes_hostname, "")
 
 
 class TestCreateGateway(TestCase):

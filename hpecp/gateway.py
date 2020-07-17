@@ -145,7 +145,7 @@ class Gateway(AbstractResource):
         """@Field: from json['proxy_nodes_hostname']"""
         try:
             return self.json["proxy_nodes_hostname"]
-        except ValueError:
+        except KeyError:
             return ""
 
     @property
