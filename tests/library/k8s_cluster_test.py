@@ -1173,10 +1173,11 @@ class TestK8sClusterHostConfig(TestCase):
     def test_cluster_host_config(self):
 
         expected_error = "'noderole' list must have two values [ node, role ]"
-
         try:
-            K8sClusterHostConfig.create_from_list(noderole=[1, 2, 3])
+            conf = K8sClusterHostConfig.create_from_list(noderole=[1, 2, 3])
         except AssertionError as e:
             self.assertEquals(
                 e.args[0], expected_error,
             )
+
+        self.assertIsInstance(conf, K8sClusterHostConfig)
