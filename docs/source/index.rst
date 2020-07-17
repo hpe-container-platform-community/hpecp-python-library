@@ -91,7 +91,7 @@ Contents
 
    installation
    hpecp
-   cli
+   cli_overview
    github
    license
 
