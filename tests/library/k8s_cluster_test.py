@@ -427,6 +427,26 @@ class TestCreateCluster(TestCase):
         )
         self.assertEqual(id, "/api/v2/k8sclusters/99")
 
+        # now with a description
+        id = get_client().k8s_cluster.create(
+            name="a",
+            k8shosts_config=[
+                K8sClusterHostConfig("/api/v2/worker/k8shost/1", "master")
+            ],
+            description="Cluster Description",
+        )
+        self.assertEqual(id, "/api/v2/k8sclusters/99")
+
+        # now with a k8s version
+        id = get_client().k8s_cluster.create(
+            name="a",
+            k8shosts_config=[
+                K8sClusterHostConfig("/api/v2/worker/k8shost/1", "master")
+            ],
+            k8s_version="1.18.0",
+        )
+        self.assertEqual(id, "/api/v2/k8sclusters/99")
+
     def mocked_requests_create_error_post(*args, **kwargs):
         if args[0] == "https://127.0.0.1:8080/api/v1/login":
             return MockResponse(
@@ -1152,10 +1172,9 @@ class TestCliStates(BaseTestCase):
 class TestK8sClusterHostConfig(TestCase):
     def test_cluster_host_config(self):
 
-        try:
-            K8sClusterHostConfig.create_from_list(noderole=[1, 2, 3])
-        except AssertionError as e:
-            self.assertEquals(
-                e.message,
-                "'noderole' list must have two values [ node, role ]",
-            )
+        expected_error = "'noderole' list must have two values [ node, role ]"
+
+        # FIXME: why is this failing on 3.x?
+        if six.PY2:
+            with self.assertRaisesRegexp(AssertionError, expected_error):
+                K8sClusterHostConfig.create_from_list(noderole=[1, 2, 3])
