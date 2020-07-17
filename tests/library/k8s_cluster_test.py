@@ -517,6 +517,33 @@ class TestGetCluster(TestCase):
                 status_code=200,
                 headers={},
             )
+        if args[0] == "https://127.0.0.1:8080/api/v2/k8scluster/123?setup_log=true":
+            return MockResponse(
+                json_data={
+                    "_links": {"self": {"href": "/api/v2/k8scluster/123"}},
+                    "label": {"name": "def", "description": "my cluster"},
+                    "k8s_version": "1.17.0",
+                    "pod_network_range": "10.192.0.0/12",
+                    "service_network_range": "10.96.0.0/12",
+                    "pod_dns_domain": "cluster.local",
+                    "created_by_user_id": "/api/v1/user/5",
+                    "created_by_user_name": "admin",
+                    "created_time": 1588260014,
+                    "k8shosts_config": [
+                        {"node": "/api/v2/worker/k8shost/4", "role": "worker"},
+                        {"node": "/api/v2/worker/k8shost/5", "role": "master"},
+                    ],
+                    "status": "ready",
+                    "status_message": "really ready",
+                    "api_endpoint_access": "api:1234",
+                    "dashboard_endpoint_access": "dashboard:1234",
+                    "admin_kube_config": "xyz==",
+                    "dashboard_token": "abc==",
+                    "persistent_storage": {"nimble_csi": False},
+                },
+                status_code=200,
+                headers={},
+            )
         raise RuntimeError("Unhandle GET request: " + args[0])
 
     def mocked_requests_post(*args, **kwargs):
@@ -545,7 +572,9 @@ class TestGetCluster(TestCase):
             id="/api/v2/k8scluster/123", setup_log=False
         )
 
-        # TODO test with setup_log = True
+        get_client().k8s_cluster.get(
+            id="/api/v2/k8scluster/123", setup_log=True
+        )
 
 
 class TestWaitForClusterStatus(TestCase):
@@ -579,7 +608,41 @@ class TestWaitForClusterStatus(TestCase):
                 status_code=200,
                 headers={},
             )
+        if args[0] == "https://127.0.0.1:8080/api/v2/k8scluster/123?setup_log=true":
+            return MockResponse(
+                json_data={
+                    "_links": {"self": {"href": "/api/v2/k8scluster/123"}},
+                    "label": {"name": "def", "description": "my cluster"},
+                    "k8s_version": "1.17.0",
+                    "pod_network_range": "10.192.0.0/12",
+                    "service_network_range": "10.96.0.0/12",
+                    "pod_dns_domain": "cluster.local",
+                    "created_by_user_id": "/api/v1/user/5",
+                    "created_by_user_name": "admin",
+                    "created_time": 1588260014,
+                    "k8shosts_config": [
+                        {"node": "/api/v2/worker/k8shost/4", "role": "worker"},
+                        {"node": "/api/v2/worker/k8shost/5", "role": "master"},
+                    ],
+                    "status": "ready",
+                    "status_message": "really ready",
+                    "api_endpoint_access": "api:1234",
+                    "dashboard_endpoint_access": "dashboard:1234",
+                    "admin_kube_config": "xyz==",
+                    "dashboard_token": "abc==",
+                    "persistent_storage": {"nimble_csi": False},
+                },
+                status_code=200,
+                headers={},
+            )
         if args[0] == "https://127.0.0.1:8080/api/v2/k8scluster/999":
+            return MockResponse(
+                json_data={},
+                status_code=404,
+                raise_for_status_flag=True,
+                headers={},
+            )
+        if args[0] == "https://127.0.0.1:8080/api/v2/k8scluster/999?setup_log=true":
             return MockResponse(
                 json_data={},
                 status_code=404,

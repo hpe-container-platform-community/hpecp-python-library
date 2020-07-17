@@ -385,13 +385,9 @@ class K8sClusterController(AbstractWaitableResourceController):
         ----------
         id: str
             The k8s cluster ID
-        params:
-            To retrieve the setup_log use:
-
-            { setup_log: None }
         """
-        if setup_log:
-            params["setup_log"] = None
+        if setup_log is True:
+            params["setup_log"] = "true"
 
         return super(K8sClusterController, self).get(id=id, params=params)
 
