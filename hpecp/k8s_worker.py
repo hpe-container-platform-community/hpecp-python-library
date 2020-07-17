@@ -143,7 +143,6 @@ class K8sWorkerController(AbstractWaitableResourceController):
 
     def get(self, id, setup_log=False):
 
-        # TODO is this a valid paramter for workers?
         if setup_log is True:
             params = {"setup_log": "true"}
         else:
