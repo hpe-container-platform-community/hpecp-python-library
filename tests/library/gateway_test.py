@@ -510,7 +510,6 @@ class TestGatewayList(BaseTestCase):
             )
         raise RuntimeError("Unhandle GET request: " + args[0])
 
-
     def mocked_requests_post(*args, **kwargs):
         if args[0] == "https://127.0.0.1:8080/api/v1/login":
             return session_mock_response()
@@ -523,7 +522,7 @@ class TestGatewayList(BaseTestCase):
         try:
             get_client().gateway.list()
         except Exception as e:
-            # Unexpected exception               
+            # Unexpected exception
             self.fail(e)
 
 
