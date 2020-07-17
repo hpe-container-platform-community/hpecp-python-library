@@ -37,6 +37,7 @@ import jmespath
 
 from jinja2 import Environment
 import six
+import traceback
 import yaml
 import wrapt
 
@@ -97,12 +98,13 @@ def intercept_exception(wrapped, instance, args, kwargs):
     ) as e:
         print(e.message, file=sys.stderr)
         sys.exit(1)
-    except Exception as ge:
+    except Exception:
         print(
             "Unknown error. To debug run with env var LOG_LEVEL=DEBUG",
             file=sys.stderr,
         )
-        _log.error(ge)
+        tb = traceback.format_exc()
+        _log.error(tb)
         sys.exit(1)
 
 
@@ -533,7 +535,7 @@ class K8sWorkerProxy(BaseProxy):
             params = "?setup_log"
         else:
             params = ""
-        return super(K8sWorkerProxy, self).get(id, params)
+        return super(K8sWorkerProxy, self).get(id=id, params=params)
 
     @intercept_exception
     def set_storage(
@@ -1269,12 +1271,14 @@ class AutoComplete:
 
                     *"hpecp,{{module_name}},{{function_name}}"*)
 
+                        # we should be able to replace the above case statement with:
+                        #
                         # if last parameter is "--columns"
                         # COMPREPLY=( $(compgen -W "{{column_names}}" -- $cur) )
                         # else
                         # COMPREPLY=( $(compgen -W "{{param_names}}" -- $cur) )
                         # fi
-                        
+
                         COMPREPLY=( $(compgen -W "{{param_names}}" -- $cur) )
                         ;;
                     {% endfor %}
