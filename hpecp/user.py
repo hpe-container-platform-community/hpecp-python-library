@@ -221,25 +221,6 @@ class User:
         self.json = json
         self.display_columns = User.default_display_fields
 
-    def __repr__(self):
-        return "<User name:{} service_account:{} site_admin:{}>".format(
-            self.label, self.is_service_account, self.is_siteadmin
-        )
-
-    def __str__(self):
-        return "User(name={}, service_account:{} site_admin:{})".format(
-            self.label, self.is_service_account, self.is_siteadmin
-        )
-
-    def __dir__(self):
-        return self.display_columns
-
-    def __getitem__(self, item):
-        return getattr(self, self.display_columns[item])
-
-    def __len__(self):
-        return len(dir(self))
-
     def set_display_columns(self, columns):
         """Set the columns this instance should have when the instance is
         used with :py:meth:`.User.tabulate`
