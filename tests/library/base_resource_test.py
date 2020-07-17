@@ -21,7 +21,7 @@
 import unittest
 from mock import MagicMock
 
-from hpecp.base_resource import AbstractResourceController
+from hpecp.base_resource import AbstractResourceController, AbstractWaitableResourceController
 from hpecp.client import ContainerPlatformClient
 
 
@@ -47,3 +47,10 @@ class TestBaseResource(unittest.TestCase):
         self.assertEqual(c.base_resource_path, "test_base_resource_path")
         self.assertEqual(c.resource_class, "test_resource_class")
         self.assertEqual(c.resource_list_path, "test_resource_list_path")
+
+        class ImplWaitClass(AbstractWaitableResourceController):
+            status_class = "test_status_class"
+
+        c = ImplWaitClass(client)
+
+        self.assertEqual(c.status_class, "test_status_class")
