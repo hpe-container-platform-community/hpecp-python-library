@@ -251,26 +251,21 @@ class ContainerPlatformClient(object):
         :py:class:`constructor <ContainerPlatformClient>` for the paramaeter
         definitions.
         """
-        if "HPECP_USERNAME" in os.environ:
+        try:
             HPECP_USERNAME = os.environ["HPECP_USERNAME"]
-
-        if "HPECP_PASSWORD" in os.environ:
             HPECP_PASSWORD = os.environ["HPECP_PASSWORD"]
-
-        if "HPECP_API_HOST" in os.environ:
             HPECP_API_HOST = os.environ["HPECP_API_HOST"]
-
-        if "HPECP_API_PORT" in os.environ:
-            HPECP_API_PORT = os.environ["HPECP_API_PORT"]
-
-        if "HPECP_USE_SSL" in os.environ:
-            HPECP_USE_SSL = os.environ["HPECP_USE_SSL"]
-
-        if "HPECP_VERIFY_SSL" in os.environ:
-            HPECP_VERIFY_SSL = os.environ["HPECP_VERIFY_SSL"]
-
-        if "HPECP_WARN_SSL" in os.environ:
-            HPECP_WARN_SSL = os.environ["HPECP_WARN_SSL"]
+            HPECP_API_PORT = int(os.environ["HPECP_API_PORT"])
+            HPECP_USE_SSL = bool(os.environ["HPECP_USE_SSL"])
+            HPECP_VERIFY_SSL = bool(os.environ["HPECP_VERIFY_SSL"])
+            HPECP_WARN_SSL = bool(os.environ["HPECP_WARN_SSL"])
+        except KeyError as ke:
+            raise ContainerPlatformClientException(
+                "Required env var '{}' not found.".format(ke.args[0])
+            )
+        except ValueError as ve:
+            # TODO replace with asssertion
+            raise ContainerPlatformClientException(ve.args[0])
 
         return cls(
             username=HPECP_USERNAME,

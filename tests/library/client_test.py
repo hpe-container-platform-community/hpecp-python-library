@@ -18,13 +18,14 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
+import os
 from unittest import TestCase
 from mock import patch
 
 from textwrap import dedent
 import tempfile
 import requests
-from hpecp import ContainerPlatformClient
+from hpecp import ContainerPlatformClient, ContainerPlatformClientException
 
 
 class MockResponse:
@@ -83,6 +84,65 @@ class TestCreateFromProperties(TestCase):
             self.assertEqual(client.warn_ssl, True)
         finally:
             tmp.close()
+
+
+class TestCreateFromEnvVar(TestCase):
+    @patch.dict(os.environ, {"HPECP_USERNAME": "test_username"})
+    def test_create_from_env_var_factory_method_with_missing_env_values(self):
+
+        try:
+            client = ContainerPlatformClient.create_from_env()
+        except ContainerPlatformClientException as expected:
+            self.assertEqual(
+                expected.message,
+                "Required env var 'HPECP_PASSWORD' not found.",
+            )
+
+    @patch.dict(
+        os.environ,
+        {
+            "HPECP_USERNAME": "test_username",
+            "HPECP_PASSWORD": "test_password",
+            "HPECP_API_HOST": "test_apihost",
+            "HPECP_API_PORT": "not_an_int",
+            "HPECP_USE_SSL": "True",
+            "HPECP_VERIFY_SSL": "True",
+            "HPECP_WARN_SSL": "True",
+        },
+    )
+    def test_create_from_env_var_factory_method_with_type_error(self):
+
+        try:
+            client = ContainerPlatformClient.create_from_env()
+        except ContainerPlatformClientException as expected:
+            self.assertEqual(
+                expected.message,
+                "invalid literal for int() with base 10: 'not_an_int'",
+            )
+
+    @patch.dict(
+        os.environ,
+        {
+            "HPECP_USERNAME": "test_username",
+            "HPECP_PASSWORD": "test_password",
+            "HPECP_API_HOST": "test_apihost",
+            "HPECP_API_PORT": "8080",
+            "HPECP_USE_SSL": "True",
+            "HPECP_VERIFY_SSL": "True",
+            "HPECP_WARN_SSL": "True",
+        },
+    )
+    def test_create_from_env_var_factory_method(self):
+
+        client = ContainerPlatformClient.create_from_env()
+
+        self.assertEqual(client.username, "test_username")
+        self.assertEqual(client.password, "test_password")
+        self.assertEqual(client.api_host, "test_apihost")
+        self.assertEqual(client.api_port, 8080)
+        self.assertEqual(client.use_ssl, True)
+        self.assertEqual(client.verify_ssl, True)
+        self.assertEqual(client.warn_ssl, True)
 
 
 class TestAuth(TestCase):
