@@ -47,6 +47,7 @@ from .role import RoleController
 from .tenant import TenantController
 from .user import UserController
 import codecs
+import ast
 
 try:
     basestring
@@ -256,15 +257,16 @@ class ContainerPlatformClient(object):
             HPECP_PASSWORD = os.environ["HPECP_PASSWORD"]
             HPECP_API_HOST = os.environ["HPECP_API_HOST"]
             HPECP_API_PORT = int(os.environ["HPECP_API_PORT"])
-            HPECP_USE_SSL = bool(os.environ["HPECP_USE_SSL"])
-            HPECP_VERIFY_SSL = bool(os.environ["HPECP_VERIFY_SSL"])
-            HPECP_WARN_SSL = bool(os.environ["HPECP_WARN_SSL"])
+
+            HPECP_USE_SSL = ast.literal_eval(os.environ["HPECP_USE_SSL"])
+            HPECP_VERIFY_SSL = ast.literal_eval(os.environ["HPECP_VERIFY_SSL"])
+            HPECP_WARN_SSL = ast.literal_eval(os.environ["HPECP_WARN_SSL"])
         except KeyError as ke:
             raise ContainerPlatformClientException(
                 "Required env var '{}' not found.".format(ke.args[0])
             )
         except ValueError as ve:
-            # TODO replace with asssertion
+            # TODO replace with asssertions
             raise ContainerPlatformClientException(ve.args[0])
 
         return cls(

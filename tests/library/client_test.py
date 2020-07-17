@@ -144,6 +144,30 @@ class TestCreateFromEnvVar(TestCase):
         self.assertEqual(client.verify_ssl, True)
         self.assertEqual(client.warn_ssl, True)
 
+    @patch.dict(
+        os.environ,
+        {
+            "HPECP_USERNAME": "test_username",
+            "HPECP_PASSWORD": "test_password",
+            "HPECP_API_HOST": "test_apihost",
+            "HPECP_API_PORT": "8080",
+            "HPECP_USE_SSL": "False",
+            "HPECP_VERIFY_SSL": "False",
+            "HPECP_WARN_SSL": "False",
+        },
+    )
+    def test_create_from_env_var_factory_method_with_falses(self):
+
+        client = ContainerPlatformClient.create_from_env()
+
+        self.assertEqual(client.username, "test_username")
+        self.assertEqual(client.password, "test_password")
+        self.assertEqual(client.api_host, "test_apihost")
+        self.assertEqual(client.api_port, 8080)
+        self.assertEqual(client.use_ssl, False)
+        self.assertEqual(client.verify_ssl, False)
+        self.assertEqual(client.warn_ssl, False)
+
 
 class TestAuth(TestCase):
 
