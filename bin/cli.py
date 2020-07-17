@@ -104,7 +104,7 @@ def intercept_exception(wrapped, instance, args, kwargs):
             file=sys.stderr,
         )
         tb = traceback.format_exc()
-        _log.error(tb)
+        _log.debug(tb)
         sys.exit(1)
 
 
@@ -532,9 +532,9 @@ class K8sWorkerProxy(BaseProxy):
     def get(self, id, setup_log=False):
         """Get a K8SWorker."""
         if setup_log is True:
-            params = "?setup_log"
+            params = {"setup_log": "true"}
         else:
-            params = ""
+            params = {}
         return super(K8sWorkerProxy, self).get(id=id, params=params)
 
     @intercept_exception
