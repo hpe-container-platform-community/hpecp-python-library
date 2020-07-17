@@ -203,8 +203,7 @@ class TestClusterList(TestCase):
         ):
             get_client().k8s_cluster.list().tabulate(columns="garbage")
 
-
-   # pylint: disable=no-method-argument
+    # pylint: disable=no-method-argument
     def mocked_requests_get_missing_cluster_props(*args, **kwargs):
         if args[0] == "https://127.0.0.1:8080/api/v2/k8scluster":
             return MockResponse(
@@ -249,7 +248,9 @@ class TestClusterList(TestCase):
             )
         raise RuntimeError("Unhandle GET request: " + args[0])
 
-    @patch("requests.get", side_effect=mocked_requests_get_missing_cluster_props)
+    @patch(
+        "requests.get", side_effect=mocked_requests_get_missing_cluster_props
+    )
     @patch("requests.post", side_effect=mocked_requests_post)
     def test_get_k8sclusters_missing_props(self, mock_get, mock_post):
 
@@ -261,13 +262,11 @@ class TestClusterList(TestCase):
 
         # Test WorkerK8sList subscriptable access and property setters
         self.assertEqual(clusters[0].id, "/api/v2/k8scluster/20")
-        
+
         self.assertEqual(clusters[0].admin_kube_config, "")
         self.assertEqual(clusters[0].dashboard_token, "")
         self.assertEqual(clusters[0].api_endpoint_access, "")
-        self.assertEqual(
-            clusters[0].dashboard_endpoint_access, ""
-        )
+        self.assertEqual(clusters[0].dashboard_endpoint_access, "")
 
     @patch("requests.get", side_effect=mocked_requests_get)
     @patch("requests.post", side_effect=mocked_requests_post)
