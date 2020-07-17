@@ -237,7 +237,6 @@ class TestClusterList(TestCase):
                                     },
                                 ],
                                 "status": "ready",
-                                "status_message": "really ready",
                                 "persistent_storage": {"nimble_csi": False},
                             }
                         ]
@@ -267,6 +266,7 @@ class TestClusterList(TestCase):
         self.assertEqual(clusters[0].dashboard_token, "")
         self.assertEqual(clusters[0].api_endpoint_access, "")
         self.assertEqual(clusters[0].dashboard_endpoint_access, "")
+        self.assertEqual(clusters[0].status_message, "")
 
     @patch("requests.get", side_effect=mocked_requests_get)
     @patch("requests.post", side_effect=mocked_requests_post)
@@ -424,6 +424,26 @@ class TestCreateCluster(TestCase):
             k8shosts_config=[
                 K8sClusterHostConfig("/api/v2/worker/k8shost/1", "master")
             ],
+        )
+        self.assertEqual(id, "/api/v2/k8sclusters/99")
+
+        # now with a description
+        id = get_client().k8s_cluster.create(
+            name="a",
+            k8shosts_config=[
+                K8sClusterHostConfig("/api/v2/worker/k8shost/1", "master")
+            ],
+            description="Cluster Description",
+        )
+        self.assertEqual(id, "/api/v2/k8sclusters/99")
+
+        # now with a k8s version
+        id = get_client().k8s_cluster.create(
+            name="a",
+            k8shosts_config=[
+                K8sClusterHostConfig("/api/v2/worker/k8shost/1", "master")
+            ],
+            k8s_version="1.18.0",
         )
         self.assertEqual(id, "/api/v2/k8sclusters/99")
 
@@ -1147,3 +1167,16 @@ class TestCliStates(BaseTestCase):
         )
 
         self.assertEqual(stdout, expected_stdout)
+
+
+class TestK8sClusterHostConfig(TestCase):
+    def test_cluster_host_config(self):
+
+        expected_error = "'noderole' list must have two values [ node, role ]"
+
+        try:
+            K8sClusterHostConfig.create_from_list(noderole=[1, 2, 3])
+        except AssertionError as e:
+            self.assertEquals(
+                e.args[0], expected_error,
+            )
