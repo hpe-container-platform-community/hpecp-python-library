@@ -143,7 +143,10 @@ class Gateway(AbstractResource):
     @property
     def proxy_nodes_hostname(self):
         """@Field: from json['proxy_nodes_hostname']"""
-        return getattr(self.json, "proxy_nodes_hostname", "")
+        try:
+            return self.json["proxy_nodes_hostname"]
+        except ValueError:
+            return ""
 
     @property
     def hostname(self):
@@ -195,12 +198,9 @@ class GatewayController(AbstractWaitableResourceController):
 
     status_fieldname = "state"
 
-    # def __init__(self, client):
-    #     self.client = client
-
-    def create_with_ssh_password(self, username, password):
-        """Not Implemented yet"""
-        raise NotImplementedError()
+    # def create_with_ssh_password(self, username, password):
+    #     """Not Implemented yet"""
+    #     raise NotImplementedError()
 
     def create_with_ssh_key(
         self, ip, proxy_node_hostname, ssh_key_data, tags=[]
