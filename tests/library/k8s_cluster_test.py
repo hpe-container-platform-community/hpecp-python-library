@@ -203,6 +203,71 @@ class TestClusterList(TestCase):
         ):
             get_client().k8s_cluster.list().tabulate(columns="garbage")
 
+    # pylint: disable=no-method-argument
+    def mocked_requests_get_missing_cluster_props(*args, **kwargs):
+        if args[0] == "https://127.0.0.1:8080/api/v2/k8scluster":
+            return MockResponse(
+                json_data={
+                    "_links": {"self": {"href": "/api/v2/k8scluster"}},
+                    "_embedded": {
+                        "k8sclusters": [
+                            {
+                                "_links": {
+                                    "self": {"href": "/api/v2/k8scluster/20"}
+                                },
+                                "label": {
+                                    "name": "def",
+                                    "description": "my cluster",
+                                },
+                                "k8s_version": "1.17.0",
+                                "pod_network_range": "10.192.0.0/12",
+                                "service_network_range": "10.96.0.0/12",
+                                "pod_dns_domain": "cluster.local",
+                                "created_by_user_id": "/api/v1/user/5",
+                                "created_by_user_name": "admin",
+                                "created_time": 1588260014,
+                                "k8shosts_config": [
+                                    {
+                                        "node": "/api/v2/worker/k8shost/4",
+                                        "role": "worker",
+                                    },
+                                    {
+                                        "node": "/api/v2/worker/k8shost/5",
+                                        "role": "master",
+                                    },
+                                ],
+                                "status": "ready",
+                                "status_message": "really ready",
+                                "persistent_storage": {"nimble_csi": False},
+                            }
+                        ]
+                    },
+                },
+                status_code=200,
+                headers={},
+            )
+        raise RuntimeError("Unhandle GET request: " + args[0])
+
+    @patch(
+        "requests.get", side_effect=mocked_requests_get_missing_cluster_props
+    )
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_get_k8sclusters_missing_props(self, mock_get, mock_post):
+
+        # Makes GET Request: https://127.0.0.1:8080/api/v2/k8sclusters/
+        clusters = get_client().k8s_cluster.list()
+
+        # Test that json response is saved in each WorkerK8s object
+        # assert client.k8s_cluster.get()[0].json is not None
+
+        # Test WorkerK8sList subscriptable access and property setters
+        self.assertEqual(clusters[0].id, "/api/v2/k8scluster/20")
+
+        self.assertEqual(clusters[0].admin_kube_config, "")
+        self.assertEqual(clusters[0].dashboard_token, "")
+        self.assertEqual(clusters[0].api_endpoint_access, "")
+        self.assertEqual(clusters[0].dashboard_endpoint_access, "")
+
     @patch("requests.get", side_effect=mocked_requests_get)
     @patch("requests.post", side_effect=mocked_requests_post)
     def test_k8sclusters_tabulate_all_columns(self, mock_get, mock_post):
