@@ -1174,14 +1174,9 @@ class TestK8sClusterHostConfig(TestCase):
 
         expected_error = "'noderole' list must have two values [ node, role ]"
 
-        if six.PY2:
-            try:
-                K8sClusterHostConfig.create_from_list(noderole=[1, 2, 3])
-            except AssertionError as e:
-                self.assertEquals(
-                    e.message, expected_error,
-                )
-
-        # FIXME: why is this failing
-        # with self.assertRaisesRegexp(AssertionError, expected_error):
-        #     K8sClusterHostConfig.create_from_list(noderole=[1, 2, 3])
+        try:
+            K8sClusterHostConfig.create_from_list(noderole=[1, 2, 3])
+        except AssertionError as e:
+            self.assertEquals(
+                e.args[0], expected_error,
+            )
