@@ -37,7 +37,7 @@ class AbstractResourceController:
     """Base class for Resource Controllers."""
 
     def _get_base_resource_path(self):
-        return self._resource_path
+        return self._base_resource_path
 
     def _set_base_resource_path(self, path):
         assert (
