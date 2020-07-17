@@ -51,16 +51,6 @@ class UserController:
     def __init__(self, client):
         self.client = client
 
-    def create_with_ssh_password(self, username, password):
-        """Not Implemented yet."""
-        raise NotImplementedError()
-
-    def create_with_ssh_key(
-        self, ip, proxy_node_hostname, ssh_key_data, tags=[]
-    ):
-        """Not Implemented yet."""
-        raise NotImplementedError()
-
     def list(self):
         """Retrieve a list of Users.
 
