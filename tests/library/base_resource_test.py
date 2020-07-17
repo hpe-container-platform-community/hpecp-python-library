@@ -50,7 +50,12 @@ class TestBaseResource(unittest.TestCase):
 
         class ImplWaitClass(AbstractWaitableResourceController):
             status_class = "test_status_class"
+            status_fieldname = "test_status_fieldname"
+            base_resource_path = "test_base_resource_path"
+            resource_class = "test_resource_class"
+            resource_list_path = "test_resource_list_path"
 
         c = ImplWaitClass(client)
 
         self.assertEqual(c.status_class, "test_status_class")
+        self.assertEqual(c.status_fieldname, "test_status_fieldname")
