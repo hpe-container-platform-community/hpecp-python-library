@@ -927,6 +927,28 @@ class TestGatewayGet(TestCase):
     def mocked_requests_post(*args, **kwargs):
         if args[0] == "https://127.0.0.1:8080/api/v1/login":
             return session_mock_response()
+        if args[0] == "https://127.0.0.1:8080/api/v1/workers/":
+            return MockResponse(
+                json_data={
+                    "hacapable": True,
+                    "propinfo": {
+                        "bds_storage_apollo": "false",
+                        "bds_network_publicinterface": "ens5",
+                    },
+                    "approved_worker_pubkey": ["test pub key"],
+                    "schedule": False,
+                    "ip": "10.1.0.37",
+                    "hostname": "ip-10-1-0-37.us-west-2.compute.internal",
+                    "state": "installed",
+                    "_links": {"self": {"href": "/api/v1/workers/99"}},
+                    "purpose": "proxy",
+                    "status_info": "test status info",
+                    "sysinfo": "test sysinfo",
+                    "tags": ["test tags"],
+                },
+                status_code=200,
+                headers={"Location": "/api/v1/workers/123"},
+            )
         raise RuntimeError("Unhandle POST request: " + args[0])
 
     @patch("requests.get", side_effect=mocked_requests_get)
@@ -997,11 +1019,11 @@ class TestCreateGateway(TestCase):
     def mocked_requests_create_post(*args, **kwargs):
         if args[0] == "https://127.0.0.1:8080/api/v1/login":
             return session_mock_response()
-        elif args[0] == "https://127.0.0.1:8080/api/v1/workers":
+        elif args[0] == "https://127.0.0.1:8080/api/v1/workers/":
             return MockResponse(
                 json_data={},
                 status_code=200,
-                headers={"Location": "/api/v2/workers/99"},
+                headers={"location": "/api/v2/workers/99"},
             )
         raise RuntimeError("Unhandle POST request: " + args[0])
 
@@ -1017,13 +1039,32 @@ class TestCreateGateway(TestCase):
                 ssh_key_data="pem encoded key data",
             )
 
-        # TODO add more assertions
+        with self.assertRaisesRegexp(
+            AssertionError,
+            "'proxy_node_hostname' must be provided and must be a string",
+        ):
+            get_client().gateway.create_with_ssh_key(
+                ip="127.0.0.1",
+                proxy_node_hostname=1234,
+                ssh_key_data="pem encoded key data",
+            )
+
+        with self.assertRaisesRegexp(
+            AssertionError,
+            "'ssh_key_data' must be provided and must be a string",
+        ):
+            get_client().gateway.create_with_ssh_key(
+                ip="127.0.0.1", proxy_node_hostname="abc", ssh_key_data=1234,
+            )
 
     @patch("requests.post", side_effect=mocked_requests_create_post)
     def test_create_with_ssh_key_returns_id(self, mock_post):
 
-        # TODO
-        pass
+        id = get_client().gateway.create_with_ssh_key(
+            ip="127.0.0.1",
+            proxy_node_hostname="my.host.name",
+            ssh_key_data="pem encoded key data",
+        )
 
 
 class TestWaitForGatewayStatus(BaseTestCase):
