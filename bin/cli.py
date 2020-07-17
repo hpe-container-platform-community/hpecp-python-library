@@ -197,7 +197,7 @@ class BaseProxy:
         self.client_module_property.delete(id=id)
 
     @intercept_exception
-    def list(self, output="table", columns=[], query={}):
+    def list(self, output="table", columns=all_fields, query={}):
         """Retrieve the list of resources.
 
         Parameters
