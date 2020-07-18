@@ -260,12 +260,6 @@ file may also be provided, by default None.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bin.cli.K8sWorkerProxy.get">
-<code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">setup_log</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#K8sWorkerProxy.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.K8sWorkerProxy.get" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get a K8SWorker.</p>
-</dd></dl>
-
-<dl class="py method">
 <dt id="bin.cli.K8sWorkerProxy.set_storage">
 <code class="sig-name descname">set_storage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">ephemeral_disks</span></em>, <em class="sig-param"><span class="n">persistent_disks</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#K8sWorkerProxy.set_storage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.K8sWorkerProxy.set_storage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set storage for a k8s worker.</p>
@@ -324,29 +318,29 @@ default=’10.96.0.0/12’</p></li>
 <dd><p>Retrieve a K8s Cluster Admin Kube Config.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>k8scluster_id</strong> – the cluster ID</p>
+<dd class="field-odd"><p><strong>id</strong> – the cluster ID</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt id="bin.cli.K8sClusterProxy.dashboard_url">
-<code class="sig-name descname">dashboard_url</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">k8scluster_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#K8sClusterProxy.dashboard_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.K8sClusterProxy.dashboard_url" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">dashboard_url</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#K8sClusterProxy.dashboard_url"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.K8sClusterProxy.dashboard_url" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve a K8s Cluster Dashboard URL.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>k8scluster_id</strong> – the cluster ID</p>
+<dd class="field-odd"><p><strong>id</strong> – the cluster ID</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt id="bin.cli.K8sClusterProxy.dashboard_token">
-<code class="sig-name descname">dashboard_token</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">k8scluster_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#K8sClusterProxy.dashboard_token"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.K8sClusterProxy.dashboard_token" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">dashboard_token</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#K8sClusterProxy.dashboard_token"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.K8sClusterProxy.dashboard_token" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve a K8s Cluster Dashboard Token.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>k8scluster_id</strong> – the cluster ID</p>
+<dd class="field-odd"><p><strong>id</strong> – the cluster ID</p>
 </dd>
 </dl>
 </dd></dl>

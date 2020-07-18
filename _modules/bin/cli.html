@@ -580,13 +580,14 @@
         <span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">worker_id</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="K8sWorkerProxy.get"><a class="viewcode-back" href="../../cli.html#bin.cli.K8sWorkerProxy.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">setup_log</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get a K8SWorker.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">setup_log</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;setup_log&quot;</span><span class="p">:</span> <span class="s2">&quot;true&quot;</span><span class="p">}</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">params</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">K8sWorkerProxy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span></div>
+    <span class="c1"># TODO: verify with engineering if setup_log is a valid parameter</span>
+    <span class="c1"># def get(self, id, setup_log=False):</span>
+    <span class="c1">#     &quot;&quot;&quot;Get a K8SWorker.&quot;&quot;&quot;</span>
+    <span class="c1">#     if setup_log is True:</span>
+    <span class="c1">#         params = {&quot;setup_log&quot;: &quot;true&quot;}</span>
+    <span class="c1">#     else:</span>
+    <span class="c1">#         params = {}</span>
+    <span class="c1">#     return super(K8sWorkerProxy, self).get(id=id, params=params)</span>
 
 <div class="viewcode-block" id="K8sWorkerProxy.set_storage"><a class="viewcode-back" href="../../cli.html#bin.cli.K8sWorkerProxy.set_storage">[docs]</a>    <span class="nd">@intercept_exception</span>
     <span class="k">def</span> <span class="nf">set_storage</span><span class="p">(</span>
@@ -696,7 +697,7 @@
 <div class="viewcode-block" id="K8sClusterProxy.admin_kube_config"><a class="viewcode-back" href="../../cli.html#bin.cli.K8sClusterProxy.admin_kube_config">[docs]</a>    <span class="k">def</span> <span class="nf">admin_kube_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Retrieve a K8s Cluster Admin Kube Config.</span>
 
-<span class="sd">        :param k8scluster_id: the cluster ID</span>
+<span class="sd">        :param id: the cluster ID</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span>
             <span class="n">get_client</span><span class="p">()</span>
@@ -705,32 +706,27 @@
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="K8sClusterProxy.dashboard_url"><a class="viewcode-back" href="../../cli.html#bin.cli.K8sClusterProxy.dashboard_url">[docs]</a>    <span class="k">def</span> <span class="nf">dashboard_url</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">k8scluster_id</span><span class="p">,</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Retrieve a K8s Cluster Dashboard URL.</span>
 
-<span class="sd">        :param k8scluster_id: the cluster ID</span>
+<span class="sd">        :param id: the cluster ID</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">url</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">get_client</span><span class="p">()</span>
-            <span class="o">.</span><span class="n">k8s_cluster</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k8scluster_id</span><span class="o">=</span><span class="n">k8scluster_id</span><span class="p">)</span>
-            <span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;dashboard_endpoint_access&quot;</span><span class="p">]</span>
-        <span class="p">)</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">k8s_cluster</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span><span class="o">.</span><span class="n">dashboard_endpoint_access</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">url</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="K8sClusterProxy.dashboard_token"><a class="viewcode-back" href="../../cli.html#bin.cli.K8sClusterProxy.dashboard_token">[docs]</a>    <span class="k">def</span> <span class="nf">dashboard_token</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">k8scluster_id</span><span class="p">,</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Retrieve a K8s Cluster Dashboard Token.</span>
 
-<span class="sd">        :param k8scluster_id: the cluster ID</span>
+<span class="sd">        :param id: the cluster ID</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">token</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">get_client</span><span class="p">()</span>
-            <span class="o">.</span><span class="n">k8s_cluster</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k8scluster_id</span><span class="o">=</span><span class="n">k8scluster_id</span><span class="p">)</span>
-            <span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;dashboard_token&quot;</span><span class="p">]</span>
-        <span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">token</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span></div>
+        <span class="n">token</span> <span class="o">=</span> <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">k8s_cluster</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span><span class="o">.</span><span class="n">dashboard_token</span>
+        <span class="k">if</span> <span class="n">six</span><span class="o">.</span><span class="n">PY2</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">token</span><span class="o">.</span><span class="n">encode</span><span class="p">()))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">token</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="K8sClusterProxy.statuses"><a class="viewcode-back" href="../../cli.html#bin.cli.K8sClusterProxy.statuses">[docs]</a>    <span class="k">def</span> <span class="nf">statuses</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
         <span class="sd">&quot;&quot;&quot;Return a list of valid statuses.&quot;&quot;&quot;</span>
