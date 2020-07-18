@@ -677,7 +677,7 @@ class K8sClusterProxy(BaseProxy):
         :param id: the cluster ID
         """
         token = get_client().k8s_cluster.get(id=id).dashboard_token
-        print(base64.b64decode(token).decode("utf-8"))
+        print(base64.b64decode(token.encode()))
 
     def statuses(self,):
         """Return a list of valid statuses."""

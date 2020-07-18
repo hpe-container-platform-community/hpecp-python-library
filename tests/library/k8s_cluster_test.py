@@ -1240,7 +1240,7 @@ class TestCLI(BaseTestCase):
         hpecp.k8scluster.dashboard_token(id="/api/v2/k8scluster/123")
 
         output = self.out.getvalue().strip()
-        self.assertEqual(output, "abc")
+        self.assertEqual(output, "abc") # abc base64 encoded is: YWJjCg== 
 
 
 class TestCliStates(BaseTestCase):
