@@ -151,6 +151,21 @@ points to the different modules (user, gateway, cluster, etc)</p>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt id="bin.cli.BaseProxy.wait_for_delete">
+<code class="sig-name descname">wait_for_delete</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">timeout_secs</span><span class="o">=</span><span class="default_value">1200</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#BaseProxy.wait_for_delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.BaseProxy.wait_for_delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wait for Gateway to be deleted.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> – Cluster id with format: /api/v1/workers/[0-9]+</p></li>
+<li><p><strong>timeout_secs</strong> – how many secs to wait before exiting</p></li>
+</ul>
+</dd>
+</dl>
+<p>:returns True if gateway was deleted within timeout_secs.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -212,21 +227,6 @@ ssh_key parameter.</p>
 “{ ‘tag1’: ‘foo’, ‘tag2’, ‘bar’ }”.</p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="bin.cli.GatewayProxy.wait_for_delete">
-<code class="sig-name descname">wait_for_delete</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">timeout_secs</span><span class="o">=</span><span class="default_value">1200</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#GatewayProxy.wait_for_delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.GatewayProxy.wait_for_delete" title="Permalink to this definition">¶</a></dt>
-<dd><p>Wait for Gateway to be deleted.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>id</strong> – Cluster id with format: /api/v1/workers/[0-9]+</p></li>
-<li><p><strong>timeout_secs</strong> – how many secs to wait before exiting</p></li>
-</ul>
-</dd>
-</dl>
-<p>:returns True if gateway was deleted within timeout_secs.</p>
 </dd></dl>
 
 <dl class="py method">

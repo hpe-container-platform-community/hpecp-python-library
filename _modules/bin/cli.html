@@ -145,10 +145,15 @@
         <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span>
-            <span class="s2">&quot;Unknown error. To debug run with env var LOG_LEVEL=DEBUG&quot;</span><span class="p">,</span>
-            <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span>
-        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">_log</span><span class="o">.</span><span class="n">level</span> <span class="o">==</span> <span class="s2">&quot;DEBUG&quot;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;Unknown error.&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;Unknown error. To debug run with env var LOG_LEVEL=DEBUG&quot;</span><span class="p">,</span>
+                <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span>
+            <span class="p">)</span>
         <span class="n">tb</span> <span class="o">=</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()</span>
         <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">tb</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
@@ -348,7 +353,20 @@
                 <span class="p">),</span>
                 <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span>
             <span class="p">)</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div></div>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseProxy.wait_for_delete"><a class="viewcode-back" href="../../cli.html#bin.cli.BaseProxy.wait_for_delete">[docs]</a>    <span class="k">def</span> <span class="nf">wait_for_delete</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">timeout_secs</span><span class="o">=</span><span class="mi">1200</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Wait for Gateway to be deleted.</span>
+
+<span class="sd">        :param id: Cluster id with format: /api/v1/workers/[0-9]+</span>
+<span class="sd">        :param timeout_secs: how many secs to wait before exiting</span>
+<span class="sd">        :returns True if gateway was deleted within timeout_secs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait_for_state</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">timeout_secs</span><span class="o">=</span><span class="n">timeout_secs</span><span class="p">,</span>
+        <span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="CatalogProxy"><a class="viewcode-back" href="../../cli.html#bin.cli.CatalogProxy">[docs]</a><span class="k">class</span> <span class="nc">CatalogProxy</span><span class="p">(</span><span class="n">BaseProxy</span><span class="p">):</span>
@@ -495,19 +513,6 @@
             <span class="n">tags</span><span class="o">=</span><span class="n">tags</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">gateway_id</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="GatewayProxy.wait_for_delete"><a class="viewcode-back" href="../../cli.html#bin.cli.GatewayProxy.wait_for_delete">[docs]</a>    <span class="k">def</span> <span class="nf">wait_for_delete</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">timeout_secs</span><span class="o">=</span><span class="mi">1200</span><span class="p">,</span>
-    <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Wait for Gateway to be deleted.</span>
-
-<span class="sd">        :param id: Cluster id with format: /api/v1/workers/[0-9]+</span>
-<span class="sd">        :param timeout_secs: how many secs to wait before exiting</span>
-<span class="sd">        :returns True if gateway was deleted within timeout_secs.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">wait_for_state</span><span class="p">(</span>
-            <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">timeout_secs</span><span class="o">=</span><span class="n">timeout_secs</span><span class="p">,</span>
-        <span class="p">)</span></div>
 
 <div class="viewcode-block" id="GatewayProxy.states"><a class="viewcode-back" href="../../cli.html#bin.cli.GatewayProxy.states">[docs]</a>    <span class="k">def</span> <span class="nf">states</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
         <span class="sd">&quot;&quot;&quot;Return a list of valid states.&quot;&quot;&quot;</span>
@@ -1341,7 +1346,7 @@
 <span class="sd">                        COMPREPLY=( $(compgen -W &quot;bash&quot; -- $cur) )</span>
 <span class="sd">                        ;;</span>
 <span class="sd">                    *&quot;hpecp&quot;*)</span>
-<span class="sd">                        COMPREPLY=( $(compgen -W &quot;{{ module_names }}&quot; -- $cur) )</span>
+<span class="sd">                        COMPREPLY=( $(compgen -W &quot;autocomplete configure-cli {{  module_names }}&quot; -- $cur) )</span>
 <span class="sd">                    ;;</span>
 
 <span class="sd">                esac</span>
