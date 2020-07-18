@@ -534,13 +534,14 @@ class K8sWorkerProxy(BaseProxy):
         )
         print(worker_id)
 
-    def get(self, id, setup_log=False):
-        """Get a K8SWorker."""
-        if setup_log is True:
-            params = {"setup_log": "true"}
-        else:
-            params = {}
-        return super(K8sWorkerProxy, self).get(id=id, params=params)
+    # TODO: verify with engineering if setup_log is a valid parameter
+    # def get(self, id, setup_log=False):
+    #     """Get a K8SWorker."""
+    #     if setup_log is True:
+    #         params = {"setup_log": "true"}
+    #     else:
+    #         params = {}
+    #     return super(K8sWorkerProxy, self).get(id=id, params=params)
 
     @intercept_exception
     def set_storage(
@@ -650,7 +651,7 @@ class K8sClusterProxy(BaseProxy):
     def admin_kube_config(self, id):
         """Retrieve a K8s Cluster Admin Kube Config.
 
-        :param k8scluster_id: the cluster ID
+        :param id: the cluster ID
         """
         print(
             get_client()
@@ -659,31 +660,23 @@ class K8sClusterProxy(BaseProxy):
         )
 
     def dashboard_url(
-        self, k8scluster_id,
+        self, id,
     ):
         """Retrieve a K8s Cluster Dashboard URL.
 
-        :param k8scluster_id: the cluster ID
+        :param id: the cluster ID
         """
-        url = (
-            get_client()
-            .k8s_cluster.get(k8scluster_id=k8scluster_id)
-            .json["dashboard_endpoint_access"]
-        )
+        url = get_client().k8s_cluster.get(id=id).dashboard_endpoint_access
         print(url)
 
     def dashboard_token(
-        self, k8scluster_id,
+        self, id,
     ):
         """Retrieve a K8s Cluster Dashboard Token.
 
-        :param k8scluster_id: the cluster ID
+        :param id: the cluster ID
         """
-        token = (
-            get_client()
-            .k8s_cluster.get(k8scluster_id=k8scluster_id)
-            .json["dashboard_token"]
-        )
+        token = get_client().k8s_cluster.get(id=id).dashboard_token
         print(base64.b64decode(token).decode("utf-8"))
 
     def statuses(self,):

@@ -42,6 +42,7 @@ from hpecp.k8s_cluster import (
     K8sClusterHostConfig,
     K8sClusterStatus,
 )
+import base64
 
 if six.PY2:
     from io import BytesIO as StringIO  # noqa: F811
@@ -1201,9 +1202,9 @@ class TestCLI(BaseTestCase):
                     "status": "ready",
                     "status_message": "really ready",
                     "api_endpoint_access": "api:1234",
-                    "dashboard_endpoint_access": "dashboard:1234",
+                    "dashboard_endpoint_access": "test_dashboard_url",
                     "admin_kube_config": "test_admin_kube_config",
-                    "dashboard_token": "abc==",
+                    "dashboard_token": "YWJjCg==",
                     "persistent_storage": {"nimble_csi": False},
                 },
                 status_code=200,
@@ -1220,6 +1221,26 @@ class TestCLI(BaseTestCase):
 
         output = self.out.getvalue().strip()
         self.assertEqual(output, "test_admin_kube_config")
+
+    @patch("requests.get", side_effect=mocked_request_get_k8s_cluster)
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_k8scluster_dashboard_url(self, mock_get, mock_post):
+
+        hpecp = self.cli.CLI()
+        hpecp.k8scluster.dashboard_url(id="/api/v2/k8scluster/123")
+
+        output = self.out.getvalue().strip()
+        self.assertEqual(output, "test_dashboard_url")
+
+    @patch("requests.get", side_effect=mocked_request_get_k8s_cluster)
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_k8scluster_dashboard_token(self, mock_get, mock_post):
+
+        hpecp = self.cli.CLI()
+        hpecp.k8scluster.dashboard_token(id="/api/v2/k8scluster/123")
+
+        output = self.out.getvalue().strip()
+        self.assertEqual(output, "abc")
 
 
 class TestCliStates(BaseTestCase):
