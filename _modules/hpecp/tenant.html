@@ -82,24 +82,24 @@
     <span class="k">def</span> <span class="nf">__class_dir__</span><span class="p">():</span>
         <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">,</span> <span class="s2">&quot;tenant_type&quot;</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;&lt;Tenant id:</span><span class="si">{}</span><span class="s2"> name:</span><span class="si">{}</span><span class="s2"> description:</span><span class="si">{}</span><span class="s2"> type:</span><span class="si">{}</span><span class="s2">&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tenant_type</span>
-        <span class="p">)</span>
+    <span class="c1"># def __repr__(self):</span>
+    <span class="c1">#     return &quot;&lt;Tenant id:{} name:{} description:{} type:{}&gt;&quot;.format(</span>
+    <span class="c1">#         self.id, self.name, self.description, self.tenant_type</span>
+    <span class="c1">#     )</span>
 
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;Tenant(id=</span><span class="si">{}</span><span class="s2">, name=</span><span class="si">{}</span><span class="s2">, description=</span><span class="si">{}</span><span class="s2">, type:</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tenant_type</span>
-        <span class="p">)</span>
+    <span class="c1"># def __str__(self):</span>
+    <span class="c1">#     return &quot;Tenant(id={}, name={}, description={}, type:{})&quot;.format(</span>
+    <span class="c1">#         self.id, self.name, self.description, self.tenant_type</span>
+    <span class="c1">#     )</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">json</span> <span class="o">=</span> <span class="n">json</span>
 
-    <span class="k">def</span> <span class="fm">__dir__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">Tenant</span><span class="o">.</span><span class="n">__class_dir__</span><span class="p">()</span>
+    <span class="c1"># def __dir__(self):</span>
+    <span class="c1">#     return Tenant.__class_dir__()</span>
 
-    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__dir__</span><span class="p">()[</span><span class="n">item</span><span class="p">])</span>
+    <span class="c1"># def __getitem__(self, item):</span>
+    <span class="c1">#     return getattr(self, self.__dir__()[item])</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -122,7 +122,7 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;tenant_type&quot;</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span></div>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="TenantList"><a class="viewcode-back" href="../../hpecp.tenant.html#hpecp.tenant.TenantList">[docs]</a><span class="k">class</span> <span class="nc">TenantList</span><span class="p">:</span>
@@ -158,8 +158,8 @@
     <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span>
 
-    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tenants</span><span class="p">)</span>
+    <span class="c1"># def __len__(self):</span>
+    <span class="c1">#     return len(self.tenants)</span>
 
 <div class="viewcode-block" id="TenantList.tabulate"><a class="viewcode-back" href="../../hpecp.tenant.html#hpecp.tenant.TenantList.tabulate">[docs]</a>    <span class="k">def</span> <span class="nf">tabulate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Output a tabular view of Tenants.</span>
@@ -213,16 +213,6 @@
 <div class="viewcode-block" id="TenantController.create"><a class="viewcode-back" href="../../hpecp.tenant.html#hpecp.tenant.TenantController.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tenant_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">k8s_cluster</span><span class="o">=</span><span class="kc">None</span>
     <span class="p">):</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-            <span class="s2">&quot;!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!&quot;</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-            <span class="s2">&quot;!!!! The method `tenant.create()` is experimental !!!!&quot;</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-            <span class="s2">&quot;!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!&quot;</span>
-        <span class="p">)</span>
 
         <span class="k">assert</span> <span class="p">(</span>
             <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">basestring</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
