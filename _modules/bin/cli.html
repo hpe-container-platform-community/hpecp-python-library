@@ -693,19 +693,16 @@
             <span class="p">)</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="K8sClusterProxy.admin_kube_config"><a class="viewcode-back" href="../../cli.html#bin.cli.K8sClusterProxy.admin_kube_config">[docs]</a>    <span class="k">def</span> <span class="nf">admin_kube_config</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">k8scluster_id</span><span class="p">,</span>
-    <span class="p">):</span>
+<div class="viewcode-block" id="K8sClusterProxy.admin_kube_config"><a class="viewcode-back" href="../../cli.html#bin.cli.K8sClusterProxy.admin_kube_config">[docs]</a>    <span class="k">def</span> <span class="nf">admin_kube_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Retrieve a K8s Cluster Admin Kube Config.</span>
 
 <span class="sd">        :param k8scluster_id: the cluster ID</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">cfg</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="nb">print</span><span class="p">(</span>
             <span class="n">get_client</span><span class="p">()</span>
-            <span class="o">.</span><span class="n">k8s_cluster</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k8scluster_id</span><span class="o">=</span><span class="n">k8scluster_id</span><span class="p">)</span>
-            <span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s2">&quot;admin_kube_config&quot;</span><span class="p">]</span>
-        <span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">n&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,))</span></div>
+            <span class="o">.</span><span class="n">k8s_cluster</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">admin_kube_config</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">n&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,)</span>
+        <span class="p">)</span></div>
 
 <div class="viewcode-block" id="K8sClusterProxy.dashboard_url"><a class="viewcode-back" href="../../cli.html#bin.cli.K8sClusterProxy.dashboard_url">[docs]</a>    <span class="k">def</span> <span class="nf">dashboard_url</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">k8scluster_id</span><span class="p">,</span>
