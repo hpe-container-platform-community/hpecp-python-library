@@ -773,7 +773,7 @@ class TestWaitForClusterStatus(TestCase):
         )
 
 
-class TestDeleteCluster(TestCase):
+class TestDeleteCluster(BaseTestCase):
 
     non_existent_cluster_url = "/api/v2/k8scluster/999"
 
@@ -837,41 +837,6 @@ class TestDeleteCluster(TestCase):
                 },
             )
         raise RuntimeError("Unhandle POST request: " + args[0])
-
-    def setUp(self):
-        file_data = dedent(
-            """[default]
-                        api_host = 127.0.0.1
-                        api_port = 8080
-                        use_ssl = True
-                        verify_ssl = False
-                        warn_ssl = True
-                        username = admin
-                        password = admin123"""
-        )
-
-        self.tmpFile = tempfile.NamedTemporaryFile(delete=True)
-        self.tmpFile.write(file_data.encode("utf-8"))
-        self.tmpFile.flush()
-
-        self.saved_stdout = sys.stdout
-        self.out = StringIO()
-        sys.stdout = self.out
-
-        self.saved_stderr = sys.stderr
-        self.err = StringIO()
-        sys.stderr = self.err
-
-        sys.path.insert(0, os.path.abspath("../../"))
-        from bin import cli
-
-        self.cli = cli
-        self.cli.HPECP_CONFIG_FILE = self.tmpFile.name
-
-    def tearDown(self):
-        self.tmpFile.close()
-        sys.stdout = self.saved_stdout
-        sys.stderr = self.saved_stderr
 
     @patch("requests.delete", side_effect=mocked_requests_delete)
     @patch("requests.post", side_effect=mocked_requests_post)
@@ -1027,7 +992,7 @@ class TestK8sSupportVersions(TestCase):
         )
 
 
-class TestCLI(TestCase):
+class TestCLI(BaseTestCase):
 
     # pylint: disable=no-method-argument
     def mocked_requests_post(*args, **kwargs):
@@ -1154,36 +1119,6 @@ class TestCLI(TestCase):
             )
         raise RuntimeError("Unhandle GET request: " + args[0])
 
-    def setUp(self):
-        file_data = dedent(
-            """[default]
-                        api_host = 127.0.0.1
-                        api_port = 8080
-                        use_ssl = True
-                        verify_ssl = False
-                        warn_ssl = True
-                        username = admin
-                        password = admin123"""
-        )
-
-        self.tmpFile = tempfile.NamedTemporaryFile(delete=True)
-        self.tmpFile.write(file_data.encode("utf-8"))
-        self.tmpFile.flush()
-
-        self.saved_stdout = sys.stdout
-        self.out = StringIO()
-        sys.stdout = self.out
-
-        sys.path.insert(0, os.path.abspath("../../"))
-        from bin import cli
-
-        self.cli = cli
-        self.cli.HPECP_CONFIG_FILE = self.tmpFile.name
-
-    def tearDown(self):
-        self.tmpFile.close()
-        sys.stdout = self.saved_stdout
-
     @patch("requests.post", side_effect=mocked_requests_post)
     @patch("requests.get", side_effect=mocked_requests_get)
     def test_k8scluster_list(self, mock_post, mock_get):
@@ -1214,6 +1149,37 @@ class TestCLI(TestCase):
         self.assertEqual(
             output, "['1.14.10', '1.15.7', '1.16.4', '1.17.0', '1.18.0']",
         )
+
+    def mocked_requests_create_post(*args, **kwargs):
+        if args[0] == "https://127.0.0.1:8080/api/v1/login":
+            return MockResponse(
+                json_data={},
+                status_code=200,
+                headers={
+                    "location": (
+                        "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    )
+                },
+            )
+        elif args[0] == "https://127.0.0.1:8080/api/v2/k8scluster":
+            return MockResponse(
+                json_data={},
+                status_code=200,
+                headers={"Location": "/api/v2/k8sclusters/99"},
+            )
+        raise RuntimeError("Unhandle POST request: " + args[0])
+
+    @patch("requests.post", side_effect=mocked_requests_create_post)
+    def test_k8scluster_create(self, mock_post):
+
+        hpecp = self.cli.CLI()
+        hpecp.k8scluster.create(
+            name="mycluster",
+            k8shosts_config="/api/v2/worker/k8shost/1:master,/api/v2/worker/k8shost/2:worker",
+        )
+
+        output = self.out.getvalue().strip()
+        self.assertEqual(output, "/api/v2/k8sclusters/99")
 
 
 class TestCliStates(BaseTestCase):
