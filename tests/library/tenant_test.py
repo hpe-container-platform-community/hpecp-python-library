@@ -77,6 +77,7 @@ class TestTentants(TestCase):
                         "tenants": [
                             {
                                 "status": "ready",
+                                "tenant_type": "docker",
                                 "features": {
                                     "ml_project": False,
                                     "kubernetes_access": False,
@@ -265,6 +266,7 @@ class TestTentants(TestCase):
         self.assertEqual(tenants[0].id, "/api/v1/tenant/1")
         self.assertEqual(tenants[0].status, "ready")
         self.assertEqual(tenants[0].name, "Site Admin")
+        self.assertEqual(tenants[0].tenant_type, "docker")
         self.assertEqual(
             tenants[0].description, "Site Admin Tenant for BlueData clusters"
         )
