@@ -413,10 +413,13 @@ class ContainerPlatformClient(object):
             self.log.debug(
                 "RES: {} : {} {} {}".format("Login", "post", url, str(e))
             )
-            msg = (
-                "Could not connect to controller - set LOG_LEVEL=DEBUG to "
-                "see more detail."
-            )
+            if self.log.level == "DEBUG":
+                msg = "Could not connect to controller."
+            else:
+                msg = (
+                    "Could not connect to controller - set LOG_LEVEL=DEBUG to "
+                    "see more detail."
+                )
             raise_from(
                 APIException(
                     message=msg, request_method="post", request_url=url,
