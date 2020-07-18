@@ -99,10 +99,15 @@ def intercept_exception(wrapped, instance, args, kwargs):
         print(e.message, file=sys.stderr)
         sys.exit(1)
     except Exception:
-        print(
-            "Unknown error. To debug run with env var LOG_LEVEL=DEBUG",
-            file=sys.stderr,
-        )
+        if _log.level == "DEBUG":
+            print(
+                "Unknown error.", file=sys.stderr,
+            )
+        else:
+            print(
+                "Unknown error. To debug run with env var LOG_LEVEL=DEBUG",
+                file=sys.stderr,
+            )
         tb = traceback.format_exc()
         _log.debug(tb)
         sys.exit(1)
