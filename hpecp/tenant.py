@@ -36,24 +36,24 @@ class Tenant:
     def __class_dir__():
         return ["id", "name", "description", "tenant_type"]
 
-    def __repr__(self):
-        return "<Tenant id:{} name:{} description:{} type:{}>".format(
-            self.id, self.name, self.description, self.tenant_type
-        )
+    # def __repr__(self):
+    #     return "<Tenant id:{} name:{} description:{} type:{}>".format(
+    #         self.id, self.name, self.description, self.tenant_type
+    #     )
 
-    def __str__(self):
-        return "Tenant(id={}, name={}, description={}, type:{})".format(
-            self.id, self.name, self.description, self.tenant_type
-        )
+    # def __str__(self):
+    #     return "Tenant(id={}, name={}, description={}, type:{})".format(
+    #         self.id, self.name, self.description, self.tenant_type
+    #     )
 
     def __init__(self, json):
         self.json = json
 
-    def __dir__(self):
-        return Tenant.__class_dir__()
+    # def __dir__(self):
+    #     return Tenant.__class_dir__()
 
-    def __getitem__(self, item):
-        return getattr(self, self.__dir__()[item])
+    # def __getitem__(self, item):
+    #     return getattr(self, self.__dir__()[item])
 
     @property
     def id(self):
@@ -76,7 +76,7 @@ class Tenant:
         try:
             return self.json["tenant_type"]
         except KeyError:
-            return None
+            return ""
 
 
 class TenantList:
@@ -112,8 +112,8 @@ class TenantList:
     def __iter__(self):
         return self
 
-    def __len__(self):
-        return len(self.tenants)
+    # def __len__(self):
+    #     return len(self.tenants)
 
     def tabulate(self):
         """Output a tabular view of Tenants.
@@ -167,16 +167,6 @@ class TenantController:
     def create(
         self, name=None, description=None, tenant_type=None, k8s_cluster=None
     ):
-
-        self.client.log.warning(
-            "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-        )
-        self.client.log.warning(
-            "!!!! The method `tenant.create()` is experimental !!!!"
-        )
-        self.client.log.warning(
-            "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-        )
 
         assert (
             isinstance(name, basestring) and len(name) > 0
