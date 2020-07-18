@@ -647,19 +647,16 @@ class K8sClusterProxy(BaseProxy):
             )
         )
 
-    def admin_kube_config(
-        self, k8scluster_id,
-    ):
+    def admin_kube_config(self, id):
         """Retrieve a K8s Cluster Admin Kube Config.
 
         :param k8scluster_id: the cluster ID
         """
-        cfg = (
+        print(
             get_client()
-            .k8s_cluster.get(k8scluster_id=k8scluster_id)
-            .json["admin_kube_config"]
+            .k8s_cluster.get(id)
+            .admin_kube_config.replace("\\n", "\n",)
         )
-        print(cfg.replace("\\n", "\n",))
 
     def dashboard_url(
         self, k8scluster_id,

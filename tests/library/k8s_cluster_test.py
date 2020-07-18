@@ -327,7 +327,7 @@ class TestCreateCluster(TestCase):
             return MockResponse(
                 json_data={},
                 status_code=200,
-                headers={"Location": "/api/v2/k8sclusters/99"},
+                headers={"Location": "/api/v2/k8scluster/99"},
             )
         raise RuntimeError("Unhandle POST request: " + args[0])
 
@@ -425,7 +425,7 @@ class TestCreateCluster(TestCase):
                 K8sClusterHostConfig("/api/v2/worker/k8shost/1", "master")
             ],
         )
-        self.assertEqual(id, "/api/v2/k8sclusters/99")
+        self.assertEqual(id, "/api/v2/k8scluster/99")
 
         # now with a description
         id = get_client().k8s_cluster.create(
@@ -435,7 +435,7 @@ class TestCreateCluster(TestCase):
             ],
             description="Cluster Description",
         )
-        self.assertEqual(id, "/api/v2/k8sclusters/99")
+        self.assertEqual(id, "/api/v2/k8scluster/99")
 
         # now with a k8s version
         id = get_client().k8s_cluster.create(
@@ -445,7 +445,7 @@ class TestCreateCluster(TestCase):
             ],
             k8s_version="1.18.0",
         )
-        self.assertEqual(id, "/api/v2/k8sclusters/99")
+        self.assertEqual(id, "/api/v2/k8scluster/99")
 
     def mocked_requests_create_error_post(*args, **kwargs):
         if args[0] == "https://127.0.0.1:8080/api/v1/login":
@@ -1180,6 +1180,46 @@ class TestCLI(BaseTestCase):
 
         output = self.out.getvalue().strip()
         self.assertEqual(output, "/api/v2/k8sclusters/99")
+
+    def mocked_request_get_k8s_cluster(*args, **kwargs):
+        if args[0] == "https://127.0.0.1:8080/api/v2/k8scluster/123":
+            return MockResponse(
+                json_data={
+                    "_links": {"self": {"href": "/api/v2/k8scluster/123"}},
+                    "label": {"name": "def", "description": "my cluster"},
+                    "k8s_version": "1.17.0",
+                    "pod_network_range": "10.192.0.0/12",
+                    "service_network_range": "10.96.0.0/12",
+                    "pod_dns_domain": "cluster.local",
+                    "created_by_user_id": "/api/v1/user/5",
+                    "created_by_user_name": "admin",
+                    "created_time": 1588260014,
+                    "k8shosts_config": [
+                        {"node": "/api/v2/worker/k8shost/4", "role": "worker"},
+                        {"node": "/api/v2/worker/k8shost/5", "role": "master"},
+                    ],
+                    "status": "ready",
+                    "status_message": "really ready",
+                    "api_endpoint_access": "api:1234",
+                    "dashboard_endpoint_access": "dashboard:1234",
+                    "admin_kube_config": "test_admin_kube_config",
+                    "dashboard_token": "abc==",
+                    "persistent_storage": {"nimble_csi": False},
+                },
+                status_code=200,
+                headers={},
+            )
+        raise RuntimeError("Unhandle GET request: " + args[0])
+
+    @patch("requests.get", side_effect=mocked_request_get_k8s_cluster)
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_k8scluster_admin_kube_config(self, mock_get, mock_post):
+
+        hpecp = self.cli.CLI()
+        hpecp.k8scluster.admin_kube_config(id="/api/v2/k8scluster/123")
+
+        output = self.out.getvalue().strip()
+        self.assertEqual(output, "test_admin_kube_config")
 
 
 class TestCliStates(BaseTestCase):
