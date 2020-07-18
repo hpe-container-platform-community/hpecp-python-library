@@ -309,6 +309,19 @@ class BaseProxy:
             )
             sys.exit(1)
 
+    def wait_for_delete(
+        self, id, timeout_secs=1200,
+    ):
+        """Wait for Gateway to be deleted.
+
+        :param id: Cluster id with format: /api/v1/workers/[0-9]+
+        :param timeout_secs: how many secs to wait before exiting
+        :returns True if gateway was deleted within timeout_secs.
+        """
+        self.wait_for_state(
+            id=id, timeout_secs=timeout_secs,
+        )
+
 
 class CatalogProxy(BaseProxy):
     """Proxy object to :py:attr:`<hpecp.client.catalog>`."""
@@ -454,19 +467,6 @@ class GatewayProxy(BaseProxy):
             tags=tags,
         )
         print(gateway_id)
-
-    def wait_for_delete(
-        self, id, timeout_secs=1200,
-    ):
-        """Wait for Gateway to be deleted.
-
-        :param id: Cluster id with format: /api/v1/workers/[0-9]+
-        :param timeout_secs: how many secs to wait before exiting
-        :returns True if gateway was deleted within timeout_secs.
-        """
-        self.wait_for_state(
-            id=id, timeout_secs=timeout_secs,
-        )
 
     def states(self,):
         """Return a list of valid states."""
@@ -1300,7 +1300,7 @@ class AutoComplete:
                         COMPREPLY=( $(compgen -W "bash" -- $cur) )
                         ;;
                     *"hpecp"*)
-                        COMPREPLY=( $(compgen -W "{{ module_names }}" -- $cur) )
+                        COMPREPLY=( $(compgen -W "autocomplete configure-cli {{  module_names }}" -- $cur) )
                     ;;
 
                 esac
