@@ -106,12 +106,15 @@ class LockController:
         try:
             polling.poll(
                 lambda: len(self.get()["_embedded"]["internal_locks"]) == 0,
-                step=60,
+                step=10,
                 poll_forever=False,
                 timeout=timeout_secs,
             )
         except polling.TimeoutException:
-            raise Exception("Timed out waiting for internal locks to free.")
+            return False
+        except Exception as e:
+            self.client.log.error(e)
+            return False
 
         if len(self.get()["_embedded"]["external_locks"]) > 0:
             for lock in self.get()["_embedded"]["external_locks"]:

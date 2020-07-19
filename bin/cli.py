@@ -775,6 +775,12 @@ class LockProxy(object):
 
         :param output: how to display the output ['yaml'|'json']
         """
+        if output not in ["yaml", "json"]:
+            print(
+                "'output' parameter must be 'yaml' or 'json'", file=sys.stderr
+            )
+            sys.exit(1)
+
         response = get_client().lock.get()
 
         if output == "yaml":
@@ -784,7 +790,7 @@ class LockProxy(object):
                 )
             )
         else:
-            print(response)
+            print(json.dumps(response))
 
     def create(
         self, reason,
@@ -800,17 +806,22 @@ class LockProxy(object):
             _log.error(e)
             sys.exit(1)
 
+    @intercept_exception
     def delete(
         self, id,
     ):
         """Delete a user lock."""
         get_client().lock.delete(id)
 
+    @intercept_exception
     def delete_all(
         self, timeout_secs=300,
     ):
         """Delete all locks."""
-        print(get_client().lock.delete_all(timeout_secs=300))
+        success = get_client().lock.delete_all(timeout_secs=timeout_secs)
+        if not success:
+            print("Could not delete locks.", file=sys.stderr)
+            sys.exit(1)
 
 
 class LicenseProxy(object):
