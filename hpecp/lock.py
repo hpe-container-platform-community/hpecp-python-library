@@ -22,6 +22,7 @@ from __future__ import absolute_import
 
 import polling
 import re
+from requests.structures import CaseInsensitiveDict
 
 try:
     basestring
@@ -62,7 +63,7 @@ class LockController:
             data=data,
             description="lock/set_lock",
         )
-        return response.headers["Location"]
+        return CaseInsensitiveDict(response.headers)["Location"]
 
     def delete(self, lock_id):
         """Delete a lock.

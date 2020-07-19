@@ -24,6 +24,7 @@ import re
 from operator import attrgetter
 
 from tabulate import tabulate
+from requests.structures import CaseInsensitiveDict
 
 try:
     basestring
@@ -190,7 +191,7 @@ class TenantController:
             data=data,
             description="tenant/create",
         )
-        return response.headers["Location"]
+        return CaseInsensitiveDict(response.headers)["Location"]
 
     def get(self, tenant_id):
         """Retrieve a Tenant by ID.

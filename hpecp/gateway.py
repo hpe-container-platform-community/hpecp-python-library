@@ -26,6 +26,7 @@ from .exceptions import APIItemNotFoundException
 
 from .base_resource import AbstractWaitableResourceController, AbstractResource
 from hpecp.base_resource import ResourceList
+from requests.structures import CaseInsensitiveDict
 
 try:
     basestring
@@ -254,7 +255,7 @@ class GatewayController(AbstractWaitableResourceController):
             data=data,
             description="gateway/create_with_ssh_key",
         )
-        return response.headers["location"]
+        return CaseInsensitiveDict(response.headers)["location"]
 
     def get(self, id):
         """Retrieve a Gateway by ID.

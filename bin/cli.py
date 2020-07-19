@@ -861,6 +861,7 @@ class LicenseProxy(object):
             else:
                 print(json.dumps(response))
 
+    @intercept_exception
     def register(
         self, server_filename,
     ):
@@ -869,8 +870,7 @@ class LicenseProxy(object):
         :param server_filename: Filepath to the license on the server, e.g.
             '/srv/bluedata/license/LICENSE-1.txt'
         """
-        get_client().license.register(server_filename=server_filename)
-        print("Done.")
+        print(get_client().license.register(server_filename=server_filename))
 
     # TODO implement me!
     # def upload_with_ssh_key(
