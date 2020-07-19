@@ -1246,6 +1246,20 @@ class AutoComplete:
 
                 COMP_WORDS_AS_STRING=$(IFS=. ; echo "${COMP_WORDS[*]}")
 
+                {% raw %}
+                for (( idx=${#COMP_WORDS[@]}-1 ; idx>=0 ; idx-- )) ; do
+                    item="${COMP_WORDS[idx]}"
+                    if [[ "${item:0:2}" == "--" ]]; then
+                        if [[ "${item}" == "--columns" ]]; then
+                            LAST_PARAM_COLUMNS=1
+                        else
+                            LAST_PARAM_COLUMNS=0
+                        fi
+                        break
+                    fi
+                done
+                {% endraw %}
+
                 case "$COMP_WORDS_AS_STRING" in
 
                 {% set module_names = " ".join(modules.keys()) %}
@@ -1253,16 +1267,14 @@ class AutoComplete:
                     {% set function_names = " ".join(modules[module_name].keys()) %}
                     {% for function_name in modules[module_name] %}
                         {% set param_names = " ".join(modules[module_name][function_name]).replace('_', '-') %}
-                        {% for param_name in modules[module_name][function_name] %}
-                            {% if param_name == "--columns" %}
-                                {% set column_names = " ".join(columns[module_name]) %}
-                    *"hpecp.{{module_name}}.{{function_name}}.{{param_name}}"*)
-                        COMPREPLY=( $(compgen -W "{{column_names}} {{param_names}}" -- $cur) )
-                        ;;
-                            {% endif %}
-                        {% endfor %}
                     *"hpecp.{{module_name}}.{{function_name}}"*)
-                        COMPREPLY=( $(compgen -W "{{param_names}}" -- $cur) )
+                        if [[ $LAST_PARAM_COLUMNS == 1 ]]
+                        then
+                            {% set column_names = " ".join(columns[module_name]) %}
+                            COMPREPLY=( $(compgen -W "{{column_names}} {{param_names}}" -- $cur) )
+                        else
+                            COMPREPLY=( $(compgen -W "{{param_names}}" -- $cur) )
+                        fi
                         ;;
                     {% endfor %}
                     *"hpecp.{{module_name}}"*)
@@ -1277,7 +1289,7 @@ class AutoComplete:
                         ;;
                     *"hpecp"*)
                         COMPREPLY=( $(compgen -W "autocomplete configure-cli {{  module_names }}" -- $cur) )
-                    ;;
+                        ;;
                 esac
                 return 0
             } &&
