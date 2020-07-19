@@ -51,7 +51,7 @@ from hpecp.k8s_worker import WorkerK8sStatus
 from hpecp.logger import Logger
 from hpecp.gateway import GatewayStatus
 from hpecp.k8s_cluster import K8sClusterHostConfig, K8sClusterStatus
-from hpecp.exceptions import APIItemNotFoundException
+from hpecp.exceptions import APIItemNotFoundException, APIUnknownException
 from textwrap import dedent
 import inspect
 
@@ -86,19 +86,9 @@ else:
 @wrapt.decorator
 def intercept_exception(wrapped, instance, args, kwargs):
     """Handle Exceptions."""
-    try:
-        return wrapped(*args, **kwargs)
-    except AssertionError as ae:
-        print(ae, file=sys.stderr)
-        sys.exit(1)
-    except (
-        APIException,
-        APIItemNotFoundException,
-        ContainerPlatformClientException,
-    ) as e:
-        print(e.message, file=sys.stderr)
-        sys.exit(1)
-    except Exception:
+
+    def _handle_unknown_exception():
+        """Handler for unknown exceptions."""
         if _log.level == "DEBUG":
             print(
                 "Unknown error.", file=sys.stderr,
@@ -111,6 +101,23 @@ def intercept_exception(wrapped, instance, args, kwargs):
         tb = traceback.format_exc()
         _log.debug(tb)
         sys.exit(1)
+
+    try:
+        return wrapped(*args, **kwargs)
+    except AssertionError as ae:
+        print(ae, file=sys.stderr)
+        sys.exit(1)
+    except APIUnknownException:
+        _handle_unknown_exception()
+    except (
+        APIException,
+        APIItemNotFoundException,
+        ContainerPlatformClientException,
+    ) as e:
+        print(e.message, file=sys.stderr)
+        sys.exit(1)
+    except Exception:
+        _handle_unknown_exception()
 
 
 @intercept_exception
@@ -792,19 +799,12 @@ class LockProxy(object):
         else:
             print(json.dumps(response))
 
+    @intercept_exception
     def create(
         self, reason,
     ):
         """Create a lock."""
-        try:
-            print(get_client().lock.create(reason), file=sys.stdout)
-        except Exception as e:
-            print(
-                "Unknown error. To debug run with env var LOG_LEVEL=DEBUG",
-                file=sys.stderr,
-            )
-            _log.error(e)
-            sys.exit(1)
+        print(get_client().lock.create(reason), file=sys.stdout)
 
     @intercept_exception
     def delete(

@@ -35,6 +35,7 @@ from .exceptions import (
     APIException,
     APIItemConflictException,
     APIItemNotFoundException,
+    APIUnknownException,
     ContainerPlatformClientException,
 )
 from .gateway import GatewayController
@@ -545,7 +546,7 @@ class ContainerPlatformClient(object):
                 )
 
             response.raise_for_status()
-        except requests.exceptions.RequestException:
+        except requests.exceptions.RequestException as re:
             try:
                 response_info = response.json()
             except Exception:
@@ -587,8 +588,8 @@ class ContainerPlatformClient(object):
                         description, http_method, url, json.dumps(data)
                     )
                 )
-                raise APIException(
-                    message=response_info,
+                raise APIUnknownException(
+                    message=str(re),  # get the exception message
                     request_method=http_method,
                     request_url=url,
                     request_data=json.dumps(data),

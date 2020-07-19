@@ -38,6 +38,10 @@ class APIException(Exception):
         )
 
 
+class APIUnknownException(APIException):
+    pass
+
+
 class APIItemNotFoundException(APIException):
     def __init__(
         self, message, request_method, request_url, request_data=None, *args
