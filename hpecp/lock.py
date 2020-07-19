@@ -113,7 +113,7 @@ class LockController:
         except polling.TimeoutException:
             return False
         except Exception as e:
-            client.log.error(e)
+            self.client.log.error(e)
             return False
 
         if len(self.get()["_embedded"]["external_locks"]) > 0:
