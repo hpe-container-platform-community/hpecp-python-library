@@ -1251,9 +1251,9 @@ class AutoComplete:
                     item="${COMP_WORDS[idx]}"
                     if [[ "${item:0:2}" == "--" ]]; then
                         if [[ "${item}" == "--columns" ]]; then
-                            LAST_PARAM_COLUMNS=1
+                            LAST_PARAM_IS_COLUMNS=1
                         else
-                            LAST_PARAM_COLUMNS=0
+                            LAST_PARAM_IS_COLUMNS=0
                         fi
                         break
                     fi
@@ -1267,15 +1267,22 @@ class AutoComplete:
                     {% set function_names = " ".join(modules[module_name].keys()) %}
                     {% for function_name in modules[module_name] %}
                         {% set param_names = " ".join(modules[module_name][function_name]).replace('_', '-') %}
+                        {% if function_name == "list" %}
                     *"hpecp.{{module_name}}.{{function_name}}"*)
-                        if [[ $LAST_PARAM_COLUMNS == 1 ]]
+                        if [[ $LAST_PARAM_IS_COLUMNS == 1 ]]
                         then
                             {% set column_names = " ".join(columns[module_name]) %}
-                            COMPREPLY=( $(compgen -W "{{column_names}} {{param_names}}" -- $cur) )
+                            {% set param_names_without_columns = param_names.replace("--columns", "") %}
+                            COMPREPLY=( $(compgen -W "{{column_names}} {{param_names_without_columns}}" -- $cur) )
                         else
                             COMPREPLY=( $(compgen -W "{{param_names}}" -- $cur) )
                         fi
                         ;;
+                        {% else %}
+                    *"hpecp.{{module_name}}.{{function_name}}"*)
+                        COMPREPLY=( $(compgen -W "{{param_names}}" -- $cur) )
+                        ;;
+                        {% endif %}
                     {% endfor %}
                     *"hpecp.{{module_name}}"*)
                         COMPREPLY=( $(compgen -W "{{ function_names }}" -- $cur) )
