@@ -831,6 +831,7 @@ class LicenseProxy(object):
         """Return the CLI method names."""
         return ["delete", "delete_all", "list", "platform_id", "register"]
 
+    @intercept_exception
     def platform_id(self,):
         """Get the platform ID."""
         print(get_client().license.platform_id())
