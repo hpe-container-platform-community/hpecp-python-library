@@ -1285,7 +1285,7 @@ class TestCLI(BaseTestCase):
 
     @patch("requests.post", side_effect=mocked_requests_post)
     @patch("requests.get", side_effect=mocked_requests_get)
-    def test_k8s_supported_verions_minor_filter_invalid(
+    def test_k8s_supported_verions_patch_filter_invalid(
         self, mock_post, mock_get
     ):
 
