@@ -1290,81 +1290,42 @@
 <span class="sd">                cur=${COMP_WORDS[COMP_CWORD]}</span>
 <span class="sd">                prev=${COMP_WORDS[COMP_CWORD-1]}</span>
 
-<span class="sd">                COMP_WORDS_AS_STRING=$(IFS=, ; echo &quot;${COMP_WORDS[*]}&quot;)</span>
+<span class="sd">                COMP_WORDS_AS_STRING=$(IFS=. ; echo &quot;${COMP_WORDS[*]}&quot;)</span>
 
 <span class="sd">                case &quot;$COMP_WORDS_AS_STRING&quot; in</span>
 
-<span class="sd">                {#</span>
-<span class="sd">                    Example module dict:</span>
-
-<span class="sd">                    {</span>
-<span class="sd">                        &#39;catalog&#39;: {</span>
-<span class="sd">                        &#39;delete&#39;: [&#39;--id&#39;],</span>
-<span class="sd">                        &#39;get&#39;: [&#39;--id&#39;, &#39;--output&#39;, &#39;--response&#39;, &#39;--e&#39;],</span>
-<span class="sd">                        &#39;install&#39;: [&#39;--catalog_id&#39;, &#39;--ae&#39;, &#39;--e&#39;],</span>
-<span class="sd">                        &#39;list&#39;: [&#39;--output&#39;, &#39;--columns&#39;, &#39;--query&#39;, &#39;--data&#39;],</span>
-<span class="sd">                        &#39;refresh&#39;: [&#39;--catalog_id&#39;, &#39;--ae&#39;, &#39;--e&#39;],</span>
-<span class="sd">                        &#39;wait_for_state&#39;: [&#39;--id&#39;, &#39;--states&#39;, &#39;--timeout_secs&#39;]</span>
-<span class="sd">                        }</span>
-<span class="sd">                    }</span>
-
-<span class="sd">                    Example columns dict:</span>
-
-<span class="sd">                    {&#39;catalog&#39;: (&#39;label_name&#39;, &#39;label_description&#39;,  ...}</span>
-<span class="sd">                #}</span>
-
 <span class="sd">                {% set module_names = &quot; &quot;.join(modules.keys()) %}</span>
-
-<span class="sd">                {% for module_name in modules %} {# e.g. &#39;catalog&#39; #}</span>
-
+<span class="sd">                {% for module_name in modules %}</span>
 <span class="sd">                    {% set function_names = &quot; &quot;.join(modules[module_name].keys()) %}</span>
-
-<span class="sd">                    {% for function_name in modules[module_name] %}  {# e.g. mod = &#39;delete&#39; #}</span>
-
+<span class="sd">                    {% for function_name in modules[module_name] %}</span>
 <span class="sd">                        {% set param_names = &quot; &quot;.join(modules[module_name][function_name]).replace(&#39;_&#39;, &#39;-&#39;) %}</span>
-
 <span class="sd">                        {% for param_name in modules[module_name][function_name] %}</span>
 <span class="sd">                            {% if param_name == &quot;--columns&quot; %}</span>
 <span class="sd">                                {% set column_names = &quot; &quot;.join(columns[module_name]) %}</span>
-<span class="sd">                    *&quot;hpecp,{{module_name}},{{function_name}},{{param_name}}&quot;*)</span>
+<span class="sd">                    *&quot;hpecp.{{module_name}}.{{function_name}}.{{param_name}}&quot;*)</span>
 <span class="sd">                        COMPREPLY=( $(compgen -W &quot;{{column_names}} {{param_names}}&quot; -- $cur) )</span>
 <span class="sd">                        ;;</span>
 <span class="sd">                            {% endif %}</span>
 <span class="sd">                        {% endfor %}</span>
-
-<span class="sd">                    *&quot;hpecp,{{module_name}},{{function_name}}&quot;*)</span>
-
-<span class="sd">                        # we should be able to replace the above case statement with:</span>
-<span class="sd">                        #</span>
-<span class="sd">                        # if last parameter is &quot;--columns&quot;</span>
-<span class="sd">                        # COMPREPLY=( $(compgen -W &quot;{{column_names}}&quot; -- $cur) )</span>
-<span class="sd">                        # else</span>
-<span class="sd">                        # COMPREPLY=( $(compgen -W &quot;{{param_names}}&quot; -- $cur) )</span>
-<span class="sd">                        # fi</span>
-
+<span class="sd">                    *&quot;hpecp.{{module_name}}.{{function_name}}&quot;*)</span>
 <span class="sd">                        COMPREPLY=( $(compgen -W &quot;{{param_names}}&quot; -- $cur) )</span>
 <span class="sd">                        ;;</span>
 <span class="sd">                    {% endfor %}</span>
-
-<span class="sd">                    *&quot;hpecp,{{module_name}}&quot;*)</span>
+<span class="sd">                    *&quot;hpecp.{{module_name}}&quot;*)</span>
 <span class="sd">                        COMPREPLY=( $(compgen -W &quot;{{ function_names }}&quot; -- $cur) )</span>
 <span class="sd">                        ;;</span>
 <span class="sd">                {% endfor %}</span>
-
-<span class="sd">                    *&quot;hpecp,autocomplete,bash&quot;*)</span>
+<span class="sd">                    *&quot;hpecp.autocomplete.bash&quot;*)</span>
 <span class="sd">                        COMPREPLY=( )</span>
 <span class="sd">                        ;;</span>
-<span class="sd">                    *&quot;hpecp,autocomplete&quot;*)</span>
+<span class="sd">                    *&quot;hpecp.autocomplete&quot;*)</span>
 <span class="sd">                        COMPREPLY=( $(compgen -W &quot;bash&quot; -- $cur) )</span>
 <span class="sd">                        ;;</span>
 <span class="sd">                    *&quot;hpecp&quot;*)</span>
 <span class="sd">                        COMPREPLY=( $(compgen -W &quot;autocomplete configure-cli {{  module_names }}&quot; -- $cur) )</span>
 <span class="sd">                    ;;</span>
-
 <span class="sd">                esac</span>
-
 <span class="sd">                return 0</span>
-
 <span class="sd">            } &amp;&amp;</span>
 <span class="sd">            complete -F _hpecp_complete hpecp</span>
 <span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
@@ -1373,7 +1334,7 @@
         <span class="p">(</span><span class="n">modules</span><span class="p">,</span> <span class="n">columns</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_metadata</span><span class="p">()</span>
 
         <span class="nb">print</span><span class="p">(</span>
-            <span class="n">Environment</span><span class="p">()</span>
+            <span class="n">Environment</span><span class="p">(</span><span class="n">trim_blocks</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lstrip_blocks</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="n">__bash_template</span><span class="p">)</span>
             <span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">modules</span><span class="o">=</span><span class="n">modules</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">),</span>
             <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span>
