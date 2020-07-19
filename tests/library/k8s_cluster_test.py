@@ -1065,6 +1065,7 @@ class TestCLI(BaseTestCase):
                         "1.15.7",
                         "1.16.4",
                         "1.17.0",
+                        "1.17.1",
                         "1.18.0",
                     ],
                     "version_info": {
@@ -1098,6 +1099,15 @@ class TestCLI(BaseTestCase):
                         "1.17.0": {
                             "_version": "1.0",
                             "min_upgrade_version": "1.16.0",
+                            "relnote_url": (
+                                "https://v1-17.docs.kubernetes.io/docs/setup"
+                                "/release/notes/"
+                            ),
+                            "hpecsi": "1.17",
+                        },
+                        "1.17.1": {
+                            "_version": "1.0",
+                            "min_upgrade_version": "1.17.0",
                             "relnote_url": (
                                 "https://v1-17.docs.kubernetes.io/docs/setup"
                                 "/release/notes/"
@@ -1141,14 +1151,101 @@ class TestCLI(BaseTestCase):
 
     @patch("requests.post", side_effect=mocked_requests_post)
     @patch("requests.get", side_effect=mocked_requests_get)
-    def test_k8s_supported_verions(self, mock_post, mock_get):
+    def test_k8s_supported_verions_no_filter(self, mock_post, mock_get):
 
         hpecp = self.cli.CLI()
         hpecp.k8scluster.k8s_supported_versions()
 
         output = self.out.getvalue().strip()
         self.assertEqual(
-            output, "['1.14.10', '1.15.7', '1.16.4', '1.17.0', '1.18.0']",
+            output,
+            "['1.14.10', '1.15.7', '1.16.4', '1.17.0', '1.17.1', '1.18.0']",
+        )
+
+    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=mocked_requests_get)
+    def test_k8s_supported_verions_major_filter_match(
+        self, mock_post, mock_get
+    ):
+
+        hpecp = self.cli.CLI()
+        hpecp.k8scluster.k8s_supported_versions(major_filter=1)
+
+        output = self.out.getvalue().strip()
+        self.assertEqual(
+            output,
+            "['1.14.10', '1.15.7', '1.16.4', '1.17.0', '1.17.1', '1.18.0']",
+        )
+
+    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=mocked_requests_get)
+    def test_k8s_supported_verions_major_filter_no_match(
+        self, mock_post, mock_get
+    ):
+
+        hpecp = self.cli.CLI()
+        hpecp.k8scluster.k8s_supported_versions(major_filter=2)
+
+        output = self.out.getvalue().strip()
+        self.assertEqual(
+            output, "[]",
+        )
+
+    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=mocked_requests_get)
+    def test_k8s_supported_verions_minor_filter_match(
+        self, mock_post, mock_get
+    ):
+
+        hpecp = self.cli.CLI()
+        hpecp.k8scluster.k8s_supported_versions(minor_filter=17)
+
+        output = self.out.getvalue().strip()
+        self.assertEqual(
+            output, "['1.17.0', '1.17.1']",
+        )
+
+    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=mocked_requests_get)
+    def test_k8s_supported_verions_minor_filter_no_match(
+        self, mock_post, mock_get
+    ):
+
+        hpecp = self.cli.CLI()
+        hpecp.k8scluster.k8s_supported_versions(minor_filter=2)
+
+        output = self.out.getvalue().strip()
+        self.assertEqual(
+            output, "[]",
+        )
+
+    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=mocked_requests_get)
+    def test_k8s_supported_verions_patch_filter_match(
+        self, mock_post, mock_get
+    ):
+
+        hpecp = self.cli.CLI()
+        hpecp.k8scluster.k8s_supported_versions(patch_filter=0)
+
+        output = self.out.getvalue().strip()
+        self.assertEqual(
+            output, "['1.17.0', '1.18.0']",
+        )
+
+
+    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=mocked_requests_get)
+    def test_k8s_supported_verions_patch_filter_no_match(
+        self, mock_post, mock_get
+    ):
+
+        hpecp = self.cli.CLI()
+        hpecp.k8scluster.k8s_supported_versions(patch_filter=21)
+
+        output = self.out.getvalue().strip()
+        self.assertEqual(
+            output, "[]",
         )
 
     def mocked_requests_create_post(*args, **kwargs):
