@@ -848,7 +848,7 @@ class LicenseProxy(object):
             response = [
                 str(unicode(li["LicenseKey"])) for li in response["Licenses"]
             ]
-            print(response)
+            print("\n".join(response))
         else:
             if output == "yaml":
                 print(
