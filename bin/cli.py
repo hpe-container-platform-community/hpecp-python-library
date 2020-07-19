@@ -1244,81 +1244,42 @@ class AutoComplete:
                 cur=${COMP_WORDS[COMP_CWORD]}
                 prev=${COMP_WORDS[COMP_CWORD-1]}
 
-                COMP_WORDS_AS_STRING=$(IFS=, ; echo "${COMP_WORDS[*]}")
+                COMP_WORDS_AS_STRING=$(IFS=. ; echo "${COMP_WORDS[*]}")
 
                 case "$COMP_WORDS_AS_STRING" in
 
-                {#
-                    Example module dict:
-
-                    {
-                        'catalog': {
-                        'delete': ['--id'],
-                        'get': ['--id', '--output', '--response', '--e'],
-                        'install': ['--catalog_id', '--ae', '--e'],
-                        'list': ['--output', '--columns', '--query', '--data'],
-                        'refresh': ['--catalog_id', '--ae', '--e'],
-                        'wait_for_state': ['--id', '--states', '--timeout_secs']
-                        }
-                    }
-
-                    Example columns dict:
-
-                    {'catalog': ('label_name', 'label_description',  ...}
-                #}
-
                 {% set module_names = " ".join(modules.keys()) %}
-
-                {% for module_name in modules %} {# e.g. 'catalog' #}
-
+                {% for module_name in modules %}
                     {% set function_names = " ".join(modules[module_name].keys()) %}
-
-                    {% for function_name in modules[module_name] %}  {# e.g. mod = 'delete' #}
-
+                    {% for function_name in modules[module_name] %}
                         {% set param_names = " ".join(modules[module_name][function_name]).replace('_', '-') %}
-
                         {% for param_name in modules[module_name][function_name] %}
                             {% if param_name == "--columns" %}
                                 {% set column_names = " ".join(columns[module_name]) %}
-                    *"hpecp,{{module_name}},{{function_name}},{{param_name}}"*)
+                    *"hpecp.{{module_name}}.{{function_name}}.{{param_name}}"*)
                         COMPREPLY=( $(compgen -W "{{column_names}} {{param_names}}" -- $cur) )
                         ;;
                             {% endif %}
                         {% endfor %}
-
-                    *"hpecp,{{module_name}},{{function_name}}"*)
-
-                        # we should be able to replace the above case statement with:
-                        #
-                        # if last parameter is "--columns"
-                        # COMPREPLY=( $(compgen -W "{{column_names}}" -- $cur) )
-                        # else
-                        # COMPREPLY=( $(compgen -W "{{param_names}}" -- $cur) )
-                        # fi
-
+                    *"hpecp.{{module_name}}.{{function_name}}"*)
                         COMPREPLY=( $(compgen -W "{{param_names}}" -- $cur) )
                         ;;
                     {% endfor %}
-
-                    *"hpecp,{{module_name}}"*)
+                    *"hpecp.{{module_name}}"*)
                         COMPREPLY=( $(compgen -W "{{ function_names }}" -- $cur) )
                         ;;
                 {% endfor %}
-
-                    *"hpecp,autocomplete,bash"*)
+                    *"hpecp.autocomplete.bash"*)
                         COMPREPLY=( )
                         ;;
-                    *"hpecp,autocomplete"*)
+                    *"hpecp.autocomplete"*)
                         COMPREPLY=( $(compgen -W "bash" -- $cur) )
                         ;;
                     *"hpecp"*)
                         COMPREPLY=( $(compgen -W "autocomplete configure-cli {{  module_names }}" -- $cur) )
                     ;;
-
                 esac
-
                 return 0
-
             } &&
             complete -F _hpecp_complete hpecp
         """  # noqa: E501
@@ -1327,7 +1288,7 @@ class AutoComplete:
         (modules, columns) = self._get_metadata()
 
         print(
-            Environment()
+            Environment(trim_blocks=True, lstrip_blocks=True)
             .from_string(__bash_template)
             .render(modules=modules, columns=columns),
             file=sys.stdout,
