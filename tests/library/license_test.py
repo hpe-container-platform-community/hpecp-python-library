@@ -64,7 +64,7 @@ class TestCLIList(BaseTestCase):
                             "StartDisplay": "2019-08-27T00:00:00Z",
                             "Expiration": 1609286399000,
                             "ExpirationDisplay": "2020-12-29T23:59:59Z",
-                            "LicenseKey": 'ABC ABC ABC"',
+                            "LicenseKey": "ABC ABC ABC",
                             "DeviceID": "1234 1234",
                             "Evaluation": False,
                         }
@@ -134,7 +134,7 @@ Licenses:
   ExpirationDisplay: \'2020-12-29T23:59:59Z\'
   Feature: HPE Machine Learning Ops
   Label: The License
-  LicenseKey: ABC ABC ABC"
+  LicenseKey: ABC ABC ABC
   Start: 1566864000000
   StartDisplay: \'2019-08-27T00:00:00Z\'
   UnlimitedCapacity: false
@@ -171,6 +171,110 @@ _links:
   self:
     href: /api/v2/hpelicense"""
 
+        expected_stderr = ""
+
+        self.assertEqual(stdout, expected_stdout)
+
+        # coverage seems to populate standard error on PY3 (issues 93)
+        if six.PY2:
+            self.assertEqual(stderr, expected_stderr)
+
+    @patch("requests.post", side_effect=mocked_login_post)
+    @patch("requests.get", side_effect=mocked_requests_get)
+    def test_list_license_key_only(self, mock_post, mock_get):
+
+        try:
+            hpecp = self.cli.CLI()
+            hpecp.license.list(license_key_only=True)
+        except Exception as e:
+            # Unexpected Exception
+            self.fail(e)
+
+        stdout = self.out.getvalue().strip()
+        stderr = self.err.getvalue().strip()
+
+        expected_stdout = "ABC ABC ABC"
+        expected_stderr = ""
+
+        self.assertEqual(stdout, expected_stdout)
+
+        # coverage seems to populate standard error on PY3 (issues 93)
+        if six.PY2:
+            self.assertEqual(stderr, expected_stderr)
+
+    @patch("requests.post", side_effect=mocked_login_post)
+    @patch("requests.get", side_effect=mocked_requests_get)
+    def test_list_output_json(self, mock_post, mock_get):
+
+        self.maxDiff = None
+
+        try:
+            hpecp = self.cli.CLI()
+            hpecp.license.list(output="json")
+        except Exception as e:
+            # Unexpected Exception
+            self.fail(e)
+
+        stdout = self.out.getvalue().strip()
+        stderr = self.err.getvalue().strip()
+
+        stdout = json.dumps(json.loads(stdout), sort_keys=True)
+        expected_stdout = json.dumps(
+            {
+                "_links": {"self": {"href": "/api/v2/hpelicense"}},
+                "RevalidateTime": 1609286400000,
+                "ValidationTime": 1594758782000,
+                "Valid": True,
+                "Licenses": [
+                    {
+                        "Expiration": 1609286399000,
+                        "DeviceID": "1234 1234",
+                        "Evaluation": False,
+                        "Capacity": 240,
+                        "UnlimitedCapacity": False,
+                        "StartDisplay": "2019-08-27T00:00:00Z",
+                        "Start": 1566864000000,
+                        "LicenseKey": "ABC ABC ABC",
+                        "ExpirationDisplay": "2020-12-29T23:59:59Z",
+                        "Feature": "HPE Machine Learning Ops",
+                        "Label": "The License",
+                    }
+                ],
+                "Messages": [],
+                "Enabled": True,
+                "Summaries": [
+                    {
+                        "NextExpiration": 1609286399000,
+                        "LatestExpirationDisplay": "2020-12-29T23:59:59Z",
+                        "TotalCapacity": 240,
+                        "Valid": True,
+                        "UnlimitedCapacity": False,
+                        "UsedCapacity": 24,
+                        "RevalidateTime": 1609286400000,
+                        "ValidationTime": 1594758782000,
+                        "AvailableCapacity": 216,
+                        "Label": "HPE Container Platform",
+                        "NextExpirationDisplay": "2020-12-29T23:59:59Z",
+                        "LatestExpiration": 1609286399000,
+                    },
+                    {
+                        "NextExpiration": 1609286399000,
+                        "LatestExpirationDisplay": "2020-12-29T23:59:59Z",
+                        "TotalCapacity": 240,
+                        "Valid": True,
+                        "UnlimitedCapacity": False,
+                        "UsedCapacity": 0,
+                        "RevalidateTime": 1609286400000,
+                        "ValidationTime": 1594758782000,
+                        "AvailableCapacity": 240,
+                        "Label": "HPE Machine Learning Ops",
+                        "NextExpirationDisplay": "2020-12-29T23:59:59Z",
+                        "LatestExpiration": 1609286399000,
+                    },
+                ],
+            },
+            sort_keys=True,
+        )
         expected_stderr = ""
 
         self.assertEqual(stdout, expected_stdout)
