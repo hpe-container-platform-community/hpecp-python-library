@@ -220,7 +220,7 @@ class TestCLIDelete(BaseTestCase):
         stderr = self.err.getvalue().strip()
 
         expected_stdout = ""
-        expected_stderr = "Timed out waiting for internal locks to free."
+        expected_stderr = "Could not delete locks."
 
         self.assertEqual(stdout, expected_stdout)
 
