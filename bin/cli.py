@@ -225,7 +225,7 @@ class BaseProxy:
             Query in jmespath (https://jmespath.org/) format, by default {}
         """
         if columns == "ALL":
-            columns = self.all_fields
+            columns = self.all_fields()
 
         if columns is [] and query is {}:
             print(
