@@ -719,28 +719,32 @@ class K8sClusterProxy(BaseProxy):
             sys.exit(1)
 
         if minor_filter is not None and not isinstance(minor_filter, int):
-            print("'minor_filter' if provided must be an int")
+            print("'minor_filter' if provided must be an int", file=sys.stderr)
             sys.exit(1)
 
         if patch_filter is not None and not isinstance(patch_filter, int):
-            print("'patch_filter' if provided must be an int")
+            print("'patch_filter' if provided must be an int", file=sys.stderr)
             sys.exit(1)
+
+        if major_filter:
+            major_filter = int(major_filter)
+
+        if minor_filter:
+            minor_filter = int(minor_filter)
+
+        if patch_filter:
+            patch_filter = int(patch_filter)
 
         vers = []
         for v in get_client().k8s_cluster.k8s_supported_versions():
+            (major, minor, patch) = v.split(".")
+            major = int(major)
+            minor = int(minor)
+            patch = int(patch)
             if (
-                (
-                    major_filter is not None
-                    and not v.startswith(str(major_filter))
-                )
-                or (
-                    minor_filter is not None
-                    and not v.find("." + str(minor_filter) + ".") > 0
-                )
-                or (
-                    patch_filter is not None
-                    and not v.endswith(str(patch_filter))
-                )
+                (major_filter is not None and major != major_filter)
+                or (minor_filter is not None and minor != minor_filter)
+                or (patch_filter is not None and patch != patch_filter)
             ):
                 continue
             else:
