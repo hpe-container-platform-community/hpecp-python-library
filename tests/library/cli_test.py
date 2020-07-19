@@ -30,6 +30,7 @@ from mock import mock, mock_open, patch
 
 from .base_test import BaseTestCase
 from hpecp.gateway import Gateway
+import json
 
 if six.PY2:
     from io import BytesIO as StringIO  # noqa: F811
@@ -273,11 +274,104 @@ class TestCLIHttpClient(BaseTestCase):
     def test_delete(self, mock_delete, mock_post):
 
         hpecp = self.cli.CLI()
-        hpecp.httpclient.delete(url="/some/url")
+        hpecp.httpclient.delete(url="/some/url",)
 
-        self.assertEqual(self.out.getvalue(), '{"foo":"bar"}\n')
+        self.assertEqual(self.out.getvalue(), "")
 
-    # TODO - add tests for POST and PUT
+    def test_post(self):
+        def mocked_requests_post(*args, **kwargs):
+            if args[0] == "https://127.0.0.1:8080/api/v1/login":
+                return session_mock_response()
+            if args[0] == "https://127.0.0.1:8080/some/url":
+                return MockResponse(
+                    text_data={"mock_data": True},
+                    json_data={},
+                    status_code=200,
+                    headers={},
+                )
+            raise RuntimeError("Unhandle POST request: " + args[0])
+
+        with patch("requests.post") as mock_requests:
+            mock_requests.side_effect = mocked_requests_post
+
+            with tempfile.NamedTemporaryFile() as json_file:
+                json_file.write(json.dumps({"abc": "def"}).encode("utf-8"))
+                json_file.flush()
+
+                hpecp = self.cli.CLI()
+                hpecp.httpclient.post(
+                    url="/some/url", json_file=json_file.name
+                )
+
+            mock_requests.assert_called_with(
+                "https://127.0.0.1:8080/some/url",
+                data='{"abc": "def"}',
+                headers={
+                    "content-type": "application/json",
+                    "X-BDS-SESSION": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71",
+                    "accept": "application/json",
+                    "cache-control": "no-cache",
+                },
+                verify=False,
+            )
+
+        stdout = self.out.getvalue().strip()
+        stderr = self.err.getvalue().strip()
+
+        expected_stdout = "{'mock_data': True}"
+        expected_stderr = ""
+
+        self.assertEqual(stdout, expected_stdout)
+
+        # coverage seems to populate standard error on PY3 (issues 93)
+        if six.PY2:
+            self.assertEqual(stderr, expected_stderr)
+
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_put(self, mock_post):
+        def mocked_requests_put(*args, **kwargs):
+            if args[0] == "https://127.0.0.1:8080/some/url":
+                return MockResponse(
+                    text_data={"mock_data": True},
+                    json_data={},
+                    status_code=200,
+                    headers={},
+                )
+            raise RuntimeError("Unhandle PUT request: " + args[0])
+
+        with patch("requests.put") as mock_requests:
+            mock_requests.side_effect = mocked_requests_put
+
+            with tempfile.NamedTemporaryFile() as json_file:
+                json_file.write(json.dumps({"abc": "def"}).encode("utf-8"))
+                json_file.flush()
+
+                hpecp = self.cli.CLI()
+                hpecp.httpclient.put(url="/some/url", json_file=json_file.name)
+
+            mock_requests.assert_called_with(
+                "https://127.0.0.1:8080/some/url",
+                data='{"abc": "def"}',
+                headers={
+                    "content-type": "application/json",
+                    "X-BDS-SESSION": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71",
+                    "accept": "application/json",
+                    "cache-control": "no-cache",
+                },
+                verify=False,
+            )
+
+        stdout = self.out.getvalue().strip()
+        stderr = self.err.getvalue().strip()
+
+        expected_stdout = "{'mock_data': True}"
+        expected_stderr = ""
+
+        self.assertEqual(stdout, expected_stdout)
+
+        # coverage seems to populate standard error on PY3 (issues 93)
+        if six.PY2:
+            self.assertEqual(stderr, expected_stderr)
 
 
 class TestBash(BaseTestCase):

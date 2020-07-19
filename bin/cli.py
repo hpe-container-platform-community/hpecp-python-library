@@ -957,7 +957,7 @@ class HttpClientProxy(object):
         response = get_client()._request(
             url, http_method="get", description="CLI HTTP GET",
         )
-        print(response.text)
+        print(response.text, file=sys.stdout)
 
     def delete(
         self, url,
@@ -968,10 +968,9 @@ class HttpClientProxy(object):
         --------
         $ hpecp httpclient delete /api/v1/workers/1
         """
-        response = get_client()._request(
+        get_client()._request(
             url, http_method="delete", description="CLI HTTP DELETE",
         )
-        print(response.text)
 
     def post(
         self, url, json_file="",
@@ -1005,7 +1004,7 @@ class HttpClientProxy(object):
         response = get_client()._request(
             url, http_method="post", data=data, description="CLI HTTP POST",
         )
-        print(response.text)
+        print(response.text, file=sys.stdout)
 
     def put(
         self, url, json_file="",
@@ -1022,7 +1021,7 @@ class HttpClientProxy(object):
         response = get_client()._request(
             url, http_method="put", data=data, description="CLI HTTP PUT",
         )
-        print(response.text)
+        print(response.text, file=sys.stdout)
 
 
 class UserProxy(BaseProxy):
