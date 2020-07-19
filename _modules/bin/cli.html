@@ -257,7 +257,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">client_module_property</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BaseProxy.list"><a class="viewcode-back" href="../../cli.html#bin.cli.BaseProxy.list">[docs]</a>    <span class="nd">@intercept_exception</span>
-    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s2">&quot;table&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">all_fields</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="p">{}):</span>
+    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s2">&quot;table&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;ALL&quot;</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="p">{}):</span>
         <span class="sd">&quot;&quot;&quot;Retrieve the list of resources.</span>
 
 <span class="sd">        Parameters</span>
@@ -270,9 +270,12 @@
 <span class="sd">        query : dict, optional</span>
 <span class="sd">            Query in jmespath (https://jmespath.org/) format, by default {}</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">columns</span> <span class="o">==</span> <span class="s2">&quot;ALL&quot;</span><span class="p">:</span>
+            <span class="n">columns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_fields</span>
+
         <span class="k">if</span> <span class="n">columns</span> <span class="ow">is</span> <span class="p">[]</span> <span class="ow">and</span> <span class="n">query</span> <span class="ow">is</span> <span class="p">{}:</span>
             <span class="nb">print</span><span class="p">(</span>
-                <span class="s2">&quot;You must only provide &#39;--columns&#39; OR &#39;--query&#39; parameters.&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;You must provide &#39;--columns&#39; OR &#39;--query&#39; parameters.&quot;</span><span class="p">,</span>
                 <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
