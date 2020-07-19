@@ -1292,6 +1292,20 @@
 
 <span class="sd">                COMP_WORDS_AS_STRING=$(IFS=. ; echo &quot;${COMP_WORDS[*]}&quot;)</span>
 
+<span class="sd">                {% raw %}</span>
+<span class="sd">                for (( idx=${#COMP_WORDS[@]}-1 ; idx&gt;=0 ; idx-- )) ; do</span>
+<span class="sd">                    item=&quot;${COMP_WORDS[idx]}&quot;</span>
+<span class="sd">                    if [[ &quot;${item:0:2}&quot; == &quot;--&quot; ]]; then</span>
+<span class="sd">                        if [[ &quot;${item}&quot; == &quot;--columns&quot; ]]; then</span>
+<span class="sd">                            LAST_PARAM_COLUMNS=1</span>
+<span class="sd">                        else</span>
+<span class="sd">                            LAST_PARAM_COLUMNS=0</span>
+<span class="sd">                        fi</span>
+<span class="sd">                        break</span>
+<span class="sd">                    fi</span>
+<span class="sd">                done</span>
+<span class="sd">                {% endraw %}</span>
+
 <span class="sd">                case &quot;$COMP_WORDS_AS_STRING&quot; in</span>
 
 <span class="sd">                {% set module_names = &quot; &quot;.join(modules.keys()) %}</span>
@@ -1299,16 +1313,14 @@
 <span class="sd">                    {% set function_names = &quot; &quot;.join(modules[module_name].keys()) %}</span>
 <span class="sd">                    {% for function_name in modules[module_name] %}</span>
 <span class="sd">                        {% set param_names = &quot; &quot;.join(modules[module_name][function_name]).replace(&#39;_&#39;, &#39;-&#39;) %}</span>
-<span class="sd">                        {% for param_name in modules[module_name][function_name] %}</span>
-<span class="sd">                            {% if param_name == &quot;--columns&quot; %}</span>
-<span class="sd">                                {% set column_names = &quot; &quot;.join(columns[module_name]) %}</span>
-<span class="sd">                    *&quot;hpecp.{{module_name}}.{{function_name}}.{{param_name}}&quot;*)</span>
-<span class="sd">                        COMPREPLY=( $(compgen -W &quot;{{column_names}} {{param_names}}&quot; -- $cur) )</span>
-<span class="sd">                        ;;</span>
-<span class="sd">                            {% endif %}</span>
-<span class="sd">                        {% endfor %}</span>
 <span class="sd">                    *&quot;hpecp.{{module_name}}.{{function_name}}&quot;*)</span>
-<span class="sd">                        COMPREPLY=( $(compgen -W &quot;{{param_names}}&quot; -- $cur) )</span>
+<span class="sd">                        if [[ $LAST_PARAM_COLUMNS == 1 ]]</span>
+<span class="sd">                        then</span>
+<span class="sd">                            {% set column_names = &quot; &quot;.join(columns[module_name]) %}</span>
+<span class="sd">                            COMPREPLY=( $(compgen -W &quot;{{column_names}} {{param_names}}&quot; -- $cur) )</span>
+<span class="sd">                        else</span>
+<span class="sd">                            COMPREPLY=( $(compgen -W &quot;{{param_names}}&quot; -- $cur) )</span>
+<span class="sd">                        fi</span>
 <span class="sd">                        ;;</span>
 <span class="sd">                    {% endfor %}</span>
 <span class="sd">                    *&quot;hpecp.{{module_name}}&quot;*)</span>
@@ -1323,7 +1335,7 @@
 <span class="sd">                        ;;</span>
 <span class="sd">                    *&quot;hpecp&quot;*)</span>
 <span class="sd">                        COMPREPLY=( $(compgen -W &quot;autocomplete configure-cli {{  module_names }}&quot; -- $cur) )</span>
-<span class="sd">                    ;;</span>
+<span class="sd">                        ;;</span>
 <span class="sd">                esac</span>
 <span class="sd">                return 0</span>
 <span class="sd">            } &amp;&amp;</span>
