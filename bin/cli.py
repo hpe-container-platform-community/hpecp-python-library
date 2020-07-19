@@ -719,16 +719,16 @@ class K8sClusterProxy(BaseProxy):
             sys.exit(1)
 
         if minor_filter is not None and not isinstance(minor_filter, int):
-            print("'minor_filter' if provided must be an int")
+            print("'minor_filter' if provided must be an int", file=sys.stderr)
             sys.exit(1)
 
         if patch_filter is not None and not isinstance(patch_filter, int):
-            print("'patch_filter' if provided must be an int")
+            print("'patch_filter' if provided must be an int", file=sys.stderr)
             sys.exit(1)
 
         if major_filter:
             major_filter = int(major_filter)
-        
+
         if minor_filter:
             minor_filter = int(minor_filter)
 
@@ -743,8 +743,8 @@ class K8sClusterProxy(BaseProxy):
             patch = int(patch)
             if (
                 (major_filter is not None and major != major_filter)
-                or (minor_filter  is not None and minor != minor_filter)
-                or (patch_filter  is not None and patch != patch_filter)
+                or (minor_filter is not None and minor != minor_filter)
+                or (patch_filter is not None and patch != patch_filter)
             ):
                 continue
             else:

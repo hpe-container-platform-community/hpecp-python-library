@@ -1233,7 +1233,6 @@ class TestCLI(BaseTestCase):
             output, "['1.17.0', '1.18.0']",
         )
 
-
     @patch("requests.post", side_effect=mocked_requests_post)
     @patch("requests.get", side_effect=mocked_requests_get)
     def test_k8s_supported_verions_patch_filter_no_match(
@@ -1247,6 +1246,60 @@ class TestCLI(BaseTestCase):
         self.assertEqual(
             output, "[]",
         )
+
+    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=mocked_requests_get)
+    def test_k8s_supported_verions_major_filter_invalid(
+        self, mock_post, mock_get
+    ):
+
+        hpecp = self.cli.CLI()
+        with self.assertRaises(SystemExit) as cm:
+            hpecp.k8scluster.k8s_supported_versions(major_filter="text")
+
+        output = self.out.getvalue().strip()
+        self.assertEqual(output, "")
+
+        error = self.err.getvalue().strip()
+        self.assertEqual(error, "'major_filter' if provided must be an int")
+
+        self.assertEqual(cm.exception.code, 1)
+
+    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=mocked_requests_get)
+    def test_k8s_supported_verions_minor_filter_invalid(
+        self, mock_post, mock_get
+    ):
+
+        hpecp = self.cli.CLI()
+        with self.assertRaises(SystemExit) as cm:
+            hpecp.k8scluster.k8s_supported_versions(minor_filter="text")
+
+        output = self.out.getvalue().strip()
+        self.assertEqual(output, "")
+
+        error = self.err.getvalue().strip()
+        self.assertEqual(error, "'minor_filter' if provided must be an int")
+
+        self.assertEqual(cm.exception.code, 1)
+
+    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=mocked_requests_get)
+    def test_k8s_supported_verions_minor_filter_invalid(
+        self, mock_post, mock_get
+    ):
+
+        hpecp = self.cli.CLI()
+        with self.assertRaises(SystemExit) as cm:
+            hpecp.k8scluster.k8s_supported_versions(patch_filter="text")
+
+        output = self.out.getvalue().strip()
+        self.assertEqual(output, "")
+
+        error = self.err.getvalue().strip()
+        self.assertEqual(error, "'patch_filter' if provided must be an int")
+
+        self.assertEqual(cm.exception.code, 1)
 
     def mocked_requests_create_post(*args, **kwargs):
         if args[0] == "https://127.0.0.1:8080/api/v1/login":
