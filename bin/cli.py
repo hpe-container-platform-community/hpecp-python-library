@@ -775,6 +775,12 @@ class LockProxy(object):
 
         :param output: how to display the output ['yaml'|'json']
         """
+        if output not in ["yaml", "json"]:
+            print(
+                "'output' parameter must be 'yaml' or 'json'", file=sys.stderr
+            )
+            sys.exit(1)
+
         response = get_client().lock.get()
 
         if output == "yaml":
@@ -784,7 +790,7 @@ class LockProxy(object):
                 )
             )
         else:
-            print(response)
+            print(json.dumps(response))
 
     def create(
         self, reason,

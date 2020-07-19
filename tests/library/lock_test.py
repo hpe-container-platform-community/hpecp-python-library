@@ -54,7 +54,7 @@ class TestCLIList(BaseTestCase):
 
     @patch("requests.post", side_effect=mocked_login_post)
     @patch("requests.get", side_effect=mocked_requests_get)
-    def test_list(self, mock_post, mock_get):
+    def test_list_yaml(self, mock_post, mock_get):
 
         try:
             hpecp = self.cli.CLI()
@@ -82,6 +82,57 @@ locked: false"""
         # coverage seems to populate standard error on PY3 (issues 93)
         if six.PY2:
             self.assertEqual(stderr, expected_stderr)
+
+    @patch("requests.post", side_effect=mocked_login_post)
+    @patch("requests.get", side_effect=mocked_requests_get)
+    def test_list_json(self, mock_post, mock_get):
+
+        self.maxDiff = None
+
+        try:
+            hpecp = self.cli.CLI()
+            hpecp.lock.list(output="json")
+        except Exception as e:
+            # Unexpected Exception
+            self.fail(e)
+
+        stdout = self.out.getvalue().strip()
+        stderr = self.err.getvalue().strip()
+
+        expected_stdout = json.dumps(
+            {
+                "_links": {"self": {"href": "/api/v1/lock"}},
+                "locked": False,
+                "_embedded": {"internal_locks": [], "external_locks": []},
+            }
+        )
+        self.assertEqual(stdout, expected_stdout)
+
+        # coverage seems to populate standard error on PY3 (issues 93)
+        if six.PY2:
+            expected_stderr = ""
+            self.assertEqual(stderr, expected_stderr)
+
+    @patch("requests.post", side_effect=mocked_login_post)
+    @patch("requests.get", side_effect=mocked_requests_get)
+    def test_list_output_parameter_invalid(self, mock_post, mock_get):
+
+        self.maxDiff = None
+
+        with self.assertRaises(SystemExit) as cm:
+            hpecp = self.cli.CLI()
+            hpecp.lock.list(output="garbage")
+
+        self.assertEqual(cm.exception.code, 1)
+
+        stdout = self.out.getvalue().strip()
+        stderr = self.err.getvalue().strip()
+
+        expected_stdout = ""
+        self.assertEqual(stdout, expected_stdout)
+
+        expected_stderr = "'output' parameter must be 'yaml' or 'json'"
+        self.assertEqual(stderr, expected_stderr)
 
 
 class TestCLIDelete(BaseTestCase):
