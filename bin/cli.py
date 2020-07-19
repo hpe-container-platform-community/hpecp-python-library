@@ -88,7 +88,7 @@ def intercept_exception(wrapped, instance, args, kwargs):
     """Handle Exceptions."""
 
     def _handle_unknown_exception():
-        """Handler for unknown exceptions."""
+        """Handle unknoen exceptions."""
         if _log.level == "DEBUG":
             print(
                 "Unknown error.", file=sys.stderr,
