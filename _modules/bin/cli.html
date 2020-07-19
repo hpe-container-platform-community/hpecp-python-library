@@ -821,6 +821,12 @@
 
 <span class="sd">        :param output: how to display the output [&#39;yaml&#39;|&#39;json&#39;]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">output</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;yaml&quot;</span><span class="p">,</span> <span class="s2">&quot;json&quot;</span><span class="p">]:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;&#39;output&#39; parameter must be &#39;yaml&#39; or &#39;json&#39;&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span>
+            <span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
         <span class="n">response</span> <span class="o">=</span> <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">lock</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">output</span> <span class="o">==</span> <span class="s2">&quot;yaml&quot;</span><span class="p">:</span>
@@ -830,7 +836,7 @@
                 <span class="p">)</span>
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span></div>
+            <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">response</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="LockProxy.create"><a class="viewcode-back" href="../../cli.html#bin.cli.LockProxy.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">reason</span><span class="p">,</span>
@@ -846,17 +852,22 @@
             <span class="n">_log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="LockProxy.delete"><a class="viewcode-back" href="../../cli.html#bin.cli.LockProxy.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span>
+<div class="viewcode-block" id="LockProxy.delete"><a class="viewcode-back" href="../../cli.html#bin.cli.LockProxy.delete">[docs]</a>    <span class="nd">@intercept_exception</span>
+    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Delete a user lock.&quot;&quot;&quot;</span>
         <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">lock</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="LockProxy.delete_all"><a class="viewcode-back" href="../../cli.html#bin.cli.LockProxy.delete_all">[docs]</a>    <span class="k">def</span> <span class="nf">delete_all</span><span class="p">(</span>
+<div class="viewcode-block" id="LockProxy.delete_all"><a class="viewcode-back" href="../../cli.html#bin.cli.LockProxy.delete_all">[docs]</a>    <span class="nd">@intercept_exception</span>
+    <span class="k">def</span> <span class="nf">delete_all</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">timeout_secs</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Delete all locks.&quot;&quot;&quot;</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">lock</span><span class="o">.</span><span class="n">delete_all</span><span class="p">(</span><span class="n">timeout_secs</span><span class="o">=</span><span class="mi">300</span><span class="p">))</span></div></div>
+        <span class="n">success</span> <span class="o">=</span> <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">lock</span><span class="o">.</span><span class="n">delete_all</span><span class="p">(</span><span class="n">timeout_secs</span><span class="o">=</span><span class="n">timeout_secs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">success</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Could not delete locks.&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="LicenseProxy"><a class="viewcode-back" href="../../cli.html#bin.cli.LicenseProxy">[docs]</a><span class="k">class</span> <span class="nc">LicenseProxy</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
