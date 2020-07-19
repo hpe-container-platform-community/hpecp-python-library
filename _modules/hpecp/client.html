@@ -81,6 +81,7 @@
     <span class="n">APIException</span><span class="p">,</span>
     <span class="n">APIItemConflictException</span><span class="p">,</span>
     <span class="n">APIItemNotFoundException</span><span class="p">,</span>
+    <span class="n">APIUnknownException</span><span class="p">,</span>
     <span class="n">ContainerPlatformClientException</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">.gateway</span> <span class="kn">import</span> <span class="n">GatewayController</span>
@@ -591,7 +592,7 @@
                 <span class="p">)</span>
 
             <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
-        <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">RequestException</span><span class="p">:</span>
+        <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">RequestException</span> <span class="k">as</span> <span class="n">re</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">response_info</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
             <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
@@ -633,8 +634,8 @@
                         <span class="n">description</span><span class="p">,</span> <span class="n">http_method</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
                     <span class="p">)</span>
                 <span class="p">)</span>
-                <span class="k">raise</span> <span class="n">APIException</span><span class="p">(</span>
-                    <span class="n">message</span><span class="o">=</span><span class="n">response_info</span><span class="p">,</span>
+                <span class="k">raise</span> <span class="n">APIUnknownException</span><span class="p">(</span>
+                    <span class="n">message</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">re</span><span class="p">),</span>  <span class="c1"># get the exception message</span>
                     <span class="n">request_method</span><span class="o">=</span><span class="n">http_method</span><span class="p">,</span>
                     <span class="n">request_url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
                     <span class="n">request_data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">),</span>
