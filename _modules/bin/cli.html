@@ -289,8 +289,8 @@
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">query</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">output</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;table&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">]:</span>
                 <span class="nb">print</span><span class="p">(</span>
-                    <span class="s2">&quot;When --columns param = [], the --output param must be&quot;</span>
-                    <span class="s2">&quot; &#39;table&#39; or &#39;text&#39;&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;When providing the --columns param, the --output param &quot;</span>
+                    <span class="s2">&quot;must be &#39;table&#39; or &#39;text&#39;&quot;</span><span class="p">,</span>
                     <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span>
                 <span class="p">)</span>
                 <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
