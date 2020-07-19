@@ -765,28 +765,32 @@
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">minor_filter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">minor_filter</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&#39;minor_filter&#39; if provided must be an int&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&#39;minor_filter&#39; if provided must be an int&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">patch_filter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">patch_filter</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&#39;patch_filter&#39; if provided must be an int&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&#39;patch_filter&#39; if provided must be an int&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">major_filter</span><span class="p">:</span>
+            <span class="n">major_filter</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">major_filter</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">minor_filter</span><span class="p">:</span>
+            <span class="n">minor_filter</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">minor_filter</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">patch_filter</span><span class="p">:</span>
+            <span class="n">patch_filter</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">patch_filter</span><span class="p">)</span>
 
         <span class="n">vers</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">k8s_cluster</span><span class="o">.</span><span class="n">k8s_supported_versions</span><span class="p">():</span>
+            <span class="p">(</span><span class="n">major</span><span class="p">,</span> <span class="n">minor</span><span class="p">,</span> <span class="n">patch</span><span class="p">)</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+            <span class="n">major</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">major</span><span class="p">)</span>
+            <span class="n">minor</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">minor</span><span class="p">)</span>
+            <span class="n">patch</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">patch</span><span class="p">)</span>
             <span class="k">if</span> <span class="p">(</span>
-                <span class="p">(</span>
-                    <span class="n">major_filter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-                    <span class="ow">and</span> <span class="ow">not</span> <span class="n">v</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">major_filter</span><span class="p">))</span>
-                <span class="p">)</span>
-                <span class="ow">or</span> <span class="p">(</span>
-                    <span class="n">minor_filter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-                    <span class="ow">and</span> <span class="ow">not</span> <span class="n">v</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">minor_filter</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
-                <span class="p">)</span>
-                <span class="ow">or</span> <span class="p">(</span>
-                    <span class="n">patch_filter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-                    <span class="ow">and</span> <span class="ow">not</span> <span class="n">v</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">patch_filter</span><span class="p">))</span>
-                <span class="p">)</span>
+                <span class="p">(</span><span class="n">major_filter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">major</span> <span class="o">!=</span> <span class="n">major_filter</span><span class="p">)</span>
+                <span class="ow">or</span> <span class="p">(</span><span class="n">minor_filter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">minor</span> <span class="o">!=</span> <span class="n">minor_filter</span><span class="p">)</span>
+                <span class="ow">or</span> <span class="p">(</span><span class="n">patch_filter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">patch</span> <span class="o">!=</span> <span class="n">patch_filter</span><span class="p">)</span>
             <span class="p">):</span>
                 <span class="k">continue</span>
             <span class="k">else</span><span class="p">:</span>
