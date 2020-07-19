@@ -1164,6 +1164,58 @@ class TestCLI(BaseTestCase):
 
     @patch("requests.post", side_effect=mocked_requests_post)
     @patch("requests.get", side_effect=mocked_requests_get)
+    def test_k8s_supported_verions_no_filter_output_json(
+        self, mock_post, mock_get
+    ):
+
+        hpecp = self.cli.CLI()
+        hpecp.k8scluster.k8s_supported_versions(output="json")
+
+        output = self.out.getvalue().strip()
+        self.assertEqual(
+            output,
+            "['1.14.10', '1.15.7', '1.16.4', '1.17.0', '1.17.1', '1.18.0']",
+        )
+
+    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=mocked_requests_get)
+    def test_k8s_supported_verions_no_filter_output_text(
+        self, mock_post, mock_get
+    ):
+
+        hpecp = self.cli.CLI()
+        hpecp.k8scluster.k8s_supported_versions(output="text")
+
+        output = self.out.getvalue().strip()
+        self.assertEqual(
+            output, "1.14.10 1.15.7 1.16.4 1.17.0 1.17.1 1.18.0",
+        )
+
+    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=mocked_requests_get)
+    def test_k8s_supported_verions_no_filter_output_invalid(
+        self, mock_post, mock_get
+    ):
+
+        hpecp = self.cli.CLI()
+
+        with self.assertRaises(SystemExit) as cm:
+            hpecp.k8scluster.k8s_supported_versions(output="garbage")
+
+        self.assertEqual(cm.exception.code, 1)
+
+        output = self.out.getvalue().strip()
+        self.assertEqual(
+            output, "",
+        )
+
+        error = self.err.getvalue().strip()
+        self.assertEqual(
+            error, "'output' parameter ust be 'json' or 'text'",
+        )
+
+    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=mocked_requests_get)
     def test_k8s_supported_verions_major_filter_match(
         self, mock_post, mock_get
     ):
