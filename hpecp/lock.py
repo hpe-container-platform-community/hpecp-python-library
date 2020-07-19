@@ -106,7 +106,7 @@ class LockController:
         try:
             polling.poll(
                 lambda: len(self.get()["_embedded"]["internal_locks"]) == 0,
-                step=60,
+                step=10,
                 poll_forever=False,
                 timeout=timeout_secs,
             )
@@ -117,5 +117,3 @@ class LockController:
             for lock in self.get()["_embedded"]["external_locks"]:
                 lock_id = lock["_links"]["self"]["href"]
                 self.delete(lock_id)
-
-        return True

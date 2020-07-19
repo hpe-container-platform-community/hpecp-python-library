@@ -792,31 +792,26 @@ class LockProxy(object):
         else:
             print(json.dumps(response))
 
+    @intercept_exception
     def create(
         self, reason,
     ):
         """Create a lock."""
-        try:
-            print(get_client().lock.create(reason), file=sys.stdout)
-        except Exception as e:
-            print(
-                "Unknown error. To debug run with env var LOG_LEVEL=DEBUG",
-                file=sys.stderr,
-            )
-            _log.error(e)
-            sys.exit(1)
+        print(get_client().lock.create(reason), file=sys.stdout)
 
+    @intercept_exception
     def delete(
         self, id,
     ):
         """Delete a user lock."""
         get_client().lock.delete(id)
 
+    @intercept_exception
     def delete_all(
         self, timeout_secs=300,
     ):
         """Delete all locks."""
-        print(get_client().lock.delete_all(timeout_secs=300))
+        get_client().lock.delete_all(timeout_secs=timeout_secs)
 
 
 class LicenseProxy(object):

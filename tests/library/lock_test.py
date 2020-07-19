@@ -38,20 +38,21 @@ from .base_test import BaseTestCase, MockResponse, mocked_login_post
 import six
 
 
-class TestCLIList(BaseTestCase):
-    def mocked_requests_get(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v1/lock":
-            return MockResponse(
-                json_data={
-                    "_links": {"self": {"href": "/api/v1/lock"}},
-                    "locked": False,
-                    "_embedded": {"internal_locks": [], "external_locks": []},
-                },
-                status_code=200,
-                headers=dict(),
-            )
-        raise RuntimeError("Unhandle GET request: " + args[0])
+def mocked_requests_get(*args, **kwargs):
+    if args[0] == "https://127.0.0.1:8080/api/v1/lock":
+        return MockResponse(
+            json_data={
+                "_links": {"self": {"href": "/api/v1/lock"}},
+                "locked": False,
+                "_embedded": {"internal_locks": [], "external_locks": []},
+            },
+            status_code=200,
+            headers=dict(),
+        )
+    raise RuntimeError("Unhandle GET request: " + args[0])
 
+
+class TestCLIList(BaseTestCase):
     @patch("requests.post", side_effect=mocked_login_post)
     @patch("requests.get", side_effect=mocked_requests_get)
     def test_list_yaml(self, mock_post, mock_get):
@@ -157,6 +158,69 @@ class TestCLIDelete(BaseTestCase):
 
         expected_stdout = ""
         expected_stderr = ""
+
+        self.assertEqual(stdout, expected_stdout)
+
+        # coverage seems to populate standard error on PY3 (issues 93)
+        if six.PY2:
+            self.assertEqual(stderr, expected_stderr)
+
+    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=mocked_login_post)
+    @patch("requests.delete", side_effect=mocked_requests_delete)
+    def test_delete_all(self, mock_get, mock_post, mock_delete):
+
+        try:
+            hpecp = self.cli.CLI()
+            hpecp.lock.delete_all()
+        except Exception as e:
+            # Unexpected Exception
+            self.fail(e)
+
+        stdout = self.out.getvalue().strip()
+        stderr = self.err.getvalue().strip()
+
+        expected_stdout = ""
+        expected_stderr = ""
+
+        self.assertEqual(stdout, expected_stdout)
+
+        # coverage seems to populate standard error on PY3 (issues 93)
+        if six.PY2:
+            self.assertEqual(stderr, expected_stderr)
+
+    def mocked_requests_get_locked(*args, **kwargs):
+        if args[0] == "https://127.0.0.1:8080/api/v1/lock":
+            return MockResponse(
+                json_data={
+                    "_links": {"self": {"href": "/api/v1/lock"}},
+                    "locked": True,
+                    "_embedded": {
+                        "internal_locks": ["1"],
+                        "external_locks": [],
+                    },
+                },
+                status_code=200,
+                headers=dict(),
+            )
+        raise RuntimeError("Unhandle GET request: " + args[0])
+
+    @patch("requests.get", side_effect=mocked_requests_get_locked)
+    @patch("requests.post", side_effect=mocked_login_post)
+    @patch("requests.delete", side_effect=mocked_requests_delete)
+    def test_delete_all_timeout(self, mock_get, mock_post, mock_delete):
+
+        with self.assertRaises(SystemExit) as cm:
+            hpecp = self.cli.CLI()
+            hpecp.lock.delete_all(timeout_secs=1)
+
+        self.assertEqual(cm.exception.code, 1)
+
+        stdout = self.out.getvalue().strip()
+        stderr = self.err.getvalue().strip()
+
+        expected_stdout = ""
+        expected_stderr = "Timed out waiting for internal locks to free."
 
         self.assertEqual(stdout, expected_stdout)
 
