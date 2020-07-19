@@ -32,8 +32,6 @@ See:
 
 ## Installation
 
-To install on HPE CP Centos/Redhat 7.7 hosts, see [here](./docs/README-INSTALL-HPECP-HOSTS.md)
-
 ```shell
 # ensure you have an up-to-date pip
 pip3 install -U pip
@@ -41,6 +39,8 @@ pip3 install -U pip
 # install hpecp directly from git
 pip3 install --upgrade git+https://github.com/hpe-container-platform-community/hpecp-client@master
 ```
+
+If you are installing on Centos 7.7 with only Python 2.7 see [here](./docs/README-INSTALL-HPECP-HOSTS.md) for a workaround
 
 ## Basic Library Usage
 
