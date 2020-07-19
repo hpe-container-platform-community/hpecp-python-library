@@ -945,6 +945,7 @@ class HttpClientProxy(object):
         """Return the CLI method names."""
         return ["delete", "get", "post", "put"]
 
+    @intercept_exception
     def get(
         self, url,
     ):
@@ -959,6 +960,7 @@ class HttpClientProxy(object):
         )
         print(response.text, file=sys.stdout)
 
+    @intercept_exception
     def delete(
         self, url,
     ):
@@ -972,6 +974,7 @@ class HttpClientProxy(object):
             url, http_method="delete", description="CLI HTTP DELETE",
         )
 
+    @intercept_exception
     def post(
         self, url, json_file="",
     ):
@@ -1006,6 +1009,7 @@ class HttpClientProxy(object):
         )
         print(response.text, file=sys.stdout)
 
+    @intercept_exception
     def put(
         self, url, json_file="",
     ):
