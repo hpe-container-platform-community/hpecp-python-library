@@ -24,6 +24,7 @@ from .base_resource import AbstractWaitableResourceController, AbstractResource
 
 from enum import Enum
 import re
+from requests.structures import CaseInsensitiveDict
 
 try:
     basestring
@@ -376,7 +377,7 @@ class K8sClusterController(AbstractWaitableResourceController):
             data=data,
             description="k8s_cluster/create",
         )
-        return response.headers["Location"]
+        return CaseInsensitiveDict(response.headers)["Location"]
 
     def get(self, id, params={}, setup_log=False):
         """Retrieve a K8s Cluster.

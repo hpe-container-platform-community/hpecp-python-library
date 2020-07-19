@@ -49,6 +49,7 @@ from .tenant import TenantController
 from .user import UserController
 import codecs
 import ast
+from requests.structures import CaseInsensitiveDict
 
 try:
     basestring
@@ -435,8 +436,8 @@ class ContainerPlatformClient(object):
                 self.log.error(e)
             raise
 
-        self.session_headers = response.headers
-        self.session_id = response.headers["location"]
+        self.session_headers = CaseInsensitiveDict(response.headers)
+        self.session_id = CaseInsensitiveDict(response.headers)["location"]
 
         return self
 

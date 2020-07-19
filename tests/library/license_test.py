@@ -38,7 +38,26 @@ from .base_test import BaseTestCase, MockResponse, mocked_login_post
 import six
 
 
-class TestCLIList(BaseTestCase):
+class TestCLI(BaseTestCase):
+    def mocked_login_post(*args, **kwargs):
+        if args[0] == "https://127.0.0.1:8080/api/v1/login":
+            return MockResponse(
+                json_data={},
+                status_code=200,
+                headers={
+                    "location": (
+                        "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    )
+                },
+            )
+        if args[0] == "https://127.0.0.1:8080/api/v2/hpelicense":
+            return MockResponse(
+                json_data={},
+                status_code=201,
+                headers={"location": "/api/v2/hpeclicense/1"},
+            )
+        raise RuntimeError("Unhandle POST request: " + args[0])
+
     def mocked_requests_get(*args, **kwargs):
         if args[0] == "https://127.0.0.1:8080/api/v1/license":
             return MockResponse(
@@ -298,6 +317,29 @@ _links:
         stderr = self.err.getvalue().strip()
 
         expected_stdout = """3c831f6e-f76f-410d-977c-ed13b0c817d1"""
+        expected_stderr = ""
+
+        self.assertEqual(stdout, expected_stdout)
+
+        # coverage seems to populate standard error on PY3 (issues 93)
+        if six.PY2:
+            self.assertEqual(stderr, expected_stderr)
+
+    @patch("requests.post", side_effect=mocked_login_post)
+    @patch("requests.get", side_effect=mocked_requests_get)
+    def test_register(self, mock_post, mock_get):
+
+        try:
+            hpecp = self.cli.CLI()
+            hpecp.license.register(server_filename="abc")
+        except Exception as e:
+            # Unexpected Exception
+            self.fail(e)
+
+        stdout = self.out.getvalue().strip()
+        stderr = self.err.getvalue().strip()
+
+        expected_stdout = "/api/v2/hpeclicense/1"
         expected_stderr = ""
 
         self.assertEqual(stdout, expected_stdout)

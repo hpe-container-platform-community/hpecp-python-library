@@ -26,6 +26,7 @@ from operator import attrgetter
 from tabulate import tabulate
 
 from .exceptions import APIItemNotFoundException
+from requests.structures import CaseInsensitiveDict
 
 try:
     basestring
@@ -174,7 +175,7 @@ class UserController:
             data=data,
             description="user/create",
         )
-        return response.headers["location"]
+        return CaseInsensitiveDict(response.headers)["location"]
 
 
 class User:

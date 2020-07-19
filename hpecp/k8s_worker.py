@@ -23,6 +23,7 @@ from __future__ import absolute_import
 from .base_resource import AbstractWaitableResourceController, AbstractResource
 
 from enum import Enum
+from requests.structures import CaseInsensitiveDict
 
 try:
     basestring
@@ -139,7 +140,7 @@ class K8sWorkerController(AbstractWaitableResourceController):
             data=data,
             description="worker/create_with_ssh_key",
         )
-        return response.headers["location"]
+        return CaseInsensitiveDict(response.headers)["location"]
 
     def get(self, id, setup_log=False):
 

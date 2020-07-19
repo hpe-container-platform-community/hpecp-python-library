@@ -22,6 +22,7 @@ from __future__ import absolute_import
 
 
 import urllib
+from requests.structures import CaseInsensitiveDict
 
 
 class LicenseController:
@@ -94,12 +95,13 @@ class LicenseController:
         APIException
         """
         data = {"hpelicense_file": server_filename}
-        return self.client._request(
+        response = self.client._request(
             url="/api/v2/hpelicense",
             http_method="post",
             data=data,
             description="license/register",
         )
+        return CaseInsensitiveDict(response.headers)["Location"]
 
     def delete(self, license_key):
         """Delete a license by LicenseKey.
