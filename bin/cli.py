@@ -211,7 +211,7 @@ class BaseProxy:
         self.client_module_property.delete(id=id)
 
     @intercept_exception
-    def list(self, output="table", columns=all_fields, query={}):
+    def list(self, output="table", columns="ALL", query={}):
         """Retrieve the list of resources.
 
         Parameters
@@ -224,9 +224,12 @@ class BaseProxy:
         query : dict, optional
             Query in jmespath (https://jmespath.org/) format, by default {}
         """
+        if columns == "ALL":
+            columns = self.all_fields
+
         if columns is [] and query is {}:
             print(
-                "You must only provide '--columns' OR '--query' parameters.",
+                "You must provide '--columns' OR '--query' parameters.",
                 file=sys.stderr,
             )
             sys.exit(1)
