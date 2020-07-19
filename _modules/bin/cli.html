@@ -907,7 +907,8 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">response</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="LicenseProxy.register"><a class="viewcode-back" href="../../cli.html#bin.cli.LicenseProxy.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span>
+<div class="viewcode-block" id="LicenseProxy.register"><a class="viewcode-back" href="../../cli.html#bin.cli.LicenseProxy.register">[docs]</a>    <span class="nd">@intercept_exception</span>
+    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">server_filename</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Register a license.</span>
@@ -915,8 +916,7 @@
 <span class="sd">        :param server_filename: Filepath to the license on the server, e.g.</span>
 <span class="sd">            &#39;/srv/bluedata/license/LICENSE-1.txt&#39;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">license</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">server_filename</span><span class="o">=</span><span class="n">server_filename</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Done.&quot;</span><span class="p">)</span></div>
+        <span class="nb">print</span><span class="p">(</span><span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">license</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">server_filename</span><span class="o">=</span><span class="n">server_filename</span><span class="p">))</span></div>
 
     <span class="c1"># TODO implement me!</span>
     <span class="c1"># def upload_with_ssh_key(</span>
