@@ -111,9 +111,14 @@ class LockController:
                 timeout=timeout_secs,
             )
         except polling.TimeoutException:
-            raise Exception("Timed out waiting for internal locks to free.")
+            return False
+        except Exception as e:
+            client.log.error(e)
+            return False
 
         if len(self.get()["_embedded"]["external_locks"]) > 0:
             for lock in self.get()["_embedded"]["external_locks"]:
                 lock_id = lock["_links"]["self"]["href"]
                 self.delete(lock_id)
+
+        return True
