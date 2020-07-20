@@ -1084,7 +1084,7 @@ class RoleProxy(object):
                 )
             )
         else:
-            print(response.json)
+            print(json.dumps(response.json))
 
 
 def configure_cli():

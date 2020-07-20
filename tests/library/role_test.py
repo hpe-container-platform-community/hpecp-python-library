@@ -20,6 +20,7 @@
 
 from unittest import TestCase
 
+import json
 import requests
 import six
 from mock import patch
@@ -154,6 +155,44 @@ _links:
 label:
   description: Role for Site Admin
   name: Site Admin"""
+
+        expected_stderr = ""
+
+        self.assertEqual(stdout, expected_stdout)
+
+        # coverage seems to populate standard error on PY3 (issues 93)
+        if six.PY2:
+            self.assertEqual(stderr, expected_stderr)
+
+    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=mocked_requests_post)
+    def test_get_json(self, mock_post, mock_delete):
+
+        try:
+            hpecp = self.cli.CLI()
+            hpecp.role.get("/api/v1/role/1", output="json")
+        except Exception as e:
+            # Unexpected Exception
+            self.fail(e)
+
+        stdout = self.out.getvalue().strip()
+        stderr = self.err.getvalue().strip()
+
+        stdout = json.dumps(json.loads(stdout), sort_keys=True)
+
+        expected_stdout = json.dumps(
+            {
+                "label": {
+                    "description": "Role for Site Admin",
+                    "name": "Site Admin",
+                },
+                "_links": {
+                    "all_roles": {"href": "/api/v1/role"},
+                    "self": {"href": "/api/v1/role/1"},
+                },
+            },
+            sort_keys=True,
+        )
 
         expected_stderr = ""
 
