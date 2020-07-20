@@ -206,7 +206,10 @@ class TestBaseProxy(BaseTestCase):
         self.assertEqual(output, "")
 
         error = self.err.getvalue().strip()
-        self.assertEqual(error, "When providing the --columns param, the --output param must be 'table' or 'text'")
+        self.assertEqual(
+            error,
+            "When providing the --columns param, the --output param must be 'table' or 'text'",
+        )
 
         self.assertEqual(cm.exception.code, 1)
 
