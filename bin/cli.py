@@ -104,6 +104,8 @@ def intercept_exception(wrapped, instance, args, kwargs):
 
     try:
         return wrapped(*args, **kwargs)
+    except SystemExit as se:
+        sys.exit(se.code)
     except AssertionError as ae:
         print(ae, file=sys.stderr)
         sys.exit(1)
@@ -238,13 +240,14 @@ class BaseProxy:
                     print("Unknown column '{}'.".format(col), file=sys.stderr)
                     sys.exit(1)
 
-        if len(query) == 0 and output not in ["table", "text"]:
-            print(
-                "When providing the --columns param, the --output param "
-                "must be 'table' or 'text'",
-                file=sys.stderr,
-            )
-            sys.exit(1)
+        if len(query) == 0:
+            if output not in ["table", "text"]:
+                print(
+                    "When providing the --columns param, the --output param "
+                    "must be 'table' or 'text'",
+                    file=sys.stderr,
+                )
+                sys.exit(1)
         else:
             if output not in ["json"]:
                 print(
