@@ -1249,11 +1249,19 @@ class AutoComplete:
 
                 COMP_WORDS_AS_STRING=$(IFS=. ; echo "${COMP_WORDS[*]}")
 
+                if echo "${prev}" | grep -q '\-\-.*file$'
+                then
+                    CUR_PARAM_IS_FILE=1
+                else
+                    CUR_PARAM_IS_FILE=0
+                fi
+
                 {% raw %}
                 for (( idx=${#COMP_WORDS[@]}-1 ; idx>=0 ; idx-- )) ; do
                     item="${COMP_WORDS[idx]}"
                     if [[ "${item:0:2}" == "--" ]]; then
-                        if [[ "${item}" == "--columns" ]]; then
+                        if [[ "${item}" == "--columns" ]]
+                        then
                             LAST_PARAM_IS_COLUMNS=1
                         else
                             LAST_PARAM_IS_COLUMNS=0
@@ -1276,14 +1284,20 @@ class AutoComplete:
                         then
                             {% set column_names = " ".join(columns[module_name]) %}
                             {% set param_names_without_columns = param_names.replace("--columns", "") %}
-                            COMPREPLY=( $(compgen -W "{{column_names}} {{param_names_without_columns}}" -- $cur) )
+                            COMPREPLY=( $(compgen -W "{{column_names}}" -- $cur) )
+                            COMPREPLY+=( $(compgen -W "{{param_names_without_columns}}" -- $cur) )
                         else
                             COMPREPLY=( $(compgen -W "{{param_names}}" -- $cur) )
                         fi
                         ;;
                         {% else %}
                     *"hpecp.{{module_name}}.{{function_name}}"*)
-                        COMPREPLY=( $(compgen -W "{{param_names}}" -- $cur) )
+                        if [[ $CUR_PARAM_IS_FILE == 1 ]]
+                        then
+                             COMPREPLY=( $(compgen -W "$(ls)" -- $cur) )
+                        else
+                            COMPREPLY=( $(compgen -W "{{param_names}}" -- $cur) )
+                        fi
                         ;;
                         {% endif %}
                     {% endfor %}
