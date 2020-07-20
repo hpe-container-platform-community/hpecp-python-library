@@ -22,10 +22,18 @@ import logging
 import os
 
 
-class Logger:
-    def get_logger(self, clazz):
-        format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+class Logger(object):
+
+    logger = None
+
+    @classmethod
+    def get_logger(cls):
+
+        format = (
+            "%(asctime)s - %(filename)s "
+            "- %(name)s - %(levelname)s - %(message)s"
+        )
         logging.basicConfig(format=format)
-        logger = logging.getLogger(clazz)
-        logger.setLevel(os.getenv("LOG_LEVEL", logging.INFO))
-        return logger
+        Logger.logger = logging.getLogger("HPECP_CLI")
+        Logger.logger.setLevel(os.getenv("LOG_LEVEL", logging.INFO))
+        return Logger.logger

@@ -311,7 +311,7 @@ class ContainerPlatformClient(object):
         warn_ssl : bool, optional
             Disable ssl warnings, by default False
         """
-        self._log = Logger().get_logger(self.__class__.__name__)
+        self._log = Logger.get_logger()
 
         if verify_ssl == "True":
             verify_ssl = True

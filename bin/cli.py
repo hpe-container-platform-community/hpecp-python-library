@@ -59,7 +59,7 @@ import inspect
 if sys.version_info[0] >= 3:
     unicode = str
 
-_log = Logger().get_logger(__file__)
+_log = Logger.get_logger()
 
 PROFILE = os.getenv("PROFILE", "default",)
 
@@ -104,6 +104,8 @@ def intercept_exception(wrapped, instance, args, kwargs):
 
     try:
         return wrapped(*args, **kwargs)
+    except SystemExit as se:
+        sys.exit(se.code)
     except AssertionError as ae:
         print(ae, file=sys.stderr)
         sys.exit(1)
@@ -128,6 +130,7 @@ def get_client(start_session=True):
         config_file=HPECP_CONFIG_FILE, profile=PROFILE,
     )
     if start_session:
+        # _log.debug("Starting session")
         client.create_session()
     return client
 
@@ -237,12 +240,6 @@ class BaseProxy:
                     print("Unknown column '{}'.".format(col), file=sys.stderr)
                     sys.exit(1)
 
-        self.client = get_client()
-        self.client_module_property = getattr(
-            self.client, self.client_module_name
-        )
-
-        # use tabulate for simplified user output
         if len(query) == 0:
             if output not in ["table", "text"]:
                 print(
@@ -251,7 +248,21 @@ class BaseProxy:
                     file=sys.stderr,
                 )
                 sys.exit(1)
+        else:
+            if output not in ["json"]:
+                print(
+                    "If you provide a jmes query, the output must be 'json'",
+                    file=sys.stderr,
+                )
+                sys.exit(1)
 
+        self.client = get_client()
+        self.client_module_property = getattr(
+            self.client, self.client_module_name
+        )
+
+        # use tabulate for simplified user output
+        if len(query) == 0:
             if output == "table":
                 print(
                     self.client_module_property.list().tabulate(
@@ -267,13 +278,6 @@ class BaseProxy:
 
         # user has provided a jmes query
         else:
-            if output not in ["json"]:
-                print(
-                    "If you provide a jmes query, the output must be 'json'",
-                    file=sys.stderr,
-                )
-                sys.exit(1)
-
             data = self.client_module_property.list().json
             print(json.dumps(jmespath.search(str(query), data)))
 

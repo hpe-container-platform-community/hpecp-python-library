@@ -29,7 +29,7 @@ from hpecp.exceptions import APIItemNotFoundException
 from .logger import Logger
 import urllib
 
-_log = Logger().get_logger(__file__)
+_log = Logger.get_logger()
 
 
 @six.add_metaclass(abc.ABCMeta)
