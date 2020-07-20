@@ -187,7 +187,6 @@ class TestBaseProxy(BaseTestCase):
 
         self.assertEqual(cm.exception.code, 1)
 
-    # FIXME: why is this failing with "TypeError: session_mock_response() got an unexpected keyword argument 'json'"
     @patch("requests.post", side_effect=base_login_post_response)
     def test_list_with_invalid_output_param(self, mock_post):
 
