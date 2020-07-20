@@ -1318,7 +1318,7 @@ class AutoComplete:
                 return 0
             } &&
             complete -F _hpecp_complete hpecp
-        """  # noqa: E501
+        """  # noqa: E501,W605
         )
 
         (modules, columns) = self._get_metadata()
