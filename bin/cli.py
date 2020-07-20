@@ -920,6 +920,7 @@ class LicenseProxy(object):
     #         "'/srv/bluedata/license/'"
     #     )
 
+    @intercept_exception
     def delete(
         self, license_key,
     ):
@@ -929,8 +930,8 @@ class LicenseProxy(object):
             "SOMETEXT"'
         """
         get_client().license.delete(license_key=license_key)
-        print("Delete submitted - verify with: `hpecp license list`")
 
+    @intercept_exception
     def delete_all(self,):
         """Delete all licenses."""
         response = get_client().license.list()
@@ -939,7 +940,6 @@ class LicenseProxy(object):
         ]
         for licence_key in all_license_keys:
             get_client().license.delete(license_key=licence_key)
-        print("Delete submitted - verify with: `hpecp license list`")
 
 
 class HttpClientProxy(object):

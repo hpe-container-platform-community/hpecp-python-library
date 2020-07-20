@@ -83,7 +83,7 @@ class TestCLI(BaseTestCase):
                             "StartDisplay": "2019-08-27T00:00:00Z",
                             "Expiration": 1609286399000,
                             "ExpirationDisplay": "2020-12-29T23:59:59Z",
-                            "LicenseKey": "ABC ABC ABC",
+                            "LicenseKey": "TEST_LICENSE_KEY",
                             "DeviceID": "1234 1234",
                             "Evaluation": False,
                         }
@@ -153,7 +153,7 @@ Licenses:
   ExpirationDisplay: \'2020-12-29T23:59:59Z\'
   Feature: HPE Machine Learning Ops
   Label: The License
-  LicenseKey: ABC ABC ABC
+  LicenseKey: TEST_LICENSE_KEY
   Start: 1566864000000
   StartDisplay: \'2019-08-27T00:00:00Z\'
   UnlimitedCapacity: false
@@ -212,7 +212,7 @@ _links:
         stdout = self.out.getvalue().strip()
         stderr = self.err.getvalue().strip()
 
-        expected_stdout = "ABC ABC ABC"
+        expected_stdout = "TEST_LICENSE_KEY"
         expected_stderr = ""
 
         self.assertEqual(stdout, expected_stdout)
@@ -253,7 +253,7 @@ _links:
                         "UnlimitedCapacity": False,
                         "StartDisplay": "2019-08-27T00:00:00Z",
                         "Start": 1566864000000,
-                        "LicenseKey": "ABC ABC ABC",
+                        "LicenseKey": "TEST_LICENSE_KEY",
                         "ExpirationDisplay": "2020-12-29T23:59:59Z",
                         "Feature": "HPE Machine Learning Ops",
                         "Label": "The License",
@@ -340,6 +340,55 @@ _links:
         stderr = self.err.getvalue().strip()
 
         expected_stdout = "/api/v2/hpeclicense/1"
+        expected_stderr = ""
+
+        self.assertEqual(stdout, expected_stdout)
+
+        # coverage seems to populate standard error on PY3 (issues 93)
+        if six.PY2:
+            self.assertEqual(stderr, expected_stderr)
+
+    def mocked_requests_delete(*args, **kwargs):
+        if (
+            args[0]
+            == "https://127.0.0.1:8080/api/v2/hpelicense/TEST_LICENSE_KEY/"
+        ):
+            return MockResponse(json_data={}, status_code=200, headers=dict(),)
+        raise RuntimeError("Unhandle DELETE request: " + args[0])
+
+    @patch("requests.post", side_effect=mocked_login_post)
+    @patch("requests.delete", side_effect=mocked_requests_delete)
+    def test_delete(self, mock_post, mock_delete):
+
+        with patch.dict("os.environ", {"LOG_LEVEL": "DEBUG"}):
+            hpecp = self.cli.CLI()
+            hpecp.license.delete(license_key="TEST_LICENSE_KEY")
+
+        stdout = self.out.getvalue().strip()
+        stderr = self.err.getvalue().strip()
+
+        expected_stdout = ""
+        expected_stderr = ""
+
+        self.assertEqual(stdout, expected_stdout)
+
+        # coverage seems to populate standard error on PY3 (issues 93)
+        if six.PY2:
+            self.assertEqual(stderr, expected_stderr)
+
+    @patch("requests.post", side_effect=mocked_login_post)
+    @patch("requests.delete", side_effect=mocked_requests_delete)
+    @patch("requests.get", side_effect=mocked_requests_get)
+    def test_delete_all(self, mock_post, mock_delete, mock_get):
+
+        with patch.dict("os.environ", {"LOG_LEVEL": "DEBUG"}):
+            hpecp = self.cli.CLI()
+            hpecp.license.delete_all()
+
+        stdout = self.out.getvalue().strip()
+        stderr = self.err.getvalue().strip()
+
+        expected_stdout = ""
         expected_stderr = ""
 
         self.assertEqual(stdout, expected_stdout)
