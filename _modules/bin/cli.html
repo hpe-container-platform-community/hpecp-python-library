@@ -966,7 +966,8 @@
     <span class="c1">#         &quot;&#39;/srv/bluedata/license/&#39;&quot;</span>
     <span class="c1">#     )</span>
 
-<div class="viewcode-block" id="LicenseProxy.delete"><a class="viewcode-back" href="../../cli.html#bin.cli.LicenseProxy.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span>
+<div class="viewcode-block" id="LicenseProxy.delete"><a class="viewcode-back" href="../../cli.html#bin.cli.LicenseProxy.delete">[docs]</a>    <span class="nd">@intercept_exception</span>
+    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">license_key</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Delete a license by LicenseKey.</span>
@@ -974,18 +975,17 @@
 <span class="sd">        :param license_key: The license key, e.g. &#39;1234 1234 ... 1234</span>
 <span class="sd">            &quot;SOMETEXT&quot;&#39;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">license</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">license_key</span><span class="o">=</span><span class="n">license_key</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Delete submitted - verify with: `hpecp license list`&quot;</span><span class="p">)</span></div>
+        <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">license</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">license_key</span><span class="o">=</span><span class="n">license_key</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="LicenseProxy.delete_all"><a class="viewcode-back" href="../../cli.html#bin.cli.LicenseProxy.delete_all">[docs]</a>    <span class="k">def</span> <span class="nf">delete_all</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
+<div class="viewcode-block" id="LicenseProxy.delete_all"><a class="viewcode-back" href="../../cli.html#bin.cli.LicenseProxy.delete_all">[docs]</a>    <span class="nd">@intercept_exception</span>
+    <span class="k">def</span> <span class="nf">delete_all</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
         <span class="sd">&quot;&quot;&quot;Delete all licenses.&quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">license</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
         <span class="n">all_license_keys</span> <span class="o">=</span> <span class="p">[</span>
             <span class="nb">str</span><span class="p">(</span><span class="n">unicode</span><span class="p">(</span><span class="n">li</span><span class="p">[</span><span class="s2">&quot;LicenseKey&quot;</span><span class="p">]))</span> <span class="k">for</span> <span class="n">li</span> <span class="ow">in</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;Licenses&quot;</span><span class="p">]</span>
         <span class="p">]</span>
         <span class="k">for</span> <span class="n">licence_key</span> <span class="ow">in</span> <span class="n">all_license_keys</span><span class="p">:</span>
-            <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">license</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">license_key</span><span class="o">=</span><span class="n">licence_key</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Delete submitted - verify with: `hpecp license list`&quot;</span><span class="p">)</span></div></div>
+            <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">license</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">license_key</span><span class="o">=</span><span class="n">licence_key</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="HttpClientProxy"><a class="viewcode-back" href="../../cli.html#bin.cli.HttpClientProxy">[docs]</a><span class="k">class</span> <span class="nc">HttpClientProxy</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
