@@ -148,6 +148,27 @@ class TestCLI(BaseTestCase):
                 self.fail(e)
 
 
+# class TestBaseProxy(BaseTestCase):
+#     @patch("requests.post", side_effect=base_login_post_response)
+#     def test_list(self, mock_post):
+
+#         with self.assertRaises(SystemExit) as cm:
+#             with patch.dict("os.environ", {"LOG_LEVEL": "DEBUG"}):
+#                 hpecp_cli = self.cli.CLI()
+
+#                 # we could have used any of the proxies implementing
+#                 # BaseProxy - here we arbitrarily chosen GatewayProxy
+#                 hpecp_cli.gateway.list(columns=[], query={})
+
+#         output = self.out.getvalue().strip()
+#         self.assertEqual(output, "")
+
+#         error = self.err.getvalue().strip()
+#         self.assertEqual(error, "")
+
+#         self.assertEqual(cm.exception.code, 1)
+
+
 class TestCLIUsingCfgFileEnvVar(TestCase):
     def test_hpe_config_file_var(self):
         dummy_filepath = "/not/a/real/dir/not_a_real_file"
