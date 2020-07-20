@@ -461,7 +461,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
                 <span class="s2">&quot;RES: </span><span class="si">{}</span><span class="s2"> : </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;Login&quot;</span><span class="p">,</span> <span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
             <span class="p">)</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">level</span> <span class="o">==</span> <span class="s2">&quot;DEBUG&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">level</span> <span class="o">==</span> <span class="mi">10</span><span class="p">:</span>  <span class="c1"># &quot;DEBUG&quot;</span>
                 <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Could not connect to controller.&quot;</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
@@ -481,6 +481,18 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
             <span class="k">raise</span>
+
+        <span class="c1"># except Exception as e:</span>
+        <span class="c1">#     if response is not None:</span>
+        <span class="c1">#         self.log.error(&quot;Auth Response: &quot; + response.text)</span>
+        <span class="c1">#     else:</span>
+        <span class="c1">#         self.log.error(e)</span>
+        <span class="c1">#     raise_from(</span>
+        <span class="c1">#         APIUnknownException(</span>
+        <span class="c1">#             message=str(e), request_method=&quot;post&quot;, request_url=url,</span>
+        <span class="c1">#         ),</span>
+        <span class="c1">#         None,</span>
+        <span class="c1">#     )</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">session_headers</span> <span class="o">=</span> <span class="n">CaseInsensitiveDict</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">session_id</span> <span class="o">=</span> <span class="n">CaseInsensitiveDict</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">)[</span><span class="s2">&quot;location&quot;</span><span class="p">]</span>
