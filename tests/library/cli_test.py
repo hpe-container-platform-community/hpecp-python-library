@@ -148,25 +148,44 @@ class TestCLI(BaseTestCase):
                 self.fail(e)
 
 
-# class TestBaseProxy(BaseTestCase):
-#     @patch("requests.post", side_effect=base_login_post_response)
-#     def test_list(self, mock_post):
+class TestBaseProxy(BaseTestCase):
+    @patch("requests.post", side_effect=base_login_post_response)
+    def test_list_with_invalid_column(self, mock_post):
 
-#         with self.assertRaises(SystemExit) as cm:
-#             with patch.dict("os.environ", {"LOG_LEVEL": "DEBUG"}):
-#                 hpecp_cli = self.cli.CLI()
+        with self.assertRaises(SystemExit) as cm:
+            with patch.dict("os.environ", {"LOG_LEVEL": "DEBUG"}):
+                hpecp_cli = self.cli.CLI()
 
-#                 # we could have used any of the proxies implementing
-#                 # BaseProxy - here we arbitrarily chosen GatewayProxy
-#                 hpecp_cli.gateway.list(columns=[], query={})
+                # we could have used any of the proxies implementing
+                # BaseProxy - here we arbitrarily chosen GatewayProxy
+                hpecp_cli.gateway.list(columns=["not_a_column"])
 
-#         output = self.out.getvalue().strip()
-#         self.assertEqual(output, "")
+        output = self.out.getvalue().strip()
+        self.assertEqual(output, "")
 
-#         error = self.err.getvalue().strip()
-#         self.assertEqual(error, "")
+        error = self.err.getvalue().strip()
+        self.assertEqual(error, "Unknown column 'not_a_column'.")
 
-#         self.assertEqual(cm.exception.code, 1)
+        self.assertEqual(cm.exception.code, 1)
+
+    @patch("requests.post", side_effect=base_login_post_response)
+    def test_list_with_invalid_columns_list(self, mock_post):
+
+        with self.assertRaises(SystemExit) as cm:
+            with patch.dict("os.environ", {"LOG_LEVEL": "DEBUG"}):
+                hpecp_cli = self.cli.CLI()
+
+                # we could have used any of the proxies implementing
+                # BaseProxy - here we arbitrarily chosen GatewayProxy
+                hpecp_cli.gateway.list(columns=123)
+
+        output = self.out.getvalue().strip()
+        self.assertEqual(output, "")
+
+        error = self.err.getvalue().strip()
+        self.assertEqual(error, "'columns' parameter must be a list.")
+
+        self.assertEqual(cm.exception.code, 1)
 
 
 class TestCLIUsingCfgFileEnvVar(TestCase):
