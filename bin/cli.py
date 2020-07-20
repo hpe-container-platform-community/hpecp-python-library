@@ -28,6 +28,7 @@ import abc
 import base64
 import configparser
 import json
+import logging
 import os
 import sys
 from collections import OrderedDict
@@ -82,14 +83,13 @@ else:
         )
     )
 
-
 @wrapt.decorator
 def intercept_exception(wrapped, instance, args, kwargs):
     """Handle Exceptions."""
 
     def _handle_unknown_exception():
-        """Handle unknoen exceptions."""
-        if _log.level == "DEBUG":
+        """Handle unknown exceptions."""
+        if _log.level == 20: # DEBUG
             print(
                 "Unknown error.", file=sys.stderr,
             )

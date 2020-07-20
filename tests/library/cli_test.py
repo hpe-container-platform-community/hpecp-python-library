@@ -28,7 +28,7 @@ import requests
 import six
 from mock import mock, mock_open, patch
 
-from .base_test import BaseTestCase
+from .base_test import BaseTestCase, session_mock_response
 from hpecp.gateway import Gateway
 import json
 
@@ -200,6 +200,27 @@ def session_mock_response():
             "location": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
         },
     )
+
+class TestBaseProxy(BaseTestCase):
+
+    @patch("requests.post", side_effect=session_mock_response)
+    def test_list(self, mock_post):
+
+        with self.assertRaises(SystemExit) as cm:
+            with patch.dict("os.environ", {"LOG_LEVEL": "DEBUG"}):
+                hpecp_cli = self.cli.CLI()
+
+                # we could have used any of the proxies implementing
+                # BaseProxy - here we arbitrarily chosen GatewayProxy
+                hpecp_cli.gateway.list(columns = [], query = {})
+
+        output = self.out.getvalue().strip()
+        self.assertEqual(output, "")
+
+        error = self.err.getvalue().strip()
+        self.assertEqual(error, "")
+
+        self.assertEqual(cm.exception.code, 1)
 
 
 class TestCLIHttpClient(BaseTestCase):
