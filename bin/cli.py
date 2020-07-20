@@ -228,12 +228,14 @@ class BaseProxy:
         if columns == "ALL":
             columns = self.all_fields()
 
-        if columns is [] and query is {}:
-            print(
-                "You must provide '--columns' OR '--query' parameters.",
-                file=sys.stderr,
-            )
-            sys.exit(1)
+        if columns is not self.all_fields():
+            if not isinstance(columns, list):
+                print("columns parameter must be a list", file=sys.stderr)
+                sys.exit(1)
+            for col in columns:
+                if col not in self.all_fields():
+                    print("Unknown column '{}'".format(col), file=sys.stderr)
+                    sys.exit(1)
 
         self.client = get_client()
         self.client_module_property = getattr(

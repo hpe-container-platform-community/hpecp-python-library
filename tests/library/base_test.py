@@ -65,18 +65,23 @@ class MockResponse:
         status_code,
         headers,
         raise_for_status_flag=False,
+        raise_connection_error=False,
         text_data="",
     ):
         self.json_data = json_data
         self.text = text_data
         self.status_code = status_code
         self.raise_for_status_flag = raise_for_status_flag
+        self.raise_connection_error = raise_connection_error
         self.headers = headers
 
     def raise_for_status(self):
         if self.raise_for_status_flag:
             self.text = "some error occurred"
             raise requests.exceptions.HTTPError()
+        if self.raise_connection_error:
+            self.text = "Simulating a connection error"
+            raise requests.exceptions.ConnectionError()
         else:
             return
 

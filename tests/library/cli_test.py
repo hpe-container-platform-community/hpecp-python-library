@@ -28,7 +28,11 @@ import requests
 import six
 from mock import mock, mock_open, patch
 
-from .base_test import BaseTestCase
+from .base_test import (
+    BaseTestCase,
+    MockResponse,
+    session_mock_response as base_login_post_response,
+)
 from hpecp.gateway import Gateway
 import json
 
@@ -144,6 +148,27 @@ class TestCLI(BaseTestCase):
                 self.fail(e)
 
 
+# class TestBaseProxy(BaseTestCase):
+#     @patch("requests.post", side_effect=base_login_post_response)
+#     def test_list(self, mock_post):
+
+#         with self.assertRaises(SystemExit) as cm:
+#             with patch.dict("os.environ", {"LOG_LEVEL": "DEBUG"}):
+#                 hpecp_cli = self.cli.CLI()
+
+#                 # we could have used any of the proxies implementing
+#                 # BaseProxy - here we arbitrarily chosen GatewayProxy
+#                 hpecp_cli.gateway.list(columns=[], query={})
+
+#         output = self.out.getvalue().strip()
+#         self.assertEqual(output, "")
+
+#         error = self.err.getvalue().strip()
+#         self.assertEqual(error, "")
+
+#         self.assertEqual(cm.exception.code, 1)
+
+
 class TestCLIUsingCfgFileEnvVar(TestCase):
     def test_hpe_config_file_var(self):
         dummy_filepath = "/not/a/real/dir/not_a_real_file"
@@ -161,51 +186,10 @@ class TestCLIUsingCfgFileEnvVar(TestCase):
             self.assertEqual(dummy_filepath, cli.HPECP_CONFIG_FILE)
 
 
-class MockResponse:
-    def __init__(
-        self,
-        json_data,
-        status_code,
-        headers,
-        raise_for_status_flag=False,
-        raise_connection_error=False,
-        text_data="",
-    ):
-        self.json_data = json_data
-        self.text = text_data
-        self.status_code = status_code
-        self.raise_for_status_flag = raise_for_status_flag
-        self.raise_connection_error = raise_connection_error
-        self.headers = headers
-
-    def raise_for_status(self):
-        if self.raise_for_status_flag:
-            self.text = "some error occurred"
-            raise requests.exceptions.HTTPError()
-        if self.raise_connection_error:
-            self.text = "Simulating a connection error"
-            raise requests.exceptions.ConnectionError()
-        else:
-            return
-
-    def json(self):
-        return self.json_data
-
-
-def session_mock_response():
-    return MockResponse(
-        json_data={},
-        status_code=200,
-        headers={
-            "location": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
-        },
-    )
-
-
 class TestCLIHttpClient(BaseTestCase):
     def mocked_requests_post(*args, **kwargs):
         if args[0] == "https://127.0.0.1:8080/api/v1/login":
-            return session_mock_response()
+            return base_login_post_response()
         raise RuntimeError("Unhandle POST request: " + args[0])
 
     def mocked_requests_get(*args, **kwargs):
@@ -281,7 +265,7 @@ class TestCLIHttpClient(BaseTestCase):
     def test_post(self):
         def mocked_requests_post(*args, **kwargs):
             if args[0] == "https://127.0.0.1:8080/api/v1/login":
-                return session_mock_response()
+                return base_login_post_response()
             if args[0] == "https://127.0.0.1:8080/some/url":
                 return MockResponse(
                     text_data={"mock_data": True},

@@ -415,7 +415,7 @@ class ContainerPlatformClient(object):
             self.log.debug(
                 "RES: {} : {} {} {}".format("Login", "post", url, str(e))
             )
-            if self.log.level == "DEBUG":
+            if self.log.level == 10:  # "DEBUG"
                 msg = "Could not connect to controller."
             else:
                 msg = (
@@ -435,6 +435,18 @@ class ContainerPlatformClient(object):
             else:
                 self.log.error(e)
             raise
+
+        # except Exception as e:
+        #     if response is not None:
+        #         self.log.error("Auth Response: " + response.text)
+        #     else:
+        #         self.log.error(e)
+        #     raise_from(
+        #         APIUnknownException(
+        #             message=str(e), request_method="post", request_url=url,
+        #         ),
+        #         None,
+        #     )
 
         self.session_headers = CaseInsensitiveDict(response.headers)
         self.session_id = CaseInsensitiveDict(response.headers)["location"]
