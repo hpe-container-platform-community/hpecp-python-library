@@ -112,6 +112,7 @@ def intercept_exception(wrapped, instance, args, kwargs):
     except (
         APIException,
         APIItemNotFoundException,
+        APIItemConflictException,
         ContainerPlatformClientException,
     ) as e:
         print(e.message, file=sys.stderr)
@@ -1042,6 +1043,7 @@ class UserProxy(BaseProxy):
         """Initiate this proxy class with the client module name."""
         super(UserProxy, self).new_instance("user")
 
+    @intercept_exception
     def create(
         self, name, description, is_external=False,
     ):
@@ -1051,14 +1053,10 @@ class UserProxy(BaseProxy):
         :param description: the user descripton
 
         """
-        try:
-            user_id = get_client().user.create(
-                name=name, description=description, is_external=is_external,
-            )
-            print(user_id)
-        except APIItemConflictException:
-            print("User already exists.")
-            sys.exit(1)
+        user_id = get_client().user.create(
+            name=name, description=description, is_external=is_external,
+        )
+        print(user_id)
 
 
 class RoleProxy(object):
