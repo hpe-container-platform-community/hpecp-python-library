@@ -187,6 +187,29 @@ class TestBaseProxy(BaseTestCase):
 
         self.assertEqual(cm.exception.code, 1)
 
+    # FIXME: why is this failing with "TypeError: session_mock_response() got an unexpected keyword argument 'json'"
+    @patch("requests.post", side_effect=base_login_post_response)
+    def test_list_with_invalid_output_param(self, mock_post):
+
+        with self.assertRaises(SystemExit) as cm:
+            with patch.dict("os.environ", {"LOG_LEVEL": "DEBUG"}):
+                hpecp_cli = self.cli.CLI()
+
+                # we could have used any of the proxies implementing
+                # BaseProxy - here we arbitrarily chosen GatewayProxy
+                try:
+                    hpecp_cli.gateway.list(output="invalid_output_value")
+                except Exception as e:
+                    self.fail(e)
+
+        output = self.out.getvalue().strip()
+        self.assertEqual(output, "")
+
+        error = self.err.getvalue().strip()
+        self.assertEqual(error, "When providing the --columns param, the --output param must be 'table' or 'text'")
+
+        self.assertEqual(cm.exception.code, 1)
+
 
 class TestCLIUsingCfgFileEnvVar(TestCase):
     def test_hpe_config_file_var(self):
