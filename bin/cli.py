@@ -779,17 +779,17 @@ class TenantProxy(BaseProxy):
     def __dir__(self):
         """Return the CLI method names."""
         return [
-            "create",
+            # "create", # TODO: implement me!
             "delete",
             "get",
             "list",
-            "statuses",
+            # "status",  # TODO: implement me!
             "wait_for_status",
         ]
 
     def __init__(self):
         """Initiate this proxy class with the client module name."""
-        super(K8sClusterProxy, self).new_instance("tenant")
+        super(TenantProxy, self).new_instance("tenant")
 
 
 class LockProxy(object):
@@ -1384,6 +1384,7 @@ class CLI(object):
         self.catalog = CatalogProxy()
         self.k8sworker = K8sWorkerProxy()
         self.k8scluster = K8sClusterProxy()
+        self.tenant = TenantProxy()
         self.gateway = GatewayProxy()
         self.lock = LockProxy()
         self.license = LicenseProxy()
