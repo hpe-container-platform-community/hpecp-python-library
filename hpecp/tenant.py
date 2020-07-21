@@ -60,7 +60,6 @@ class Tenant(AbstractResource):
         "name",
         "description",
         "status",
-        "status_message",
         "tenant_type",
     ]
 
