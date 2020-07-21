@@ -1325,29 +1325,50 @@
 
 <span class="sd">                {% set module_names = &quot; &quot;.join(modules.keys()) %}</span>
 <span class="sd">                {% for module_name in modules %}</span>
-<span class="sd">                    {% set function_names = &quot; &quot;.join(modules[module_name].keys()) %}</span>
+<span class="sd">                    {% set function_names = &quot; &quot;.join(modules[module_name].keys()).replace(&#39;_&#39;, &#39;-&#39;) %}</span>
 <span class="sd">                    {% for function_name in modules[module_name] %}</span>
 <span class="sd">                        {% set param_names = &quot; &quot;.join(modules[module_name][function_name]).replace(&#39;_&#39;, &#39;-&#39;) %}</span>
 <span class="sd">                        {% if function_name == &quot;list&quot; %}</span>
-<span class="sd">                    *&quot;hpecp.{{module_name}}.{{function_name}}&quot;*)</span>
+<span class="sd">                    *&quot;hpecp.{{module_name}}.{{function_name.replace(&#39;_&#39;, &#39;-&#39;)}}&quot;*)</span>
+<span class="sd">                        PARAM_NAMES=&quot;{{param_names}}&quot;</span>
+<span class="sd">                        for PARAM in ${PARAM_NAMES[@]}; do</span>
+<span class="sd">                            PARAM=&quot;${PARAM//&#39;\&#39;}&quot;</span>
+<span class="sd">                            for WORD in ${COMP_WORDS[@]}; do</span>
+<span class="sd">                                if [[ &quot;${WORD}&quot; == &quot;${PARAM}&quot; ]]</span>
+<span class="sd">                                then</span>
+<span class="sd">                                    # remove parameters already entered by user</span>
+<span class="sd">                                    PARAM_NAMES=${PARAM_NAMES//$WORD/}</span>
+<span class="sd">                                fi</span>
+<span class="sd">                            done</span>
+<span class="sd">                        done</span>
 <span class="sd">                        if [[ $LAST_PARAM_IS_COLUMNS == 1 ]]</span>
 <span class="sd">                        then</span>
 <span class="sd">                            {% set column_names = &quot; &quot;.join(columns[module_name]) %}</span>
-<span class="sd">                            {% set param_names_without_columns = param_names.replace(&quot;--columns&quot;, &quot;&quot;) %}</span>
 <span class="sd">                            COMPREPLY=( $(compgen -W &quot;{{column_names}}&quot; -- $cur) )</span>
-<span class="sd">                            COMPREPLY+=( $(compgen -W &quot;{{param_names_without_columns}}&quot; -- $cur) )</span>
+<span class="sd">                            COMPREPLY+=( $(compgen -W &quot;$PARAM_NAMES&quot; -- $cur) )</span>
 <span class="sd">                        else</span>
-<span class="sd">                            COMPREPLY=( $(compgen -W &quot;{{param_names}}&quot; -- $cur) )</span>
+<span class="sd">                            COMPREPLY=( $(compgen -W &quot;$PARAM_NAMES&quot; -- $cur) )</span>
 <span class="sd">                        fi</span>
 <span class="sd">                        ;;</span>
 <span class="sd">                        {% else %}</span>
-<span class="sd">                    *&quot;hpecp.{{module_name}}.{{function_name}}&quot;*)</span>
-<span class="sd">                        COMPREPLY=( $(compgen -W &quot;{{param_names}}&quot; -- $cur) )</span>
+<span class="sd">                    *&quot;hpecp.{{module_name}}.{{function_name.replace(&#39;_&#39;, &#39;-&#39;)}}&quot;*)</span>
+<span class="sd">                        PARAM_NAMES=&quot;{{param_names}}&quot;</span>
+<span class="sd">                        for PARAM in ${PARAM_NAMES[@]}; do</span>
+<span class="sd">                            PARAM=&quot;${PARAM//&#39;\&#39;}&quot;</span>
+<span class="sd">                            for WORD in ${COMP_WORDS[@]}; do</span>
+<span class="sd">                                if [[ &quot;${WORD}&quot; == &quot;${PARAM}&quot; ]]</span>
+<span class="sd">                                then</span>
+<span class="sd">                                    # remove parameters already entered by user</span>
+<span class="sd">                                    PARAM_NAMES=${PARAM_NAMES//$WORD/}</span>
+<span class="sd">                                fi</span>
+<span class="sd">                            done</span>
+<span class="sd">                        done</span>
+<span class="sd">                        COMPREPLY=( $(compgen -W &quot;$PARAM_NAMES&quot; -- $cur) )</span>
 <span class="sd">                        ;;</span>
 <span class="sd">                        {% endif %}</span>
 <span class="sd">                    {% endfor %}</span>
 <span class="sd">                    *&quot;hpecp.{{module_name}}&quot;*)</span>
-<span class="sd">                        COMPREPLY=( $(compgen -W &quot;{{ function_names }}&quot; -- $cur) )</span>
+<span class="sd">                        COMPREPLY=( $(compgen -W &quot;{{function_names}}&quot; -- $cur) )</span>
 <span class="sd">                        ;;</span>
 <span class="sd">                {% endfor %}</span>
 <span class="sd">                    *&quot;hpecp.autocomplete.bash&quot;*)</span>
@@ -1357,7 +1378,7 @@
 <span class="sd">                        COMPREPLY=( $(compgen -W &quot;bash&quot; -- $cur) )</span>
 <span class="sd">                        ;;</span>
 <span class="sd">                    *&quot;hpecp&quot;*)</span>
-<span class="sd">                        COMPREPLY=( $(compgen -W &quot;autocomplete configure-cli {{  module_names }}&quot; -- $cur) )</span>
+<span class="sd">                        COMPREPLY=( $(compgen -W &quot;autocomplete configure-cli {{module_names}}&quot; -- $cur) )</span>
 <span class="sd">                        ;;</span>
 <span class="sd">                esac</span>
 <span class="sd">                return 0</span>
