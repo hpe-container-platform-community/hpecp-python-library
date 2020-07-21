@@ -20,11 +20,11 @@
 
 from __future__ import absolute_import
 
-import re
-from operator import attrgetter
+from enum import Enum
 
-from tabulate import tabulate
 from requests.structures import CaseInsensitiveDict
+
+from .base_resource import AbstractWaitableResourceController, AbstractResource
 
 try:
     basestring
@@ -32,29 +32,37 @@ except NameError:
     basestring = str
 
 
-class Tenant:
-    @staticmethod
-    def __class_dir__():
-        return ["id", "name", "description", "tenant_type"]
+class TenantStatus(Enum):
+    """Bases: enum.Enum
 
-    # def __repr__(self):
-    #     return "<Tenant id:{} name:{} description:{} type:{}>".format(
-    #         self.id, self.name, self.description, self.tenant_type
-    #     )
+    The statuses for Tenant
 
-    # def __str__(self):
-    #     return "Tenant(id={}, name={}, description={}, type:{})".format(
-    #         self.id, self.name, self.description, self.tenant_type
-    #     )
+    **Note:**
 
-    def __init__(self, json):
-        self.json = json
+    The integer values do not have a meaning outside of this library.
+    The API uses a string identifier with the status name rather than an
+    integer value.
+    """
 
-    # def __dir__(self):
-    #     return Tenant.__class_dir__()
+    ready = 1
+    creating = 2
+    updating = 3
+    upgrading = 4
+    deleting = 5
+    error = 6
+    warning = 7
 
-    # def __getitem__(self, item):
-    #     return getattr(self, self.__dir__()[item])
+
+class Tenant(AbstractResource):
+
+    all_fields = [
+        "id",
+        "name",
+        "description",
+        "status",
+        "status_message",
+        "tenant_type",
+    ]
 
     @property
     def id(self):
@@ -80,56 +88,7 @@ class Tenant:
             return ""
 
 
-class TenantList:
-    """Represents a list of HPE Container Platform tenants."""
-
-    def __init__(self, json):
-        """Create a TenantList.  This method is not expected to be called by
-        users directly.
-
-        Parameters
-        ----------
-        json : str
-            The Json object returned from the HPE Container Platform API.
-        """
-        self.json = json
-        self.tenants = sorted([Tenant(t) for t in json], key=attrgetter("id"))
-
-    def __getitem__(self, item):
-        return self.tenants[item]
-
-    # Python 2
-    def next(self):
-        if not self.tenants:
-            raise StopIteration
-        return self.tenants.pop(0)
-
-    # Python 3
-    def __next__(self):
-        if not self.tenants:
-            raise StopIteration
-        return self.tenants.pop(0)
-
-    def __iter__(self):
-        return self
-
-    # def __len__(self):
-    #     return len(self.tenants)
-
-    def tabulate(self):
-        """Output a tabular view of Tenants.
-
-        Returns
-        -------
-        str
-            Tablular view of Tenants.
-        """
-        return tabulate(
-            self, headers=Tenant.__class_dir__(), tablefmt="pretty"
-        )
-
-
-class TenantController:
+class TenantController(AbstractWaitableResourceController):
     """Class that users will interact with to work with tenants.
 
     An instance of this class is available in
@@ -144,26 +103,14 @@ class TenantController:
     >>> client.tenant.list()
     """
 
+    base_resource_path = "/api/v1/tenant/"
+    resource_class = Tenant
+    resource_list_path = "tenants"
+    status_class = TenantStatus
+    status_fieldname = "status"
+
     def __init__(self, client):
         self.client = client
-
-    def list(self):
-        """Retrieve a list of the tenants.
-
-        Returns
-        -------
-        TenantList
-            list of tenants
-
-        Raises
-        ------
-        APIException
-        """
-        response = self.client._request(
-            url="/api/v1/tenant", http_method="get", description="tenant/list"
-        )
-        tenants = TenantList(response.json()["_embedded"]["tenants"])
-        return tenants
 
     def create(
         self, name=None, description=None, tenant_type=None, k8s_cluster=None
@@ -192,45 +139,6 @@ class TenantController:
             description="tenant/create",
         )
         return CaseInsensitiveDict(response.headers)["Location"]
-
-    def get(self, tenant_id):
-        """Retrieve a Tenant by ID.
-
-        Parameters
-        ----------
-        tenant_id : str
-            The tenant ID - format: '/api/v1/tenant/[0-9]+'
-
-        Returns
-        -------
-        Tenant:
-            An object representing the Tenant
-
-        Raises
-        ------
-        APIException
-        """
-        self.client.log.warning(
-            "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-        )
-        self.client.log.warning(
-            "!!!! The method `tenant.get()` is experimental !!!!"
-        )
-        self.client.log.warning(
-            "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-        )
-
-        assert isinstance(
-            tenant_id, str
-        ), "'tenant_id' must be provided and must be string"
-        assert re.match(
-            r"\/api\/v1\/tenant\/[0-9]+", tenant_id
-        ), "'tenant_id' must have format '/api/v1/tenant/[0-9]+'"
-
-        response = self.client._request(
-            url=tenant_id, http_method="get", description="tenant/get"
-        )
-        return Tenant(response.json())
 
     def auth_setup(self, tenant_id, data):
         """Setup external autentication for the tenant.
