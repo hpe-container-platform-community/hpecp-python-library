@@ -773,6 +773,25 @@ class K8sClusterProxy(BaseProxy):
             print(" ".join(vers))
 
 
+class TenantProxy(BaseProxy):
+    """Proxy object to :py:attr:`<hpecp.client.tenant>`."""
+
+    def __dir__(self):
+        """Return the CLI method names."""
+        return [
+            "create",
+            "delete",
+            "get",
+            "list",
+            "statuses",
+            "wait_for_status",
+        ]
+
+    def __init__(self):
+        """Initiate this proxy class with the client module name."""
+        super(K8sClusterProxy, self).new_instance("tenant")
+
+
 class LockProxy(object):
     """Proxy object to :py:attr:`<hpecp.client.lock>`."""
 
