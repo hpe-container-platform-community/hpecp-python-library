@@ -1279,29 +1279,50 @@ class AutoComplete:
 
                 {% set module_names = " ".join(modules.keys()) %}
                 {% for module_name in modules %}
-                    {% set function_names = " ".join(modules[module_name].keys()) %}
+                    {% set function_names = " ".join(modules[module_name].keys()).replace('_', '-') %}
                     {% for function_name in modules[module_name] %}
                         {% set param_names = " ".join(modules[module_name][function_name]).replace('_', '-') %}
                         {% if function_name == "list" %}
-                    *"hpecp.{{module_name}}.{{function_name}}"*)
+                    *"hpecp.{{module_name}}.{{function_name.replace('_', '-')}}"*)
+                        PARAM_NAMES="{{param_names}}"
+                        for PARAM in ${PARAM_NAMES[@]}; do
+                            PARAM="${PARAM//'\'}"
+                            for WORD in ${COMP_WORDS[@]}; do
+                                if [[ "${WORD}" == "${PARAM}" ]]
+                                then
+                                    # remove parameters already entered by user
+                                    PARAM_NAMES=${PARAM_NAMES//$WORD/}
+                                fi
+                            done
+                        done
                         if [[ $LAST_PARAM_IS_COLUMNS == 1 ]]
                         then
                             {% set column_names = " ".join(columns[module_name]) %}
-                            {% set param_names_without_columns = param_names.replace("--columns", "") %}
                             COMPREPLY=( $(compgen -W "{{column_names}}" -- $cur) )
-                            COMPREPLY+=( $(compgen -W "{{param_names_without_columns}}" -- $cur) )
+                            COMPREPLY+=( $(compgen -W "$PARAM_NAMES" -- $cur) )
                         else
-                            COMPREPLY=( $(compgen -W "{{param_names}}" -- $cur) )
+                            COMPREPLY=( $(compgen -W "$PARAM_NAMES" -- $cur) )
                         fi
                         ;;
                         {% else %}
-                    *"hpecp.{{module_name}}.{{function_name}}"*)
-                        COMPREPLY=( $(compgen -W "{{param_names}}" -- $cur) )
+                    *"hpecp.{{module_name}}.{{function_name.replace('_', '-')}}"*)
+                        PARAM_NAMES="{{param_names}}"
+                        for PARAM in ${PARAM_NAMES[@]}; do
+                            PARAM="${PARAM//'\'}"
+                            for WORD in ${COMP_WORDS[@]}; do
+                                if [[ "${WORD}" == "${PARAM}" ]]
+                                then
+                                    # remove parameters already entered by user
+                                    PARAM_NAMES=${PARAM_NAMES//$WORD/}
+                                fi
+                            done
+                        done
+                        COMPREPLY=( $(compgen -W "$PARAM_NAMES" -- $cur) )
                         ;;
                         {% endif %}
                     {% endfor %}
                     *"hpecp.{{module_name}}"*)
-                        COMPREPLY=( $(compgen -W "{{ function_names }}" -- $cur) )
+                        COMPREPLY=( $(compgen -W "{{function_names}}" -- $cur) )
                         ;;
                 {% endfor %}
                     *"hpecp.autocomplete.bash"*)
@@ -1311,7 +1332,7 @@ class AutoComplete:
                         COMPREPLY=( $(compgen -W "bash" -- $cur) )
                         ;;
                     *"hpecp"*)
-                        COMPREPLY=( $(compgen -W "autocomplete configure-cli {{  module_names }}" -- $cur) )
+                        COMPREPLY=( $(compgen -W "autocomplete configure-cli {{module_names}}" -- $cur) )
                         ;;
                 esac
                 return 0
