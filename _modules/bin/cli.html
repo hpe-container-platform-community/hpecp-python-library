@@ -1299,11 +1299,11 @@
 
 <span class="sd">                COMP_WORDS_AS_STRING=$(IFS=. ; echo &quot;${COMP_WORDS[*]}&quot;)</span>
 
+<span class="sd">                # if the last parameter was --*file</span>
 <span class="sd">                if echo &quot;${prev}&quot; | grep -q &#39;\-\-.*file$&#39;</span>
 <span class="sd">                then</span>
-<span class="sd">                    CUR_PARAM_IS_FILE=1</span>
-<span class="sd">                else</span>
-<span class="sd">                    CUR_PARAM_IS_FILE=0</span>
+<span class="sd">                    _filedir;</span>
+<span class="sd">                    return</span>
 <span class="sd">                fi</span>
 
 <span class="sd">                {% raw %}</span>
@@ -1342,12 +1342,7 @@
 <span class="sd">                        ;;</span>
 <span class="sd">                        {% else %}</span>
 <span class="sd">                    *&quot;hpecp.{{module_name}}.{{function_name}}&quot;*)</span>
-<span class="sd">                        if [[ $CUR_PARAM_IS_FILE == 1 ]]</span>
-<span class="sd">                        then</span>
-<span class="sd">                             COMPREPLY=( $(compgen -W &quot;$(ls)&quot; -- $cur) )</span>
-<span class="sd">                        else</span>
-<span class="sd">                            COMPREPLY=( $(compgen -W &quot;{{param_names}}&quot; -- $cur) )</span>
-<span class="sd">                        fi</span>
+<span class="sd">                        COMPREPLY=( $(compgen -W &quot;{{param_names}}&quot; -- $cur) )</span>
 <span class="sd">                        ;;</span>
 <span class="sd">                        {% endif %}</span>
 <span class="sd">                    {% endfor %}</span>
