@@ -20,6 +20,8 @@
 
 from __future__ import absolute_import
 
+from enum import Enum
+
 from requests.structures import CaseInsensitiveDict
 
 from .base_resource import AbstractWaitableResourceController, AbstractResource
@@ -30,13 +32,37 @@ except NameError:
     basestring = str
 
 
-class Tenant(AbstractResource):
-    @staticmethod
-    def __class_dir__():
-        return ["id", "name", "description", "tenant_type"]
+class TenantStatus(Enum):
+    """Bases: enum.Enum
 
-    def __init__(self, json):
-        self.json = json
+    The statuses for Tenant
+
+    **Note:**
+
+    The integer values do not have a meaning outside of this library.
+    The API uses a string identifier with the status name rather than an
+    integer value.
+    """
+
+    ready = 1
+    creating = 2
+    updating = 3
+    upgrading = 4
+    deleting = 5
+    error = 6
+    warning = 7
+
+
+class Tenant(AbstractResource):
+
+    all_fields = [
+        "id",
+        "name",
+        "description",
+        "status",
+        "status_message",
+        "tenant_type",
+    ]
 
     @property
     def id(self):
@@ -76,6 +102,12 @@ class TenantController(AbstractWaitableResourceController):
     >>> client = ContainerPlatformClient(...).create_session()
     >>> client.tenant.list()
     """
+
+    base_resource_path = "/api/v1/tenant/"
+    resource_class = Tenant
+    resource_list_path = "tenants"
+    status_class = TenantStatus
+    status_fieldname = "status"
 
     def __init__(self, client):
         self.client = client

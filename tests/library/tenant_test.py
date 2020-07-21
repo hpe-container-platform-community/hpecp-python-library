@@ -68,7 +68,7 @@ def get_client():
 class TestTentants(TestCase):
     def mocked_requests_get(*args, **kwargs):
         print(args[0])
-        if args[0] == "https://127.0.0.1:8080/api/v1/tenant":
+        if args[0] == "https://127.0.0.1:8080/api/v1/tenant/":
             return MockResponse(
                 # This json data was captured from calling the /tenants api on
                 # a clean HPECP 5.0 installation.
@@ -283,22 +283,9 @@ class TestTentants(TestCase):
         client = get_client()
 
         with self.assertRaisesRegexp(
-            AssertionError,
-            (
-                "'tenant_id' must have format "
-                + r"'\/api\/v1\/tenant\/\[0-9\]\+'"  # noqa: W503
-            ),
+            AssertionError, ("'id' does not start with '/api/v1/tenant/'"),
         ):
             client.tenant.get("garbage")
-
-        with self.assertRaisesRegexp(
-            AssertionError,
-            (
-                "'tenant_id' must have format "
-                + r"'\/api\/v1\/tenant\/\[0-9\]\+'"  # noqa: W503
-            ),
-        ):
-            client.tenant.get("/api/v1/tenant/some_id")
 
     @patch("requests.get", side_effect=mocked_requests_get)
     @patch("requests.post", side_effect=mocked_requests_post)
