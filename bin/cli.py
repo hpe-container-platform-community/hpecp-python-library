@@ -791,6 +791,35 @@ class TenantProxy(BaseProxy):
         """Initiate this proxy class with the client module name."""
         super(TenantProxy, self).new_instance("tenant")
 
+    @intercept_exception
+    def create(
+        self,
+        name=None,
+        description=None,
+        tenant_type=None,
+        k8s_cluster_id=None,
+    ):
+        """Create a tenant.
+
+        Parameters
+        ----------
+        name : [type], optional
+            [description], by default None
+        description : [type], optional
+            [description], by default None
+        tenant_type : [type], optional
+            [description], by default None
+        k8s_cluster_id : [type], optional
+            [description], by default None
+        """
+        tenant_id = get_client().tenant.create(
+            name=name,
+            description=description,
+            tenant_type=tenant_type,
+            k8s_cluster=k8s_cluster_id,
+        )
+        print(tenant_id)
+
 
 class LockProxy(object):
     """Proxy object to :py:attr:`<hpecp.client.lock>`."""
