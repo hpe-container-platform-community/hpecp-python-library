@@ -779,7 +779,7 @@ class TenantProxy(BaseProxy):
     def __dir__(self):
         """Return the CLI method names."""
         return [
-            # "create", # TODO: implement me!
+            "create",
             "delete",
             "get",
             "list",
