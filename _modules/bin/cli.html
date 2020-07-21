@@ -819,6 +819,25 @@
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">vers</span><span class="p">))</span></div></div>
 
 
+<div class="viewcode-block" id="TenantProxy"><a class="viewcode-back" href="../../cli.html#bin.cli.TenantProxy">[docs]</a><span class="k">class</span> <span class="nc">TenantProxy</span><span class="p">(</span><span class="n">BaseProxy</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Proxy object to :py:attr:`&lt;hpecp.client.tenant&gt;`.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__dir__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the CLI method names.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="s2">&quot;create&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;delete&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;get&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;list&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;statuses&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;wait_for_status&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initiate this proxy class with the client module name.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">K8sClusterProxy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">new_instance</span><span class="p">(</span><span class="s2">&quot;tenant&quot;</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="LockProxy"><a class="viewcode-back" href="../../cli.html#bin.cli.LockProxy">[docs]</a><span class="k">class</span> <span class="nc">LockProxy</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Proxy object to :py:attr:`&lt;hpecp.client.lock&gt;`.&quot;&quot;&quot;</span>
 
