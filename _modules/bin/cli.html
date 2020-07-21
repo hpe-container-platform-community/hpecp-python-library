@@ -825,17 +825,17 @@
     <span class="k">def</span> <span class="fm">__dir__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return the CLI method names.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span>
-            <span class="s2">&quot;create&quot;</span><span class="p">,</span>
+            <span class="c1"># &quot;create&quot;, # TODO: implement me!</span>
             <span class="s2">&quot;delete&quot;</span><span class="p">,</span>
             <span class="s2">&quot;get&quot;</span><span class="p">,</span>
             <span class="s2">&quot;list&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;statuses&quot;</span><span class="p">,</span>
+            <span class="c1"># &quot;status&quot;,  # TODO: implement me!</span>
             <span class="s2">&quot;wait_for_status&quot;</span><span class="p">,</span>
         <span class="p">]</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initiate this proxy class with the client module name.&quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">K8sClusterProxy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">new_instance</span><span class="p">(</span><span class="s2">&quot;tenant&quot;</span><span class="p">)</span></div>
+        <span class="nb">super</span><span class="p">(</span><span class="n">TenantProxy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">new_instance</span><span class="p">(</span><span class="s2">&quot;tenant&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="LockProxy"><a class="viewcode-back" href="../../cli.html#bin.cli.LockProxy">[docs]</a><span class="k">class</span> <span class="nc">LockProxy</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -1430,6 +1430,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">catalog</span> <span class="o">=</span> <span class="n">CatalogProxy</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k8sworker</span> <span class="o">=</span> <span class="n">K8sWorkerProxy</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k8scluster</span> <span class="o">=</span> <span class="n">K8sClusterProxy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tenant</span> <span class="o">=</span> <span class="n">TenantProxy</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gateway</span> <span class="o">=</span> <span class="n">GatewayProxy</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lock</span> <span class="o">=</span> <span class="n">LockProxy</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">license</span> <span class="o">=</span> <span class="n">LicenseProxy</span><span class="p">()</span>
