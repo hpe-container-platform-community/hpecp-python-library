@@ -1253,11 +1253,11 @@ class AutoComplete:
 
                 COMP_WORDS_AS_STRING=$(IFS=. ; echo "${COMP_WORDS[*]}")
 
+                # if the last parameter was --*file
                 if echo "${prev}" | grep -q '\-\-.*file$'
                 then
-                    CUR_PARAM_IS_FILE=1
-                else
-                    CUR_PARAM_IS_FILE=0
+                    _filedir;
+                    return
                 fi
 
                 {% raw %}
@@ -1296,12 +1296,7 @@ class AutoComplete:
                         ;;
                         {% else %}
                     *"hpecp.{{module_name}}.{{function_name}}"*)
-                        if [[ $CUR_PARAM_IS_FILE == 1 ]]
-                        then
-                             COMPREPLY=( $(compgen -W "$(ls)" -- $cur) )
-                        else
-                            COMPREPLY=( $(compgen -W "{{param_names}}" -- $cur) )
-                        fi
+                        COMPREPLY=( $(compgen -W "{{param_names}}" -- $cur) )
                         ;;
                         {% endif %}
                     {% endfor %}
