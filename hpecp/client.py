@@ -351,10 +351,18 @@ class ContainerPlatformClient(object):
         if verify_ssl == "False":
             verify_ssl = False
 
-        # TODO add other fields, except password
         self._log.debug(
-            "ContainerPlatformClient() created with username['{}']".format(
-                username
+            "ContainerPlatformClient() created with '{}'".format(
+                {
+                    "username": username,
+                    "password": "********",
+                    "api_host": api_host,
+                    "api_port": api_port,
+                    "use_ssl": use_ssl,
+                    "verify_ssl": verify_ssl,
+                    "warn_ssl": warn_ssl,
+                    "tenant": tenant,
+                }
             )
         )
 
