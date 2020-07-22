@@ -148,6 +148,63 @@ class TestCLI(BaseTestCase):
                 self.fail(e)
 
 
+class TestCLIConfig(TestCase):
+    def setUp(self):
+        try:
+            reload
+        except NameError:
+            # Python 3
+            from imp import reload
+
+        sys.path.insert(0, os.path.abspath("../../"))
+
+    def test_configure_cli_reads_hpecp_conf_user_provided_profile(self):
+
+        mock_data = dedent(
+            """                [default]
+                api_host = mock_host
+                api_port = 9999
+                use_ssl = True
+                verify_ssl = False
+                warn_ssl = True
+                username = admin
+                password = admin123
+                
+                [tenant1]
+                username = tenant-admin
+                password = tenant-password"""
+        ).encode("utf8")
+
+        if six.PY2:
+            builtins_name = "__builtin__.open"
+        else:
+            builtins_name = "builtins.open"
+
+        with patch.dict("os.environ", {"PROFILE": "tenant1"}):
+            with patch(builtins_name, mock_open(read_data=mock_data)):
+                with patch("os.path.exists") as os_path_exists:
+
+                    from bin import cli
+
+                    # reload cli module inside patched os.environ
+                    reload(cli)
+
+                    self.cli = cli
+
+                    self.assertEqual(self.cli.PROFILE, "tenant1")
+
+                    # instruct the CLI that the mock file is actually
+                    # ~/.hpecp.conf
+                    os_path_exists.return_value = True
+
+                    hpecp_cli = self.cli.get_client(start_session=False)
+
+                    self.assertEqual(hpecp_cli.api_host, "mock_host")
+
+                    # this should be from the [tenant1] section
+                    self.assertEqual(hpecp_cli.username, "tenant-admin")
+
+
 class TestBaseProxy(BaseTestCase):
     @patch("requests.post", side_effect=base_login_post_response)
     def test_list_with_invalid_column(self, mock_post):

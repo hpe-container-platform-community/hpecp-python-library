@@ -61,7 +61,7 @@ if sys.version_info[0] >= 3:
 
 _log = Logger.get_logger()
 
-PROFILE = os.getenv("PROFILE", "default",)
+PROFILE = os.getenv("PROFILE", default="default")
 
 _log.debug(
     "PROFILE envirionment variable exists with value '{}'".format(PROFILE)
