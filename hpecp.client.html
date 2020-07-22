@@ -56,7 +56,7 @@
 <p>HPE Container Platform Client.</p>
 <dl class="py class">
 <dt id="hpecp.client.ContainerPlatformClient">
-<em class="property">class </em><code class="sig-prename descclassname">hpecp.client.</code><code class="sig-name descname">ContainerPlatformClient</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">username</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">password</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">api_host</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">api_port</span><span class="o">=</span><span class="default_value">8080</span></em>, <em class="sig-param"><span class="n">use_ssl</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">verify_ssl</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">warn_ssl</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/client.html#ContainerPlatformClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.client.ContainerPlatformClient" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">hpecp.client.</code><code class="sig-name descname">ContainerPlatformClient</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">username</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">password</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">api_host</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">api_port</span><span class="o">=</span><span class="default_value">8080</span></em>, <em class="sig-param"><span class="n">use_ssl</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">verify_ssl</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">warn_ssl</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">tenant</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/client.html#ContainerPlatformClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.client.ContainerPlatformClient" title="Permalink to this definition">¶</a></dt>
 <dd><p>Client object for HPE Container Platform.</p>
 <p>This is the central object that users of this library work with.</p>
 <dl class="simple">
@@ -74,6 +74,8 @@
 #ssl-cert-verification”</p>
 </dd>
 <dt>warn_ssl<span class="classifier">bool</span></dt><dd><p>Disable ssl warnings</p>
+</dd>
+<dt>tenant<span class="classifier">str (optional)</span></dt><dd><p>The tenant ID, e.g. /api/v1/tenant/2</p>
 </dd>
 </dl>
 <dl class="simple">
@@ -111,7 +113,8 @@ verify_ssl = False
 warn_ssl = False</p>
 <p>[demoserver]
 username = admin
-password = admin123</p>
+password = admin123
+tenant = /api/v1/tenant/2</p>
 </dd></dl>
 
 <dl class="py method">
@@ -124,7 +127,8 @@ HPECP_API_HOST
 HPECP_API_PORT
 HPECP_USE_SSL
 HPECP_VERIFY_SSL
-HPECP_WARN_SSL</p>
+HPECP_WARN_SSL
+HPECP_TENANT</p>
 <p>See ContainerPlatformClient
 <a class="reference internal" href="#hpecp.client.ContainerPlatformClient" title="hpecp.client.ContainerPlatformClient"><code class="xref py py-class docutils literal notranslate"><span class="pre">constructor</span></code></a> for the paramaeter
 definitions.</p>

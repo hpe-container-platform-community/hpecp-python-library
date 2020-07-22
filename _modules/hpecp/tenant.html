@@ -71,6 +71,7 @@
 <span class="kn">from</span> <span class="nn">requests.structures</span> <span class="kn">import</span> <span class="n">CaseInsensitiveDict</span>
 
 <span class="kn">from</span> <span class="nn">.base_resource</span> <span class="kn">import</span> <span class="n">AbstractWaitableResourceController</span><span class="p">,</span> <span class="n">AbstractResource</span>
+<span class="kn">from</span> <span class="nn">hpecp.exceptions</span> <span class="kn">import</span> <span class="n">ContainerPlatformClientException</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="n">basestring</span>
@@ -184,6 +185,35 @@
             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;tenant/create&quot;</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">CaseInsensitiveDict</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">)[</span><span class="s2">&quot;Location&quot;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="TenantController.get_k8skubeconfig"><a class="viewcode-back" href="../../hpecp.tenant.html#hpecp.tenant.TenantController.get_k8skubeconfig">[docs]</a>    <span class="k">def</span> <span class="nf">get_k8skubeconfig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve the tenant kubeconfig.</span>
+
+<span class="sd">        This requires the ContainerPlatformClient to be created with</span>
+<span class="sd">        a &#39;tenant&#39; parameter.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+<span class="sd">            Tenant KubeConfig</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ContainerPlatformClientException</span>
+<span class="sd">            This is raised if the ContainerPlatformClient was not created with</span>
+<span class="sd">            a &#39;tenant&#39; parameter.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">tenant_config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ContainerPlatformClientException</span><span class="p">(</span>
+                <span class="s2">&quot;&#39;tenant&#39; session is required, but client &quot;</span>
+                <span class="s2">&quot;was not create with a &#39;tenant&#39; argument.&quot;</span>
+            <span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
+            <span class="n">url</span><span class="o">=</span><span class="s2">&quot;/api/v2/k8skubeconfig/&quot;</span><span class="p">,</span>
+            <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;get&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;tenant/get_k8skubeconfig&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span></div>
 
 <div class="viewcode-block" id="TenantController.auth_setup"><a class="viewcode-back" href="../../hpecp.tenant.html#hpecp.tenant.TenantController.auth_setup">[docs]</a>    <span class="k">def</span> <span class="nf">auth_setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tenant_id</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Setup external autentication for the tenant.</span>

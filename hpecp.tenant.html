@@ -184,6 +184,23 @@ below.</p>
 <dd></dd></dl>
 
 <dl class="py method">
+<dt id="hpecp.tenant.TenantController.get_k8skubeconfig">
+<code class="sig-name descname">get_k8skubeconfig</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/tenant.html#TenantController.get_k8skubeconfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.tenant.TenantController.get_k8skubeconfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve the tenant kubeconfig.</p>
+<p>This requires the ContainerPlatformClient to be created with
+a ‘tenant’ parameter.</p>
+<dl class="simple">
+<dt>str</dt><dd><p>Tenant KubeConfig</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>ContainerPlatformClientException</dt><dd><p>This is raised if the ContainerPlatformClient was not created with
+a ‘tenant’ parameter.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt id="hpecp.tenant.TenantController.auth_setup">
 <code class="sig-name descname">auth_setup</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tenant_id</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/tenant.html#TenantController.auth_setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.tenant.TenantController.auth_setup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Setup external autentication for the tenant.</p>
