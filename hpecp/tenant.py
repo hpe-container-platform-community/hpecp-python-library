@@ -167,7 +167,7 @@ class TenantController(AbstractWaitableResourceController):
             http_method="get",
             description="tenant/get_k8skubeconfig",
         )
-        return response
+        return response.text
 
     def auth_setup(self, tenant_id, data):
         """Setup external autentication for the tenant.
