@@ -397,10 +397,18 @@
         <span class="k">if</span> <span class="n">verify_ssl</span> <span class="o">==</span> <span class="s2">&quot;False&quot;</span><span class="p">:</span>
             <span class="n">verify_ssl</span> <span class="o">=</span> <span class="kc">False</span>
 
-        <span class="c1"># TODO add other fields, except password</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-            <span class="s2">&quot;ContainerPlatformClient() created with username[&#39;</span><span class="si">{}</span><span class="s2">&#39;]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">username</span>
+            <span class="s2">&quot;ContainerPlatformClient() created with &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span>
+                    <span class="s2">&quot;password&quot;</span><span class="p">:</span> <span class="s2">&quot;********&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;api_host&quot;</span><span class="p">:</span> <span class="n">api_host</span><span class="p">,</span>
+                    <span class="s2">&quot;api_port&quot;</span><span class="p">:</span> <span class="n">api_port</span><span class="p">,</span>
+                    <span class="s2">&quot;use_ssl&quot;</span><span class="p">:</span> <span class="n">use_ssl</span><span class="p">,</span>
+                    <span class="s2">&quot;verify_ssl&quot;</span><span class="p">:</span> <span class="n">verify_ssl</span><span class="p">,</span>
+                    <span class="s2">&quot;warn_ssl&quot;</span><span class="p">:</span> <span class="n">warn_ssl</span><span class="p">,</span>
+                    <span class="s2">&quot;tenant&quot;</span><span class="p">:</span> <span class="n">tenant</span><span class="p">,</span>
+                <span class="p">}</span>
             <span class="p">)</span>
         <span class="p">)</span>
 
