@@ -145,6 +145,14 @@ class BaseTestCase(unittest.TestCase):
         sys.path.insert(0, os.path.abspath("../../"))
         from bin import cli
 
+        try:
+            reload
+        except NameError:
+            # Python 3
+            from imp import reload
+
+        reload(cli)
+
         self.cli = cli
         self.cli.HPECP_CONFIG_FILE = self.tmpFile.name
 
