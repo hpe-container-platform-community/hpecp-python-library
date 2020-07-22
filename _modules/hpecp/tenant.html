@@ -213,7 +213,7 @@
             <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;get&quot;</span><span class="p">,</span>
             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;tenant/get_k8skubeconfig&quot;</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="k">return</span> <span class="n">response</span></div>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span></div>
 
 <div class="viewcode-block" id="TenantController.auth_setup"><a class="viewcode-back" href="../../hpecp.tenant.html#hpecp.tenant.TenantController.auth_setup">[docs]</a>    <span class="k">def</span> <span class="nf">auth_setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tenant_id</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Setup external autentication for the tenant.</span>
