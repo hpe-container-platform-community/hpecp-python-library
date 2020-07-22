@@ -79,6 +79,8 @@ class ContainerPlatformClient(object):
         #ssl-cert-verification"
     warn_ssl : bool
         Disable ssl warnings
+    tenant : str (optional)
+        The tenant ID, e.g. /api/v1/tenant/2
 
     Returns
     -------
@@ -132,7 +134,10 @@ class ContainerPlatformClient(object):
         [demoserver]
         username = admin
         password = admin123
+        tenant = /api/v1/tenant/2
         """
+        _log = Logger.get_logger()
+
         if profile is None:
             profile = "default"
 
@@ -196,11 +201,26 @@ class ContainerPlatformClient(object):
             "the default section".format(profile)
         )
 
+        # tenant parameter is optional
+
         def get_config_value(key, profile):
             if key in config[profile]:
+                _log.debug("Found '{}' in profile '{}'".format(key, profile))
                 return config[profile][key]
             else:
-                return config["default"][key]
+                try:
+                    val = config["default"][key]
+                    _log.debug(
+                        "Found '{}' in profile '{}'".format(key, "default")
+                    )
+                    return val
+                except Exception:
+                    _log.debug(
+                        "Could not find '{}' in profile '{}'".format(
+                            key, profile
+                        )
+                    )
+                    return None
 
         username = str(get_config_value("username", profile))
         password = str(get_config_value("password", profile))
@@ -209,6 +229,9 @@ class ContainerPlatformClient(object):
         use_ssl = str(get_config_value("use_ssl", profile))
         verify_ssl = str(get_config_value("verify_ssl", profile))
         warn_ssl = str(get_config_value("warn_ssl", profile))
+
+        # optional parameter
+        tenant = get_config_value("tenant", profile)
 
         if use_ssl == "False":
             use_ssl = False
@@ -232,6 +255,7 @@ class ContainerPlatformClient(object):
             use_ssl,
             verify_ssl,
             warn_ssl,
+            tenant,
         )
 
     @classmethod
@@ -247,6 +271,7 @@ class ContainerPlatformClient(object):
         HPECP_USE_SSL
         HPECP_VERIFY_SSL
         HPECP_WARN_SSL
+        HPECP_TENANT
 
         See Also
         --------
@@ -263,6 +288,9 @@ class ContainerPlatformClient(object):
             HPECP_USE_SSL = ast.literal_eval(os.environ["HPECP_USE_SSL"])
             HPECP_VERIFY_SSL = ast.literal_eval(os.environ["HPECP_VERIFY_SSL"])
             HPECP_WARN_SSL = ast.literal_eval(os.environ["HPECP_WARN_SSL"])
+
+            # Optional parameter
+            HPECP_TENANT = os.getenv("HPECP_TENANT", default=None)
         except KeyError as ke:
             raise ContainerPlatformClientException(
                 "Required env var '{}' not found.".format(ke.args[0])
@@ -279,6 +307,7 @@ class ContainerPlatformClient(object):
             use_ssl=HPECP_USE_SSL,
             verify_ssl=HPECP_VERIFY_SSL,
             warn_ssl=HPECP_WARN_SSL,
+            tenant=HPECP_TENANT,
         )
 
     def __init__(
@@ -290,6 +319,7 @@ class ContainerPlatformClient(object):
         use_ssl=True,
         verify_ssl=True,
         warn_ssl=False,
+        tenant=None,
     ):
         """Create a Client object for interacting with HPE Container Platform.
 
@@ -310,6 +340,8 @@ class ContainerPlatformClient(object):
             #ssl-cert-verification", by default True
         warn_ssl : bool, optional
             Disable ssl warnings, by default False
+        tenant : str, optional
+            The tenant ID, e.g. /api/v1/tenant/2
         """
         self._log = Logger.get_logger()
 
@@ -359,6 +391,7 @@ class ContainerPlatformClient(object):
         self.use_ssl = use_ssl
         self.verify_ssl = verify_ssl
         self.warn_ssl = warn_ssl
+        self.tenant_config = tenant
 
         if self.use_ssl:
             scheme = "https"
@@ -399,6 +432,9 @@ class ContainerPlatformClient(object):
         """
         url = self.base_url + "/api/v1/login"
         auth = {"name": self.username, "password": self.password}
+
+        if self.tenant_config:
+            auth["tenant"] = self.tenant_config
 
         if self.warn_ssl is False:
             import urllib3

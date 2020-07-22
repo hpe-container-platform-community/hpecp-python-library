@@ -171,8 +171,10 @@ class TestCLIConfig(TestCase):
                 password = admin123
                 
                 [tenant1]
+                api_host = tenant_mock_host
                 username = tenant-admin
-                password = tenant-password"""
+                password = tenant-password
+                tenant = /api/v1/tenant/2"""
         ).encode("utf8")
 
         if six.PY2:
@@ -199,10 +201,15 @@ class TestCLIConfig(TestCase):
 
                     hpecp_cli = self.cli.get_client(start_session=False)
 
-                    self.assertEqual(hpecp_cli.api_host, "mock_host")
+                    # this should be from the [default] section
+                    self.assertEqual(hpecp_cli.api_port, 9999)
 
                     # this should be from the [tenant1] section
+                    self.assertEqual(hpecp_cli.api_host, "tenant_mock_host")
                     self.assertEqual(hpecp_cli.username, "tenant-admin")
+                    self.assertEqual(
+                        hpecp_cli.tenant_config, "/api/v1/tenant/2"
+                    )
 
 
 class TestBaseProxy(BaseTestCase):
