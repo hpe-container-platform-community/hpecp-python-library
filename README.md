@@ -60,7 +60,7 @@ client.create_session() # Login
 # Alternatively:
 # client = ContainerPlatformClient.create_from_config_file().create_session()
 
-print(client.k8s_cluster.list().tabulate(columns=['description', 'id']))
+print(client.k8s_cluster.list(columns=['description', 'id']))
 ```
 
 On my environment, this displays:
@@ -101,7 +101,7 @@ hpecp k8scluster create myclus1 /api/v2/worker/k8shost/1:master --k8s_version=1.
 
 List k8s clusters example:
 ```sh
-hpecp k8scluster tabulate --columns=['id','description','status']
+hpecp k8scluster list --columns=['id','description','status']
 ```
 
 ## CLI example 2
