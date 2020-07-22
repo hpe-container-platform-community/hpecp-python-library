@@ -833,7 +833,7 @@ class TenantProxy(BaseProxy):
         str
             Tenant KubeConfig
         """
-        conf = get_client.tenant.get_k8skubeconfig()
+        conf = get_client().tenant.get_k8skubeconfig()
         print(conf)
 
 
