@@ -25,6 +25,7 @@ from enum import Enum
 from requests.structures import CaseInsensitiveDict
 
 from .base_resource import AbstractWaitableResourceController, AbstractResource
+from hpecp.exceptions import ContainerPlatformClientException
 
 try:
     basestring
@@ -138,6 +139,35 @@ class TenantController(AbstractWaitableResourceController):
             description="tenant/create",
         )
         return CaseInsensitiveDict(response.headers)["Location"]
+
+    def get_k8skubeconfig(self):
+        """Retrieve the tenant kubeconfig.
+
+        This requires the ContainerPlatformClient to be created with
+        a 'tenant' parameter.
+
+        Returns
+        -------
+        str
+            Tenant KubeConfig
+
+        Raises
+        ------
+        ContainerPlatformClientException
+            This is raised if the ContainerPlatformClient was not created with
+            a 'tenant' parameter.
+        """
+        if self.client.tenant_config is None:
+            raise ContainerPlatformClientException(
+                "'tenant' session is required, but client "
+                "was not create with a 'tenant' argument."
+            )
+        response = self.client._request(
+            url="/api/v2/k8skubeconfig/",
+            http_method="get",
+            description="tenant/get_k8skubeconfig",
+        )
+        return response
 
     def auth_setup(self, tenant_id, data):
         """Setup external autentication for the tenant.

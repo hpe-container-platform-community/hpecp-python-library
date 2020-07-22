@@ -782,6 +782,7 @@ class TenantProxy(BaseProxy):
             "create",
             "delete",
             "get",
+            "get_k8skubeconfig",
             "list",
             # "status",  # TODO: implement me!
             "wait_for_status",
@@ -819,6 +820,21 @@ class TenantProxy(BaseProxy):
             k8s_cluster=k8s_cluster_id,
         )
         print(tenant_id)
+
+    @intercept_exception
+    def get_k8skubeconfig(self):
+        """Retrieve the tenant kubeconfig.
+
+        This requires the ContainerPlatformClient to be created with
+        a 'tenant' parameter.
+
+        Returns
+        -------
+        str
+            Tenant KubeConfig
+        """
+        conf = get_client.tenant.get_k8skubeconfig()
+        print(conf)
 
 
 class LockProxy(object):
