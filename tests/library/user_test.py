@@ -198,20 +198,19 @@ class TestDeleteUser(TestCase):
     @patch("requests.post", side_effect=mocked_requests_post)
     def test_delete_user(self, mock_get, mock_post, mock_delete):
         with self.assertRaisesRegexp(
-            AssertionError, "'user_id' must be provided and must be a string",
+            AssertionError, "'id' must be provided and must be a str",
         ):
-            get_client().user.delete(user_id=999)
+            get_client().user.delete(id=999)
 
         with self.assertRaisesRegexp(
-            AssertionError,
-            "'user_id' must have format " + r"'\/api\/v1\/user\/\[0-9\]\+'",
+            AssertionError, "'id' does not start with '/api/v1/user/'",
         ):
-            get_client().user.delete(user_id="garbage")
+            get_client().user.delete(id="garbage")
 
         with self.assertRaises(APIItemNotFoundException):
-            get_client().user.delete(user_id="/api/v1/user/999")
+            get_client().user.delete(id="/api/v1/user/999")
 
-        get_client().user.delete(user_id="/api/v1/user/123")
+        get_client().user.delete(id="/api/v1/user/123")
 
 
 def mocked_login_post(*args, **kwargs):
