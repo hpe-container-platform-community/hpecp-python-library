@@ -859,6 +859,13 @@ class TenantProxy(BaseProxy):
         conf = get_client().tenant.k8skubeconfig()
         print(conf)
 
+    @intercept_exception
+    def assign_user_to_role(self, tenant_id, user_id, role_id):
+        """Assign user to role in tenant."""
+        get_client().tenant.assign_user_to_role(
+            tenant_id=tenant_id, user_id=user_id, role_id=role_id
+        )
+
 
 class LockProxy(object):
     """Proxy object to :py:attr:`<hpecp.client.lock>`."""
