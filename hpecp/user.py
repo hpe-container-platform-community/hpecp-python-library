@@ -47,6 +47,9 @@ class User(AbstractResource):
     """
 
     all_fields = [
+        "id",
+        "name",
+        "description",
         "label",
         "is_group_added_user",
         "is_external",
@@ -64,6 +67,14 @@ class User(AbstractResource):
         id format: '/api/v1/user/[0-9]+'
         """
         return self.json["_links"]["self"]["href"]
+
+    @property
+    def name(self):
+        return self.json["label"]["name"]
+
+    @property
+    def description(self):
+        return self.json["label"]["description"]
 
     @property
     def label(self):
