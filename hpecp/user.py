@@ -94,32 +94,50 @@ class User(AbstractResource):
     @property
     def is_group_added_user(self):
         """@Field: from json['is_group_added_user']"""
-        return self.json["is_group_added_user"]
+        try:
+            return self.json["is_group_added_user"]
+        except Exception:
+            return ""
 
     @property
     def is_external(self):
         """@Field: from json['is_external']"""
-        return self.json["is_external"]
+        try:
+            return self.json["is_external"]
+        except Exception:
+            return ""
 
     @property
     def is_service_account(self):
         """@Field: from json['is_service_account']"""
-        return self.json["is_service_account"]
+        try:
+            return self.json["is_service_account"]
+        except Exception:
+            return ""
 
     @property
     def default_tenant(self):
         """@Field: from json['default_tenant']"""
-        return self.json["default_tenant"]
+        try:
+            return self.json["default_tenant"]
+        except Exception:
+            return ""
 
     @property
     def is_siteadmin(self):
         """@Field: from json['is_siteadmin']"""
-        return self.json["is_siteadmin"]
+        try:
+            return self.json["is_siteadmin"]
+        except Exception:
+            return ""
 
     @property
     def _links(self):
         """@Field: from json['_links']"""
-        return self.json["_links"]
+        try:
+            return self.json["_links"]
+        except Exception:
+            return ""
 
 
 class UserController(AbstractResourceController):
