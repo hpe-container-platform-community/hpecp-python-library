@@ -72,14 +72,20 @@ class User(AbstractResource):
     def name(self):
         """@Field: from json['label']['name']"""
         try:
-            return self.json["label"]["name"]
+            if "_embedded" in self.json:
+                return self.json["_embedded"]["label"]["name"]
+            else:
+                return self.json["label"]["name"]
         except Exception:
             return ""
 
     @property
     def description(self):
         try:
-            return self.json["label"]["description"]
+            if "_embedded" in self.json:
+                return self.json["_embedded"]["label"]["description"]
+            else:
+                return self.json["label"]["description"]
         except Exception:
             return ""
 
@@ -87,7 +93,10 @@ class User(AbstractResource):
     def label(self):
         """@Field: from json['label']"""
         try:
-            return self.json["label"]
+            if "_embedded" in self.json:
+                return self.json["_embedded"]["label"]
+            else:
+                return self.json["label"]
         except Exception:
             return ""
 
@@ -95,7 +104,10 @@ class User(AbstractResource):
     def is_group_added_user(self):
         """@Field: from json['is_group_added_user']"""
         try:
-            return self.json["is_group_added_user"]
+            if "_embedded" in self.json:
+                return self.json["_embedded"]["is_group_added_user"]
+            else:
+                return self.json["is_group_added_user"]
         except Exception:
             return ""
 
@@ -103,7 +115,10 @@ class User(AbstractResource):
     def is_external(self):
         """@Field: from json['is_external']"""
         try:
-            return self.json["is_external"]
+            if "_embedded" in self.json:
+                return self.json["_embedded"]["is_external"]
+            else:
+                return self.json["is_external"]
         except Exception:
             return ""
 
@@ -111,7 +126,10 @@ class User(AbstractResource):
     def is_service_account(self):
         """@Field: from json['is_service_account']"""
         try:
-            return self.json["is_service_account"]
+            if "_embedded" in self.json:
+                return self.json["_embedded"]["is_service_account"]
+            else:
+                return self.json["is_service_account"]
         except Exception:
             return ""
 
@@ -119,7 +137,10 @@ class User(AbstractResource):
     def default_tenant(self):
         """@Field: from json['default_tenant']"""
         try:
-            return self.json["default_tenant"]
+            if "_embedded" in self.json:
+                return self.json["_embedded"]["default_tenant"]
+            else:
+                return self.json["default_tenant"]
         except Exception:
             return ""
 
@@ -127,7 +148,10 @@ class User(AbstractResource):
     def is_siteadmin(self):
         """@Field: from json['is_siteadmin']"""
         try:
-            return self.json["is_siteadmin"]
+            if "_embedded" in self.json:
+                return self.json["_embedded"]["is_siteadmin"]
+            else:
+                return self.json["is_siteadmin"]
         except Exception:
             return ""
 
