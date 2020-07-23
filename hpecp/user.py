@@ -78,7 +78,10 @@ class User(AbstractResource):
 
     @property
     def description(self):
-        return self.json["label"]["description"]
+        try:
+            return self.json["label"]["description"]
+        except Exception:
+            return ""
 
     @property
     def label(self):
