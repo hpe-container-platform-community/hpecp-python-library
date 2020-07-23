@@ -192,9 +192,7 @@ class BaseProxy:
         if output == "json":
             print(json.dumps(response.json))
         elif output == "json-pp":
-            print(
-                json.dumps(response.json), indent=4, sort_keys=True,
-            )
+            print(json.dumps(response.json, indent=4, sort_keys=True,))
         else:
             print(
                 yaml.dump(
