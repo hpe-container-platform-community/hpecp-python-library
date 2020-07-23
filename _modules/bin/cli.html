@@ -828,7 +828,7 @@
             <span class="s2">&quot;create&quot;</span><span class="p">,</span>
             <span class="s2">&quot;delete&quot;</span><span class="p">,</span>
             <span class="s2">&quot;get&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;get_k8skubeconfig&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;k8skubeconfig&quot;</span><span class="p">,</span>
             <span class="s2">&quot;list&quot;</span><span class="p">,</span>
             <span class="c1"># &quot;status&quot;,  # TODO: implement me!</span>
             <span class="s2">&quot;wait_for_status&quot;</span><span class="p">,</span>
@@ -867,8 +867,8 @@
         <span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">tenant_id</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="TenantProxy.get_k8skubeconfig"><a class="viewcode-back" href="../../cli.html#bin.cli.TenantProxy.get_k8skubeconfig">[docs]</a>    <span class="nd">@intercept_exception</span>
-    <span class="k">def</span> <span class="nf">get_k8skubeconfig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="TenantProxy.k8skubeconfig"><a class="viewcode-back" href="../../cli.html#bin.cli.TenantProxy.k8skubeconfig">[docs]</a>    <span class="nd">@intercept_exception</span>
+    <span class="k">def</span> <span class="nf">k8skubeconfig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Retrieve the tenant kubeconfig.</span>
 
 <span class="sd">        This requires the ContainerPlatformClient to be created with</span>
@@ -879,7 +879,7 @@
 <span class="sd">        str</span>
 <span class="sd">            Tenant KubeConfig</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">conf</span> <span class="o">=</span> <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">tenant</span><span class="o">.</span><span class="n">get_k8skubeconfig</span><span class="p">()</span>
+        <span class="n">conf</span> <span class="o">=</span> <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">tenant</span><span class="o">.</span><span class="n">k8skubeconfig</span><span class="p">()</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span></div></div>
 
 
@@ -1365,6 +1365,12 @@
 
 <span class="sd">                # if the last parameter was --*file</span>
 <span class="sd">                if echo &quot;${prev}&quot; | grep -q &#39;\-\-.*file$&#39;</span>
+<span class="sd">                then</span>
+<span class="sd">                    _filedir;</span>
+<span class="sd">                    return</span>
+<span class="sd">                fi</span>
+
+<span class="sd">                if echo &quot;${prev}&quot; | grep -q &#39;&gt;&#39;</span>
 <span class="sd">                then</span>
 <span class="sd">                    _filedir;</span>
 <span class="sd">                    return</span>
