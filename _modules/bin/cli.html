@@ -309,29 +309,50 @@
                 <span class="p">)</span>
                 <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
+        <span class="c1"># self.client.create_session()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">get_client</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client_module_property</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_module_name</span>
         <span class="p">)</span>
+        <span class="n">list_instance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_module_property</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_list</span><span class="p">(</span>
+            <span class="n">list_instance</span><span class="o">=</span><span class="n">list_instance</span><span class="p">,</span>
+            <span class="n">output</span><span class="o">=</span><span class="n">output</span><span class="p">,</span>
+            <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span>
+            <span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseProxy.print_list"><a class="viewcode-back" href="../../cli.html#bin.cli.BaseProxy.print_list">[docs]</a>    <span class="k">def</span> <span class="nf">print_list</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">list_instance</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Print a list of resources.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        list_instance : [type]</span>
+<span class="sd">            [description]</span>
+<span class="sd">        output : [type]</span>
+<span class="sd">            [description]</span>
+<span class="sd">        columns : [type]</span>
+<span class="sd">            [description]</span>
+<span class="sd">        query : [type]</span>
+<span class="sd">            [description]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># use tabulate for simplified user output</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">query</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">output</span> <span class="o">==</span> <span class="s2">&quot;table&quot;</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">client_module_property</span><span class="o">.</span><span class="n">list</span><span class="p">()</span><span class="o">.</span><span class="n">tabulate</span><span class="p">(</span>
-                        <span class="n">columns</span><span class="o">=</span><span class="n">columns</span>
-                    <span class="p">)</span>
-                <span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">list_instance</span><span class="o">.</span><span class="n">tabulate</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">client_module_property</span><span class="o">.</span><span class="n">list</span><span class="p">()</span><span class="o">.</span><span class="n">tabulate</span><span class="p">(</span>
+                    <span class="n">list_instance</span><span class="o">.</span><span class="n">tabulate</span><span class="p">(</span>
                         <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;plain&quot;</span><span class="p">,</span> <span class="n">display_headers</span><span class="o">=</span><span class="kc">False</span>
                     <span class="p">)</span>
                 <span class="p">)</span>
 
         <span class="c1"># user has provided a jmes query</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_module_property</span><span class="o">.</span><span class="n">list</span><span class="p">()</span><span class="o">.</span><span class="n">json</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">list_instance</span><span class="o">.</span><span class="n">json</span>
             <span class="k">if</span> <span class="n">output</span> <span class="o">==</span> <span class="s2">&quot;json-pp&quot;</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span>
                     <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span>
@@ -908,7 +929,7 @@
         <span class="nb">print</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TenantProxy.users"><a class="viewcode-back" href="../../cli.html#bin.cli.TenantProxy.users">[docs]</a>    <span class="nd">@intercept_exception</span>
-    <span class="k">def</span> <span class="nf">users</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">users</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s2">&quot;table&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;ALL&quot;</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="p">{}):</span>
         <span class="sd">&quot;&quot;&quot;Retrieve users assigned to tenant.</span>
 
 <span class="sd">        Parameters</span>
@@ -916,7 +937,13 @@
 <span class="sd">        id : str</span>
 <span class="sd">            The tenant ID.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">tenant</span><span class="o">.</span><span class="n">users</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span></div>
+        <span class="n">list_instance</span> <span class="o">=</span> <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">tenant</span><span class="o">.</span><span class="n">users</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_list</span><span class="p">(</span>
+            <span class="n">list_instance</span><span class="o">=</span><span class="n">list_instance</span><span class="p">,</span>
+            <span class="n">output</span><span class="o">=</span><span class="n">output</span><span class="p">,</span>
+            <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span>
+            <span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 <div class="viewcode-block" id="TenantProxy.assign_user_to_role"><a class="viewcode-back" href="../../cli.html#bin.cli.TenantProxy.assign_user_to_role">[docs]</a>    <span class="nd">@intercept_exception</span>
     <span class="k">def</span> <span class="nf">assign_user_to_role</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tenant_id</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">role_id</span><span class="p">):</span>
