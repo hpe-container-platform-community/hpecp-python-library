@@ -906,6 +906,17 @@
         <span class="n">conf</span> <span class="o">=</span> <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">tenant</span><span class="o">.</span><span class="n">k8skubeconfig</span><span class="p">()</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="TenantProxy.users"><a class="viewcode-back" href="../../cli.html#bin.cli.TenantProxy.users">[docs]</a>    <span class="nd">@intercept_exception</span>
+    <span class="k">def</span> <span class="nf">users</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve users assigned to tenant.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        id : str</span>
+<span class="sd">            The tenant ID.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">tenant</span><span class="o">.</span><span class="n">assign_user_to_role</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="TenantProxy.assign_user_to_role"><a class="viewcode-back" href="../../cli.html#bin.cli.TenantProxy.assign_user_to_role">[docs]</a>    <span class="nd">@intercept_exception</span>
     <span class="k">def</span> <span class="nf">assign_user_to_role</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tenant_id</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">role_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Assign user to role in tenant.&quot;&quot;&quot;</span>
