@@ -79,7 +79,10 @@ class User(AbstractResource):
     @property
     def label(self):
         """@Field: from json['label']"""
-        return self.json["label"]
+        try:
+            return self.json["label"]
+        except Exception:
+            return ""
 
     @property
     def is_group_added_user(self):
