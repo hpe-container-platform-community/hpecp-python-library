@@ -211,36 +211,9 @@ a ‘tenant’ parameter.</p>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="hpecp.tenant.TenantController.auth_setup">
-<code class="sig-name descname">auth_setup</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tenant_id</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/tenant.html#TenantController.auth_setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.tenant.TenantController.auth_setup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Setup external autentication for the tenant.</p>
-<dl class="simple">
-<dt>tenant_id<span class="classifier">str</span></dt><dd><p>The tenant ID</p>
-</dd>
-<dt>data<span class="classifier">object</span></dt><dd><p>See below for an example.</p>
-</dd>
-</dl>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
-<span class="gp">... </span>   <span class="s2">&quot;external_user_groups&quot;</span><span class="p">:</span> <span class="p">[</span>
-<span class="gp">... </span>       <span class="p">{</span>
-<span class="gp">... </span>           <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;/api/v1/role/2&quot;</span><span class="p">,</span> <span class="c1"># 2 = Admins</span>
-<span class="gp">... </span>           <span class="s2">&quot;group&quot;</span><span class="p">:(</span>
-<span class="gp">... </span>                <span class="s2">&quot;CN=DemoTenantAdmins,CN=Users,DC=samdom,&quot;</span>
-<span class="gp">... </span>                <span class="s2">&quot;DC=example,DC=com&quot;</span>
-<span class="gp">... </span>                <span class="p">),</span>
-<span class="gp">... </span>       <span class="p">},</span>
-<span class="gp">... </span>       <span class="p">{</span>
-<span class="gp">... </span>           <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;/api/v1/role/3&quot;</span><span class="p">,</span> <span class="c1"># 3 = Members</span>
-<span class="gp">... </span>           <span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="p">(</span>
-<span class="gp">... </span>                <span class="s2">&quot;CN=DemoTenantUsers,CN=Users,DC=samdom,&quot;</span>
-<span class="gp">... </span>                <span class="s2">&quot;DC=example,DC=com&quot;</span>
-<span class="gp">... </span>                <span class="p">),</span>
-<span class="gp">... </span>       <span class="p">}</span>
-<span class="gp">... </span>   <span class="p">]</span>
-<span class="gp">... </span><span class="p">}</span>
-</pre></div>
-</div>
-</dd></dl>
+<dt id="hpecp.tenant.TenantController.add_external_user_groups">
+<code class="sig-name descname">add_external_user_groups</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tenant_id</span></em>, <em class="sig-param"><span class="n">role_id</span></em>, <em class="sig-param"><span class="n">group</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/tenant.html#TenantController.add_external_user_groups"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.tenant.TenantController.add_external_user_groups" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt id="hpecp.tenant.TenantController.users">

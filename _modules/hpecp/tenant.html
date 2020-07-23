@@ -74,6 +74,7 @@
 <span class="kn">from</span> <span class="nn">hpecp.exceptions</span> <span class="kn">import</span> <span class="n">ContainerPlatformClientException</span>
 <span class="kn">from</span> <span class="nn">hpecp.base_resource</span> <span class="kn">import</span> <span class="n">ResourceList</span>
 <span class="kn">from</span> <span class="nn">hpecp.user</span> <span class="kn">import</span> <span class="n">User</span>
+<span class="kn">import</span> <span class="nn">json</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="n">basestring</span>
@@ -221,49 +222,21 @@
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
             <span class="n">url</span><span class="o">=</span><span class="s2">&quot;/api/v2/k8skubeconfig/&quot;</span><span class="p">,</span>
             <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;get&quot;</span><span class="p">,</span>
-            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;tenant/get_k8skubeconfig&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;tenant/k8skubeconfig&quot;</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span></div>
 
 <div class="viewcode-block" id="TenantController.get_external_user_groups"><a class="viewcode-back" href="../../hpecp.tenant.html#hpecp.tenant.TenantController.get_external_user_groups">[docs]</a>    <span class="k">def</span> <span class="nf">get_external_user_groups</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span><span class="o">.</span><span class="n">external_user_groups</span></div>
 
-<div class="viewcode-block" id="TenantController.auth_setup"><a class="viewcode-back" href="../../hpecp.tenant.html#hpecp.tenant.TenantController.auth_setup">[docs]</a>    <span class="k">def</span> <span class="nf">auth_setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tenant_id</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Setup external autentication for the tenant.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        tenant_id : str</span>
-<span class="sd">            The tenant ID</span>
-<span class="sd">        data : object</span>
-<span class="sd">            See below for an example.</span>
-
-<span class="sd">        Example</span>
-<span class="sd">        -------</span>
-<span class="sd">        &gt;&gt;&gt; data = {</span>
-<span class="sd">        ...    &quot;external_user_groups&quot;: [</span>
-<span class="sd">        ...        {</span>
-<span class="sd">        ...            &quot;role&quot;: &quot;/api/v1/role/2&quot;, # 2 = Admins</span>
-<span class="sd">        ...            &quot;group&quot;:(</span>
-<span class="sd">        ...                 &quot;CN=DemoTenantAdmins,CN=Users,DC=samdom,&quot;</span>
-<span class="sd">        ...                 &quot;DC=example,DC=com&quot;</span>
-<span class="sd">        ...                 ),</span>
-<span class="sd">        ...        },</span>
-<span class="sd">        ...        {</span>
-<span class="sd">        ...            &quot;role&quot;: &quot;/api/v1/role/3&quot;, # 3 = Members</span>
-<span class="sd">        ...            &quot;group&quot;: (</span>
-<span class="sd">        ...                 &quot;CN=DemoTenantUsers,CN=Users,DC=samdom,&quot;</span>
-<span class="sd">        ...                 &quot;DC=example,DC=com&quot;</span>
-<span class="sd">        ...                 ),</span>
-<span class="sd">        ...        }</span>
-<span class="sd">        ...    ]</span>
-<span class="sd">        ... }</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="TenantController.add_external_user_groups"><a class="viewcode-back" href="../../hpecp.tenant.html#hpecp.tenant.TenantController.add_external_user_groups">[docs]</a>    <span class="k">def</span> <span class="nf">add_external_user_groups</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tenant_id</span><span class="p">,</span> <span class="n">role_id</span><span class="p">,</span> <span class="n">group</span><span class="p">):</span>
+        <span class="n">user_groups</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_external_user_groups</span><span class="p">(</span><span class="n">tenant_id</span><span class="p">))</span>
+        <span class="n">user_groups</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="n">role_id</span><span class="p">,</span> <span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="n">group</span><span class="p">})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
-            <span class="n">url</span><span class="o">=</span><span class="s2">&quot;/api/v1/tenant/</span><span class="si">{}</span><span class="s2">?external_user_groups&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tenant_id</span><span class="p">),</span>
+            <span class="n">url</span><span class="o">=</span><span class="n">tenant_id</span> <span class="o">+</span> <span class="s2">&quot;?external_user_groups&quot;</span><span class="p">,</span>
             <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;put&quot;</span><span class="p">,</span>
-            <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
-            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;epic_tenant_auth&quot;</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">user_groups</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;tenant/add_external_user_groups&quot;</span><span class="p">,</span>
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="TenantController.users"><a class="viewcode-back" href="../../hpecp.tenant.html#hpecp.tenant.TenantController.users">[docs]</a>    <span class="k">def</span> <span class="nf">users</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
