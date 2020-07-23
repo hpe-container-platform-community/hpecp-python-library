@@ -860,6 +860,7 @@ class TenantProxy(BaseProxy):
             "delete",
             "examples",
             "get",
+            "get_external_user_groups",
             "k8skubeconfig",
             "list",
             # "status",  # TODO: implement me!
@@ -944,6 +945,11 @@ class TenantProxy(BaseProxy):
         get_client().tenant.assign_user_to_role(
             tenant_id=tenant_id, user_id=user_id, role_id=role_id
         )
+
+    @intercept_exception
+    def get_external_user_groups(self, id):
+        """Retrieve External User Groups"""
+        get_client().tenant.get_external_user_groups(id=id)
 
 
 class LockProxy(object):
