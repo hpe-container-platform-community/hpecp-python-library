@@ -1224,16 +1224,20 @@ class UserProxy(BaseProxy):
 
     @intercept_exception
     def create(
-        self, name, description, is_external=False,
+        self, name, password, description, is_external=False,
     ):
         """Create a User.
 
         :param name: the user name
+        :param password:  the password
         :param description: the user descripton
 
         """
         user_id = get_client().user.create(
-            name=name, description=description, is_external=is_external,
+            name=name,
+            password=password,
+            description=description,
+            is_external=is_external,
         )
         print(user_id)
 

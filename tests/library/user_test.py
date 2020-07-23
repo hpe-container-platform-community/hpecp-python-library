@@ -239,7 +239,10 @@ class TestCLI(BaseTestCase):
 
         hpecp = self.cli.CLI()
         hpecp.user.create(
-            name="jdoe", description="Jane Doe", is_external=False
+            name="jdoe",
+            password="secret",
+            description="Jane Doe",
+            is_external=False,
         )
 
         stdout = self.out.getvalue().strip()

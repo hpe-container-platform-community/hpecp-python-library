@@ -183,13 +183,15 @@ class UserController(AbstractResourceController):
     resource_class = User
     resource_list_path = "users"
 
-    def create(self, name, description="", is_external=True):
+    def create(self, name, password=None, description="", is_external=True):
         """Create a user by specifying name and description.
 
         Parameters
         ----------
         name: str
             Client name.
+        password: str
+            Password
         description: str
             Description as a string.
         is_external: bool
@@ -215,6 +217,9 @@ class UserController(AbstractResourceController):
             "label": {"name": name, "description": description},
             "is_external": is_external,
         }
+
+        if password:
+            data["password"] = password
 
         response = self.client._request(
             url="/api/v1/user",
