@@ -232,15 +232,54 @@ class BaseProxy:
             Query in jmespath (https://jmespath.org/) format, by default {}
             if using a query, output must be "json" or "json-pp"
         """
-        if columns == "ALL":
-            columns = self.all_fields()
 
-        if columns is not self.all_fields():
+        # FIXME: this also gets called by print_list()
+        self.validate_list_params(
+            all_fields=self.all_fields(),
+            output=output,
+            columns=columns,
+            query=query,
+        )
+
+        self.client = get_client()
+        self.client_module_property = getattr(
+            self.client, self.client_module_name
+        )
+        list_instance = self.client_module_property.list()
+
+        self.print_list(
+            list_instance=list_instance,
+            output=output,
+            columns=columns,
+            query=query,
+        )
+
+    @intercept_exception
+    def validate_list_params(
+        self, all_fields, output, columns, query,
+    ):
+        """Print a list of resources.
+
+        Parameters
+        ----------
+        list_instance : [type]
+            [description]
+        output : [type]
+            [description]
+        columns : [type]
+            [description]
+        query : [type]
+            [description]
+        """
+        if columns == "ALL":
+            columns = all_fields
+
+        if columns is not all_fields:
             if not isinstance(columns, list):
                 print("'columns' parameter must be a list.", file=sys.stderr)
                 sys.exit(1)
             for col in columns:
-                if col not in self.all_fields():
+                if col not in all_fields:
                     print("Unknown column '{}'.".format(col), file=sys.stderr)
                     sys.exit(1)
 
@@ -263,20 +302,7 @@ class BaseProxy:
                 )
                 sys.exit(1)
 
-        # self.client.create_session()
-        self.client = get_client()
-        self.client_module_property = getattr(
-            self.client, self.client_module_name
-        )
-        list_instance = self.client_module_property.list()
-
-        self.print_list(
-            list_instance=list_instance,
-            output=output,
-            columns=columns,
-            query=query,
-        )
-
+    @intercept_exception
     def print_list(
         self, list_instance, output, columns, query,
     ):
@@ -293,6 +319,13 @@ class BaseProxy:
         query : [type]
             [description]
         """
+        self.validate_list_params(
+            all_fields=list_instance.resource_class.all_fields,
+            output=output,
+            columns=columns,
+            query=query,
+        )
+
         # use tabulate for simplified user output
         if len(query) == 0:
             if output == "table":
