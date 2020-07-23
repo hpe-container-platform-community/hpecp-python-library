@@ -263,29 +263,50 @@ class BaseProxy:
                 )
                 sys.exit(1)
 
+        # self.client.create_session()
         self.client = get_client()
         self.client_module_property = getattr(
             self.client, self.client_module_name
         )
+        list_instance = self.client_module_property.list()
 
+        self.print_list(
+            list_instance=list_instance,
+            output=output,
+            columns=columns,
+            query=query,
+        )
+
+    def print_list(
+        self, list_instance, output, columns, query,
+    ):
+        """Print a list of resources.
+
+        Parameters
+        ----------
+        list_instance : [type]
+            [description]
+        output : [type]
+            [description]
+        columns : [type]
+            [description]
+        query : [type]
+            [description]
+        """
         # use tabulate for simplified user output
         if len(query) == 0:
             if output == "table":
-                print(
-                    self.client_module_property.list().tabulate(
-                        columns=columns
-                    )
-                )
+                print(list_instance.tabulate(columns=columns))
             else:
                 print(
-                    self.client_module_property.list().tabulate(
+                    list_instance.tabulate(
                         columns=columns, style="plain", display_headers=False
                     )
                 )
 
         # user has provided a jmes query
         else:
-            data = self.client_module_property.list().json
+            data = list_instance.json
             if output == "json-pp":
                 print(
                     json.dumps(
@@ -862,7 +883,7 @@ class TenantProxy(BaseProxy):
         print(conf)
 
     @intercept_exception
-    def users(self, id):
+    def users(self, id, output="table", columns="ALL", query={}):
         """Retrieve users assigned to tenant.
 
         Parameters
@@ -870,7 +891,13 @@ class TenantProxy(BaseProxy):
         id : str
             The tenant ID.
         """
-        get_client().tenant.users(id=id)
+        list_instance = get_client().tenant.users(id=id)
+        self.print_list(
+            list_instance=list_instance,
+            output=output,
+            columns=columns,
+            query=query,
+        )
 
     @intercept_exception
     def assign_user_to_role(self, tenant_id, user_id, role_id):
