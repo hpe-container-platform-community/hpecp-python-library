@@ -253,7 +253,10 @@ class BaseProxy:
         else:
             if output not in ["json", "json-pp"]:
                 print(
-                    "If you provide a jmes query, the output must be 'json' or 'json-pp'",
+                    (
+                        "If you provide a jmes query, the output must "
+                        "be 'json' or 'json-pp'"
+                    ),
                     file=sys.stderr,
                 )
                 sys.exit(1)
