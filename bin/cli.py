@@ -1216,7 +1216,7 @@ class UserProxy(BaseProxy):
 
     def __dir__(self):
         """Return the CLI method names."""
-        return ["create", "get", "delete", "list"]
+        return ["create", "get", "delete", "examples", "list"]
 
     def __init__(self):
         """Initiate this proxy class with the client module name."""
