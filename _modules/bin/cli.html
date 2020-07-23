@@ -1196,32 +1196,16 @@
         <span class="nb">print</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="RoleProxy"><a class="viewcode-back" href="../../cli.html#bin.cli.RoleProxy">[docs]</a><span class="k">class</span> <span class="nc">RoleProxy</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="RoleProxy"><a class="viewcode-back" href="../../cli.html#bin.cli.RoleProxy">[docs]</a><span class="k">class</span> <span class="nc">RoleProxy</span><span class="p">(</span><span class="n">BaseProxy</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Proxy object to :py:attr:`&lt;hpecp.client.role&gt;`.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__dir__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return the CLI method names.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;get&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;delete&quot;</span><span class="p">,</span> <span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="s2">&quot;list&quot;</span><span class="p">]</span>
 
-<div class="viewcode-block" id="RoleProxy.get"><a class="viewcode-back" href="../../cli.html#bin.cli.RoleProxy.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">role_id</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s2">&quot;yaml&quot;</span><span class="p">,</span>
-    <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Retrieve a Role by Id.</span>
-
-<span class="sd">        :param role_id: the id of the role with format: &#39;/api/v1/role/[0-9]+&#39;</span>
-<span class="sd">        :param output: how to display the output [&#39;yaml&#39;|&#39;json&#39;]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">role_id</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">output</span> <span class="o">==</span> <span class="s2">&quot;yaml&quot;</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span>
-                <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span>
-                    <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span>
-                        <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">),</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">,</span>
-                    <span class="p">)</span>
-                <span class="p">)</span>
-            <span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">))</span></div></div>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initiate this proxy class with the client module name.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RoleProxy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">new_instance</span><span class="p">(</span><span class="s2">&quot;role&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="configure_cli"><a class="viewcode-back" href="../../cli.html#bin.cli.configure_cli">[docs]</a><span class="k">def</span> <span class="nf">configure_cli</span><span class="p">():</span>
