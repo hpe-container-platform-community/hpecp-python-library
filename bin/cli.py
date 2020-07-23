@@ -855,6 +855,7 @@ class TenantProxy(BaseProxy):
     def __dir__(self):
         """Return the CLI method names."""
         return [
+            "add_external_user_groups",
             "assign_user_to_role",
             "create",
             "delete",
@@ -950,6 +951,13 @@ class TenantProxy(BaseProxy):
     def get_external_user_groups(self, id):
         """Retrieve External User Groups."""
         print(get_client().tenant.get_external_user_groups(id=id))
+
+    @intercept_exception
+    def add_external_user_groups(self, tenant_id, role_id, group):
+        """Add External User Groups."""
+        get_client().tenant.add_external_user_groups(
+            tenant_id=tenant_id, role_id=role_id, group=group
+        )
 
 
 class LockProxy(object):

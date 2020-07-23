@@ -28,6 +28,7 @@ from .base_resource import AbstractWaitableResourceController, AbstractResource
 from hpecp.exceptions import ContainerPlatformClientException
 from hpecp.base_resource import ResourceList
 from hpecp.user import User
+import json
 
 try:
     basestring
@@ -175,49 +176,21 @@ class TenantController(AbstractWaitableResourceController):
         response = self.client._request(
             url="/api/v2/k8skubeconfig/",
             http_method="get",
-            description="tenant/get_k8skubeconfig",
+            description="tenant/k8skubeconfig",
         )
         return response.text
 
     def get_external_user_groups(self, id):
         return self.get(id).external_user_groups
 
-    def auth_setup(self, tenant_id, data):
-        """Setup external autentication for the tenant.
-
-        Parameters
-        ----------
-        tenant_id : str
-            The tenant ID
-        data : object
-            See below for an example.
-
-        Example
-        -------
-        >>> data = {
-        ...    "external_user_groups": [
-        ...        {
-        ...            "role": "/api/v1/role/2", # 2 = Admins
-        ...            "group":(
-        ...                 "CN=DemoTenantAdmins,CN=Users,DC=samdom,"
-        ...                 "DC=example,DC=com"
-        ...                 ),
-        ...        },
-        ...        {
-        ...            "role": "/api/v1/role/3", # 3 = Members
-        ...            "group": (
-        ...                 "CN=DemoTenantUsers,CN=Users,DC=samdom,"
-        ...                 "DC=example,DC=com"
-        ...                 ),
-        ...        }
-        ...    ]
-        ... }
-        """
+    def add_external_user_groups(self, tenant_id, role_id, group):
+        user_groups = json.loads(self.get_external_user_groups(tenant_id))
+        user_groups.append({"role": role_id, "group": group})
         self.client._request(
-            url="/api/v1/tenant/{}?external_user_groups".format(tenant_id),
+            url=tenant_id + "?external_user_groups",
             http_method="put",
-            data=data,
-            description="epic_tenant_auth",
+            data=user_groups,
+            description="tenant/add_external_user_groups",
         )
 
     def users(self, id):
