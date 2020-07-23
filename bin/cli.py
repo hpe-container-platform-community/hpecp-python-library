@@ -87,7 +87,7 @@ else:
 def intercept_exception(wrapped, instance, args, kwargs):
     """Handle Exceptions."""
 
-    def _handle_unknown_exception():
+    def _handle_unknown_exception(ex):
         """Handle unknown exceptions."""
         if _log.level == 10:  # "DEBUG"
             print(
@@ -100,6 +100,7 @@ def intercept_exception(wrapped, instance, args, kwargs):
             )
         tb = traceback.format_exc()
         _log.debug(tb)
+        _log.debug(ex)
         sys.exit(1)
 
     try:
@@ -109,8 +110,8 @@ def intercept_exception(wrapped, instance, args, kwargs):
     except AssertionError as ae:
         print(ae, file=sys.stderr)
         sys.exit(1)
-    except APIUnknownException:
-        _handle_unknown_exception()
+    except APIUnknownException as ue:
+        _handle_unknown_exception(ue)
     except (
         APIException,
         APIItemNotFoundException,
@@ -119,8 +120,8 @@ def intercept_exception(wrapped, instance, args, kwargs):
     ) as e:
         print(e.message, file=sys.stderr)
         sys.exit(1)
-    except Exception:
-        _handle_unknown_exception()
+    except Exception as ex:
+        _handle_unknown_exception(ex)
 
 
 @intercept_exception

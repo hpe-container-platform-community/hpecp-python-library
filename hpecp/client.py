@@ -640,7 +640,7 @@ class ContainerPlatformClient(object):
                     request_data=json.dumps(data),
                 )
             else:
-                self.log.exception(
+                self.log.debug(
                     "{} : {} {} REQ: {}".format(
                         description, http_method, url, json.dumps(data)
                     )
