@@ -26,6 +26,8 @@ from requests.structures import CaseInsensitiveDict
 
 from .base_resource import AbstractWaitableResourceController, AbstractResource
 from hpecp.exceptions import ContainerPlatformClientException
+from hpecp.base_resource import ResourceList
+from hpecp.user import User
 
 try:
     basestring
@@ -206,6 +208,14 @@ class TenantController(AbstractWaitableResourceController):
             data=data,
             description="epic_tenant_auth",
         )
+
+    def users(self, id):
+        response = self.client._request(
+            url="/api/v1/tenant/{}?user".format(id),
+            http_method="get",
+            description="tenant/users",
+        )
+        return ResourceList(User, response.json()["_embedded"]["users"],)
 
     def assign_user_to_role(self, tenant_id, role_id, user_id):
         """Assign a user to a given role using the tenant.

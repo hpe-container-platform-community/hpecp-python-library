@@ -861,6 +861,17 @@ class TenantProxy(BaseProxy):
         print(conf)
 
     @intercept_exception
+    def users(self, id):
+        """Retrieve users assigned to tenant.
+
+        Parameters
+        ----------
+        id : str
+            The tenant ID.
+        """
+        get_client().tenant.assign_user_to_role(id=id)
+
+    @intercept_exception
     def assign_user_to_role(self, tenant_id, user_id, role_id):
         """Assign user to role in tenant."""
         get_client().tenant.assign_user_to_role(
