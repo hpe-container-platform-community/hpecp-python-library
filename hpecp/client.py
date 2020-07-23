@@ -50,6 +50,7 @@ from .user import UserController
 import codecs
 import ast
 from requests.structures import CaseInsensitiveDict
+from hpecp.exceptions import APIForbiddenException
 
 try:
     basestring
@@ -611,6 +612,20 @@ class ContainerPlatformClient(object):
             else:
                 response_info = ""
 
+            if response.status_code == 403:
+                # This is expected for some method calls so do not log as an
+                # error
+                self.log.debug(
+                    "{} : {} {} REQ: {}".format(
+                        description, http_method, url, json.dumps(data)
+                    )
+                )
+                raise APIForbiddenException(
+                    message=response_info,
+                    request_method=http_method,
+                    request_url=url,
+                    request_data=json.dumps(data),
+                )
             if response.status_code == 404:
                 # This is expected for some method calls so do not log as an
                 # error

@@ -51,7 +51,11 @@ from hpecp.k8s_worker import WorkerK8sStatus
 from hpecp.logger import Logger
 from hpecp.gateway import GatewayStatus
 from hpecp.k8s_cluster import K8sClusterHostConfig, K8sClusterStatus
-from hpecp.exceptions import APIItemNotFoundException, APIUnknownException
+from hpecp.exceptions import (
+    APIForbiddenException,
+    APIItemNotFoundException,
+    APIUnknownException,
+)
 from textwrap import dedent
 import inspect
 
@@ -116,6 +120,7 @@ def intercept_exception(wrapped, instance, args, kwargs):
         APIException,
         APIItemNotFoundException,
         APIItemConflictException,
+        APIForbiddenException,
         ContainerPlatformClientException,
     ) as e:
         print(e.message, file=sys.stderr)
