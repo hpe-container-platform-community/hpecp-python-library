@@ -211,9 +211,7 @@ class TenantController(AbstractWaitableResourceController):
 
     def users(self, id):
         response = self.client._request(
-            url="/api/v1/tenant/{}?user".format(id),
-            http_method="get",
-            description="tenant/users",
+            url=id + "?user", http_method="get", description="tenant/users",
         )
         return ResourceList(User, response.json()["_embedded"]["users"],)
 
