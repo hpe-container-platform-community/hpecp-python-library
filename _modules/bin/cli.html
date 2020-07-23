@@ -841,6 +841,7 @@
         <span class="k">return</span> <span class="p">[</span>
             <span class="s2">&quot;create&quot;</span><span class="p">,</span>
             <span class="s2">&quot;delete&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;examples&quot;</span><span class="p">,</span>
             <span class="s2">&quot;get&quot;</span><span class="p">,</span>
             <span class="s2">&quot;k8skubeconfig&quot;</span><span class="p">,</span>
             <span class="s2">&quot;list&quot;</span><span class="p">,</span>
@@ -880,6 +881,12 @@
             <span class="n">k8s_cluster</span><span class="o">=</span><span class="n">k8s_cluster_id</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">tenant_id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TenantProxy.examples"><a class="viewcode-back" href="../../cli.html#bin.cli.TenantProxy.examples">[docs]</a>    <span class="k">def</span> <span class="nf">examples</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Show usage_examples of the list method.&quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sd">&quot;&quot;&quot;hpecp tenant list --query &quot;[?tenant_type == &#39;k8s&#39;]&quot; --output json-pp&quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
+        <span class="p">)</span></div>
 
 <div class="viewcode-block" id="TenantProxy.k8skubeconfig"><a class="viewcode-back" href="../../cli.html#bin.cli.TenantProxy.k8skubeconfig">[docs]</a>    <span class="nd">@intercept_exception</span>
     <span class="k">def</span> <span class="nf">k8skubeconfig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
