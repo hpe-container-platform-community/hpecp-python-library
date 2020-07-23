@@ -179,7 +179,7 @@ class TenantController(AbstractWaitableResourceController):
         )
         return response.text
 
-    def get_external_user_groups(self, tenant_id):
+    def get_external_user_groups(self, id):
         return self.get(id).external_user_groups
 
     def auth_setup(self, tenant_id, data):
