@@ -88,4 +88,4 @@ class RoleController(AbstractResourceController):
 
     base_resource_path = "/api/v1/role/"
     resource_class = Role
-    resource_list_path = "role"
+    resource_list_path = "roles"
