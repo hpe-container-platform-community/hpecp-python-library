@@ -803,6 +803,7 @@ class TenantProxy(BaseProxy):
             "k8skubeconfig",
             "list",
             # "status",  # TODO: implement me!
+            "users",
             "wait_for_status",
         ]
 
