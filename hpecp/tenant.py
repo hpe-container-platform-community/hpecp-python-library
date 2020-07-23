@@ -140,7 +140,7 @@ class TenantController(AbstractWaitableResourceController):
         )
         return CaseInsensitiveDict(response.headers)["Location"]
 
-    def get_k8skubeconfig(self):
+    def k8skubeconfig(self):
         """Retrieve the tenant kubeconfig.
 
         This requires the ContainerPlatformClient to be created with

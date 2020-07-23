@@ -782,7 +782,7 @@ class TenantProxy(BaseProxy):
             "create",
             "delete",
             "get",
-            "get_k8skubeconfig",
+            "k8skubeconfig",
             "list",
             # "status",  # TODO: implement me!
             "wait_for_status",
@@ -822,7 +822,7 @@ class TenantProxy(BaseProxy):
         print(tenant_id)
 
     @intercept_exception
-    def get_k8skubeconfig(self):
+    def k8skubeconfig(self):
         """Retrieve the tenant kubeconfig.
 
         This requires the ContainerPlatformClient to be created with
@@ -833,7 +833,7 @@ class TenantProxy(BaseProxy):
         str
             Tenant KubeConfig
         """
-        conf = get_client().tenant.get_k8skubeconfig()
+        conf = get_client().tenant.k8skubeconfig()
         print(conf)
 
 
@@ -1319,6 +1319,12 @@ class AutoComplete:
 
                 # if the last parameter was --*file
                 if echo "${prev}" | grep -q '\-\-.*file$'
+                then
+                    _filedir;
+                    return
+                fi
+
+                if echo "${prev}" | grep -q '>'
                 then
                     _filedir;
                     return
