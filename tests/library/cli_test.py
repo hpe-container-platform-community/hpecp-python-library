@@ -476,5 +476,6 @@ class TestBash(BaseTestCase):
 
         # test the introspection of CLI gateway.list() parameter names
         self.assertEquals(
-            modules["gateway"]["list"], ["--output", "--columns", "--query"]
+            modules["gateway"]["list"],
+            ["--output", "--columns", "--query", "--pretty_print"],
         )

@@ -215,7 +215,9 @@ class BaseProxy:
         self.client_module_property.delete(id=id)
 
     @intercept_exception
-    def list(self, output="table", columns="ALL", query={}):
+    def list(
+        self, output="table", columns="ALL", query={}, pretty_print=False
+    ):
         """Retrieve the list of resources.
 
         Parameters
@@ -248,6 +250,13 @@ class BaseProxy:
                     file=sys.stderr,
                 )
                 sys.exit(1)
+            else:
+                if pretty_print:
+                    print(
+                        "'--pretty-print' is only valid for --output='json'",
+                        file=sys.stderr,
+                    )
+                    sys.exit(1)
         else:
             if output not in ["json"]:
                 print(
@@ -279,7 +288,16 @@ class BaseProxy:
         # user has provided a jmes query
         else:
             data = self.client_module_property.list().json
-            print(json.dumps(jmespath.search(str(query), data)))
+            if pretty_print:
+                print(
+                    json.dumps(
+                        jmespath.search(str(query), data),
+                        indent=4,
+                        sort_keys=True,
+                    )
+                )
+            else:
+                print(json.dumps(jmespath.search(str(query), data),))
 
     def wait_for_state(
         self, id, states=[], timeout_secs=60,
