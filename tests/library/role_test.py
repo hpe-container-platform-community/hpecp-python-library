@@ -109,14 +109,13 @@ class TestRoleGet(TestCase):
     def test_get_role_assertions(self, mock_get, mock_post):
 
         with self.assertRaisesRegexp(
-            AssertionError, "'role_id' must be provided and must be a string",
+            AssertionError, "'id' must be provided and must be a str",
         ):
             get_client().role.get(123)
 
         # pylint: disable=anomalous-backslash-in-string
         with self.assertRaisesRegexp(
-            AssertionError,
-            "'role_id' must have format '\/api\/v1\/role\/\[0-9]\+'",
+            AssertionError, "'id' does not start with '/api/v1/role/",
         ):
             get_client().role.get("garbage")
 

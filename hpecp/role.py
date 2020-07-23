@@ -22,59 +22,15 @@ from __future__ import absolute_import
 
 import re
 
+from .base_resource import AbstractResourceController, AbstractResource
+
 try:
     basestring
 except NameError:
     basestring = str
 
 
-class RoleController:
-    """This is the main class that users will interact with to work with roles.
-
-    An instance of this class is available in the
-    client.ContainerPlatformClient with the attribute name
-    :py:attr:`role <.client.ContainerPlatformClient.role>`.  The methods of
-    this class can be
-    invoked using `client.role.method()`.  See the example below:
-
-    Example::
-
-        client = ContainerPlatformClient(...).create_session()
-        client.role.get()
-
-    """
-
-    def __init__(self, client):
-        self.client = client
-
-    def get(self, role_id):
-        """Retrieve a Role by ID.
-
-        Args:
-            role_id: str
-                The role ID - format: '/api/v1/role/[0-9]+'
-
-        Returns:
-            Role: object representing Role
-
-        Raises:
-            APIException
-        """
-        assert isinstance(
-            role_id, str
-        ), "'role_id' must be provided and must be a string"
-        assert re.match(
-            r"\/api\/v1\/role\/[0-9]+", role_id
-        ), "'role_id' must have format '/api/v1/role/[0-9]+'"
-
-        response = self.client._request(
-            url=role_id, http_method="get", description="role/get"
-        )
-
-        return Role(response.json())
-
-
-class Role:
+class Role(AbstractResource):
     """Create an instance of Role from json data returned from the HPE
     Container Platform API.
 
@@ -97,17 +53,6 @@ class Role:
     """All of the fields of Role objects as returned by the HPE Container
     Platform API"""
 
-    default_display_fields = [
-        "id",
-        "name",
-        "description",
-    ]
-    """These fields are displayed by default, e.g. in tabulate()"""
-
-    def __init__(self, json):
-        self.json = json
-        self.display_columns = Role.default_display_fields
-
     @property
     def id(self):
         """@Field: from json['_links']['self']['href'] - id format:
@@ -123,3 +68,24 @@ class Role:
     def description(self):
         """@Field: from json['label']['description']"""
         return self.json["label"]["description"]
+
+
+class RoleController(AbstractResourceController):
+    """This is the main class that users will interact with to work with roles.
+
+    An instance of this class is available in the
+    client.ContainerPlatformClient with the attribute name
+    :py:attr:`role <.client.ContainerPlatformClient.role>`.  The methods of
+    this class can be
+    invoked using `client.role.method()`.  See the example below:
+
+    Example::
+
+        client = ContainerPlatformClient(...).create_session()
+        client.role.get()
+
+    """
+
+    base_resource_path = "/api/v1/role/"
+    resource_class = Role
+    resource_list_path = "role"

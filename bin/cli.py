@@ -1150,32 +1150,16 @@ class UserProxy(BaseProxy):
         print(user_id)
 
 
-class RoleProxy(object):
+class RoleProxy(BaseProxy):
     """Proxy object to :py:attr:`<hpecp.client.role>`."""
 
     def __dir__(self):
         """Return the CLI method names."""
-        return ["get"]
+        return ["delete", "get", "list"]
 
-    def get(
-        self, role_id, output="yaml",
-    ):
-        """Retrieve a Role by Id.
-
-        :param role_id: the id of the role with format: '/api/v1/role/[0-9]+'
-        :param output: how to display the output ['yaml'|'json']
-        """
-        response = get_client().role.get(role_id)
-        if output == "yaml":
-            print(
-                yaml.dump(
-                    yaml.load(
-                        json.dumps(response.json), Loader=yaml.FullLoader,
-                    )
-                )
-            )
-        else:
-            print(json.dumps(response.json))
+    def __init__(self):
+        """Initiate this proxy class with the client module name."""
+        super(RoleProxy, self).new_instance("role")
 
 
 def configure_cli():
