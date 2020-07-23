@@ -795,6 +795,7 @@ class TenantProxy(BaseProxy):
     def __dir__(self):
         """Return the CLI method names."""
         return [
+            "assign_user_to_role",
             "create",
             "delete",
             "examples",
