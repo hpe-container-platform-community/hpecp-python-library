@@ -232,9 +232,8 @@ class BaseProxy:
             Query in jmespath (https://jmespath.org/) format, by default {}
             if using a query, output must be "json" or "json-pp"
         """
-
         # FIXME: this also gets called by print_list()
-        self.validate_list_params(
+        columns = self.validate_list_params(
             all_fields=self.all_fields(),
             output=output,
             columns=columns,
@@ -272,9 +271,8 @@ class BaseProxy:
             [description]
         """
         if columns == "ALL":
-            columns = all_fields
-
-        if columns is not all_fields:
+            columns = list(all_fields)
+        else:
             if not isinstance(columns, list):
                 print("'columns' parameter must be a list.", file=sys.stderr)
                 sys.exit(1)
@@ -302,6 +300,8 @@ class BaseProxy:
                 )
                 sys.exit(1)
 
+        return columns
+
     @intercept_exception
     def print_list(
         self, list_instance, output, columns, query,
@@ -319,7 +319,7 @@ class BaseProxy:
         query : [type]
             [description]
         """
-        self.validate_list_params(
+        columns = self.validate_list_params(
             all_fields=list_instance.resource_class.all_fields,
             output=output,
             columns=columns,
