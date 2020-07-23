@@ -112,15 +112,17 @@ points to the different modules (user, gateway, cluster, etc)</p>
 
 <dl class="py method">
 <dt id="bin.cli.BaseProxy.list">
-<code class="sig-name descname">list</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">output</span><span class="o">=</span><span class="default_value">'table'</span></em>, <em class="sig-param"><span class="n">columns</span><span class="o">=</span><span class="default_value">'ALL'</span></em>, <em class="sig-param"><span class="n">query</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">pretty_print</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#BaseProxy.list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.BaseProxy.list" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">list</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">output</span><span class="o">=</span><span class="default_value">'table'</span></em>, <em class="sig-param"><span class="n">columns</span><span class="o">=</span><span class="default_value">'ALL'</span></em>, <em class="sig-param"><span class="n">query</span><span class="o">=</span><span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#BaseProxy.list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.BaseProxy.list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve the list of resources.</p>
 <dl class="simple">
-<dt>output<span class="classifier">str, optional</span></dt><dd><p>Define how the output should be printed, by default “json”</p>
+<dt>output<span class="classifier">str, optional</span></dt><dd><p>Define how the output should be printed, by default “table”
+“json” or “json-pp” (json pretty print) if providing a query</p>
 </dd>
 <dt>columns<span class="classifier">list/tuple, optional</span></dt><dd><p>List of specific columns to be displayed, by default []
 <cite>Catalog.default_display_fields</cite></p>
 </dd>
-<dt>query<span class="classifier">dict, optional</span></dt><dd><p>Query in jmespath (<a class="reference external" href="https://jmespath.org/">https://jmespath.org/</a>) format, by default {}</p>
+<dt>query<span class="classifier">dict, optional</span></dt><dd><p>Query in jmespath (<a class="reference external" href="https://jmespath.org/">https://jmespath.org/</a>) format, by default {}
+if using a query, output must be “json” or “json-pp”</p>
 </dd>
 </dl>
 </dd></dl>
