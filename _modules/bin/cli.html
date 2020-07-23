@@ -261,7 +261,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">client_module_property</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BaseProxy.list"><a class="viewcode-back" href="../../cli.html#bin.cli.BaseProxy.list">[docs]</a>    <span class="nd">@intercept_exception</span>
-    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s2">&quot;table&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;ALL&quot;</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="p">{}):</span>
+    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s2">&quot;table&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;ALL&quot;</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="p">{},</span> <span class="n">pretty_print</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Retrieve the list of resources.</span>
 
 <span class="sd">        Parameters</span>
@@ -294,6 +296,13 @@
                     <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span>
                 <span class="p">)</span>
                 <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">pretty_print</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span>
+                        <span class="s2">&quot;&#39;--pretty-print&#39; is only valid for --output=&#39;json&#39;&quot;</span><span class="p">,</span>
+                        <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span>
+                    <span class="p">)</span>
+                    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">output</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;json&quot;</span><span class="p">]:</span>
                 <span class="nb">print</span><span class="p">(</span>
@@ -325,7 +334,16 @@
         <span class="c1"># user has provided a jmes query</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_module_property</span><span class="o">.</span><span class="n">list</span><span class="p">()</span><span class="o">.</span><span class="n">json</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">jmespath</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">query</span><span class="p">),</span> <span class="n">data</span><span class="p">)))</span></div>
+            <span class="k">if</span> <span class="n">pretty_print</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span>
+                        <span class="n">jmespath</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">query</span><span class="p">),</span> <span class="n">data</span><span class="p">),</span>
+                        <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                        <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">jmespath</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">query</span><span class="p">),</span> <span class="n">data</span><span class="p">),))</span></div>
 
 <div class="viewcode-block" id="BaseProxy.wait_for_state"><a class="viewcode-back" href="../../cli.html#bin.cli.BaseProxy.wait_for_state">[docs]</a>    <span class="k">def</span> <span class="nf">wait_for_state</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">states</span><span class="o">=</span><span class="p">[],</span> <span class="n">timeout_secs</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
