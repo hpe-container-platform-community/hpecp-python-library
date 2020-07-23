@@ -215,20 +215,20 @@ class BaseProxy:
         self.client_module_property.delete(id=id)
 
     @intercept_exception
-    def list(
-        self, output="table", columns="ALL", query={}, pretty_print=False
-    ):
+    def list(self, output="table", columns="ALL", query={}):
         """Retrieve the list of resources.
 
         Parameters
         ----------
         output : str, optional
-            Define how the output should be printed, by default "json"
+            Define how the output should be printed, by default "table"
+            "json" or "json-pp" (json pretty print) if providing a query
         columns : list/tuple, optional
             List of specific columns to be displayed, by default []
             `Catalog.default_display_fields`
         query : dict, optional
             Query in jmespath (https://jmespath.org/) format, by default {}
+            if using a query, output must be "json" or "json-pp"
         """
         if columns == "ALL":
             columns = self.all_fields()
@@ -250,17 +250,10 @@ class BaseProxy:
                     file=sys.stderr,
                 )
                 sys.exit(1)
-            else:
-                if pretty_print:
-                    print(
-                        "'--pretty-print' is only valid for --output='json'",
-                        file=sys.stderr,
-                    )
-                    sys.exit(1)
         else:
-            if output not in ["json"]:
+            if output not in ["json", "json-pp"]:
                 print(
-                    "If you provide a jmes query, the output must be 'json'",
+                    "If you provide a jmes query, the output must be 'json' or 'json-pp'",
                     file=sys.stderr,
                 )
                 sys.exit(1)
@@ -288,7 +281,7 @@ class BaseProxy:
         # user has provided a jmes query
         else:
             data = self.client_module_property.list().json
-            if pretty_print:
+            if output == "json-pp":
                 print(
                     json.dumps(
                         jmespath.search(str(query), data),
