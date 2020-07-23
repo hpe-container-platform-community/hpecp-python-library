@@ -1241,6 +1241,12 @@ class UserProxy(BaseProxy):
         )
         print(user_id)
 
+    def examples(self):
+        """Show usage_examples of the list method."""
+        print(
+            """hpecp user list --query '[?is_external]' --output json-pp"""  # noqa: E501
+        )
+
 
 class RoleProxy(BaseProxy):
     """Proxy object to :py:attr:`<hpecp.client.role>`."""
