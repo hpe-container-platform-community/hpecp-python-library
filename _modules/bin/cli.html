@@ -1270,16 +1270,20 @@
 
 <div class="viewcode-block" id="UserProxy.create"><a class="viewcode-back" href="../../cli.html#bin.cli.UserProxy.create">[docs]</a>    <span class="nd">@intercept_exception</span>
     <span class="k">def</span> <span class="nf">create</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">is_external</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">is_external</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create a User.</span>
 
 <span class="sd">        :param name: the user name</span>
+<span class="sd">        :param password:  the password</span>
 <span class="sd">        :param description: the user descripton</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">user_id</span> <span class="o">=</span> <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">,</span> <span class="n">is_external</span><span class="o">=</span><span class="n">is_external</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">,</span>
+            <span class="n">is_external</span><span class="o">=</span><span class="n">is_external</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span></div></div>
 
