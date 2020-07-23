@@ -870,7 +870,7 @@ class TenantProxy(BaseProxy):
         id : str
             The tenant ID.
         """
-        get_client().tenant.assign_user_to_role(id=id)
+        get_client().tenant.users(id=id)
 
     @intercept_exception
     def assign_user_to_role(self, tenant_id, user_id, role_id):
