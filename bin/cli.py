@@ -795,6 +795,7 @@ class TenantProxy(BaseProxy):
         return [
             "create",
             "delete",
+            "examples",
             "get",
             "k8skubeconfig",
             "list",
@@ -834,6 +835,12 @@ class TenantProxy(BaseProxy):
             k8s_cluster=k8s_cluster_id,
         )
         print(tenant_id)
+
+    def examples(self):
+        """Show usage_examples of the list method."""
+        print(
+            """hpecp tenant list --query "[?tenant_type == 'k8s']" --output json-pp"""  # noqa: E501
+        )
 
     @intercept_exception
     def k8skubeconfig(self):
