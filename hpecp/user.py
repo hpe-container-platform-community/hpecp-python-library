@@ -50,7 +50,6 @@ class User(AbstractResource):
         "id",
         "name",
         "description",
-        "label",
         "is_group_added_user",
         "is_external",
         "is_service_account",
@@ -86,17 +85,6 @@ class User(AbstractResource):
                 return self.json["_embedded"]["label"]["description"]
             else:
                 return self.json["label"]["description"]
-        except Exception:
-            return ""
-
-    @property
-    def label(self):
-        """@Field: from json['label']"""
-        try:
-            if "_embedded" in self.json:
-                return self.json["_embedded"]["label"]
-            else:
-                return self.json["label"]
         except Exception:
             return ""
 

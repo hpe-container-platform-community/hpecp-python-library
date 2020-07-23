@@ -139,7 +139,8 @@ class TestUsers(TestCase):
         assert users[0].is_external is False
         assert users[0].is_group_added_user is False
 
-        assert users[0].label == {"description": "chris", "name": "csnow"}
+        assert users[0].name == "csnow"
+        assert users[0].description == "chris"
         assert users[0]._links == {"self": {"href": "/api/v1/user/16"}}
 
 
