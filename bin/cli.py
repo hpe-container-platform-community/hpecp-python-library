@@ -949,8 +949,9 @@ class TenantProxy(BaseProxy):
     @intercept_exception
     def get_external_user_groups(self, id):
         """Retrieve External User Groups."""
-        get_client().tenant.get_external_user_groups(id=id)
-
+        print(
+            get_client().tenant.get_external_user_groups(id=id)
+        )
 
 class LockProxy(object):
     """Proxy object to :py:attr:`<hpecp.client.lock>`."""
