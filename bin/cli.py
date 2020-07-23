@@ -189,7 +189,13 @@ class BaseProxy:
         )
         response = self.client_module_property.get(id=id, params=params)
 
-        if output == "yaml":
+        if output == "json":
+            print(json.dumps(response.json))
+        elif output == "json-pp":
+            print(
+                json.dumps(response.json), indent=4, sort_keys=True,
+            )
+        else:
             print(
                 yaml.dump(
                     yaml.load(
@@ -197,8 +203,6 @@ class BaseProxy:
                     )
                 )
             )
-        else:
-            print(json.dumps(response.json))
 
     @intercept_exception
     def delete(
