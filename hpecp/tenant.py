@@ -64,6 +64,7 @@ class Tenant(AbstractResource):
         "description",
         "status",
         "tenant_type",
+        "external_user_groups",
     ]
 
     @property
@@ -86,6 +87,13 @@ class Tenant(AbstractResource):
     def tenant_type(self):
         try:
             return self.json["tenant_type"]
+        except KeyError:
+            return ""
+
+    @property
+    def external_user_groups(self):
+        try:
+            return self.json["external_user_groups"]
         except KeyError:
             return ""
 
