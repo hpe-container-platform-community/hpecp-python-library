@@ -1285,7 +1285,13 @@
             <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">,</span>
             <span class="n">is_external</span><span class="o">=</span><span class="n">is_external</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span></div></div>
+        <span class="nb">print</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="UserProxy.examples"><a class="viewcode-back" href="../../cli.html#bin.cli.UserProxy.examples">[docs]</a>    <span class="k">def</span> <span class="nf">examples</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Show usage_examples of the list method.&quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sd">&quot;&quot;&quot;hpecp user list --query &#39;[?is_external]&#39; --output json-pp&quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
+        <span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="RoleProxy"><a class="viewcode-back" href="../../cli.html#bin.cli.RoleProxy">[docs]</a><span class="k">class</span> <span class="nc">RoleProxy</span><span class="p">(</span><span class="n">BaseProxy</span><span class="p">):</span>
