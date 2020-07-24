@@ -180,8 +180,8 @@ class TenantController(AbstractWaitableResourceController):
         )
         return response.text
 
-    def get_external_user_groups(self, id):
-        return self.get(id).external_user_groups
+    def get_external_user_groups(self, tenant_id):
+        return self.get(tenant_id).external_user_groups
 
     def delete_external_user_group(
         self, tenant_id, group,
