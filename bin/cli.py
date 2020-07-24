@@ -950,7 +950,7 @@ class TenantProxy(BaseProxy):
     @intercept_exception
     def add_external_user_group(self, tenant_id, group, role_id):
         """Add External User Group."""
-        get_client().tenant.add_external_user_groups(
+        get_client().tenant.add_external_user_group(
             tenant_id=tenant_id, group=group, role_id=role_id
         )
 
