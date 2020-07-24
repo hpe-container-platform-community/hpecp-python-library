@@ -58,6 +58,7 @@ from hpecp.exceptions import (
 )
 from textwrap import dedent
 import inspect
+import collections
 
 
 if sys.version_info[0] >= 3:
@@ -1403,8 +1404,9 @@ class AutoComplete:
 
     def _get_metadata(self):
 
-        modules = {}
-        columns = {}
+        modules = collections.OrderedDict()
+        columns = collections.OrderedDict()
+
         for module_name in self.cli.__dict__.keys():
 
             # we manually define autocomplete for these methods
@@ -1419,8 +1421,12 @@ class AutoComplete:
             except Exception:
                 all_fields = []
 
-            function_parameters = {}
-            for function_name in function_names:
+            function_parameters = collections.OrderedDict()
+
+            # autcomplete should have most specific name first, e.g.
+            # hpecp.tenant.create_xyz  before
+            # hpecp.tenant.create
+            for function_name in reversed(function_names):
                 function = getattr(module, function_name)
 
                 if six.PY2:
@@ -1436,6 +1442,7 @@ class AutoComplete:
 
                 # prefix parameter names with '--'
                 parameter_names = list(map("--".__add__, parameter_names))
+
                 function_parameters.update({function_name: parameter_names})
 
             modules[module_name] = function_parameters
@@ -1496,7 +1503,7 @@ class AutoComplete:
                     {% for function_name in modules[module_name] %}
                         {% set param_names = " ".join(modules[module_name][function_name]).replace('_', '-') %}
                         {% if function_name == "list" %}
-                    *"hpecp.{{module_name}}.{{function_name.replace('_', '-')}}"*)
+                    *"hpecp.{{module_name}}.{{function_name.replace('_', '-')}}."*)
                         PARAM_NAMES="{{param_names}}"
                         for PARAM in ${PARAM_NAMES[@]}; do
                             PARAM="${PARAM//'\'}"
@@ -1518,7 +1525,7 @@ class AutoComplete:
                         fi
                         ;;
                         {% else %}
-                    *"hpecp.{{module_name}}.{{function_name.replace('_', '-')}}"*)
+                    *"hpecp.{{module_name}}.{{function_name.replace('_', '-')}}."*)
                         PARAM_NAMES="{{param_names}}"
                         for PARAM in ${PARAM_NAMES[@]}; do
                             PARAM="${PARAM//'\'}"

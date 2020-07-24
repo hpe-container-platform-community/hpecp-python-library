@@ -473,10 +473,25 @@ class TestCLIHttpClient(BaseTestCase):
 class TestBash(BaseTestCase):
     def test_get_metadata(self):
 
+        self.maxDiff = None
+
         hpecp = self.cli.CLI()
         (modules, columns) = hpecp.autocomplete._get_metadata()
 
         self.assertEquals(columns["gateway"], hpecp.gateway.all_fields())
+
+        self.assertEquals(
+            list(modules["gateway"].keys()),
+            [
+                "wait_for_state",
+                "states",
+                "list",
+                "get",
+                "delete",
+                "create_with_ssh_key",
+            ],
+            "Keys should be in reverse alphabetical order for autocompletion",
+        )
 
         # test the introspection of CLI gateway.list() parameter names
         self.assertEquals(
