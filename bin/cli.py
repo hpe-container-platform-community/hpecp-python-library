@@ -1277,11 +1277,23 @@ class RoleProxy(BaseProxy):
 
     def __dir__(self):
         """Return the CLI method names."""
-        return ["delete", "get", "list"]
+        return ["delete", "examples", "get", "list"]
 
     def __init__(self):
         """Initiate this proxy class with the client module name."""
         super(RoleProxy, self).new_instance("role")
+
+    def examples(self):
+        """Show examples for working with roles."""
+        print(
+            dedent(
+                """\
+                # Retrieve the role ID for 'Admin'
+                $ hpecp role list  --query "[?label.name == 'Admin'][_links.self.href] | [0][0]" --output json | tr -d '"'
+                /api/v1/role/2
+                """  # noqa:  E501
+            )
+        )
 
 
 def configure_cli():
