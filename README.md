@@ -99,9 +99,14 @@ password = pass123
 EOF
 ```
 
+K8s versions:
+```sh
+hpecp k8scluster k8s-supported-versions --major-filter 1 --minor-filter 17
+```
+
 Create k8s cluster example:
 ```sh
-hpecp k8scluster create myclus1 /api/v2/worker/k8shost/1:master --k8s_version=1.17.0
+hpecp k8scluster create --name myclus1 --k8shosts-config /api/v2/worker/k8shost/1:master --k8s_version=1.17.0
 ```
 
 List k8s clusters example:
