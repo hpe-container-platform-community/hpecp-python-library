@@ -188,15 +188,11 @@ class TenantController(AbstractWaitableResourceController):
     ):
         user_groups = self.get_external_user_groups(tenant_id)
 
-        updated = False
-        for user_group in user_groups:
-            if user_group["group"] == group:
-                # Update
-                user_group["group"] == role_id
-                updated = True
+        # if group exists already, remove it
+        user_groups = [ug for ug in user_groups if ug["group"] != group]
 
-        if not updated:
-            user_groups.append({"group": group, "role": role_id})
+        # add group
+        user_groups.append({"group": group, "role": role_id})
 
         data = {"external_user_groups": user_groups}
 
