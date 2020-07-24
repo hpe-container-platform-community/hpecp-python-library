@@ -91,6 +91,11 @@ verify_ssl = False
 warn_ssl = False
 username = admin
 password = admin123
+
+[tenant]
+tenant = /api/v1/tenant/15
+admin = ad_admin1
+password = pass123
 EOF
 ```
 
@@ -102,6 +107,11 @@ hpecp k8scluster create myclus1 /api/v2/worker/k8shost/1:master --k8s_version=1.
 List k8s clusters example:
 ```sh
 hpecp k8scluster list --columns=['id','description','status']
+```
+
+Tenant kube config:
+```sh
+PROFILE=tenant1 hpecp tenant k8skubeconfig > kube.conf
 ```
 
 ## CLI example 2
