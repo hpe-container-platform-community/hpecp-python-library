@@ -244,10 +244,12 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">updated</span><span class="p">:</span>
             <span class="n">user_groups</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="n">group</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="n">role_id</span><span class="p">})</span>
 
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;external_user_groups&quot;</span><span class="p">:</span> <span class="n">user_groups</span><span class="p">}</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
             <span class="n">url</span><span class="o">=</span><span class="n">tenant_id</span> <span class="o">+</span> <span class="s2">&quot;?external_user_groups&quot;</span><span class="p">,</span>
             <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;put&quot;</span><span class="p">,</span>
-            <span class="n">data</span><span class="o">=</span><span class="n">user_groups</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;tenant/add_external_user_groups&quot;</span><span class="p">,</span>
         <span class="p">)</span></div>
 
