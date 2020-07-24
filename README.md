@@ -106,7 +106,7 @@ hpecp k8scluster create myclus1 /api/v2/worker/k8shost/1:master --k8s_version=1.
 
 List k8s clusters example:
 ```sh
-hpecp k8scluster list --columns=['id','description','status']
+hpecp k8scluster list --columns [id,description,status]
 ```
 
 Tenant kube config:
