@@ -184,7 +184,7 @@ class TenantController(AbstractWaitableResourceController):
         return self.get(id).external_user_groups
 
     def add_external_user_groups(self, tenant_id, role_id, group):
-        user_groups = json.loads(self.get_external_user_groups(tenant_id))
+        user_groups = self.get_external_user_groups(tenant_id)
         user_groups.append({"role": role_id, "group": group})
         self.client._request(
             url=tenant_id + "?external_user_groups",
