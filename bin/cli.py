@@ -209,18 +209,21 @@ class BaseProxy:
             )
 
     @intercept_exception
-    def delete(
-        self, id,
-    ):
+    def delete(self, id, wait_for_delete_sec=0):
         """Delete a resource.
 
         :param id: the resource ID
+        :param wait_for_delete_sec: wait for delete to complete
+        (0 = do not wait)
         """
         self.client = get_client()
         self.client_module_property = getattr(
             self.client, self.client_module_name
         )
         self.client_module_property.delete(id=id)
+
+        if wait_for_delete_sec > 0:
+            self.wait_for_delete(id=id, timeout_secs=wait_for_delete_sec)
 
     @intercept_exception
     def list(self, output="table", columns="ALL", query={}):
