@@ -280,13 +280,17 @@
 
         <span class="c1"># optional parameter</span>
         <span class="n">tenant</span> <span class="o">=</span> <span class="n">get_config_value</span><span class="p">(</span><span class="s2">&quot;tenant&quot;</span><span class="p">,</span> <span class="n">profile</span><span class="p">)</span>
-
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
-            <span class="n">tenant</span><span class="p">,</span> <span class="nb">str</span>
-        <span class="p">),</span> <span class="s2">&quot;&#39;tenant&#39; must be provided and must be string&quot;</span>
-        <span class="k">assert</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
-            <span class="sa">r</span><span class="s2">&quot;\/api\/v1\/tenant\/[0-9]+&quot;</span><span class="p">,</span> <span class="n">tenant</span>
-        <span class="p">),</span> <span class="s2">&quot;&#39;tenant&#39; must have format &#39;/api/v1/tenant/[0-9]+&#39;&quot;</span>
+        <span class="k">if</span> <span class="n">tenant</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
+                <span class="n">tenant</span><span class="p">,</span> <span class="nb">str</span>
+            <span class="p">),</span> <span class="s2">&quot;&#39;tenant&#39; must be provided and must be string in &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">config_file</span>
+            <span class="p">)</span>
+            <span class="k">assert</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+                <span class="sa">r</span><span class="s2">&quot;\/api\/v1\/tenant\/[0-9]+&quot;</span><span class="p">,</span> <span class="n">tenant</span>
+            <span class="p">),</span> <span class="s2">&quot;&#39;tenant&#39; must have format &#39;/api/v1/tenant/[0-9]+&#39; &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">config_file</span>
+            <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">use_ssl</span> <span class="o">==</span> <span class="s2">&quot;False&quot;</span><span class="p">:</span>
             <span class="n">use_ssl</span> <span class="o">=</span> <span class="kc">False</span>
@@ -346,6 +350,15 @@
 
             <span class="c1"># Optional parameter</span>
             <span class="n">HPECP_TENANT</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;HPECP_TENANT&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">HPECP_TENANT</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
+                    <span class="n">tenant</span><span class="p">,</span> <span class="nb">str</span>
+                <span class="p">),</span> <span class="s2">&quot;&#39;tenant&#39; must be provided and must be string in env var &#39;HPECP_TENANT&#39;&quot;</span>
+                <span class="k">assert</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+                    <span class="sa">r</span><span class="s2">&quot;\/api\/v1\/tenant\/[0-9]+&quot;</span><span class="p">,</span> <span class="n">tenant</span>
+                <span class="p">),</span> <span class="s2">&quot;&#39;tenant&#39; must have format &#39;/api/v1/tenant/[0-9]+&#39; env var &#39;HPECP_TENANT&#39;&quot;</span>
+
         <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">ke</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">ContainerPlatformClientException</span><span class="p">(</span>
                 <span class="s2">&quot;Required env var &#39;</span><span class="si">{}</span><span class="s2">&#39; not found.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ke</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
