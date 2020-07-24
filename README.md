@@ -105,6 +105,8 @@ Autocompletion:
 ```sh
 hpecp TAB
 ```
+More sophisticated CLI examples [here](https://github.com/bluedata-community/bluedata-demo-env-aws-terraform/tree/master/bin/experimental) 
+
 
 ## Basic Library Usage
 
