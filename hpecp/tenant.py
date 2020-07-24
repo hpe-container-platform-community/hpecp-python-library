@@ -198,10 +198,12 @@ class TenantController(AbstractWaitableResourceController):
         if not updated:
             user_groups.append({"group": group, "role": role_id})
 
+        data = {"external_user_groups": user_groups}
+
         self.client._request(
             url=tenant_id + "?external_user_groups",
             http_method="put",
-            data=user_groups,
+            data=data,
             description="tenant/add_external_user_groups",
         )
 
