@@ -94,6 +94,11 @@ Tenant kube config:
 PROFILE=tenant1 hpecp tenant k8skubeconfig > kube.conf
 ```
 
+Autocompletion:
+```sh
+hpecp TAB
+```
+
 ## Basic Library Usage
 
 See docs: https://hpe-container-platform-community.github.io/hpecp-python-library/index.html
