@@ -53,6 +53,12 @@ class Role(AbstractResource):
     """All of the fields of Role objects as returned by the HPE Container
     Platform API"""
 
+    default_display_fields = [
+        "id",
+        "name",
+        "description",
+    ]
+
     @property
     def id(self):
         """@Field: from json['_links']['self']['href'] - id format:
