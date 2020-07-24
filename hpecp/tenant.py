@@ -183,9 +183,21 @@ class TenantController(AbstractWaitableResourceController):
     def get_external_user_groups(self, id):
         return self.get(id).external_user_groups
 
-    def add_external_user_groups(self, tenant_id, role_id, group):
+    def add_external_user_groups(
+        self, tenant_id, group, role_id,
+    ):
         user_groups = self.get_external_user_groups(tenant_id)
-        user_groups.append({"role": role_id, "group": group})
+
+        updated = False
+        for user_group in user_groups:
+            if user_group["group"] == group:
+                # Update
+                user_group["group"] == role_id
+                updated = True
+
+        if not updated:
+            user_groups.append({"group": group, "role": role_id})
+
         self.client._request(
             url=tenant_id + "?external_user_groups",
             http_method="put",
