@@ -92,7 +92,7 @@ warn_ssl = False
 username = admin
 password = admin123
 
-[tenant]
+[tenant1]
 tenant = /api/v1/tenant/15
 admin = ad_admin1
 password = pass123
