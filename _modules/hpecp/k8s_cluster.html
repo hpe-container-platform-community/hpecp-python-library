@@ -138,6 +138,14 @@
     <span class="sd">&quot;&quot;&quot;All of the fields of a K8s Cluster objects that are returned by the HPE</span>
 <span class="sd">    Container Platform API&quot;&quot;&quot;</span>
 
+    <span class="n">default_display_fields</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;id&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;description&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;k8s_version&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;status&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;@Field: from json[&#39;label&#39;][&#39;name&#39;]&quot;&quot;&quot;</span>

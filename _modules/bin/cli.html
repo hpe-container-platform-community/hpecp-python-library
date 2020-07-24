@@ -93,10 +93,14 @@
     <span class="n">ContainerPlatformClient</span><span class="p">,</span>
     <span class="n">ContainerPlatformClientException</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">hpecp.k8s_worker</span> <span class="kn">import</span> <span class="n">WorkerK8sStatus</span>
+<span class="kn">from</span> <span class="nn">hpecp.k8s_worker</span> <span class="kn">import</span> <span class="n">WorkerK8sStatus</span><span class="p">,</span> <span class="n">WorkerK8s</span>
 <span class="kn">from</span> <span class="nn">hpecp.logger</span> <span class="kn">import</span> <span class="n">Logger</span>
-<span class="kn">from</span> <span class="nn">hpecp.gateway</span> <span class="kn">import</span> <span class="n">GatewayStatus</span>
-<span class="kn">from</span> <span class="nn">hpecp.k8s_cluster</span> <span class="kn">import</span> <span class="n">K8sClusterHostConfig</span><span class="p">,</span> <span class="n">K8sClusterStatus</span>
+<span class="kn">from</span> <span class="nn">hpecp.gateway</span> <span class="kn">import</span> <span class="n">Gateway</span><span class="p">,</span> <span class="n">GatewayStatus</span>
+<span class="kn">from</span> <span class="nn">hpecp.k8s_cluster</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">K8sCluster</span><span class="p">,</span>
+    <span class="n">K8sClusterHostConfig</span><span class="p">,</span>
+    <span class="n">K8sClusterStatus</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">hpecp.exceptions</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">APIForbiddenException</span><span class="p">,</span>
     <span class="n">APIItemNotFoundException</span><span class="p">,</span>
@@ -105,6 +109,10 @@
 <span class="kn">from</span> <span class="nn">textwrap</span> <span class="kn">import</span> <span class="n">dedent</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">from</span> <span class="nn">hpecp.catalog</span> <span class="kn">import</span> <span class="n">Catalog</span>
+<span class="kn">from</span> <span class="nn">hpecp.tenant</span> <span class="kn">import</span> <span class="n">Tenant</span>
+<span class="kn">from</span> <span class="nn">hpecp.user</span> <span class="kn">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">hpecp.role</span> <span class="kn">import</span> <span class="n">Role</span>
 
 
 <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
@@ -192,7 +200,7 @@
 <span class="k">class</span> <span class="nc">BaseProxy</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Base &#39;proxy&#39; class for generic calls to API.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="BaseProxy.new_instance"><a class="viewcode-back" href="../../cli.html#bin.cli.BaseProxy.new_instance">[docs]</a>    <span class="k">def</span> <span class="nf">new_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client_module_name</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseProxy.new_instance"><a class="viewcode-back" href="../../cli.html#bin.cli.BaseProxy.new_instance">[docs]</a>    <span class="k">def</span> <span class="nf">new_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client_module_name</span><span class="p">,</span> <span class="n">resource_class</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create a new instance (constructor).</span>
 
 <span class="sd">        Parameters</span>
@@ -202,30 +210,8 @@
 <span class="sd">            points to the different modules (user, gateway, cluster, etc)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client_module_name</span> <span class="o">=</span> <span class="n">client_module_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resource_class</span> <span class="o">=</span> <span class="n">resource_class</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">BaseProxy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span></div>
-
-<div class="viewcode-block" id="BaseProxy.all_fields"><a class="viewcode-back" href="../../cli.html#bin.cli.BaseProxy.all_fields">[docs]</a>    <span class="k">def</span> <span class="nf">all_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Retrieve Entity columns.&quot;&quot;&quot;</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="c1"># contstruct a dummy client to retrieve the</span>
-            <span class="c1"># field metadata</span>
-            <span class="n">dummy_client</span> <span class="o">=</span> <span class="n">ContainerPlatformClient</span><span class="p">(</span>
-                <span class="n">api_host</span><span class="o">=</span><span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span>
-                <span class="n">api_port</span><span class="o">=</span><span class="mi">8080</span><span class="p">,</span>
-                <span class="n">use_ssl</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                <span class="n">verify_ssl</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                <span class="n">warn_ssl</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                <span class="n">username</span><span class="o">=</span><span class="s2">&quot;dummyuser&quot;</span><span class="p">,</span>
-                <span class="n">password</span><span class="o">=</span><span class="s2">&quot;dummypassword&quot;</span><span class="p">,</span>
-            <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">client_module_property</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
-                <span class="n">dummy_client</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_module_name</span>
-            <span class="p">)</span>
-            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">client_module_property</span><span class="p">,</span> <span class="s2">&quot;resource_class&quot;</span>
-            <span class="p">)</span><span class="o">.</span><span class="n">all_fields</span>
-        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">[]</span></div>
 
 <div class="viewcode-block" id="BaseProxy.get"><a class="viewcode-back" href="../../cli.html#bin.cli.BaseProxy.get">[docs]</a>    <span class="nd">@intercept_exception</span>
     <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s2">&quot;yaml&quot;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -273,7 +259,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">wait_for_delete</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">timeout_secs</span><span class="o">=</span><span class="n">wait_for_delete_sec</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BaseProxy.list"><a class="viewcode-back" href="../../cli.html#bin.cli.BaseProxy.list">[docs]</a>    <span class="nd">@intercept_exception</span>
-    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s2">&quot;table&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;ALL&quot;</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="p">{}):</span>
+    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s2">&quot;table&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;DEFAULT&quot;</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="p">{}):</span>
         <span class="sd">&quot;&quot;&quot;Retrieve the list of resources.</span>
 
 <span class="sd">        Parameters</span>
@@ -284,13 +270,19 @@
 <span class="sd">        columns : list/tuple, optional</span>
 <span class="sd">            List of specific columns to be displayed, by default []</span>
 <span class="sd">            `Catalog.default_display_fields`</span>
+<span class="sd">            &quot;DEFAULT&quot;, &quot;WIDE&quot;, or columns list</span>
 <span class="sd">        query : dict, optional</span>
 <span class="sd">            Query in jmespath (https://jmespath.org/) format, by default {}</span>
 <span class="sd">            if using a query, output must be &quot;json&quot; or &quot;json-pp&quot;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">columns</span> <span class="o">==</span> <span class="s2">&quot;DEFAULT&quot;</span><span class="p">:</span>
+            <span class="n">columns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resource_class</span><span class="o">.</span><span class="n">default_display_fields</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">columns</span> <span class="o">==</span> <span class="s2">&quot;WIDE&quot;</span><span class="p">:</span>
+            <span class="n">columns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resource_class</span><span class="o">.</span><span class="n">all_fields</span><span class="p">)</span>
+
         <span class="c1"># FIXME: this also gets called by print_list()</span>
-        <span class="n">columns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate_list_params</span><span class="p">(</span>
-            <span class="n">all_fields</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">all_fields</span><span class="p">(),</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_list_params</span><span class="p">(</span>
+            <span class="n">all_fields</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">resource_class</span><span class="o">.</span><span class="n">all_fields</span><span class="p">,</span>
             <span class="n">output</span><span class="o">=</span><span class="n">output</span><span class="p">,</span>
             <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span>
             <span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">,</span>
@@ -310,9 +302,7 @@
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="BaseProxy.validate_list_params"><a class="viewcode-back" href="../../cli.html#bin.cli.BaseProxy.validate_list_params">[docs]</a>    <span class="nd">@intercept_exception</span>
-    <span class="k">def</span> <span class="nf">validate_list_params</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">all_fields</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span>
-    <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">validate_list_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">all_fields</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">query</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Print a list of resources.</span>
 
 <span class="sd">        Parameters</span>
@@ -326,16 +316,13 @@
 <span class="sd">        query : [type]</span>
 <span class="sd">            [description]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">columns</span> <span class="o">==</span> <span class="s2">&quot;ALL&quot;</span><span class="p">:</span>
-            <span class="n">columns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">all_fields</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">columns</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&#39;columns&#39; parameter must be a list.&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">columns</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&#39;columns&#39; parameter must be a list.&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">all_fields</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Unknown column &#39;</span><span class="si">{}</span><span class="s2">&#39;.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">col</span><span class="p">),</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
                 <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">all_fields</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Unknown column &#39;</span><span class="si">{}</span><span class="s2">&#39;.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">col</span><span class="p">),</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
-                    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">query</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">output</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;table&quot;</span><span class="p">,</span> <span class="s2">&quot;text&quot;</span><span class="p">]:</span>
@@ -349,19 +336,15 @@
             <span class="k">if</span> <span class="n">output</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;json&quot;</span><span class="p">,</span> <span class="s2">&quot;json-pp&quot;</span><span class="p">]:</span>
                 <span class="nb">print</span><span class="p">(</span>
                     <span class="p">(</span>
-                        <span class="s2">&quot;If you provide a jmes query, the output must &quot;</span>
+                        <span class="s2">&quot;If you provide a jmes --query, the output must &quot;</span>
                         <span class="s2">&quot;be &#39;json&#39; or &#39;json-pp&#39;&quot;</span>
                     <span class="p">),</span>
                     <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span>
                 <span class="p">)</span>
-                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">columns</span></div>
+                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BaseProxy.print_list"><a class="viewcode-back" href="../../cli.html#bin.cli.BaseProxy.print_list">[docs]</a>    <span class="nd">@intercept_exception</span>
-    <span class="k">def</span> <span class="nf">print_list</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">list_instance</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span>
-    <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">print_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">list_instance</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">query</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Print a list of resources.</span>
 
 <span class="sd">        Parameters</span>
@@ -375,7 +358,12 @@
 <span class="sd">        query : [type]</span>
 <span class="sd">            [description]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">columns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate_list_params</span><span class="p">(</span>
+        <span class="k">if</span> <span class="n">columns</span> <span class="o">==</span> <span class="s2">&quot;DEFAULT&quot;</span><span class="p">:</span>
+            <span class="n">columns</span> <span class="o">=</span> <span class="n">list_instance</span><span class="o">.</span><span class="n">resource_class</span><span class="o">.</span><span class="n">default_display_fields</span>
+        <span class="k">elif</span> <span class="n">columns</span> <span class="o">==</span> <span class="s2">&quot;WIDE&quot;</span><span class="p">:</span>
+            <span class="n">columns</span> <span class="o">=</span> <span class="n">list_instance</span><span class="o">.</span><span class="n">resource_class</span><span class="o">.</span><span class="n">all_fields</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_list_params</span><span class="p">(</span>
             <span class="n">all_fields</span><span class="o">=</span><span class="n">list_instance</span><span class="o">.</span><span class="n">resource_class</span><span class="o">.</span><span class="n">all_fields</span><span class="p">,</span>
             <span class="n">output</span><span class="o">=</span><span class="n">output</span><span class="p">,</span>
             <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span>
@@ -471,7 +459,7 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initiate this proxy class with the client module name.&quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">CatalogProxy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">new_instance</span><span class="p">(</span><span class="s2">&quot;catalog&quot;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">CatalogProxy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">new_instance</span><span class="p">(</span><span class="s2">&quot;catalog&quot;</span><span class="p">,</span> <span class="n">Catalog</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__dir__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return the CLI method names.&quot;&quot;&quot;</span>
@@ -554,7 +542,7 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initiate this proxy class with the client module name.&quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">GatewayProxy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">new_instance</span><span class="p">(</span><span class="s2">&quot;gateway&quot;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">GatewayProxy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">new_instance</span><span class="p">(</span><span class="s2">&quot;gateway&quot;</span><span class="p">,</span> <span class="n">Gateway</span><span class="p">)</span>
 
 <div class="viewcode-block" id="GatewayProxy.create_with_ssh_key"><a class="viewcode-back" href="../../cli.html#bin.cli.GatewayProxy.create_with_ssh_key">[docs]</a>    <span class="nd">@intercept_exception</span>
     <span class="k">def</span> <span class="nf">create_with_ssh_key</span><span class="p">(</span>
@@ -633,7 +621,7 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initiate this proxy class with the client module name.&quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">K8sWorkerProxy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">new_instance</span><span class="p">(</span><span class="s2">&quot;k8s_worker&quot;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">K8sWorkerProxy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">new_instance</span><span class="p">(</span><span class="s2">&quot;k8s_worker&quot;</span><span class="p">,</span> <span class="n">WorkerK8s</span><span class="p">)</span>
 
 <div class="viewcode-block" id="K8sWorkerProxy.create_with_ssh_key"><a class="viewcode-back" href="../../cli.html#bin.cli.K8sWorkerProxy.create_with_ssh_key">[docs]</a>    <span class="nd">@intercept_exception</span>
     <span class="k">def</span> <span class="nf">create_with_ssh_key</span><span class="p">(</span>
@@ -742,7 +730,7 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initiate this proxy class with the client module name.&quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">K8sClusterProxy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">new_instance</span><span class="p">(</span><span class="s2">&quot;k8s_cluster&quot;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">K8sClusterProxy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">new_instance</span><span class="p">(</span><span class="s2">&quot;k8s_cluster&quot;</span><span class="p">,</span> <span class="n">K8sCluster</span><span class="p">)</span>
 
 <div class="viewcode-block" id="K8sClusterProxy.create"><a class="viewcode-back" href="../../cli.html#bin.cli.K8sClusterProxy.create">[docs]</a>    <span class="nd">@intercept_exception</span>
     <span class="k">def</span> <span class="nf">create</span><span class="p">(</span>
@@ -922,7 +910,7 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initiate this proxy class with the client module name.&quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">TenantProxy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">new_instance</span><span class="p">(</span><span class="s2">&quot;tenant&quot;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">TenantProxy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">new_instance</span><span class="p">(</span><span class="s2">&quot;tenant&quot;</span><span class="p">,</span> <span class="n">Tenant</span><span class="p">)</span>
 
 <div class="viewcode-block" id="TenantProxy.create"><a class="viewcode-back" href="../../cli.html#bin.cli.TenantProxy.create">[docs]</a>    <span class="nd">@intercept_exception</span>
     <span class="k">def</span> <span class="nf">create</span><span class="p">(</span>
@@ -1294,7 +1282,7 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initiate this proxy class with the client module name.&quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">UserProxy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">new_instance</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">UserProxy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">new_instance</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="n">User</span><span class="p">)</span>
 
 <div class="viewcode-block" id="UserProxy.create"><a class="viewcode-back" href="../../cli.html#bin.cli.UserProxy.create">[docs]</a>    <span class="nd">@intercept_exception</span>
     <span class="k">def</span> <span class="nf">create</span><span class="p">(</span>
@@ -1331,7 +1319,7 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initiate this proxy class with the client module name.&quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">RoleProxy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">new_instance</span><span class="p">(</span><span class="s2">&quot;role&quot;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RoleProxy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">new_instance</span><span class="p">(</span><span class="s2">&quot;role&quot;</span><span class="p">,</span> <span class="n">Role</span><span class="p">)</span>
 
 <div class="viewcode-block" id="RoleProxy.examples"><a class="viewcode-back" href="../../cli.html#bin.cli.RoleProxy.examples">[docs]</a>    <span class="k">def</span> <span class="nf">examples</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Show examples for working with roles.&quot;&quot;&quot;</span>
@@ -1463,7 +1451,7 @@
             <span class="n">function_names</span> <span class="o">=</span> <span class="nb">dir</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
 
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">all_fields</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s2">&quot;all_fields&quot;</span><span class="p">)()</span>
+                <span class="n">all_fields</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">resource_class</span><span class="p">,</span> <span class="s2">&quot;all_fields&quot;</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
                 <span class="n">all_fields</span> <span class="o">=</span> <span class="p">[]</span>
 

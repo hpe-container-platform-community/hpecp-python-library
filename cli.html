@@ -72,19 +72,13 @@
 <dd><p>Base ‘proxy’ class for generic calls to API.</p>
 <dl class="py method">
 <dt id="bin.cli.BaseProxy.new_instance">
-<code class="sig-name descname">new_instance</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">client_module_name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#BaseProxy.new_instance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.BaseProxy.new_instance" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">new_instance</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">client_module_name</span></em>, <em class="sig-param"><span class="n">resource_class</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#BaseProxy.new_instance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.BaseProxy.new_instance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new instance (constructor).</p>
 <dl class="simple">
 <dt>client_module_name<span class="classifier">str</span></dt><dd><p>Name of the property in the ContainerPlatformClient that
 points to the different modules (user, gateway, cluster, etc)</p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="bin.cli.BaseProxy.all_fields">
-<code class="sig-name descname">all_fields</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#BaseProxy.all_fields"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.BaseProxy.all_fields" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieve Entity columns.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -116,14 +110,15 @@ points to the different modules (user, gateway, cluster, etc)</p>
 
 <dl class="py method">
 <dt id="bin.cli.BaseProxy.list">
-<code class="sig-name descname">list</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">output</span><span class="o">=</span><span class="default_value">'table'</span></em>, <em class="sig-param"><span class="n">columns</span><span class="o">=</span><span class="default_value">'ALL'</span></em>, <em class="sig-param"><span class="n">query</span><span class="o">=</span><span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#BaseProxy.list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.BaseProxy.list" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">list</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">output</span><span class="o">=</span><span class="default_value">'table'</span></em>, <em class="sig-param"><span class="n">columns</span><span class="o">=</span><span class="default_value">'DEFAULT'</span></em>, <em class="sig-param"><span class="n">query</span><span class="o">=</span><span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#BaseProxy.list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.BaseProxy.list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve the list of resources.</p>
 <dl class="simple">
 <dt>output<span class="classifier">str, optional</span></dt><dd><p>Define how the output should be printed, by default “table”
 “json” or “json-pp” (json pretty print) if providing a query</p>
 </dd>
 <dt>columns<span class="classifier">list/tuple, optional</span></dt><dd><p>List of specific columns to be displayed, by default []
-<cite>Catalog.default_display_fields</cite></p>
+<cite>Catalog.default_display_fields</cite>
+“DEFAULT”, “WIDE”, or columns list</p>
 </dd>
 <dt>query<span class="classifier">dict, optional</span></dt><dd><p>Query in jmespath (<a class="reference external" href="https://jmespath.org/">https://jmespath.org/</a>) format, by default {}
 if using a query, output must be “json” or “json-pp”</p>
