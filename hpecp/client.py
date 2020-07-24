@@ -242,7 +242,7 @@ class ContainerPlatformClient(object):
             )
             assert re.match(
                 r"\/api\/v1\/tenant\/[0-9]+", tenant
-            ), "'tenant' must have format '/api/v1/tenant/[0-9]+' '{}'".format(
+            ), "'tenant' must have format '/api/v1/tenant/[0-9]+' in '{}'".format(
                 config_file
             )
 
@@ -311,7 +311,7 @@ class ContainerPlatformClient(object):
                 ), "'tenant' must be provided and must be string in env var 'HPECP_TENANT'"
                 assert re.match(
                     r"\/api\/v1\/tenant\/[0-9]+", tenant
-                ), "'tenant' must have format '/api/v1/tenant/[0-9]+' env var 'HPECP_TENANT'"
+                ), "'tenant' must have format '/api/v1/tenant/[0-9]+' in env var 'HPECP_TENANT'"
 
         except KeyError as ke:
             raise ContainerPlatformClientException(
