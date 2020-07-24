@@ -101,13 +101,17 @@ points to the different modules (user, gateway, cluster, etc)</p>
 
 <dl class="py method">
 <dt id="bin.cli.BaseProxy.delete">
-<code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#BaseProxy.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.BaseProxy.delete" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">wait_for_delete_sec</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#BaseProxy.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.BaseProxy.delete" title="Permalink to this definition">¶</a></dt>
 <dd><p>Delete a resource.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>id</strong> – the resource ID</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> – the resource ID</p></li>
+<li><p><strong>wait_for_delete_sec</strong> – wait for delete to complete</p></li>
+</ul>
 </dd>
 </dl>
+<p>(0 = do not wait)</p>
 </dd></dl>
 
 <dl class="py method">

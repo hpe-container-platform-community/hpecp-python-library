@@ -255,18 +255,21 @@
             <span class="p">)</span></div>
 
 <div class="viewcode-block" id="BaseProxy.delete"><a class="viewcode-back" href="../../cli.html#bin.cli.BaseProxy.delete">[docs]</a>    <span class="nd">@intercept_exception</span>
-    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span>
-    <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">wait_for_delete_sec</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Delete a resource.</span>
 
 <span class="sd">        :param id: the resource ID</span>
+<span class="sd">        :param wait_for_delete_sec: wait for delete to complete</span>
+<span class="sd">        (0 = do not wait)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">get_client</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client_module_property</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_module_name</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">client_module_property</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client_module_property</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">wait_for_delete_sec</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">wait_for_delete</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">timeout_secs</span><span class="o">=</span><span class="n">wait_for_delete_sec</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BaseProxy.list"><a class="viewcode-back" href="../../cli.html#bin.cli.BaseProxy.list">[docs]</a>    <span class="nd">@intercept_exception</span>
     <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s2">&quot;table&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;ALL&quot;</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="p">{}):</span>
