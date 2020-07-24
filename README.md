@@ -93,7 +93,7 @@ hpecp k8scluster list --columns [id,description,status]
 
 Tenant kube config:
 ```sh
-PROFILE=tenant1 hpecp tenant k8skubeconfig > kube.conf
+PROFILE=tenant1 hpecp tenant k8skubeconfig > tenant1_kube.conf
 ```
 
 List query examples:
