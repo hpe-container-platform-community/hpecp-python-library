@@ -42,36 +42,6 @@ pip3 install --upgrade git+https://github.com/hpe-container-platform-community/h
 
 If you are installing on Centos 7.7 with only Python 2.7 see [here](./docs/README-INSTALL-HPECP-HOSTS.md) for a workaround
 
-## Basic Library Usage
-
-Example:
-
-```py3
-from hpecp import ContainerPlatformClient
-
-client = ContainerPlatformClient(username='admin',
-                                password='admin123',
-                                api_host='127.0.0.1',
-                                api_port=8080,
-                                use_ssl=True,
-                                verify_ssl='/certs/hpecp-ca-cert.pem')
-client.create_session() # Login
-
-# Alternatively:
-# client = ContainerPlatformClient.create_from_config_file().create_session()
-
-print(client.k8s_cluster.list(columns=['description', 'id']))
-```
-
-On my environment, this displays:
-```
-+-------------+-----------------------+
-| description |          id           |
-+-------------+-----------------------+
-| my cluster  | /api/v2/k8scluster/20 |
-+-------------+-----------------------+
-```
-
 
 ## CLI
 
@@ -124,4 +94,35 @@ Tenant kube config:
 PROFILE=tenant1 hpecp tenant k8skubeconfig > kube.conf
 ```
 
+## Basic Library Usage
+
+See docs: https://hpe-container-platform-community.github.io/hpecp-python-library/index.html
+
+Example:
+
+```py3
+from hpecp import ContainerPlatformClient
+
+client = ContainerPlatformClient(username='admin',
+                                password='admin123',
+                                api_host='127.0.0.1',
+                                api_port=8080,
+                                use_ssl=True,
+                                verify_ssl='/certs/hpecp-ca-cert.pem')
+client.create_session() # Login
+
+# Alternatively:
+# client = ContainerPlatformClient.create_from_config_file().create_session()
+
+print(client.k8s_cluster.list(columns=['description', 'id']))
+```
+
+On my environment, this displays:
+```
++-------------+-----------------------+
+| description |          id           |
++-------------+-----------------------+
+| my cluster  | /api/v2/k8scluster/20 |
++-------------+-----------------------+
+```
 
