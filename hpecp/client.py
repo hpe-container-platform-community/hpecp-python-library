@@ -234,13 +234,17 @@ class ContainerPlatformClient(object):
 
         # optional parameter
         tenant = get_config_value("tenant", profile)
-
-        assert isinstance(
-            tenant, str
-        ), "'tenant' must be provided and must be string"
-        assert re.match(
-            r"\/api\/v1\/tenant\/[0-9]+", tenant
-        ), "'tenant' must have format '/api/v1/tenant/[0-9]+'"
+        if tenant:
+            assert isinstance(
+                tenant, str
+            ), "'tenant' must be provided and must be string in '{}'".format(
+                config_file
+            )
+            assert re.match(
+                r"\/api\/v1\/tenant\/[0-9]+", tenant
+            ), "'tenant' must have format '/api/v1/tenant/[0-9]+' '{}'".format(
+                config_file
+            )
 
         if use_ssl == "False":
             use_ssl = False
@@ -300,6 +304,15 @@ class ContainerPlatformClient(object):
 
             # Optional parameter
             HPECP_TENANT = os.getenv("HPECP_TENANT", default=None)
+
+            if HPECP_TENANT:
+                assert isinstance(
+                    tenant, str
+                ), "'tenant' must be provided and must be string in env var 'HPECP_TENANT'"
+                assert re.match(
+                    r"\/api\/v1\/tenant\/[0-9]+", tenant
+                ), "'tenant' must have format '/api/v1/tenant/[0-9]+' env var 'HPECP_TENANT'"
+
         except KeyError as ke:
             raise ContainerPlatformClientException(
                 "Required env var '{}' not found.".format(ke.args[0])
