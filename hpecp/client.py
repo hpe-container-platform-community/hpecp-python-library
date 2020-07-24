@@ -51,6 +51,7 @@ import codecs
 import ast
 from requests.structures import CaseInsensitiveDict
 from hpecp.exceptions import APIForbiddenException
+import re
 
 try:
     basestring
@@ -233,6 +234,13 @@ class ContainerPlatformClient(object):
 
         # optional parameter
         tenant = get_config_value("tenant", profile)
+
+        assert isinstance(
+            tenant, str
+        ), "'tenant' must be provided and must be string"
+        assert re.match(
+            r"\/api\/v1\/tenant\/[0-9]+", tenant
+        ), "'tenant' must have format '/api/v1/tenant/[0-9]+'"
 
         if use_ssl == "False":
             use_ssl = False
