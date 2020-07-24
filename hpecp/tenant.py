@@ -28,7 +28,6 @@ from .base_resource import AbstractWaitableResourceController, AbstractResource
 from hpecp.exceptions import ContainerPlatformClientException
 from hpecp.base_resource import ResourceList
 from hpecp.user import User
-import json
 
 try:
     basestring
