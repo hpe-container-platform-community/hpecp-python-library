@@ -951,20 +951,24 @@ class TenantProxy(BaseProxy):
     @intercept_exception
     def get_external_user_groups(self, tenant_id):
         """Retrieve External User Groups."""
-        print(get_client().tenant.get_external_user_groups(tenant_id=tenant_id))
+        print(
+            get_client().tenant.get_external_user_groups(tenant_id=tenant_id)
+        )
 
     @intercept_exception
     def add_external_user_group(self, tenant_id, group, role_id):
-        """Add External User Groups."""
+        """Add External User Group."""
         get_client().tenant.add_external_user_groups(
             tenant_id=tenant_id, group=group, role_id=role_id
         )
 
     @intercept_exception
     def delete_external_user_group(self, tenant_id, group):
-        """Retrieve External User Groups."""
+        """Delete External User Group."""
         print(
-            get_client().tenant.delete_external_user_group(tenant_id=tenant_id, group=group)
+            get_client().tenant.delete_external_user_group(
+                tenant_id=tenant_id, group=group
+            )
         )
 
 
