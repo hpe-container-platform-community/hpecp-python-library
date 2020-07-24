@@ -965,10 +965,8 @@ class TenantProxy(BaseProxy):
     @intercept_exception
     def delete_external_user_group(self, tenant_id, group):
         """Delete External User Group."""
-        print(
-            get_client().tenant.delete_external_user_group(
-                tenant_id=tenant_id, group=group
-            )
+        get_client().tenant.delete_external_user_group(
+            tenant_id=tenant_id, group=group
         )
 
 

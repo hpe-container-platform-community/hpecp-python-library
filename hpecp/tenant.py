@@ -189,7 +189,9 @@ class TenantController(AbstractWaitableResourceController):
         user_groups = self.get_external_user_groups(tenant_id)
 
         # if group exists already, remove it
-        user_groups = [ug for ug in user_groups if ug["group"] != group]
+        user_groups = [
+            ug for ug in user_groups if ug["group"].lower() != group.lower()
+        ]
 
         data = {"external_user_groups": user_groups}
         self.client._request(
