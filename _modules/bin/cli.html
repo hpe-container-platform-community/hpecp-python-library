@@ -1323,11 +1323,23 @@
 
     <span class="k">def</span> <span class="fm">__dir__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return the CLI method names.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;delete&quot;</span><span class="p">,</span> <span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="s2">&quot;list&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;delete&quot;</span><span class="p">,</span> <span class="s2">&quot;examples&quot;</span><span class="p">,</span> <span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="s2">&quot;list&quot;</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initiate this proxy class with the client module name.&quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">RoleProxy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">new_instance</span><span class="p">(</span><span class="s2">&quot;role&quot;</span><span class="p">)</span></div>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RoleProxy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">new_instance</span><span class="p">(</span><span class="s2">&quot;role&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="RoleProxy.examples"><a class="viewcode-back" href="../../cli.html#bin.cli.RoleProxy.examples">[docs]</a>    <span class="k">def</span> <span class="nf">examples</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Show examples for working with roles.&quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="n">dedent</span><span class="p">(</span>
+                <span class="sd">&quot;&quot;&quot;\</span>
+<span class="sd">                # Retrieve the role ID for &#39;Admin&#39;</span>
+<span class="sd">                $ hpecp role list  --query &quot;[?label.name == &#39;Admin&#39;][_links.self.href] | [0][0]&quot; --output json | tr -d &#39;&quot;&#39;</span>
+<span class="sd">                /api/v1/role/2</span>
+<span class="sd">                &quot;&quot;&quot;</span>  <span class="c1"># noqa:  E501</span>
+            <span class="p">)</span>
+        <span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="configure_cli"><a class="viewcode-back" href="../../cli.html#bin.cli.configure_cli">[docs]</a><span class="k">def</span> <span class="nf">configure_cli</span><span class="p">():</span>
