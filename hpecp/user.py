@@ -59,6 +59,17 @@ class User(AbstractResource):
     # All of the fields of User objects as returned by the HPE Container
     # Platform API
 
+    default_display_fields = [
+        "id",
+        "name",
+        "description",
+        "is_group_added_user",
+        "is_external",
+        "is_service_account",
+        "default_tenant",
+        "is_siteadmin",
+    ]
+
     @property
     def id(self):
         """@Field: from json['_links']['self']['href'] -

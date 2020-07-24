@@ -475,10 +475,10 @@ class TestBash(BaseTestCase):
 
         self.maxDiff = None
 
-        hpecp = self.cli.CLI()
-        (modules, columns) = hpecp.autocomplete._get_metadata()
+        hpecp_cli = self.cli.CLI()
+        (modules, columns) = hpecp_cli.autocomplete._get_metadata()
 
-        self.assertEquals(columns["gateway"], hpecp.gateway.all_fields())
+        self.assertEquals(columns["gateway"], Gateway.all_fields)
 
         self.assertEquals(
             list(modules["gateway"].keys()),

@@ -67,6 +67,14 @@ class Tenant(AbstractResource):
         "external_user_groups",
     ]
 
+    default_display_fields = [
+        "id",
+        "name",
+        "description",
+        "status",
+        "tenant_type",
+    ]
+
     @property
     def id(self):
         return self.json["_links"]["self"]["href"]

@@ -92,6 +92,14 @@ class K8sCluster(AbstractResource):
     """All of the fields of a K8s Cluster objects that are returned by the HPE
     Container Platform API"""
 
+    default_display_fields = [
+        "id",
+        "name",
+        "description",
+        "k8s_version",
+        "status",
+    ]
+
     @property
     def name(self):
         """@Field: from json['label']['name']"""

@@ -47,10 +47,14 @@ from hpecp import (
     ContainerPlatformClient,
     ContainerPlatformClientException,
 )
-from hpecp.k8s_worker import WorkerK8sStatus
+from hpecp.k8s_worker import WorkerK8sStatus, WorkerK8s
 from hpecp.logger import Logger
-from hpecp.gateway import GatewayStatus
-from hpecp.k8s_cluster import K8sClusterHostConfig, K8sClusterStatus
+from hpecp.gateway import Gateway, GatewayStatus
+from hpecp.k8s_cluster import (
+    K8sCluster,
+    K8sClusterHostConfig,
+    K8sClusterStatus,
+)
 from hpecp.exceptions import (
     APIForbiddenException,
     APIItemNotFoundException,
@@ -59,6 +63,10 @@ from hpecp.exceptions import (
 from textwrap import dedent
 import inspect
 import collections
+from hpecp.catalog import Catalog
+from hpecp.tenant import Tenant
+from hpecp.user import User
+from hpecp.role import Role
 
 
 if sys.version_info[0] >= 3:
@@ -146,7 +154,7 @@ def get_client(start_session=True):
 class BaseProxy:
     """Base 'proxy' class for generic calls to API."""
 
-    def new_instance(self, client_module_name):
+    def new_instance(self, client_module_name, resource_class):
         """Create a new instance (constructor).
 
         Parameters
@@ -156,30 +164,8 @@ class BaseProxy:
             points to the different modules (user, gateway, cluster, etc)
         """
         self.client_module_name = client_module_name
+        self.resource_class = resource_class
         super(BaseProxy, self).__init__()
-
-    def all_fields(self):
-        """Retrieve Entity columns."""
-        try:
-            # contstruct a dummy client to retrieve the
-            # field metadata
-            dummy_client = ContainerPlatformClient(
-                api_host="127.0.0.1",
-                api_port=8080,
-                use_ssl=False,
-                verify_ssl=False,
-                warn_ssl=False,
-                username="dummyuser",
-                password="dummypassword",
-            )
-            self.client_module_property = getattr(
-                dummy_client, self.client_module_name
-            )
-            return getattr(
-                self.client_module_property, "resource_class"
-            ).all_fields
-        except Exception:
-            return []
 
     @intercept_exception
     def get(self, id, output="yaml", params=None):
@@ -227,7 +213,7 @@ class BaseProxy:
             self.wait_for_delete(id=id, timeout_secs=wait_for_delete_sec)
 
     @intercept_exception
-    def list(self, output="table", columns="ALL", query={}):
+    def list(self, output="table", columns="DEFAULT", query={}):
         """Retrieve the list of resources.
 
         Parameters
@@ -238,13 +224,19 @@ class BaseProxy:
         columns : list/tuple, optional
             List of specific columns to be displayed, by default []
             `Catalog.default_display_fields`
+            "DEFAULT", "WIDE", or columns list
         query : dict, optional
             Query in jmespath (https://jmespath.org/) format, by default {}
             if using a query, output must be "json" or "json-pp"
         """
+        if columns == "DEFAULT":
+            columns = list(self.resource_class.default_display_fields)
+        elif columns == "WIDE":
+            columns = list(self.resource_class.all_fields)
+
         # FIXME: this also gets called by print_list()
-        columns = self.validate_list_params(
-            all_fields=self.all_fields(),
+        self.validate_list_params(
+            all_fields=self.resource_class.all_fields,
             output=output,
             columns=columns,
             query=query,
@@ -264,9 +256,7 @@ class BaseProxy:
         )
 
     @intercept_exception
-    def validate_list_params(
-        self, all_fields, output, columns, query,
-    ):
+    def validate_list_params(self, all_fields, output, columns, query):
         """Print a list of resources.
 
         Parameters
@@ -280,16 +270,13 @@ class BaseProxy:
         query : [type]
             [description]
         """
-        if columns == "ALL":
-            columns = list(all_fields)
-        else:
-            if not isinstance(columns, list):
-                print("'columns' parameter must be a list.", file=sys.stderr)
+        if not isinstance(columns, list):
+            print("'columns' parameter must be a list.", file=sys.stderr)
+            sys.exit(1)
+        for col in columns:
+            if col not in all_fields:
+                print("Unknown column '{}'.".format(col), file=sys.stderr)
                 sys.exit(1)
-            for col in columns:
-                if col not in all_fields:
-                    print("Unknown column '{}'.".format(col), file=sys.stderr)
-                    sys.exit(1)
 
         if len(query) == 0:
             if output not in ["table", "text"]:
@@ -303,19 +290,15 @@ class BaseProxy:
             if output not in ["json", "json-pp"]:
                 print(
                     (
-                        "If you provide a jmes query, the output must "
+                        "If you provide a jmes --query, the output must "
                         "be 'json' or 'json-pp'"
                     ),
                     file=sys.stderr,
                 )
                 sys.exit(1)
 
-        return columns
-
     @intercept_exception
-    def print_list(
-        self, list_instance, output, columns, query,
-    ):
+    def print_list(self, list_instance, output, columns, query):
         """Print a list of resources.
 
         Parameters
@@ -329,7 +312,12 @@ class BaseProxy:
         query : [type]
             [description]
         """
-        columns = self.validate_list_params(
+        if columns == "DEFAULT":
+            columns = list_instance.resource_class.default_display_fields
+        elif columns == "WIDE":
+            columns = list_instance.resource_class.all_fields
+
+        self.validate_list_params(
             all_fields=list_instance.resource_class.all_fields,
             output=output,
             columns=columns,
@@ -425,7 +413,7 @@ class CatalogProxy(BaseProxy):
 
     def __init__(self):
         """Initiate this proxy class with the client module name."""
-        super(CatalogProxy, self).new_instance("catalog")
+        super(CatalogProxy, self).new_instance("catalog", Catalog)
 
     def __dir__(self):
         """Return the CLI method names."""
@@ -508,7 +496,7 @@ class GatewayProxy(BaseProxy):
 
     def __init__(self):
         """Initiate this proxy class with the client module name."""
-        super(GatewayProxy, self).new_instance("gateway")
+        super(GatewayProxy, self).new_instance("gateway", Gateway)
 
     @intercept_exception
     def create_with_ssh_key(
@@ -587,7 +575,7 @@ class K8sWorkerProxy(BaseProxy):
 
     def __init__(self):
         """Initiate this proxy class with the client module name."""
-        super(K8sWorkerProxy, self).new_instance("k8s_worker")
+        super(K8sWorkerProxy, self).new_instance("k8s_worker", WorkerK8s)
 
     @intercept_exception
     def create_with_ssh_key(
@@ -696,7 +684,7 @@ class K8sClusterProxy(BaseProxy):
 
     def __init__(self):
         """Initiate this proxy class with the client module name."""
-        super(K8sClusterProxy, self).new_instance("k8s_cluster")
+        super(K8sClusterProxy, self).new_instance("k8s_cluster", K8sCluster)
 
     @intercept_exception
     def create(
@@ -876,7 +864,7 @@ class TenantProxy(BaseProxy):
 
     def __init__(self):
         """Initiate this proxy class with the client module name."""
-        super(TenantProxy, self).new_instance("tenant")
+        super(TenantProxy, self).new_instance("tenant", Tenant)
 
     @intercept_exception
     def create(
@@ -1248,7 +1236,7 @@ class UserProxy(BaseProxy):
 
     def __init__(self):
         """Initiate this proxy class with the client module name."""
-        super(UserProxy, self).new_instance("user")
+        super(UserProxy, self).new_instance("user", User)
 
     @intercept_exception
     def create(
@@ -1285,7 +1273,7 @@ class RoleProxy(BaseProxy):
 
     def __init__(self):
         """Initiate this proxy class with the client module name."""
-        super(RoleProxy, self).new_instance("role")
+        super(RoleProxy, self).new_instance("role", Role)
 
     def examples(self):
         """Show examples for working with roles."""
@@ -1417,7 +1405,7 @@ class AutoComplete:
             function_names = dir(module)
 
             try:
-                all_fields = getattr(module, "all_fields")()
+                all_fields = getattr(module.resource_class, "all_fields")
             except Exception:
                 all_fields = []
 

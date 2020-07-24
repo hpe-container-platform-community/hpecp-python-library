@@ -621,8 +621,11 @@ class TestCLIList(BaseTestCase):
 
         self.maxDiff = None
 
-        hpecp = self.cli.CLI()
-        hpecp.catalog.list(columns=["label_name", "distro_id"], output="text")
+        with patch.dict("os.environ", {"LOG_LEVEL": "DEBUG"}):
+            hpecp = self.cli.CLI()
+            hpecp.catalog.list(
+                columns=["label_name", "distro_id"], output="text"
+            )
 
         output = self.out.getvalue().strip()
         self.assertEqual(output, "Spark240  bluedata/spark240juphub7xssl")

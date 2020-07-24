@@ -46,6 +46,12 @@ class Catalog(AbstractResource):
         "state_info",
     )
 
+    default_display_fields = [
+        "label_name",
+        "label_description",
+        "self_href",
+    ]
+
     # These fields are displayed by default, e.g. in tabulate()
     # TODO: Verify this with the specification
     # TODO: Pick a smaller subset, again based on the API response

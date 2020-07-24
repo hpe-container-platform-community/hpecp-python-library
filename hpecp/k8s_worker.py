@@ -61,6 +61,13 @@ class WorkerK8s(AbstractResource):
     """All of the fields of a K8s Cluster objects that are returned by the HPE
     Container Platform API"""
 
+    default_display_fields = [
+        "id",
+        "status",
+        "hostname",
+        "ipaddr",
+    ]
+
     @property
     def worker_id(self):
         return int(self.json["_links"]["self"]["href"].split("/")[-1])
