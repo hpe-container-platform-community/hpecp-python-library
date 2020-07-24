@@ -183,7 +183,23 @@ class TenantController(AbstractWaitableResourceController):
     def get_external_user_groups(self, id):
         return self.get(id).external_user_groups
 
-    def add_external_user_groups(
+    def delete_external_user_group(
+        self, tenant_id, group,
+    ):
+        user_groups = self.get_external_user_groups(tenant_id)
+
+        # if group exists already, remove it
+        user_groups = [ug for ug in user_groups if ug["group"] != group]
+
+        data = {"external_user_groups": user_groups}
+        self.client._request(
+            url=tenant_id + "?external_user_groups",
+            http_method="put",
+            data=data,
+            description="tenant/add_external_user_groups",
+        )
+
+    def add_external_user_group(
         self, tenant_id, group, role_id,
     ):
         user_groups = self.get_external_user_groups(tenant_id)
@@ -195,7 +211,6 @@ class TenantController(AbstractWaitableResourceController):
         user_groups.append({"group": group, "role": role_id})
 
         data = {"external_user_groups": user_groups}
-
         self.client._request(
             url=tenant_id + "?external_user_groups",
             http_method="put",
