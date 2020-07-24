@@ -105,6 +105,13 @@ Autocompletion:
 ```sh
 hpecp TAB
 ```
+
+Logging with HTTP tracing:
+```sh
+export LOG_LEVEL=DEBUG
+hpecp do-something
+```
+
 More sophisticated CLI examples [here](https://github.com/bluedata-community/bluedata-demo-env-aws-terraform/tree/master/bin/experimental) 
 
 
