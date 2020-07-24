@@ -145,7 +145,6 @@ def get_client(start_session=True):
         config_file=HPECP_CONFIG_FILE, profile=PROFILE,
     )
     if start_session:
-        # _log.debug("Starting session")
         client.create_session()
     return client
 
@@ -229,10 +228,15 @@ class BaseProxy:
             Query in jmespath (https://jmespath.org/) format, by default {}
             if using a query, output must be "json" or "json-pp"
         """
-        if columns == "DEFAULT":
-            columns = list(self.resource_class.default_display_fields)
-        elif columns == "WIDE":
-            columns = list(self.resource_class.all_fields)
+        if columns is not None:
+            if columns == "DEFAULT":
+                columns = list(self.resource_class.default_display_fields)
+            elif columns == "WIDE":
+                columns = list(self.resource_class.all_fields)
+            elif isinstance(columns, tuple):
+                columns = list(columns)
+            elif isinstance(columns, str):
+                columns = columns.split(",")
 
         # FIXME: this also gets called by print_list()
         self.validate_list_params(
