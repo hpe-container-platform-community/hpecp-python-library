@@ -1288,6 +1288,7 @@ class RoleProxy(BaseProxy):
         print(
             dedent(
                 """\
+                    
                 # Retrieve the role ID for 'Admin'
                 $ hpecp role list  --query "[?label.name == 'Admin'][_links.self.href] | [0][0]" --output json | tr -d '"'
                 /api/v1/role/2
