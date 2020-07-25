@@ -498,7 +498,10 @@
             <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;get&quot;</span><span class="p">,</span>
             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;k8s_cluster/get_available_addons&quot;</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;version_info&quot;</span><span class="p">][</span><span class="n">current_cluster_k8s_version</span><span class="p">]</span></div></div>
+        <span class="n">addons</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;version_info&quot;</span><span class="p">][</span><span class="n">current_cluster_k8s_version</span><span class="p">][</span>
+            <span class="s2">&quot;addons&quot;</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="n">addons</span></div></div>
 </pre></div>
 
             <div class="clearer"></div>
