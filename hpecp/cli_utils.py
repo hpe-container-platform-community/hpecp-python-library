@@ -20,8 +20,6 @@
 
 """CLI Utilities."""
 
-from past.builtins import basestring
-
 from collections import OrderedDict
 from six import string_types
 from io import StringIO
@@ -80,12 +78,8 @@ class TextOutput(object):
 
         class MyStringIO(StringIO):
             def write(self, b):
-                # try:
-                #     val = str(b.decode())
-                # except Exception:
-                #     val = str(b)
                 if six.PY2:
-                    val = unicode(b)
+                    val = unicode(b)  # noqa: F821
                 else:
                     val = b
                 super(MyStringIO, self).write(val)
