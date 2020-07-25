@@ -74,6 +74,9 @@ Setup bash autocomplete:
 source <(hpecp autocomplete bash)
 ```
 
+
+
+
 K8s versions:
 ```sh
 hpecp k8scluster k8s-supported-versions --major-filter 1 --minor-filter 17
@@ -84,6 +87,11 @@ hpecp k8scluster k8s-supported-versions --major-filter 1 --minor-filter 17
 Create k8s cluster example:
 ```sh
 hpecp k8scluster create --name myclus1 --k8shosts-config /api/v2/worker/k8shost/1:master --k8s_version=1.17.0
+```
+
+Autocompletion:
+```sh
+hpecp TAB
 ```
 
 List k8s clusters example:
@@ -99,11 +107,6 @@ PROFILE=tenant1 hpecp tenant k8skubeconfig > tenant1_kube.conf
 List query examples:
 ```sh
 hpecp tenant examples
-```
-
-Autocompletion:
-```sh
-hpecp TAB
 ```
 
 Logging with HTTP tracing:
