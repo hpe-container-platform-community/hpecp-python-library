@@ -632,13 +632,14 @@ class TestCLIList(BaseTestCase):
 
     @patch("requests.post", side_effect=mocked_requests_post)
     @patch("requests.get", side_effect=mocked_requests_get)
-    def test_list_with_query(self, mock_post, mock_get):
+    def test_list_with_query_and_json_ouput(self, mock_post, mock_get):
 
         self.maxDiff = None
 
         hpecp = self.cli.CLI()
         hpecp.catalog.list(
-            query="[*][_links.self.href, distro_id]", output="json"
+            query="[?state!='installed' && state!='installing'] | [*].[_links.self.href] | []",
+            output="json",
         )
 
         output = self.out.getvalue().strip()
@@ -648,9 +649,23 @@ class TestCLIList(BaseTestCase):
         except Exception:
             self.fail("Output should be valid json")
 
-        self.assertEqual(
-            output, '[["/api/v1/catalog/29", "bluedata/spark240juphub7xssl"]]'
+        self.assertEqual(output, '["/api/v1/catalog/29"]')
+
+    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=mocked_requests_get)
+    def test_list_with_query_and_text_output(self, mock_post, mock_get):
+
+        self.maxDiff = None
+
+        hpecp = self.cli.CLI()
+        hpecp.catalog.list(
+            query="[?state!='installed' && state!='installing'] | [*].[_links.self.href] | []",
+            output="text",
         )
+
+        output = self.out.getvalue().strip()
+
+        self.assertEqual(output, "/api/v1/catalog/29")
 
 
 class TestCLIGet(BaseTestCase):
