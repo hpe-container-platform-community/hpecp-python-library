@@ -106,7 +106,7 @@ hpecp tenant examples
 
 Raw http example:
 ```sh
-hpecp http get /some/uri
+hpecp httpclient get /some/uri
 ```
 
 Logging with HTTP tracing:
