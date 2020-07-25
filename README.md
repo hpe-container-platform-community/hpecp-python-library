@@ -84,12 +84,12 @@ K8s versions:
 hpecp k8scluster k8s-supported-versions --major-filter 1 --minor-filter 17
 ```
 
-Create k8s cluster example:
+Create k8s cluster:
 ```sh
 hpecp k8scluster create --name myclus1 --k8shosts-config /api/v2/worker/k8shost/1:master --k8s_version=1.17.0
 ```
 
-List k8s clusters example:
+List k8s clusters:
 ```sh
 hpecp k8scluster list --columns [id,description,status]
 ```
@@ -99,12 +99,17 @@ Tenant kube config:
 PROFILE=tenant1 hpecp tenant k8skubeconfig > tenant1_kube.conf
 ```
 
-List query examples:
+List query:
+```sh
+hpecp catalog list --query "[?state!='installed' && state!='installing'] | [*].[_links.self.href] | []"  --output text
+```
+
+List --query examples:
 ```sh
 hpecp tenant examples
 ```
 
-Raw http example:
+Raw http:
 ```sh
 hpecp httpclient get /some/uri
 ```
