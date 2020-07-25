@@ -118,7 +118,7 @@ class.</p>
 </dl>
 <dl class="py attribute">
 <dt id="hpecp.k8s_cluster.K8sCluster.all_fields">
-<code class="sig-name descname">all_fields</code><em class="property"> = ['id', 'name', 'description', 'k8s_version', 'created_by_user_id', 'created_by_user_name', 'created_time', 'k8shosts_config', 'admin_kube_config', 'dashboard_token', 'api_endpoint_access', 'dashboard_endpoint_access', 'cert_data', 'status', 'status_message', '_links']</em><a class="headerlink" href="#hpecp.k8s_cluster.K8sCluster.all_fields" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">all_fields</code><em class="property"> = ['id', 'name', 'description', 'k8s_version', 'addons', 'created_by_user_id', 'created_by_user_name', 'created_time', 'k8shosts_config', 'admin_kube_config', 'dashboard_token', 'api_endpoint_access', 'dashboard_endpoint_access', 'cert_data', 'status', 'status_message', '_links']</em><a class="headerlink" href="#hpecp.k8s_cluster.K8sCluster.all_fields" title="Permalink to this definition">¶</a></dt>
 <dd><p>All of the fields of a K8s Cluster objects that are returned by the HPE
 Container Platform API</p>
 </dd></dl>
@@ -144,6 +144,12 @@ Container Platform API</p>
 <dt id="hpecp.k8s_cluster.K8sCluster.k8s_version">
 <em class="property">property </em><code class="sig-name descname">k8s_version</code><a class="headerlink" href="#hpecp.k8s_cluster.K8sCluster.k8s_version" title="Permalink to this definition">¶</a></dt>
 <dd><p>&#64;Field: from json[‘k8s_version’]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="hpecp.k8s_cluster.K8sCluster.addons">
+<em class="property">property </em><code class="sig-name descname">addons</code><a class="headerlink" href="#hpecp.k8s_cluster.K8sCluster.addons" title="Permalink to this definition">¶</a></dt>
+<dd><p>&#64;Field: from json[‘addons’]</p>
 </dd></dl>
 
 <dl class="py method">
