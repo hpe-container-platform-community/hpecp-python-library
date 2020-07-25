@@ -353,7 +353,7 @@ class BaseProxy:
                 )
             elif output == "text":
                 obj = jmespath.search(str(query), data)
-                print(TextOutput.dump(obj).encode("utf-8"))
+                print(TextOutput.dump(obj))
             else:
                 print(json.dumps(jmespath.search(str(query), data),))
 
@@ -429,6 +429,7 @@ class CatalogProxy(BaseProxy):
             "get",
             "list",
             "delete",
+            "examples",
             "wait_for_state",
             "refresh",
             "install",
@@ -486,6 +487,31 @@ class CatalogProxy(BaseProxy):
         except (APIException, APIItemNotFoundException) as e:
             print(e.message, file=sys.stderr)
             sys.exit(1)
+
+    def examples(self):
+        """Show examples for working with roles."""
+        print(
+            dedent(
+                """\
+                $  hpecp catalog list --query "[?state!='installed' && state!='installing'] | [*].[_links.self.href] | []"  --output json
+                ["/api/v1/catalog/24", "/api/v1/catalog/27", "/api/v1/catalog/14", "/api/v1/catalog/11", "/api/v1/catalog/28", "/api/v1/catalog/18"]
+
+                $  hpecp catalog list --query "[?state!='installed' && state!='installing'] | [*].[_links.self.href] | []"  --output text
+                /api/v1/catalog/24
+                /api/v1/catalog/27
+                /api/v1/catalog/14
+                /api/v1/catalog/11
+                /api/v1/catalog/28
+                /api/v1/catalog/18
+
+                $  hpecp catalog list --query "[?state!='installed' && state!='installing'] | [*].[_links.self.href, distro_id]"  --output text
+                /api/v1/catalog/29	bluedata/spark240juphub7xssl
+                /api/v1/catalog/11	bluedata/ubuntu16
+                /api/v1/catalog/21	bluedata/cdh632multi
+                /api/v1/catalog/2	bluedata/spark231juphub7xssl
+                """  # noqa:  E501
+            )
+        )
 
 
 class GatewayProxy(BaseProxy):

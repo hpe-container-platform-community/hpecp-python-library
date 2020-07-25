@@ -20,9 +20,13 @@
 
 """CLI Utilities."""
 
+from past.builtins import basestring
+
 from collections import OrderedDict
 from six import string_types
 from io import StringIO
+import six
+
 
 # This class has been adapted from knack.
 # See https://github.com/microsoft/knack/blob/master/LICENSE
@@ -42,7 +46,7 @@ class TextOutput(object):
             stream.write("")
         else:
             to_write = data if isinstance(data, string_types) else str(data)
-            stream.write(to_write.decode("utf-8"))
+            stream.write(to_write)
 
     @staticmethod
     def _dump_row(data, stream):
@@ -68,15 +72,28 @@ class TextOutput(object):
             TextOutput._dump_obj(str(data).lower(), stream)
         else:
             TextOutput._dump_obj(data, stream)
-        stream.write("\n".decode("utf-8"))
+        stream.write("\n")
 
     @staticmethod
     def dump(data):
         """Dump the python object as text."""
-        io = StringIO()
+
+        class MyStringIO(StringIO):
+            def write(self, b):
+                # try:
+                #     val = str(b.decode())
+                # except Exception:
+                #     val = str(b)
+                if six.PY2:
+                    val = unicode(b)
+                else:
+                    val = b
+                super(MyStringIO, self).write(val)
+
+        io = MyStringIO()
         for item in data:
             TextOutput._dump_row(item, io)
 
         result = io.getvalue()
         io.close()
-        return result
+        return str(result)
