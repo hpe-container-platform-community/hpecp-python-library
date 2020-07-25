@@ -94,7 +94,7 @@ List with columns parameter:
 hpecp k8scluster list --columns [id,description,status]
 ```
 
-List with query parameter:
+List with (jmespath) query parameter:
 ```sh
 hpecp catalog list --query "[?state!='installed' && state!='installing'] | [*].[_links.self.href] | []"  --output text
 ```
