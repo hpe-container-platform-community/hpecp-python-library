@@ -805,7 +805,7 @@ class K8sClusterProxy(BaseProxy):
 
     def get_addons(self, id):
         """Retrieve the addons for a cluster.
-        
+
         :param id: the cluster ID
         """
         print(get_client().k8s_cluster.get(id=id).addons)
