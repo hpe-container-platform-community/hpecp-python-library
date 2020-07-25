@@ -452,4 +452,7 @@ class K8sClusterController(AbstractWaitableResourceController):
             http_method="get",
             description="k8s_cluster/get_available_addons",
         )
-        response.json()["version_info"][current_cluster_k8s_version]
+        addons = response.json()["version_info"][current_cluster_k8s_version][
+            "addons"
+        ]
+        return addons
