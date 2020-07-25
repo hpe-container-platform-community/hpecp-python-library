@@ -24,6 +24,9 @@ from collections import OrderedDict
 from six import string_types
 from io import StringIO
 
+# This class has been adapted from knack.
+# See https://github.com/microsoft/knack/blob/master/LICENSE
+
 
 class TextOutput(object):
     """Text output class."""
