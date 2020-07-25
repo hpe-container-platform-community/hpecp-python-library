@@ -711,7 +711,7 @@ class K8sClusterProxy(BaseProxy):
             "dashboard_token",
             "delete",
             "get",
-            "get-addons",
+            "get_addons",
             "k8s_supported_versions",
             "list",
             "statuses",
