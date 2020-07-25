@@ -399,7 +399,7 @@
                 <span class="p">)</span>
             <span class="k">elif</span> <span class="n">output</span> <span class="o">==</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span>
                 <span class="n">obj</span> <span class="o">=</span> <span class="n">jmespath</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">query</span><span class="p">),</span> <span class="n">data</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">TextOutput</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">TextOutput</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">obj</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">jmespath</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">query</span><span class="p">),</span> <span class="n">data</span><span class="p">),))</span></div>
 
@@ -475,6 +475,7 @@
             <span class="s2">&quot;get&quot;</span><span class="p">,</span>
             <span class="s2">&quot;list&quot;</span><span class="p">,</span>
             <span class="s2">&quot;delete&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;examples&quot;</span><span class="p">,</span>
             <span class="s2">&quot;wait_for_state&quot;</span><span class="p">,</span>
             <span class="s2">&quot;refresh&quot;</span><span class="p">,</span>
             <span class="s2">&quot;install&quot;</span><span class="p">,</span>
@@ -531,7 +532,32 @@
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">except</span> <span class="p">(</span><span class="n">APIException</span><span class="p">,</span> <span class="n">APIItemNotFoundException</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div></div>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CatalogProxy.examples"><a class="viewcode-back" href="../../cli.html#bin.cli.CatalogProxy.examples">[docs]</a>    <span class="k">def</span> <span class="nf">examples</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Show examples for working with roles.&quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="n">dedent</span><span class="p">(</span>
+                <span class="sd">&quot;&quot;&quot;\</span>
+<span class="sd">                $  hpecp catalog list --query &quot;[?state!=&#39;installed&#39; &amp;&amp; state!=&#39;installing&#39;] | [*].[_links.self.href] | []&quot;  --output json</span>
+<span class="sd">                [&quot;/api/v1/catalog/24&quot;, &quot;/api/v1/catalog/27&quot;, &quot;/api/v1/catalog/14&quot;, &quot;/api/v1/catalog/11&quot;, &quot;/api/v1/catalog/28&quot;, &quot;/api/v1/catalog/18&quot;]</span>
+
+<span class="sd">                $  hpecp catalog list --query &quot;[?state!=&#39;installed&#39; &amp;&amp; state!=&#39;installing&#39;] | [*].[_links.self.href] | []&quot;  --output text</span>
+<span class="sd">                /api/v1/catalog/24</span>
+<span class="sd">                /api/v1/catalog/27</span>
+<span class="sd">                /api/v1/catalog/14</span>
+<span class="sd">                /api/v1/catalog/11</span>
+<span class="sd">                /api/v1/catalog/28</span>
+<span class="sd">                /api/v1/catalog/18</span>
+
+<span class="sd">                $  hpecp catalog list --query &quot;[?state!=&#39;installed&#39; &amp;&amp; state!=&#39;installing&#39;] | [*].[_links.self.href, distro_id]&quot;  --output text</span>
+<span class="sd">                /api/v1/catalog/29	bluedata/spark240juphub7xssl</span>
+<span class="sd">                /api/v1/catalog/11	bluedata/ubuntu16</span>
+<span class="sd">                /api/v1/catalog/21	bluedata/cdh632multi</span>
+<span class="sd">                /api/v1/catalog/2	bluedata/spark231juphub7xssl</span>
+<span class="sd">                &quot;&quot;&quot;</span>  <span class="c1"># noqa:  E501</span>
+            <span class="p">)</span>
+        <span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="GatewayProxy"><a class="viewcode-back" href="../../cli.html#bin.cli.GatewayProxy">[docs]</a><span class="k">class</span> <span class="nc">GatewayProxy</span><span class="p">(</span><span class="n">BaseProxy</span><span class="p">):</span>
