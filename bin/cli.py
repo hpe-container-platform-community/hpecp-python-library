@@ -711,7 +711,8 @@ class K8sClusterProxy(BaseProxy):
             "dashboard_token",
             "delete",
             "get",
-            "get_addons",
+            "get_available_addons",
+            "get_installed_addons",
             "k8s_supported_versions",
             "list",
             "statuses",
@@ -803,12 +804,19 @@ class K8sClusterProxy(BaseProxy):
         else:
             print(base64.b64decode(token.encode()).decode("utf-8"))
 
-    def get_addons(self, id):
-        """Retrieve the addons for a cluster.
+    def get_installed_addons(self, id):
+        """Retrieve the installed addons on the cluster.
 
         :param id: the cluster ID
         """
         print(get_client().k8s_cluster.get(id=id).addons)
+
+    def get_available_addons(self, id):
+        """Retrieve the available addons for a cluster.
+
+        :param id: the cluster ID
+        """
+        print(get_client().k8s_cluster.get_available_addons(id=id))
 
     def statuses(self,):
         """Return a list of valid statuses."""

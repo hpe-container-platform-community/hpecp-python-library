@@ -427,3 +427,29 @@ class K8sClusterController(AbstractWaitableResourceController):
             description="k8s_cluster/k8s_supported_versions",
         )
         return response.json()["supported_versions"]
+
+    def get_available_addons(self, id):
+        """Retrieve list of K8S Supported Versions.
+
+        Parameters
+        ----------
+        id: str
+            The k8s cluster ID
+
+        Returns
+        -------
+        list[str]
+            List of available addons
+
+        Raises
+        ------
+        APIException
+        """
+        current_cluster_k8s_version = self.get(id).k8s_version
+
+        response = self.client._request(
+            url="/api/v2/k8smanifest",
+            http_method="get",
+            description="k8s_cluster/get_available_addons",
+        )
+        response.json()["version_info"][current_cluster_k8s_version]
