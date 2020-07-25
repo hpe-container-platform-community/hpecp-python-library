@@ -67,6 +67,7 @@ from hpecp.catalog import Catalog
 from hpecp.tenant import Tenant
 from hpecp.user import User
 from hpecp.role import Role
+from hpecp.cli_utils import TextOutput
 
 
 if sys.version_info[0] >= 3:
@@ -291,11 +292,11 @@ class BaseProxy:
                 )
                 sys.exit(1)
         else:
-            if output not in ["json", "json-pp"]:
+            if output not in ["json", "json-pp", "text"]:
                 print(
                     (
                         "If you provide a jmes --query, the output must "
-                        "be 'json' or 'json-pp'"
+                        "be 'json', 'json-pp', or 'text'"
                     ),
                     file=sys.stderr,
                 )
@@ -350,6 +351,8 @@ class BaseProxy:
                         sort_keys=True,
                     )
                 )
+            elif output == "text":
+                TextOutput.dump(jmespath.search(str(query), data))
             else:
                 print(json.dumps(jmespath.search(str(query), data),))
 
