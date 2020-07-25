@@ -352,7 +352,8 @@ class BaseProxy:
                     )
                 )
             elif output == "text":
-                TextOutput.dump(jmespath.search(str(query), data))
+                obj = jmespath.search(str(query), data)
+                print(TextOutput.dump(obj))
             else:
                 print(json.dumps(jmespath.search(str(query), data),))
 
