@@ -43,7 +43,7 @@ pip3 install --upgrade git+https://github.com/hpe-container-platform-community/h
 If you are installing on Centos 7.7 with only Python 2.7 see [here](./docs/README-INSTALL-HPECP-HOSTS.md) for a workaround
 
 
-## CLI selected examples
+## CLI examples
 
 CLI is installed with pip ([as above](#installation))
 
