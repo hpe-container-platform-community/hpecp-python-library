@@ -109,7 +109,7 @@ Tenant kube config:
 PROFILE=tenant1 hpecp tenant k8skubeconfig > tenant1_kube.conf
 ```
 
-Raw http:
+Http call:
 ```sh
 hpecp httpclient get /some/uri
 ```
