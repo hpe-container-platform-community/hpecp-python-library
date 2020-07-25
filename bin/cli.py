@@ -493,6 +493,7 @@ class CatalogProxy(BaseProxy):
         print(
             dedent(
                 """\
+
                 $  hpecp catalog list --query "[?state!='installed' && state!='installing'] | [*].[_links.self.href] | []"  --output json
                 ["/api/v1/catalog/24", "/api/v1/catalog/27", "/api/v1/catalog/14", "/api/v1/catalog/11", "/api/v1/catalog/28", "/api/v1/catalog/18"]
 
@@ -932,7 +933,13 @@ class TenantProxy(BaseProxy):
     def examples(self):
         """Show usage_examples of the list method."""
         print(
-            """hpecp tenant list --query "[?tenant_type == 'k8s']" --output json-pp"""  # noqa: E501
+            dedent(
+                """\
+
+                hpecp tenant list --query "[?tenant_type == 'k8s']" --output json-pp
+
+                """  # noqa: E501
+            )
         )
 
     @intercept_exception
@@ -1294,7 +1301,12 @@ class UserProxy(BaseProxy):
     def examples(self):
         """Show usage_examples of the list method."""
         print(
-            """hpecp user list --query '[?is_external]' --output json-pp"""  # noqa: E501
+            dedent(
+                """\
+
+                hpecp user list --query '[?is_external]' --output json-pp
+                """  # noqa: E501
+            )
         )
 
 
