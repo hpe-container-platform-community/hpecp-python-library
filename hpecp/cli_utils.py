@@ -42,7 +42,7 @@ class TextOutput(object):
             stream.write("")
         else:
             to_write = data if isinstance(data, string_types) else str(data)
-            stream.write(to_write)
+            stream.write(to_write.decode("utf-8"))
 
     @staticmethod
     def _dump_row(data, stream):
@@ -68,7 +68,7 @@ class TextOutput(object):
             TextOutput._dump_obj(str(data).lower(), stream)
         else:
             TextOutput._dump_obj(data, stream)
-        stream.write("\n")
+        stream.write("\n".decode("utf-8"))
 
     @staticmethod
     def dump(data):

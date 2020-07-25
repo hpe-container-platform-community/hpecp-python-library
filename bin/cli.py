@@ -353,7 +353,7 @@ class BaseProxy:
                 )
             elif output == "text":
                 obj = jmespath.search(str(query), data)
-                print(TextOutput.dump(obj))
+                print(TextOutput.dump(obj).encode("utf-8"))
             else:
                 print(json.dumps(jmespath.search(str(query), data),))
 

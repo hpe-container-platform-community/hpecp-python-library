@@ -657,11 +657,12 @@ class TestCLIList(BaseTestCase):
 
         self.maxDiff = None
 
-        hpecp = self.cli.CLI()
-        hpecp.catalog.list(
-            query="[?state!='installed' && state!='installing'] | [*].[_links.self.href] | []",
-            output="text",
-        )
+        with patch.dict("os.environ", {"LOG_LEVEL": "DEBUG"}):
+            hpecp = self.cli.CLI()
+            hpecp.catalog.list(
+                query="[?state!='installed' && state!='installing'] | [*].[_links.self.href] | []",
+                output="text",
+            )
 
         output = self.out.getvalue().strip()
 
