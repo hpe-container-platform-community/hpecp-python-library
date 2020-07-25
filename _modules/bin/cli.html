@@ -539,6 +539,7 @@
         <span class="nb">print</span><span class="p">(</span>
             <span class="n">dedent</span><span class="p">(</span>
                 <span class="sd">&quot;&quot;&quot;\</span>
+
 <span class="sd">                $  hpecp catalog list --query &quot;[?state!=&#39;installed&#39; &amp;&amp; state!=&#39;installing&#39;] | [*].[_links.self.href] | []&quot;  --output json</span>
 <span class="sd">                [&quot;/api/v1/catalog/24&quot;, &quot;/api/v1/catalog/27&quot;, &quot;/api/v1/catalog/14&quot;, &quot;/api/v1/catalog/11&quot;, &quot;/api/v1/catalog/28&quot;, &quot;/api/v1/catalog/18&quot;]</span>
 
@@ -978,7 +979,13 @@
 <div class="viewcode-block" id="TenantProxy.examples"><a class="viewcode-back" href="../../cli.html#bin.cli.TenantProxy.examples">[docs]</a>    <span class="k">def</span> <span class="nf">examples</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Show usage_examples of the list method.&quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span>
-            <span class="sd">&quot;&quot;&quot;hpecp tenant list --query &quot;[?tenant_type == &#39;k8s&#39;]&quot; --output json-pp&quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
+            <span class="n">dedent</span><span class="p">(</span>
+                <span class="sd">&quot;&quot;&quot;\</span>
+
+<span class="sd">                hpecp tenant list --query &quot;[?tenant_type == &#39;k8s&#39;]&quot; --output json-pp</span>
+
+<span class="sd">                &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
+            <span class="p">)</span>
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="TenantProxy.k8skubeconfig"><a class="viewcode-back" href="../../cli.html#bin.cli.TenantProxy.k8skubeconfig">[docs]</a>    <span class="nd">@intercept_exception</span>
@@ -1340,7 +1347,12 @@
 <div class="viewcode-block" id="UserProxy.examples"><a class="viewcode-back" href="../../cli.html#bin.cli.UserProxy.examples">[docs]</a>    <span class="k">def</span> <span class="nf">examples</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Show usage_examples of the list method.&quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span>
-            <span class="sd">&quot;&quot;&quot;hpecp user list --query &#39;[?is_external]&#39; --output json-pp&quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
+            <span class="n">dedent</span><span class="p">(</span>
+                <span class="sd">&quot;&quot;&quot;\</span>
+
+<span class="sd">                hpecp user list --query &#39;[?is_external]&#39; --output json-pp</span>
+<span class="sd">                &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
+            <span class="p">)</span>
         <span class="p">)</span></div></div>
 
 
