@@ -89,17 +89,12 @@ Create k8s cluster:
 hpecp k8scluster create --name myclus1 --k8shosts-config /api/v2/worker/k8shost/1:master --k8s_version=1.17.0
 ```
 
-List k8s clusters:
+List with columns parameter:
 ```sh
 hpecp k8scluster list --columns [id,description,status]
 ```
 
-Tenant kube config:
-```sh
-PROFILE=tenant1 hpecp tenant k8skubeconfig > tenant1_kube.conf
-```
-
-List query:
+List with query parameter:
 ```sh
 hpecp catalog list --query "[?state!='installed' && state!='installing'] | [*].[_links.self.href] | []"  --output text
 ```
@@ -109,7 +104,12 @@ List --query examples:
 hpecp tenant examples
 ```
 
-Raw http:
+Tenant kube config:
+```sh
+PROFILE=tenant1 hpecp tenant k8skubeconfig > tenant1_kube.conf
+```
+
+Http call:
 ```sh
 hpecp httpclient get /some/uri
 ```
