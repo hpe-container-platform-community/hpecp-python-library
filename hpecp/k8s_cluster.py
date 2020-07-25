@@ -76,6 +76,7 @@ class K8sCluster(AbstractResource):
         "name",
         "description",
         "k8s_version",
+        "addons",
         "created_by_user_id",
         "created_by_user_name",
         "created_time",
@@ -114,6 +115,14 @@ class K8sCluster(AbstractResource):
     def k8s_version(self):
         """@Field: from json['k8s_version']"""
         return self.json["k8s_version"]
+
+    @property
+    def addons(self):
+        """@Field: from json['addons']"""
+        if "addons" in self.json:
+            return self.json["addons"]
+        else:
+            return ""
 
     @property
     def created_by_user_id(self):
