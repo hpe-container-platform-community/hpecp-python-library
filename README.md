@@ -94,11 +94,6 @@ List with columns parameter:
 hpecp k8scluster list --columns [id,description,status]
 ```
 
-Tenant kube config:
-```sh
-PROFILE=tenant1 hpecp tenant k8skubeconfig > tenant1_kube.conf
-```
-
 List with query parameter:
 ```sh
 hpecp catalog list --query "[?state!='installed' && state!='installing'] | [*].[_links.self.href] | []"  --output text
@@ -107,6 +102,11 @@ hpecp catalog list --query "[?state!='installed' && state!='installing'] | [*].[
 List --query examples:
 ```sh
 hpecp tenant examples
+```
+
+Tenant kube config:
+```sh
+PROFILE=tenant1 hpecp tenant k8skubeconfig > tenant1_kube.conf
 ```
 
 Raw http:
