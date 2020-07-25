@@ -757,7 +757,8 @@
             <span class="s2">&quot;dashboard_token&quot;</span><span class="p">,</span>
             <span class="s2">&quot;delete&quot;</span><span class="p">,</span>
             <span class="s2">&quot;get&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;get_addons&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;get_available_addons&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;get_installed_addons&quot;</span><span class="p">,</span>
             <span class="s2">&quot;k8s_supported_versions&quot;</span><span class="p">,</span>
             <span class="s2">&quot;list&quot;</span><span class="p">,</span>
             <span class="s2">&quot;statuses&quot;</span><span class="p">,</span>
@@ -849,12 +850,19 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">token</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="K8sClusterProxy.get_addons"><a class="viewcode-back" href="../../cli.html#bin.cli.K8sClusterProxy.get_addons">[docs]</a>    <span class="k">def</span> <span class="nf">get_addons</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Retrieve the addons for a cluster.</span>
+<div class="viewcode-block" id="K8sClusterProxy.get_installed_addons"><a class="viewcode-back" href="../../cli.html#bin.cli.K8sClusterProxy.get_installed_addons">[docs]</a>    <span class="k">def</span> <span class="nf">get_installed_addons</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve the installed addons on the cluster.</span>
 
 <span class="sd">        :param id: the cluster ID</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">k8s_cluster</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span><span class="o">.</span><span class="n">addons</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="K8sClusterProxy.get_available_addons"><a class="viewcode-back" href="../../cli.html#bin.cli.K8sClusterProxy.get_available_addons">[docs]</a>    <span class="k">def</span> <span class="nf">get_available_addons</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve the available addons for a cluster.</span>
+
+<span class="sd">        :param id: the cluster ID</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">k8s_cluster</span><span class="o">.</span><span class="n">get_available_addons</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="K8sClusterProxy.statuses"><a class="viewcode-back" href="../../cli.html#bin.cli.K8sClusterProxy.statuses">[docs]</a>    <span class="k">def</span> <span class="nf">statuses</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
         <span class="sd">&quot;&quot;&quot;Return a list of valid statuses.&quot;&quot;&quot;</span>
