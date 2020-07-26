@@ -13,6 +13,6 @@ RUN pip install -U pylint pytest mock nose flake8-docstrings flake8-per-file-ign
     && pip install -r /tmp/requirements.txt \
     && pip3 install -r /tmp/requirements.txt 
 
-RUN echo 'PATH=$PATH:/home/theia/.local/bin/' > /home/theia/.bash_profile
+RUN echo 'PATH=$PATH:/home/theia/.local/bin/' >> /home/theia/.bashrc
 
 ENV PYTHONPATH=/home/project:$PYTHONPATH

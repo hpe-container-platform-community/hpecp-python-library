@@ -448,6 +448,17 @@ class TestCreateCluster(TestCase):
         )
         self.assertEqual(id, "/api/v2/k8scluster/99")
 
+        # now with a k8s version
+        id = get_client().k8s_cluster.create(
+            name="a",
+            k8shosts_config=[
+                K8sClusterHostConfig("/api/v2/worker/k8shost/1", "master")
+            ],
+            k8s_version="1.18.0",
+            addons=["picasso"],
+        )
+        self.assertEqual(id, "/api/v2/k8scluster/99")
+
     def mocked_requests_create_error_post(*args, **kwargs):
         if args[0] == "https://127.0.0.1:8080/api/v1/login":
             return MockResponse(
