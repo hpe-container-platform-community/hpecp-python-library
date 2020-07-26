@@ -467,3 +467,41 @@ class K8sClusterController(AbstractWaitableResourceController):
         )
         addons = response.json()["version_info"][k8s_version]["addons"]
         return addons
+
+    def add_addons(self, id, addons=[]):
+        """Retrieve list of K8S Supported Versions.
+
+        Parameters
+        ----------
+        id: str
+            The k8s cluster ID
+        addons: list
+            The list of addons to add.
+
+        Raises
+        ------
+        APIException
+        """
+        # TODO assert ID is provided and valid
+        assert (
+            isinstance(addons, list) and len(list) > 0
+        ), "'Addons' parameter must be a list and have at least one entry."
+
+        current_addons = self.get(id).addons
+        required_addons = current_addons + addons
+
+        # de-duplicate
+        required_addons = list(dict.fromkeys(required_addons))
+
+        data = {
+            "change_spec": {"addons": required_addons},
+            "operation": "reconfigure",
+            "reason": "",
+        }
+
+        self.client._request(
+            url="/api/v2/k8scluster/{}/change_task".format(id),
+            http_method="post",
+            description="k8s_cluster/add_addons",
+            data=data,
+        )

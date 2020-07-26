@@ -705,6 +705,7 @@ class K8sClusterProxy(BaseProxy):
     def __dir__(self):
         """Return the CLI method names."""
         return [
+            "add_addons",
             "admin_kube_config",
             "create",
             "dashboard_url",
@@ -824,13 +825,17 @@ class K8sClusterProxy(BaseProxy):
         if id is not None or k8s_version is not None:
             print(
                 "Either 'id' or 'k8s_version' parameter must be provided",
-                file=sys.stdout,
+                file=sys.stderr,
             )
+            sys.exit(1)
+
         if id is None or k8s_version is None:
             print(
                 "Either 'id' or 'k8s_version' parameter must be provided",
-                file=sys.stdout,
+                file=sys.stderr,
             )
+            sys.exit(1)
+
         if id:
             print(get_client().k8s_cluster.get_available_addons(id=id))
         else:
@@ -839,6 +844,24 @@ class K8sClusterProxy(BaseProxy):
                     k8s_version=k8s_version
                 )
             )
+
+    def add_addons(self, addons):
+        """Retrieve the installed addons on the cluster.
+
+        :param id: get installed addons for a specific cluster
+        :param addons: list of addons to install
+        """
+        if id is None:
+            print("'id' parameter must be provided.", file=sys.stderr)
+            sys.exit(1)
+        if addons is None or not isinstance(addons, list) or len(addons) < 1:
+            print(
+                "'addons' must be a list with at least one entry.",
+                file=sys.stderr,
+            )
+            sys.exit(1)
+
+        print(get_client().k8s_cluster.add_addons(id=id, addons=addons))
 
     def statuses(self,):
         """Return a list of valid statuses."""
