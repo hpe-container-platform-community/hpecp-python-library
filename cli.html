@@ -388,14 +388,11 @@ default=’10.96.0.0/12’</p></li>
 
 <dl class="py method">
 <dt id="bin.cli.K8sClusterProxy.get_installed_addons">
-<code class="sig-name descname">get_installed_addons</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">k8s_version</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#K8sClusterProxy.get_installed_addons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.K8sClusterProxy.get_installed_addons" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_installed_addons</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#K8sClusterProxy.get_installed_addons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.K8sClusterProxy.get_installed_addons" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve the installed addons on the cluster.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>id</strong> – get available addons for a specific cluster (opt)</p></li>
-<li><p><strong>k8s_version</strong> – get available addons for a cluster version (opt)</p></li>
-</ul>
+<dd class="field-odd"><p><strong>id</strong> – get installed addons for a specific cluster</p>
 </dd>
 </dl>
 </dd></dl>
@@ -406,7 +403,10 @@ default=’10.96.0.0/12’</p></li>
 <dd><p>Retrieve the available addons for a cluster.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>id</strong> – the cluster ID</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> – get available addons for a specific cluster (opt)</p></li>
+<li><p><strong>k8s_version</strong> – get available addons for a cluster version (opt)</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
