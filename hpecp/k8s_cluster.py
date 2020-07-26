@@ -290,6 +290,7 @@ class K8sClusterController(AbstractWaitableResourceController):
         persistent_storage_local=False,
         persistent_storage_nimble_csi=False,
         k8shosts_config=[],
+        addons=[],
     ):
         """Send an API request to create a K8s Cluster.  The cluster creation
         will be asynchronous - use the :py:meth:`wait_for_status` method to
@@ -310,6 +311,8 @@ class K8sClusterController(AbstractWaitableResourceController):
         pod_network_range: str
             Network range to be used for kubernetes pods. Defaults to
             `10.192.0.0/12`
+        addons: list
+            Addons - See :py:method:`get_available_addons`.
         service_network_range: str
             Network range to be used for kubernetes services that are
             exposed with Cluster IP. Defaults to `10.96.0.0/12`
@@ -371,12 +374,14 @@ class K8sClusterController(AbstractWaitableResourceController):
                 "'k8shosts_config' item '{}' is not of"
                 " type K8sClusterHostConfig"
             ).format(i)
+        assert isinstance(addons, list), "'addons' must be a list"
 
         data = {
             "label": {"name": name},
             "pod_network_range": pod_network_range,
             "service_network_range": service_network_range,
             "pod_dns_domain": pod_dns_domain,
+            "addons": addons,
             "persistent_storage": {
                 "local": persistent_storage_local,
                 "nimble_csi": persistent_storage_nimble_csi,
@@ -428,7 +433,7 @@ class K8sClusterController(AbstractWaitableResourceController):
         )
         return response.json()["supported_versions"]
 
-    def get_available_addons(self, id):
+    def get_available_addons(self, id=None, k8s_version=None):
         """Retrieve list of K8S Supported Versions.
 
         Parameters
@@ -445,14 +450,20 @@ class K8sClusterController(AbstractWaitableResourceController):
         ------
         APIException
         """
-        current_cluster_k8s_version = self.get(id).k8s_version
+        assert (
+            id is not None or k8s_version is not None
+        ), "Either 'id' or 'k8s_version' parameter must be provided"
+        assert (
+            id is None or k8s_version is None
+        ), "Either 'id' or 'k8s_version' parameter must be provided"
+
+        if id:
+            k8s_version = self.get(id).k8s_version
 
         response = self.client._request(
             url="/api/v2/k8smanifest",
             http_method="get",
             description="k8s_cluster/get_available_addons",
         )
-        addons = response.json()["version_info"][current_cluster_k8s_version][
-            "addons"
-        ]
+        addons = response.json()["version_info"][k8s_version]["addons"]
         return addons

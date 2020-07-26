@@ -735,6 +735,7 @@ class K8sClusterProxy(BaseProxy):
         pod_dns_domain="cluster.local",
         persistent_storage_local=False,
         persistent_storage_nimble_csi=False,
+        addons=[],
     ):
         """Create a K8s Cluster.
 
@@ -750,7 +751,10 @@ class K8sClusterProxy(BaseProxy):
         :param pod_dns_domain: the pod dns domain, default='cluster.local'
         :param persistent_storage_local: True/False
         :param persistent_storage_nimble_csi: True/False
+        :param addons: list of required addons. See:
+            `hpecp k8scluster get-available-addons`
         """
+
         host_config = [
             K8sClusterHostConfig.create_from_list(h.split(":"))
             for h in k8shosts_config.split(",")
@@ -767,6 +771,7 @@ class K8sClusterProxy(BaseProxy):
                 persistent_storage_local=persistent_storage_local,
                 persistent_storage_nimble_csi=persistent_storage_nimble_csi,
                 k8shosts_config=host_config,
+                addons=addons,
             )
         )
 
@@ -804,14 +809,25 @@ class K8sClusterProxy(BaseProxy):
         else:
             print(base64.b64decode(token.encode()).decode("utf-8"))
 
-    def get_installed_addons(self, id):
+    def get_installed_addons(self, id, k8s_version):
         """Retrieve the installed addons on the cluster.
 
-        :param id: the cluster ID
+        :param id: get available addons for a specific cluster (opt)
+        :param k8s_version: get available addons for a cluster version (opt)
         """
+        if id is not None or k8s_version is not None:
+            print(
+                "Either 'id' or 'k8s_version' parameter must be provided",
+                file=sys.stdout,
+            )
+        if id is None or k8s_version is None:
+            print(
+                "Either 'id' or 'k8s_version' parameter must be provided",
+                file=sys.stdout,
+            )
         print(get_client().k8s_cluster.get(id=id).addons)
 
-    def get_available_addons(self, id):
+    def get_available_addons(self, id, k8s_version):
         """Retrieve the available addons for a cluster.
 
         :param id: the cluster ID
