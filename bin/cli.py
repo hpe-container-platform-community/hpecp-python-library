@@ -754,7 +754,6 @@ class K8sClusterProxy(BaseProxy):
         :param addons: list of required addons. See:
             `hpecp k8scluster get-available-addons`
         """
-
         host_config = [
             K8sClusterHostConfig.create_from_list(h.split(":"))
             for h in k8shosts_config.split(",")
