@@ -99,7 +99,7 @@ else:
 
 @wrapt.decorator
 def intercept_exception(wrapped, instance, args, kwargs):
-    """Handle Exceptions."""
+    """Handle Exceptions."""  # noqa: D202
 
     def _handle_unknown_exception(ex):
         """Handle unknown exceptions."""
@@ -420,7 +420,7 @@ class CatalogProxy(BaseProxy):
     """Proxy object to :py:attr:`<hpecp.client.catalog>`."""
 
     def __init__(self):
-        """Initiate this proxy class with the client module name."""
+        """Create instance of proxy class with the client module name."""
         super(CatalogProxy, self).new_instance("catalog", Catalog)
 
     def __dir__(self):
@@ -530,7 +530,7 @@ class GatewayProxy(BaseProxy):
         ]
 
     def __init__(self):
-        """Initiate this proxy class with the client module name."""
+        """Create instance of proxy class with the client module name."""
         super(GatewayProxy, self).new_instance("gateway", Gateway)
 
     @intercept_exception
@@ -609,7 +609,7 @@ class K8sWorkerProxy(BaseProxy):
         ]
 
     def __init__(self):
-        """Initiate this proxy class with the client module name."""
+        """Create instance of proxy class with the client module name."""
         super(K8sWorkerProxy, self).new_instance("k8s_worker", WorkerK8s)
 
     @intercept_exception
@@ -720,7 +720,7 @@ class K8sClusterProxy(BaseProxy):
         ]
 
     def __init__(self):
-        """Initiate this proxy class with the client module name."""
+        """Create instance of proxy class with the client module name."""
         super(K8sClusterProxy, self).new_instance("k8s_cluster", K8sCluster)
 
     @intercept_exception
@@ -929,7 +929,7 @@ class TenantProxy(BaseProxy):
         ]
 
     def __init__(self):
-        """Initiate this proxy class with the client module name."""
+        """Create instance of proxy class with the client module name."""
         super(TenantProxy, self).new_instance("tenant", Tenant)
 
     @intercept_exception
@@ -1307,7 +1307,7 @@ class UserProxy(BaseProxy):
         return ["create", "get", "delete", "examples", "list"]
 
     def __init__(self):
-        """Initiate this proxy class with the client module name."""
+        """Create instance of proxy class with the client module name."""
         super(UserProxy, self).new_instance("user", User)
 
     @intercept_exception
@@ -1349,7 +1349,7 @@ class RoleProxy(BaseProxy):
         return ["delete", "examples", "get", "list"]
 
     def __init__(self):
-        """Initiate this proxy class with the client module name."""
+        """Create instance of proxy class with the client module name."""
         super(RoleProxy, self).new_instance("role", Role)
 
     def examples(self):

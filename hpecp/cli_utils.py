@@ -74,7 +74,7 @@ class TextOutput(object):
 
     @staticmethod
     def dump(data):
-        """Dump the python object as text."""
+        """Dump the python object as text."""  # noqa: D202
 
         class MyStringIO(StringIO):
             def write(self, b):
