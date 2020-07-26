@@ -484,7 +484,7 @@ class K8sClusterController(AbstractWaitableResourceController):
         """
         # TODO assert ID is provided and valid
         assert (
-            isinstance(addons, list) and len(list) > 0
+            isinstance(addons, list) and len(addons) > 0
         ), "'Addons' parameter must be a list and have at least one entry."
 
         current_addons = self.get(id).addons

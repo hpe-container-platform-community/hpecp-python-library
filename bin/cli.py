@@ -845,7 +845,7 @@ class K8sClusterProxy(BaseProxy):
                 )
             )
 
-    def add_addons(self, addons):
+    def add_addons(self, id, addons):
         """Retrieve the installed addons on the cluster.
 
         :param id: get installed addons for a specific cluster
