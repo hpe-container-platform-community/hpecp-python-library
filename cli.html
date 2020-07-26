@@ -329,7 +329,7 @@ e.g: “/dev/nvme1n1,/dev/nvme1n2”</p>
 <dd><p>Proxy object to <code class="xref py py-attr docutils literal notranslate"><span class="pre">&lt;hpecp.client.k8s_cluster&gt;</span></code>.</p>
 <dl class="py method">
 <dt id="bin.cli.K8sClusterProxy.create">
-<code class="sig-name descname">create</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">k8shosts_config</span></em>, <em class="sig-param"><span class="n">description</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">k8s_version</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pod_network_range</span><span class="o">=</span><span class="default_value">'10.192.0.0/12'</span></em>, <em class="sig-param"><span class="n">service_network_range</span><span class="o">=</span><span class="default_value">'10.96.0.0/12'</span></em>, <em class="sig-param"><span class="n">pod_dns_domain</span><span class="o">=</span><span class="default_value">'cluster.local'</span></em>, <em class="sig-param"><span class="n">persistent_storage_local</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">persistent_storage_nimble_csi</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#K8sClusterProxy.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.K8sClusterProxy.create" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">create</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">k8shosts_config</span></em>, <em class="sig-param"><span class="n">description</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">k8s_version</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pod_network_range</span><span class="o">=</span><span class="default_value">'10.192.0.0/12'</span></em>, <em class="sig-param"><span class="n">service_network_range</span><span class="o">=</span><span class="default_value">'10.96.0.0/12'</span></em>, <em class="sig-param"><span class="n">pod_dns_domain</span><span class="o">=</span><span class="default_value">'cluster.local'</span></em>, <em class="sig-param"><span class="n">persistent_storage_local</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">persistent_storage_nimble_csi</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">addons</span><span class="o">=</span><span class="default_value">[]</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#K8sClusterProxy.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.K8sClusterProxy.create" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a K8s Cluster.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -346,6 +346,8 @@ default=’10.96.0.0/12’</p></li>
 <li><p><strong>pod_dns_domain</strong> – the pod dns domain, default=’cluster.local’</p></li>
 <li><p><strong>persistent_storage_local</strong> – True/False</p></li>
 <li><p><strong>persistent_storage_nimble_csi</strong> – True/False</p></li>
+<li><p><strong>addons</strong> – list of required addons. See:
+<cite>hpecp k8scluster get-available-addons</cite></p></li>
 </ul>
 </dd>
 </dl>
@@ -386,18 +388,21 @@ default=’10.96.0.0/12’</p></li>
 
 <dl class="py method">
 <dt id="bin.cli.K8sClusterProxy.get_installed_addons">
-<code class="sig-name descname">get_installed_addons</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#K8sClusterProxy.get_installed_addons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.K8sClusterProxy.get_installed_addons" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_installed_addons</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">k8s_version</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#K8sClusterProxy.get_installed_addons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.K8sClusterProxy.get_installed_addons" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve the installed addons on the cluster.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>id</strong> – the cluster ID</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> – get available addons for a specific cluster (opt)</p></li>
+<li><p><strong>k8s_version</strong> – get available addons for a cluster version (opt)</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt id="bin.cli.K8sClusterProxy.get_available_addons">
-<code class="sig-name descname">get_available_addons</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#K8sClusterProxy.get_available_addons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.K8sClusterProxy.get_available_addons" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_available_addons</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">k8s_version</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#K8sClusterProxy.get_available_addons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.K8sClusterProxy.get_available_addons" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve the available addons for a cluster.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

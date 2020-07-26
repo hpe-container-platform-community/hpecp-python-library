@@ -336,6 +336,7 @@
         <span class="n">persistent_storage_local</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">persistent_storage_nimble_csi</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">k8shosts_config</span><span class="o">=</span><span class="p">[],</span>
+        <span class="n">addons</span><span class="o">=</span><span class="p">[],</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Send an API request to create a K8s Cluster.  The cluster creation</span>
 <span class="sd">        will be asynchronous - use the :py:meth:`wait_for_status` method to</span>
@@ -356,6 +357,8 @@
 <span class="sd">        pod_network_range: str</span>
 <span class="sd">            Network range to be used for kubernetes pods. Defaults to</span>
 <span class="sd">            `10.192.0.0/12`</span>
+<span class="sd">        addons: list</span>
+<span class="sd">            Addons - See :py:method:`get_available_addons`.</span>
 <span class="sd">        service_network_range: str</span>
 <span class="sd">            Network range to be used for kubernetes services that are</span>
 <span class="sd">            exposed with Cluster IP. Defaults to `10.96.0.0/12`</span>
@@ -417,12 +420,14 @@
                 <span class="s2">&quot;&#39;k8shosts_config&#39; item &#39;</span><span class="si">{}</span><span class="s2">&#39; is not of&quot;</span>
                 <span class="s2">&quot; type K8sClusterHostConfig&quot;</span>
             <span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">addons</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span> <span class="s2">&quot;&#39;addons&#39; must be a list&quot;</span>
 
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">},</span>
             <span class="s2">&quot;pod_network_range&quot;</span><span class="p">:</span> <span class="n">pod_network_range</span><span class="p">,</span>
             <span class="s2">&quot;service_network_range&quot;</span><span class="p">:</span> <span class="n">service_network_range</span><span class="p">,</span>
             <span class="s2">&quot;pod_dns_domain&quot;</span><span class="p">:</span> <span class="n">pod_dns_domain</span><span class="p">,</span>
+            <span class="s2">&quot;addons&quot;</span><span class="p">:</span> <span class="n">addons</span><span class="p">,</span>
             <span class="s2">&quot;persistent_storage&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;local&quot;</span><span class="p">:</span> <span class="n">persistent_storage_local</span><span class="p">,</span>
                 <span class="s2">&quot;nimble_csi&quot;</span><span class="p">:</span> <span class="n">persistent_storage_nimble_csi</span><span class="p">,</span>
@@ -474,7 +479,7 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;supported_versions&quot;</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="K8sClusterController.get_available_addons"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.get_available_addons">[docs]</a>    <span class="k">def</span> <span class="nf">get_available_addons</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+<div class="viewcode-block" id="K8sClusterController.get_available_addons"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.get_available_addons">[docs]</a>    <span class="k">def</span> <span class="nf">get_available_addons</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">k8s_version</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Retrieve list of K8S Supported Versions.</span>
 
 <span class="sd">        Parameters</span>
@@ -491,16 +496,22 @@
 <span class="sd">        ------</span>
 <span class="sd">        APIException</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">current_cluster_k8s_version</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span><span class="o">.</span><span class="n">k8s_version</span>
+        <span class="k">assert</span> <span class="p">(</span>
+            <span class="nb">id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">k8s_version</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="p">),</span> <span class="s2">&quot;Either &#39;id&#39; or &#39;k8s_version&#39; parameter must be provided&quot;</span>
+        <span class="k">assert</span> <span class="p">(</span>
+            <span class="nb">id</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">k8s_version</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="p">),</span> <span class="s2">&quot;Either &#39;id&#39; or &#39;k8s_version&#39; parameter must be provided&quot;</span>
+
+        <span class="k">if</span> <span class="nb">id</span><span class="p">:</span>
+            <span class="n">k8s_version</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span><span class="o">.</span><span class="n">k8s_version</span>
 
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
             <span class="n">url</span><span class="o">=</span><span class="s2">&quot;/api/v2/k8smanifest&quot;</span><span class="p">,</span>
             <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;get&quot;</span><span class="p">,</span>
             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;k8s_cluster/get_available_addons&quot;</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">addons</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;version_info&quot;</span><span class="p">][</span><span class="n">current_cluster_k8s_version</span><span class="p">][</span>
-            <span class="s2">&quot;addons&quot;</span>
-        <span class="p">]</span>
+        <span class="n">addons</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;version_info&quot;</span><span class="p">][</span><span class="n">k8s_version</span><span class="p">][</span><span class="s2">&quot;addons&quot;</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">addons</span></div></div>
 </pre></div>
 
