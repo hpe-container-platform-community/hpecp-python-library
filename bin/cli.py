@@ -822,14 +822,14 @@ class K8sClusterProxy(BaseProxy):
         :param id: get available addons for a specific cluster (opt)
         :param k8s_version: get available addons for a cluster version (opt)
         """
-        if id is not None or k8s_version is not None:
+        if id is not None and k8s_version is not None:
             print(
                 "Either 'id' or 'k8s_version' parameter must be provided",
                 file=sys.stderr,
             )
             sys.exit(1)
 
-        if id is None or k8s_version is None:
+        if id is None and k8s_version is None:
             print(
                 "Either 'id' or 'k8s_version' parameter must be provided",
                 file=sys.stderr,
