@@ -512,7 +512,45 @@
             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;k8s_cluster/get_available_addons&quot;</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">addons</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;version_info&quot;</span><span class="p">][</span><span class="n">k8s_version</span><span class="p">][</span><span class="s2">&quot;addons&quot;</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">addons</span></div></div>
+        <span class="k">return</span> <span class="n">addons</span></div>
+
+<div class="viewcode-block" id="K8sClusterController.add_addons"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.add_addons">[docs]</a>    <span class="k">def</span> <span class="nf">add_addons</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">addons</span><span class="o">=</span><span class="p">[]):</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve list of K8S Supported Versions.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        id: str</span>
+<span class="sd">            The k8s cluster ID</span>
+<span class="sd">        addons: list</span>
+<span class="sd">            The list of addons to add.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        APIException</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># TODO assert ID is provided and valid</span>
+        <span class="k">assert</span> <span class="p">(</span>
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">addons</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="p">),</span> <span class="s2">&quot;&#39;Addons&#39; parameter must be a list and have at least one entry.&quot;</span>
+
+        <span class="n">current_addons</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span><span class="o">.</span><span class="n">addons</span>
+        <span class="n">required_addons</span> <span class="o">=</span> <span class="n">current_addons</span> <span class="o">+</span> <span class="n">addons</span>
+
+        <span class="c1"># de-duplicate</span>
+        <span class="n">required_addons</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">required_addons</span><span class="p">))</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;change_spec&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;addons&quot;</span><span class="p">:</span> <span class="n">required_addons</span><span class="p">},</span>
+            <span class="s2">&quot;operation&quot;</span><span class="p">:</span> <span class="s2">&quot;reconfigure&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
+            <span class="n">url</span><span class="o">=</span><span class="s2">&quot;/api/v2/k8scluster/</span><span class="si">{}</span><span class="s2">/change_task&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span>
+            <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;post&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;k8s_cluster/add_addons&quot;</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+        <span class="p">)</span></div></div>
 </pre></div>
 
             <div class="clearer"></div>
