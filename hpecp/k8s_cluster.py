@@ -500,7 +500,7 @@ class K8sClusterController(AbstractWaitableResourceController):
         }
 
         self.client._request(
-            url="/api/v2/k8scluster/{}/change_task".format(id),
+            url="{}/change_task".format(id),
             http_method="post",
             description="k8s_cluster/add_addons",
             data=data,
