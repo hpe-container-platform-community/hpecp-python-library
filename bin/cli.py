@@ -861,7 +861,7 @@ class K8sClusterProxy(BaseProxy):
             )
             sys.exit(1)
 
-        print(get_client().k8s_cluster.add_addons(id=id, addons=addons))
+        get_client().k8s_cluster.add_addons(id=id, addons=addons)
 
     def statuses(self,):
         """Return a list of valid statuses."""
