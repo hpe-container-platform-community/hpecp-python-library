@@ -145,7 +145,7 @@
 
 <div class="viewcode-block" id="intercept_exception"><a class="viewcode-back" href="../../cli.html#bin.cli.intercept_exception">[docs]</a><span class="nd">@wrapt</span><span class="o">.</span><span class="n">decorator</span>
 <span class="k">def</span> <span class="nf">intercept_exception</span><span class="p">(</span><span class="n">wrapped</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Handle Exceptions.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Handle Exceptions.&quot;&quot;&quot;</span>  <span class="c1"># noqa: D202</span>
 
     <span class="k">def</span> <span class="nf">_handle_unknown_exception</span><span class="p">(</span><span class="n">ex</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Handle unknown exceptions.&quot;&quot;&quot;</span>
@@ -466,7 +466,7 @@
     <span class="sd">&quot;&quot;&quot;Proxy object to :py:attr:`&lt;hpecp.client.catalog&gt;`.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Initiate this proxy class with the client module name.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Create instance of proxy class with the client module name.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">CatalogProxy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">new_instance</span><span class="p">(</span><span class="s2">&quot;catalog&quot;</span><span class="p">,</span> <span class="n">Catalog</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__dir__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -576,7 +576,7 @@
         <span class="p">]</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Initiate this proxy class with the client module name.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Create instance of proxy class with the client module name.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">GatewayProxy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">new_instance</span><span class="p">(</span><span class="s2">&quot;gateway&quot;</span><span class="p">,</span> <span class="n">Gateway</span><span class="p">)</span>
 
 <div class="viewcode-block" id="GatewayProxy.create_with_ssh_key"><a class="viewcode-back" href="../../cli.html#bin.cli.GatewayProxy.create_with_ssh_key">[docs]</a>    <span class="nd">@intercept_exception</span>
@@ -655,7 +655,7 @@
         <span class="p">]</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Initiate this proxy class with the client module name.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Create instance of proxy class with the client module name.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">K8sWorkerProxy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">new_instance</span><span class="p">(</span><span class="s2">&quot;k8s_worker&quot;</span><span class="p">,</span> <span class="n">WorkerK8s</span><span class="p">)</span>
 
 <div class="viewcode-block" id="K8sWorkerProxy.create_with_ssh_key"><a class="viewcode-back" href="../../cli.html#bin.cli.K8sWorkerProxy.create_with_ssh_key">[docs]</a>    <span class="nd">@intercept_exception</span>
@@ -766,7 +766,7 @@
         <span class="p">]</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Initiate this proxy class with the client module name.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Create instance of proxy class with the client module name.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">K8sClusterProxy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">new_instance</span><span class="p">(</span><span class="s2">&quot;k8s_cluster&quot;</span><span class="p">,</span> <span class="n">K8sCluster</span><span class="p">)</span>
 
 <div class="viewcode-block" id="K8sClusterProxy.create"><a class="viewcode-back" href="../../cli.html#bin.cli.K8sClusterProxy.create">[docs]</a>    <span class="nd">@intercept_exception</span>
@@ -800,7 +800,6 @@
 <span class="sd">        :param addons: list of required addons. See:</span>
 <span class="sd">            `hpecp k8scluster get-available-addons`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="n">host_config</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">K8sClusterHostConfig</span><span class="o">.</span><span class="n">create_from_list</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">))</span>
             <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">k8shosts_config</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
@@ -976,7 +975,7 @@
         <span class="p">]</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Initiate this proxy class with the client module name.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Create instance of proxy class with the client module name.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">TenantProxy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">new_instance</span><span class="p">(</span><span class="s2">&quot;tenant&quot;</span><span class="p">,</span> <span class="n">Tenant</span><span class="p">)</span>
 
 <div class="viewcode-block" id="TenantProxy.create"><a class="viewcode-back" href="../../cli.html#bin.cli.TenantProxy.create">[docs]</a>    <span class="nd">@intercept_exception</span>
@@ -1354,7 +1353,7 @@
         <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;create&quot;</span><span class="p">,</span> <span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="s2">&quot;delete&quot;</span><span class="p">,</span> <span class="s2">&quot;examples&quot;</span><span class="p">,</span> <span class="s2">&quot;list&quot;</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Initiate this proxy class with the client module name.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Create instance of proxy class with the client module name.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">UserProxy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">new_instance</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="n">User</span><span class="p">)</span>
 
 <div class="viewcode-block" id="UserProxy.create"><a class="viewcode-back" href="../../cli.html#bin.cli.UserProxy.create">[docs]</a>    <span class="nd">@intercept_exception</span>
@@ -1396,7 +1395,7 @@
         <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;delete&quot;</span><span class="p">,</span> <span class="s2">&quot;examples&quot;</span><span class="p">,</span> <span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="s2">&quot;list&quot;</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Initiate this proxy class with the client module name.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Create instance of proxy class with the client module name.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">RoleProxy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">new_instance</span><span class="p">(</span><span class="s2">&quot;role&quot;</span><span class="p">,</span> <span class="n">Role</span><span class="p">)</span>
 
 <div class="viewcode-block" id="RoleProxy.examples"><a class="viewcode-back" href="../../cli.html#bin.cli.RoleProxy.examples">[docs]</a>    <span class="k">def</span> <span class="nf">examples</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
