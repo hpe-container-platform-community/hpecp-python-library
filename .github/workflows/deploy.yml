@@ -15,11 +15,8 @@ jobs:
         fetch-depth: 0
     - name: Python Semantic Release
       uses: relekang/python-semantic-release@master
-      env:
-        INPUT_GITHUB_TOKEN: ${{ secrets.SNOWCH_ACCESS_TOKEN }}
-        GITHUB_ACTOR: snowch
-#       with:
-#         github_token: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
 #         pypi_token: ${{ secrets.PYPI_TOKEN }}
 #         key:  
   deploy:
