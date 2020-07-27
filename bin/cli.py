@@ -714,6 +714,7 @@ class K8sClusterProxy(BaseProxy):
             "get",
             "get_available_addons",
             "get_installed_addons",
+            "k8smanifest",
             "k8s_supported_versions",
             "list",
             "statuses",
@@ -808,6 +809,17 @@ class K8sClusterProxy(BaseProxy):
             print(base64.b64decode(token.encode()))
         else:
             print(base64.b64decode(token.encode()).decode("utf-8"))
+
+    @intercept_exception
+    def k8smanifest(self):
+        """Retrieve the k8smanifest.
+        """
+        response = get_client().k8s_cluster.k8smanifest()
+        print(
+            yaml.dump(
+                yaml.load(json.dumps(response), Loader=yaml.FullLoader,)
+            )
+        )
 
     def get_installed_addons(self, id):
         """Retrieve the installed addons on the cluster.

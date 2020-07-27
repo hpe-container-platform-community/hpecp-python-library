@@ -414,6 +414,25 @@ class K8sClusterController(AbstractWaitableResourceController):
 
         return super(K8sClusterController, self).get(id=id, params=params)
 
+    def k8smanifest(self):
+        """Retrieve the k8smanifest.
+
+        Returns
+        -------
+        json
+            K8sManifest
+
+        Raises
+        ------
+        APIException
+        """
+        response = self.client._request(
+            url="/api/v2/k8smanifest",
+            http_method="get",
+            description="k8s_cluster/k8smanifest",
+        )
+        return response.json()
+
     def k8s_supported_versions(self):
         """Retrieve list of K8S Supported Versions.
 
@@ -426,12 +445,7 @@ class K8sClusterController(AbstractWaitableResourceController):
         ------
         APIException
         """
-        response = self.client._request(
-            url="/api/v2/k8smanifest",
-            http_method="get",
-            description="k8s_cluster/k8s_supported_versions",
-        )
-        return response.json()["supported_versions"]
+        return self.k8smanifest()["supported_versions"]
 
     def get_available_addons(self, id=None, k8s_version=None):
         """Retrieve list of K8S Supported Versions.
@@ -460,13 +474,7 @@ class K8sClusterController(AbstractWaitableResourceController):
         if id:
             k8s_version = self.get(id).k8s_version
 
-        response = self.client._request(
-            url="/api/v2/k8smanifest",
-            http_method="get",
-            description="k8s_cluster/get_available_addons",
-        )
-        addons = response.json()["version_info"][k8s_version]["addons"]
-        return addons
+        return self.k8smanifest()["version_info"][k8s_version]["addons"]
 
     def add_addons(self, id, addons=[]):
         """Retrieve list of K8S Supported Versions.
