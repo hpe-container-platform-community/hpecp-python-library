@@ -460,6 +460,25 @@
 
         <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">K8sClusterController</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="K8sClusterController.k8smanifest"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.k8smanifest">[docs]</a>    <span class="k">def</span> <span class="nf">k8smanifest</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve the k8smanifest.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        json</span>
+<span class="sd">            K8sManifest</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        APIException</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
+            <span class="n">url</span><span class="o">=</span><span class="s2">&quot;/api/v2/k8smanifest&quot;</span><span class="p">,</span>
+            <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;get&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;k8s_cluster/k8smanifest&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></div>
+
 <div class="viewcode-block" id="K8sClusterController.k8s_supported_versions"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.k8s_supported_versions">[docs]</a>    <span class="k">def</span> <span class="nf">k8s_supported_versions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Retrieve list of K8S Supported Versions.</span>
 
@@ -472,12 +491,7 @@
 <span class="sd">        ------</span>
 <span class="sd">        APIException</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
-            <span class="n">url</span><span class="o">=</span><span class="s2">&quot;/api/v2/k8smanifest&quot;</span><span class="p">,</span>
-            <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;get&quot;</span><span class="p">,</span>
-            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;k8s_cluster/k8s_supported_versions&quot;</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;supported_versions&quot;</span><span class="p">]</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">k8smanifest</span><span class="p">()[</span><span class="s2">&quot;supported_versions&quot;</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="K8sClusterController.get_available_addons"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.get_available_addons">[docs]</a>    <span class="k">def</span> <span class="nf">get_available_addons</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">k8s_version</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Retrieve list of K8S Supported Versions.</span>
@@ -506,13 +520,7 @@
         <span class="k">if</span> <span class="nb">id</span><span class="p">:</span>
             <span class="n">k8s_version</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span><span class="o">.</span><span class="n">k8s_version</span>
 
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
-            <span class="n">url</span><span class="o">=</span><span class="s2">&quot;/api/v2/k8smanifest&quot;</span><span class="p">,</span>
-            <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;get&quot;</span><span class="p">,</span>
-            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;k8s_cluster/get_available_addons&quot;</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="n">addons</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;version_info&quot;</span><span class="p">][</span><span class="n">k8s_version</span><span class="p">][</span><span class="s2">&quot;addons&quot;</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">addons</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">k8smanifest</span><span class="p">()[</span><span class="s2">&quot;version_info&quot;</span><span class="p">][</span><span class="n">k8s_version</span><span class="p">][</span><span class="s2">&quot;addons&quot;</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="K8sClusterController.add_addons"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.add_addons">[docs]</a>    <span class="k">def</span> <span class="nf">add_addons</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">addons</span><span class="o">=</span><span class="p">[]):</span>
         <span class="sd">&quot;&quot;&quot;Retrieve list of K8S Supported Versions.</span>
