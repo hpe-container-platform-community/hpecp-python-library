@@ -858,13 +858,10 @@
 
 <div class="viewcode-block" id="K8sClusterProxy.k8smanifest"><a class="viewcode-back" href="../../cli.html#bin.cli.K8sClusterProxy.k8smanifest">[docs]</a>    <span class="nd">@intercept_exception</span>
     <span class="k">def</span> <span class="nf">k8smanifest</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Retrieve the k8smanifest.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve the k8smanifest.&quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">k8s_cluster</span><span class="o">.</span><span class="n">k8smanifest</span><span class="p">()</span>
         <span class="nb">print</span><span class="p">(</span>
-            <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span>
-                <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">response</span><span class="p">),</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">,)</span>
-            <span class="p">)</span>
+            <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">response</span><span class="p">),</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">,))</span>
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="K8sClusterProxy.get_installed_addons"><a class="viewcode-back" href="../../cli.html#bin.cli.K8sClusterProxy.get_installed_addons">[docs]</a>    <span class="k">def</span> <span class="nf">get_installed_addons</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
@@ -1570,7 +1567,7 @@
         <span class="k">for</span> <span class="n">module_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cli</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
 
             <span class="c1"># we manually define autocomplete for these methods</span>
-            <span class="k">if</span> <span class="n">module_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;autocomplete&quot;</span><span class="p">,</span> <span class="s2">&quot;configure_cli&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">module_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;autocomplete&quot;</span><span class="p">,</span> <span class="s2">&quot;configure_cli&quot;</span><span class="p">,</span> <span class="s2">&quot;version&quot;</span><span class="p">]:</span>
                 <span class="k">continue</span>
 
             <span class="n">module</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cli</span><span class="p">,</span> <span class="n">module_name</span><span class="p">)</span>
@@ -1712,7 +1709,7 @@
 <span class="sd">                        COMPREPLY=( $(compgen -W &quot;bash&quot; -- $cur) )</span>
 <span class="sd">                        ;;</span>
 <span class="sd">                    *&quot;hpecp&quot;*)</span>
-<span class="sd">                        COMPREPLY=( $(compgen -W &quot;autocomplete configure-cli {{module_names}}&quot; -- $cur) )</span>
+<span class="sd">                        COMPREPLY=( $(compgen -W &quot;autocomplete configure-cli version {{module_names}}&quot; -- $cur) )</span>
 <span class="sd">                        ;;</span>
 <span class="sd">                esac</span>
 <span class="sd">                return 0</span>
@@ -1729,6 +1726,11 @@
             <span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">modules</span><span class="o">=</span><span class="n">modules</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">),</span>
             <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span>
         <span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="version"><a class="viewcode-back" href="../../cli.html#bin.cli.version">[docs]</a><span class="k">def</span> <span class="nf">version</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Display version information.&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">ContainerPlatformClient</span><span class="o">.</span><span class="n">version</span><span class="p">())</span></div>
 
 
 <div class="viewcode-block" id="CLI"><a class="viewcode-back" href="../../cli.html#bin.cli.CLI">[docs]</a><span class="k">class</span> <span class="nc">CLI</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -1751,7 +1753,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">license</span> <span class="o">=</span> <span class="n">LicenseProxy</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">httpclient</span> <span class="o">=</span> <span class="n">HttpClientProxy</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">UserProxy</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">role</span> <span class="o">=</span> <span class="n">RoleProxy</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">role</span> <span class="o">=</span> <span class="n">RoleProxy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">version</span></div>
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>

@@ -98,6 +98,7 @@
 <span class="kn">from</span> <span class="nn">requests.structures</span> <span class="kn">import</span> <span class="n">CaseInsensitiveDict</span>
 <span class="kn">from</span> <span class="nn">hpecp.exceptions</span> <span class="kn">import</span> <span class="n">APIForbiddenException</span>
 <span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">pkg_resources</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="n">basestring</span>
@@ -148,6 +149,11 @@
 <span class="sd">    :py:meth:`create_from_env` for an alternative way to create a</span>
 <span class="sd">    ContainerPlatformClient instance</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ContainerPlatformClient.version"><a class="viewcode-back" href="../../hpecp.client.html#hpecp.client.ContainerPlatformClient.version">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">version</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve the hpecp version information.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="s2">&quot;hpecp&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">version</span></div>
 
 <div class="viewcode-block" id="ContainerPlatformClient.create_from_config_file"><a class="viewcode-back" href="../../hpecp.client.html#hpecp.client.ContainerPlatformClient.create_from_config_file">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">create_from_config_file</span><span class="p">(</span>
