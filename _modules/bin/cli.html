@@ -891,11 +891,13 @@
                 <span class="p">)</span>
             <span class="p">)</span></div>
 
-<div class="viewcode-block" id="K8sClusterProxy.add_addons"><a class="viewcode-back" href="../../cli.html#bin.cli.K8sClusterProxy.add_addons">[docs]</a>    <span class="k">def</span> <span class="nf">add_addons</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">addons</span><span class="p">):</span>
+<div class="viewcode-block" id="K8sClusterProxy.add_addons"><a class="viewcode-back" href="../../cli.html#bin.cli.K8sClusterProxy.add_addons">[docs]</a>    <span class="k">def</span> <span class="nf">add_addons</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">addons</span><span class="p">,</span> <span class="n">wait_for_ready_sec</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Retrieve the installed addons on the cluster.</span>
 
 <span class="sd">        :param id: get installed addons for a specific cluster</span>
 <span class="sd">        :param addons: list of addons to install</span>
+<span class="sd">        :param wait_for_ready_sec: wait for ready status</span>
+<span class="sd">        (0 = do not wait)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&#39;id&#39; parameter must be provided.&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
@@ -907,7 +909,12 @@
             <span class="p">)</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
-        <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">k8s_cluster</span><span class="o">.</span><span class="n">add_addons</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">addons</span><span class="o">=</span><span class="n">addons</span><span class="p">)</span></div>
+        <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">k8s_cluster</span><span class="o">.</span><span class="n">add_addons</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">addons</span><span class="o">=</span><span class="n">addons</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">wait_for_ready_sec</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">wait_for_status</span><span class="p">(</span>
+                <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;ready&quot;</span><span class="p">],</span> <span class="n">timeout_secs</span><span class="o">=</span><span class="n">wait_for_ready_sec</span>
+            <span class="p">)</span></div>
 
 <div class="viewcode-block" id="K8sClusterProxy.statuses"><a class="viewcode-back" href="../../cli.html#bin.cli.K8sClusterProxy.statuses">[docs]</a>    <span class="k">def</span> <span class="nf">statuses</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
         <span class="sd">&quot;&quot;&quot;Return a list of valid statuses.&quot;&quot;&quot;</span>

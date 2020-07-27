@@ -413,16 +413,18 @@ default=’10.96.0.0/12’</p></li>
 
 <dl class="py method">
 <dt id="bin.cli.K8sClusterProxy.add_addons">
-<code class="sig-name descname">add_addons</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">addons</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#K8sClusterProxy.add_addons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.K8sClusterProxy.add_addons" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add_addons</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">addons</span></em>, <em class="sig-param"><span class="n">wait_for_ready_sec</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#K8sClusterProxy.add_addons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.K8sClusterProxy.add_addons" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve the installed addons on the cluster.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>id</strong> – get installed addons for a specific cluster</p></li>
 <li><p><strong>addons</strong> – list of addons to install</p></li>
+<li><p><strong>wait_for_ready_sec</strong> – wait for ready status</p></li>
 </ul>
 </dd>
 </dl>
+<p>(0 = do not wait)</p>
 </dd></dl>
 
 <dl class="py method">
