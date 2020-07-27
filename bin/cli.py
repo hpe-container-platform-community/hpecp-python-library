@@ -845,11 +845,13 @@ class K8sClusterProxy(BaseProxy):
                 )
             )
 
-    def add_addons(self, id, addons):
+    def add_addons(self, id, addons, wait_for_ready_sec=0):
         """Retrieve the installed addons on the cluster.
 
         :param id: get installed addons for a specific cluster
         :param addons: list of addons to install
+        :param wait_for_ready_sec: wait for ready status
+        (0 = do not wait)
         """
         if id is None:
             print("'id' parameter must be provided.", file=sys.stderr)
@@ -862,6 +864,11 @@ class K8sClusterProxy(BaseProxy):
             sys.exit(1)
 
         get_client().k8s_cluster.add_addons(id=id, addons=addons)
+
+        if wait_for_ready_sec > 0:
+            self.wait_for_status(
+                id=id, status=["ready"], timeout_secs=wait_for_ready_sec
+            )
 
     def statuses(self,):
         """Return a list of valid statuses."""
