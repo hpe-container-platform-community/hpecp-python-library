@@ -812,13 +812,10 @@ class K8sClusterProxy(BaseProxy):
 
     @intercept_exception
     def k8smanifest(self):
-        """Retrieve the k8smanifest.
-        """
+        """Retrieve the k8smanifest."""
         response = get_client().k8s_cluster.k8smanifest()
         print(
-            yaml.dump(
-                yaml.load(json.dumps(response), Loader=yaml.FullLoader,)
-            )
+            yaml.dump(yaml.load(json.dumps(response), Loader=yaml.FullLoader,))
         )
 
     def get_installed_addons(self, id):
@@ -1524,7 +1521,7 @@ class AutoComplete:
         for module_name in self.cli.__dict__.keys():
 
             # we manually define autocomplete for these methods
-            if module_name in ["autocomplete", "configure_cli"]:
+            if module_name in ["autocomplete", "configure_cli", "version"]:
                 continue
 
             module = getattr(self.cli, module_name)
@@ -1666,7 +1663,7 @@ class AutoComplete:
                         COMPREPLY=( $(compgen -W "bash" -- $cur) )
                         ;;
                     *"hpecp"*)
-                        COMPREPLY=( $(compgen -W "autocomplete configure-cli {{module_names}}" -- $cur) )
+                        COMPREPLY=( $(compgen -W "autocomplete configure-cli version {{module_names}}" -- $cur) )
                         ;;
                 esac
                 return 0
@@ -1683,6 +1680,11 @@ class AutoComplete:
             .render(modules=modules, columns=columns),
             file=sys.stdout,
         )
+
+
+def version():
+    """Display version information."""
+    print(ContainerPlatformClient.version())
 
 
 class CLI(object):
@@ -1706,6 +1708,7 @@ class CLI(object):
         self.httpclient = HttpClientProxy()
         self.user = UserProxy()
         self.role = RoleProxy()
+        self.version = version
 
 
 if __name__ == "__main__":

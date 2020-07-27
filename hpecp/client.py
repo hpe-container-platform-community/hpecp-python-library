@@ -52,6 +52,7 @@ import ast
 from requests.structures import CaseInsensitiveDict
 from hpecp.exceptions import APIForbiddenException
 import re
+import pkg_resources
 
 try:
     basestring
@@ -102,6 +103,11 @@ class ContainerPlatformClient(object):
     :py:meth:`create_from_env` for an alternative way to create a
     ContainerPlatformClient instance
     """
+
+    @classmethod
+    def version(cls):
+        """Retrieve the hpecp version information."""
+        return pkg_resources.require("hpecp")[0].version
 
     @classmethod
     def create_from_config_file(
