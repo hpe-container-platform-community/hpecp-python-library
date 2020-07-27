@@ -18,8 +18,8 @@ jobs:
       env:
         INPUT_GITHUB_TOKEN: ${{ secrets.SNOWCH_ACCESS_TOKEN }}
         GITHUB_ACTOR: snowch
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+#       with:
+#         github_token: ${{ secrets.GITHUB_TOKEN }}
 #         pypi_token: ${{ secrets.PYPI_TOKEN }}
 #         key:  
   deploy:
