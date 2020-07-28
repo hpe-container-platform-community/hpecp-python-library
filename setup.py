@@ -63,7 +63,7 @@ except Exception:
 
 setup(
     name="hpecp",
-    description="HPE Container Platform client",
+    description="HPE Ezmeral Container Platform client",
     long_description=long_description,
     long_description_content_type='text/markdown',
     author="Chris Snow",
