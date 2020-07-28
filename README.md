@@ -12,13 +12,6 @@
 
 ----
 
-```diff
-- This project is under active development.
-- Method APIs may change between commits.
-- Not all HPE CP APIs have been implemented.
-- Help Wanted - please consider contributing!
-```
-
 ## Documentation
 
 See [here](https://hpe-container-platform-community.github.io/hpecp-python-library/index.html) for User Documentation.
@@ -27,29 +20,21 @@ See [here](https://hpe-container-platform-community.github.io/hpecp-python-libra
 
 See:
 
-- [Developing Guide](./DEVELOPING.md)
-- [Contribution Guide](./CONTRIBUTING.md)
+- [Developing Guide](https://github.com/hpe-container-platform-community/hpecp-python-library/blob/master/DEVELOPING.md)
+- [Contribution Guide](https://github.com/hpe-container-platform-community/hpecp-python-library/blob/master/CONTRIBUTING.md)
 
 ## Installation
 
 ```shell
-# ensure you have an up-to-date pip
-pip3 install -U pip
-
-# install hpecp directly from git
-pip3 install --upgrade git+https://github.com/hpe-container-platform-community/hpecp-client@master
+pip3 install -U hpecp
 ```
 
-If you are installing on Centos 7.7 with only Python 2.7 see [here](./docs/README-INSTALL-HPECP-HOSTS.md) for a workaround
+If you are installing on Centos 7.7 with only Python 2.7 see [here](https://github.com/hpe-container-platform-community/hpecp-python-library/blob/master/docs/README-INSTALL-HPECP-HOSTS.md) for a workaround
 
 
 ## CLI examples
 
-CLI is installed with pip ([as above](#installation))
-
-First you need to create a config file with your endpoint details.
-
-Note that you can have multiple profiles:
+You need to create a config file with your endpoint details - note that you can have multiple profiles:
 
 ```ini
 cat > ~/.hpecp.conf <<EOF
