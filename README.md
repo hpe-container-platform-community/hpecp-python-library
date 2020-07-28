@@ -5,7 +5,7 @@
 [![Pyversions](https://img.shields.io/badge/Pyversions-2.7,%203.5,%203.6,%203.7,%203.8,%203.9-green.svg)](https://github.com/hpe-container-platform-community/hpecp-python-library/blob/master/tox.ini#L7)
 [![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
 [![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![pypi](https://img.shields.io/pypi/v/pybadges.svg)](https://pypi.org/project/hpecp)
+[![pypi](https://img.shields.io/pypi/v/hpecp.svg)](https://pypi.org/project/hpecp)
 
 [![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/hpe-container-platform-community/hpecp-python-library)
 [![Good first issues open](https://img.shields.io/github/issues/hpe-container-platform-community/hpecp-python-library/good%20first%20issue.svg?label=good%20first%20issue)](https://github.com/hpe-container-platform-community/hpecp-python-library/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)
