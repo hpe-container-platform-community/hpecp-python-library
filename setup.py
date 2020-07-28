@@ -19,10 +19,9 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 
 from setuptools import setup
+import codecs
 import os
 import shutil
-import codecs
-import os.path
 
 if "TRAVIS_BUILD_DIR" in os.environ:
     REQ_PATH = os.getenv("TRAVIS_BUILD_DIR")
