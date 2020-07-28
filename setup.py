@@ -21,6 +21,8 @@
 from setuptools import setup
 import os
 import shutil
+import codecs
+import os.path
 
 if "TRAVIS_BUILD_DIR" in os.environ:
     REQ_PATH = os.getenv("TRAVIS_BUILD_DIR")
@@ -37,6 +39,22 @@ shutil.copyfile(REQ_PATH + "/bin/cli.py", REQ_PATH + "/bin/hpecp")
 # make executable
 os.chmod(REQ_PATH + "/bin/hpecp", 509)
 
+
+
+def read(rel_path):
+    here = os.path.abspath(os.path.dirname(__file__))
+    with codecs.open(os.path.join(here, rel_path), 'r') as fp:
+        return fp.read()
+
+def get_version(rel_path):
+    for line in read(rel_path).splitlines():
+        if line.startswith('__version__'):
+            delim = '"' if '"' in line else "'"
+            return line.split(delim)[1]
+    else:
+        raise RuntimeError("Unable to find version string.")
+
+
 setup(
     name="hpecp",
     description="HPE Container Platform client",
@@ -46,8 +64,7 @@ setup(
     packages=["hpecp"],
     scripts=["bin/hpecp"],
     keywords="",
-    # version_format='{tag}.dev{commitcount}+{gitsha}',
-    # setup_requires=['setuptools-git-version'],
+    version=get_version("hpecp/__init__.py"),
     install_requires=requirements,
     test_suite="nose.collector",
     tests_require=["coverage", "mock", "nose", "requests"],
