@@ -75,10 +75,12 @@ hpecp lock delete-all
 
 Add K8s worker host:
 ```sh
-hpecp k8sworker create-with-ssh-key --ip 10.1.0.10 --ssh-key-file controller_private.key
-hpecp k8sworker wait-for-status --id /api/v2/worker/1 --status  [storage_pending] --timeout-secs 600
-hpecp k8sworker set-storage --id /api/v2/worker/1 --persistent-disks=/dev/nvme1n1 --ephemeral-disks=/dev/nvme2n1
-hpecp k8sworker wait-for-status --id /api/v2/worker/1 --status  [ready] --timeout-secs 600
+hpecp k8sworker create-with-ssh-key \
+    --ip 10.1.0.10 \
+    --ssh-key-file controller_private.key \
+    --persistent-disks /dev/nvme1n1 \
+    --ephemeral-disks /dev/nvme2n1 \
+    --wait-for-operation-secs 600
 ```
 
 K8s versions:

@@ -614,7 +614,14 @@ class K8sWorkerProxy(BaseProxy):
 
     @intercept_exception
     def create_with_ssh_key(
-        self, ip=None, ssh_key=None, ssh_key_file=None, tags=[],
+        self,
+        ip=None,
+        ssh_key=None,
+        ssh_key_file=None,
+        tags=[],
+        ephemeral_disks=None,
+        persistent_disks=None,
+        wait_for_operation_secs=0,
     ):
         """Create a K8s Worker using SSH key authentication.
 
@@ -630,6 +637,15 @@ class K8sWorkerProxy(BaseProxy):
             The SSH key file path, by default None
         tags : list, optional
             Tags to use, e.g. "{ "tag1": "foo", "tag2": "bar"}", by default []
+        ephemeral_disks : str
+            Comma separated string containing ephemeral disks.
+            e.g: "/dev/nvme2n1,/dev/nvme2n2"
+        persistent_disks : str, optional
+            Comma separated string containing persistent disks, by default
+            None.
+            e.g: "/dev/nvme1n1,/dev/nvme1n2"
+        wait_for_operation_secs: int
+            wait for operations to complete. 0 = don't wait
         """
         if ssh_key is None and ssh_key_file is None:
             print(
@@ -652,6 +668,28 @@ class K8sWorkerProxy(BaseProxy):
         worker_id = get_client().k8s_worker.create_with_ssh_key(
             ip=ip, ssh_key_data=ssh_key, tags=tags,
         )
+
+        if wait_for_operation_secs > 0:
+            self.wait_for_status(
+                id=worker_id,
+                status=["storage_pending"],
+                timeout_secs=wait_for_operation_secs,
+            )
+
+        if ephemeral_disks is not None or persistent_disks is not None:
+            self.set_storage(
+                id=worker_id,
+                ephemeral_disks=ephemeral_disks,
+                persistent_disks=persistent_disks,
+            )
+
+        if wait_for_operation_secs > 0:
+            self.wait_for_status(
+                id=worker_id,
+                status=["ready"],
+                timeout_secs=wait_for_operation_secs,
+            )
+
         print(worker_id)
 
     # TODO: verify with engineering if setup_log is a valid parameter
