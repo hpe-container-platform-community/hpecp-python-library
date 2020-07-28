@@ -14,7 +14,8 @@ jobs:
       with:
         fetch-depth: 0
     - name: Python Semantic Release
-      uses: snowch/python-semantic-release@master
+#       uses: snowch/python-semantic-release@master
+      uses: relekang/python-semantic-release@master
       with:
         github_token: ${{ secrets.SNOWCH_ACCESS_TOKEN }}
         pypi_token: ${{ secrets.PYPI_TOKEN }}
