@@ -53,9 +53,12 @@ def get_version(rel_path):
     else:
         raise RuntimeError("Unable to find version string.")
 
-this_directory = os.path.abspath(os.path.dirname(__file__))
-with open(os.path.join(this_directory, 'README.md')) as f:
-    long_description = f.read()
+try:
+    this_directory = os.path.abspath(os.path.dirname(__file__))
+    with open(os.path.join(this_directory, 'README.md')) as f:
+        long_description = f.read()
+except Exception:
+    long_description = ""
 
 
 setup(
