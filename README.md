@@ -66,6 +66,13 @@ Autocompletion:
 hpecp TAB
 ```
 
+Add gateway:
+```sh
+hpecp lock create "Install Gateway"
+hpecp gateway create-with-ssh-key 10.1.0.5 my.gateway.local --ssh-key-file controller_private.key
+hpecp lock delete-all
+```
+
 Add K8s worker host:
 ```sh
 hpecp k8sworker create-with-ssh-key --ip 10.1.0.10 --ssh-key-file controller_private.key
