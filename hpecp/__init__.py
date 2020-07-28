@@ -26,7 +26,7 @@
 
 from __future__ import absolute_import
 
-__version__ = "0.0.9"
+__version__ = "0.0.10"
 
 from .logger import Logger
 
