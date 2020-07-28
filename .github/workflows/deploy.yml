@@ -17,8 +17,7 @@ jobs:
       uses: snowch/python-semantic-release@master
       with:
         github_token: ${{ secrets.SNOWCH_ACCESS_TOKEN }}
-#         pypi_token: ${{ secrets.PYPI_TOKEN }}
-#         key:  
+        pypi_token: ${{ secrets.PYPI_TOKEN }}
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
