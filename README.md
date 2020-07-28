@@ -30,7 +30,7 @@ See:
 pip3 install -U hpecp
 ```
 
-If you are installing on Centos 7.7 with only Python 2.7 see [here](https://github.com/hpe-container-platform-community/hpecp-python-library/blob/master/docs/README-INSTALL-HPECP-HOSTS.md) for a workaround
+If you encounter an issue installing on Centos 7.7 with Python 2.7 see [here](https://github.com/hpe-container-platform-community/hpecp-python-library/blob/master/docs/README-INSTALL-HPECP-HOSTS.md) for a workaround
 
 
 ## CLI examples
