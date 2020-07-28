@@ -100,6 +100,11 @@ Http call:
 hpecp httpclient get /some/uri
 ```
 
+Use a different config file:
+```sh
+HPECP_CONFIG_FILE=myclus.conf hpecp do-something
+```
+
 Logging with HTTP tracing:
 ```sh
 export LOG_LEVEL=DEBUG
