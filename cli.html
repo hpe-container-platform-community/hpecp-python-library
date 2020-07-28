@@ -282,7 +282,7 @@ ssh_key parameter.</p>
 <dd><p>Proxy object to <code class="xref py py-attr docutils literal notranslate"><span class="pre">&lt;hpecp.client.k8s_worker&gt;</span></code>.</p>
 <dl class="py method">
 <dt id="bin.cli.K8sWorkerProxy.create_with_ssh_key">
-<code class="sig-name descname">create_with_ssh_key</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ip</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ssh_key</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ssh_key_file</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">tags</span><span class="o">=</span><span class="default_value">[]</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#K8sWorkerProxy.create_with_ssh_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.K8sWorkerProxy.create_with_ssh_key" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">create_with_ssh_key</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ip</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ssh_key</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ssh_key_file</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">tags</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">ephemeral_disks</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">persistent_disks</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">wait_for_operation_secs</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bin/cli.html#K8sWorkerProxy.create_with_ssh_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bin.cli.K8sWorkerProxy.create_with_ssh_key" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a K8s Worker using SSH key authentication.</p>
 <dl class="simple">
 <dt>ip<span class="classifier">str, optional</span></dt><dd><p>The IP address of the host, this is used for internal
@@ -294,6 +294,15 @@ file may also be provided, by default None.</p>
 <dt>ssh_key_file<span class="classifier">str, optional</span></dt><dd><p>The SSH key file path, by default None</p>
 </dd>
 <dt>tags<span class="classifier">list, optional</span></dt><dd><p>Tags to use, e.g. “{ “tag1”: “foo”, “tag2”: “bar”}”, by default []</p>
+</dd>
+<dt>ephemeral_disks<span class="classifier">str</span></dt><dd><p>Comma separated string containing ephemeral disks.
+e.g: “/dev/nvme2n1,/dev/nvme2n2”</p>
+</dd>
+<dt>persistent_disks<span class="classifier">str, optional</span></dt><dd><p>Comma separated string containing persistent disks, by default
+None.
+e.g: “/dev/nvme1n1,/dev/nvme1n2”</p>
+</dd>
+<dt>wait_for_operation_secs: int</dt><dd><p>wait for operations to complete. 0 = don’t wait</p>
 </dd>
 </dl>
 </dd></dl>

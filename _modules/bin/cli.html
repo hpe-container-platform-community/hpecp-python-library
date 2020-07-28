@@ -660,7 +660,14 @@
 
 <div class="viewcode-block" id="K8sWorkerProxy.create_with_ssh_key"><a class="viewcode-back" href="../../cli.html#bin.cli.K8sWorkerProxy.create_with_ssh_key">[docs]</a>    <span class="nd">@intercept_exception</span>
     <span class="k">def</span> <span class="nf">create_with_ssh_key</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ssh_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ssh_key_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[],</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">ip</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">ssh_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">ssh_key_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">tags</span><span class="o">=</span><span class="p">[],</span>
+        <span class="n">ephemeral_disks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">persistent_disks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">wait_for_operation_secs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create a K8s Worker using SSH key authentication.</span>
 
@@ -676,6 +683,15 @@
 <span class="sd">            The SSH key file path, by default None</span>
 <span class="sd">        tags : list, optional</span>
 <span class="sd">            Tags to use, e.g. &quot;{ &quot;tag1&quot;: &quot;foo&quot;, &quot;tag2&quot;: &quot;bar&quot;}&quot;, by default []</span>
+<span class="sd">        ephemeral_disks : str</span>
+<span class="sd">            Comma separated string containing ephemeral disks.</span>
+<span class="sd">            e.g: &quot;/dev/nvme2n1,/dev/nvme2n2&quot;</span>
+<span class="sd">        persistent_disks : str, optional</span>
+<span class="sd">            Comma separated string containing persistent disks, by default</span>
+<span class="sd">            None.</span>
+<span class="sd">            e.g: &quot;/dev/nvme1n1,/dev/nvme1n2&quot;</span>
+<span class="sd">        wait_for_operation_secs: int</span>
+<span class="sd">            wait for operations to complete. 0 = don&#39;t wait</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">ssh_key</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ssh_key_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span>
@@ -698,6 +714,28 @@
         <span class="n">worker_id</span> <span class="o">=</span> <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">k8s_worker</span><span class="o">.</span><span class="n">create_with_ssh_key</span><span class="p">(</span>
             <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">ssh_key_data</span><span class="o">=</span><span class="n">ssh_key</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="n">tags</span><span class="p">,</span>
         <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">wait_for_operation_secs</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">wait_for_status</span><span class="p">(</span>
+                <span class="nb">id</span><span class="o">=</span><span class="n">worker_id</span><span class="p">,</span>
+                <span class="n">status</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;storage_pending&quot;</span><span class="p">],</span>
+                <span class="n">timeout_secs</span><span class="o">=</span><span class="n">wait_for_operation_secs</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">ephemeral_disks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">persistent_disks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_storage</span><span class="p">(</span>
+                <span class="nb">id</span><span class="o">=</span><span class="n">worker_id</span><span class="p">,</span>
+                <span class="n">ephemeral_disks</span><span class="o">=</span><span class="n">ephemeral_disks</span><span class="p">,</span>
+                <span class="n">persistent_disks</span><span class="o">=</span><span class="n">persistent_disks</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">wait_for_operation_secs</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">wait_for_status</span><span class="p">(</span>
+                <span class="nb">id</span><span class="o">=</span><span class="n">worker_id</span><span class="p">,</span>
+                <span class="n">status</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;ready&quot;</span><span class="p">],</span>
+                <span class="n">timeout_secs</span><span class="o">=</span><span class="n">wait_for_operation_secs</span><span class="p">,</span>
+            <span class="p">)</span>
+
         <span class="nb">print</span><span class="p">(</span><span class="n">worker_id</span><span class="p">)</span></div>
 
     <span class="c1"># TODO: verify with engineering if setup_log is a valid parameter</span>
