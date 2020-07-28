@@ -66,6 +66,11 @@ Autocompletion:
 hpecp TAB
 ```
 
+Add K8s worker host:
+```sh
+hpecp k8sworker create-with-ssh-key --ip 10.1.0.10 --ssh-key-file controller_private.key
+```
+
 K8s versions:
 ```sh
 hpecp k8scluster k8s-supported-versions --major-filter 1 --minor-filter 17
