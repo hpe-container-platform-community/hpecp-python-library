@@ -679,7 +679,7 @@ class K8sWorkerProxy(BaseProxy):
         ) and wait_for_operation_secs == 0:
             print(
                 (
-                    "if setting disks 'wait-for-operation-secs' parameter"
+                    "If setting disks, 'wait-for-operation-secs' parameter"
                     " must be greater than zero (recommended 600 seconds)"
                 ),
                 file=sys.stderr,
@@ -693,9 +693,19 @@ class K8sWorkerProxy(BaseProxy):
         if wait_for_operation_secs > 0:
             self.wait_for_status(
                 id=worker_id,
-                status=["storage_pending"],
+                status=["storage_pending", "error"],
                 timeout_secs=wait_for_operation_secs,
             )
+
+        if self.get(id=id).status == "error":
+            print(
+                (
+                    "Create request has errored. "
+                    "Check status message with `hpecp k8sworker get {}".format(id)
+                ),
+                file=sys.stderr,
+            )
+            sys.exit(1)
 
         if ephemeral_disks is not None or persistent_disks is not None:
             self.set_storage(

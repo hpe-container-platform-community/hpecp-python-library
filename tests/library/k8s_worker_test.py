@@ -389,18 +389,19 @@ class TestCliCreate(BaseTestCase):
         is passed to the library method 'create_with_ssh_key()'.
         """
 
-        with patch.object(
-            K8sWorkerController,
-            "create_with_ssh_key",
-            return_value="/api/v2/worker/k8shost/1",
-        ) as mock_create_with_ssh_key:
-            try:
-                hpecp_cli = self.cli.CLI()
-                hpecp_cli.k8sworker.create_with_ssh_key(
-                    ip="127.0.0.1", ssh_key="test_ssh_key",
-                )
-            except Exception:
-                self.fail("Unexpected exception.")
+        with patch.dict("os.environ", {"LOG_LEVEL": "DEBUG"}):
+            with patch.object(
+                K8sWorkerController,
+                "create_with_ssh_key",
+                return_value="/api/v2/worker/k8shost/1",
+            ) as mock_create_with_ssh_key:
+                try:
+                    hpecp_cli = self.cli.CLI()
+                    hpecp_cli.k8sworker.create_with_ssh_key(
+                        ip="127.0.0.1", ssh_key="test_ssh_key",
+                    )
+                except Exception:
+                    self.fail("Unexpected exception.")
 
         mock_create_with_ssh_key.assert_called_once_with(
             ip="127.0.0.1", ssh_key_data="test_ssh_key", tags=[],
@@ -514,18 +515,19 @@ class TestCliCreate(BaseTestCase):
         ssh_key_file.write("test_ssh_key_file_data")
         ssh_key_file.flush()
 
-        with patch.object(
-            K8sWorkerController,
-            "create_with_ssh_key",
-            return_value="/api/v2/worker/k8shost/1",
-        ) as mock_create_with_ssh_key:
-            try:
-                hpecp_cli = self.cli.CLI()
-                hpecp_cli.k8sworker.create_with_ssh_key(
-                    ip="127.0.0.1", ssh_key_file=ssh_key_file.name,
-                )
-            except Exception as e:
-                self.fail("Unexpected exception. {}".format(e))
+        with patch.dict("os.environ", {"LOG_LEVEL": "DEBUG"}):
+            with patch.object(
+                K8sWorkerController,
+                "create_with_ssh_key",
+                return_value="/api/v2/worker/k8shost/1",
+            ) as mock_create_with_ssh_key:
+                try:
+                    hpecp_cli = self.cli.CLI()
+                    hpecp_cli.k8sworker.create_with_ssh_key(
+                        ip="127.0.0.1", ssh_key_file=ssh_key_file.name,
+                    )
+                except Exception as e:
+                    self.fail("Unexpected exception. {}".format(e))
 
         mock_create_with_ssh_key.assert_called_once_with(
             ip="127.0.0.1", ssh_key_data="test_ssh_key_file_data", tags=[],
