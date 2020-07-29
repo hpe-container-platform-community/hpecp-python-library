@@ -667,10 +667,26 @@ class K8sWorkerProxy(BaseProxy):
                     ssh_key = f.read()
             except OSError:
                 print(
-                    "Could not open/read file: {}".format(ssh_key_file),
+                    "Could not open/read ssh-key-file: {}".format(
+                        ssh_key_file
+                    ),
                     file=sys.stderr,
                 )
                 sys.exit(1)
+
+        if (
+            ephemeral_disks is not None
+            or persistent_disks is not None
+            and wait_for_operation_secs == 0
+        ):
+            print(
+                (
+                    "wait-for-operation-secs must be greater than zero if "
+                    "setting disks (recommended 600 seconds)"
+                ),
+                file=sys.stderr,
+            )
+            sys.exit(1)
 
         worker_id = get_client().k8s_worker.create_with_ssh_key(
             ip=ip, ssh_key_data=ssh_key, tags=tags,
