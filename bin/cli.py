@@ -675,14 +675,12 @@ class K8sWorkerProxy(BaseProxy):
                 sys.exit(1)
 
         if (
-            ephemeral_disks is not None
-            or persistent_disks is not None
-            and wait_for_operation_secs == 0
-        ):
+            ephemeral_disks is not None or persistent_disks is not None
+        ) and wait_for_operation_secs == 0:
             print(
                 (
-                    "wait-for-operation-secs must be greater than zero if "
-                    "setting disks (recommended 600 seconds)"
+                    "if setting disks 'wait-for-operation-secs' parameter"
+                    " must be greater than zero (recommended 600 seconds)"
                 ),
                 file=sys.stderr,
             )
