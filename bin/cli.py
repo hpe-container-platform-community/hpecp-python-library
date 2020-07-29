@@ -662,8 +662,15 @@ class K8sWorkerProxy(BaseProxy):
             sys.exit(1)
 
         if ssh_key_file:
-            with open(ssh_key_file) as f:
-                ssh_key = f.read()
+            try:
+                with open(ssh_key_file) as f:
+                    ssh_key = f.read()
+            except OSError:
+                print(
+                    "Could not open/read file: {}".format(ssh_key_file),
+                    file=sys.stderr,
+                )
+                sys.exit(1)
 
         worker_id = get_client().k8s_worker.create_with_ssh_key(
             ip=ip, ssh_key_data=ssh_key, tags=tags,
