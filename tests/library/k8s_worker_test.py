@@ -398,27 +398,57 @@ class TestCliCreate(BaseTestCase):
         is passed to the library method 'create_with_ssh_key()'.
         """
 
-        with patch.dict("os.environ", {"LOG_LEVEL": "DEBUG"}):
-            with patch.object(
-                K8sWorkerController,
-                "create_with_ssh_key",
-                return_value="/api/v2/worker/k8shost/1",
-            ) as mock_create_with_ssh_key:
-                try:
-                    hpecp_cli = self.cli.CLI()
-                    hpecp_cli.k8sworker.create_with_ssh_key(
-                        ip="127.0.0.1", ssh_key="test_ssh_key",
-                    )
-                except Exception:
-                    self.fail("Unexpected exception.")
+        def mock_k8s_worker_get(*args, **kwargs):
+            worker = WorkerK8s(
+                {
+                    "status": "bundle",
+                    "approved_worker_pubkey": [],
+                    "tags": [],
+                    "hostname": "",
+                    "ipaddr": "10.1.0.186",
+                    "setup_log": (
+                        "/var/log/bluedata/install/"
+                        "k8shost_setup_10.1.0.186-"
+                        "2020-4-26-18-49-10"
+                    ),
+                    "_links": {"self": {"href": "/api/v2/worker/k8shost/5"}},
+                }
+            )
+            return worker
 
-        mock_create_with_ssh_key.assert_called_once_with(
-            ip="127.0.0.1", ssh_key_data="test_ssh_key", tags=[],
-        )
+        def mock_create_with_ssh_key(*args, **kwargs):
+            return "/api/v2/worker/k8shost/5"
+
+        def mock_get_client():
+            client = ContainerPlatformClient(
+                username="",
+                password="",
+                api_host="",
+                api_port=9090,
+                use_ssl=True,
+                verify_ssl=True,
+                warn_ssl=True,
+            )
+            client.session_id = "ABC"
+            client.k8s_worker.get = mock_k8s_worker_get
+            client.k8s_worker.create_with_ssh_key = mock_create_with_ssh_key
+            return client
+
+        # support debugging if this test fails
+        with patch.dict("os.environ", {"LOG_LEVEL": "DEBUG"}):
+            hpecp_cli = self.cli.CLI()
+
+            # manually patch methods due to json serialization error
+            # when using Mock or MagicMock
+            self.cli.get_client = mock_get_client
+
+            hpecp_cli.k8sworker.create_with_ssh_key(
+                ip="127.0.0.1", ssh_key="test_ssh_key",
+            )
 
         stdout = self.out.getvalue().strip()
 
-        self.assertEqual(stdout, "/api/v2/worker/k8shost/1")
+        self.assertEqual(stdout, "/api/v2/worker/k8shost/5")
 
     @patch("requests.post", side_effect=mocked_requests_post)
     @patch("hpecp.k8s_worker")
@@ -525,20 +555,20 @@ class TestCliCreate(BaseTestCase):
 
         def mock_k8s_worker_get(*args, **kwargs):
             worker = WorkerK8s(
-                    {
-                        "status": "bundle",
-                        "approved_worker_pubkey": [],
-                        "tags": [],
-                        "hostname": "",
-                        "ipaddr": "10.1.0.186",
-                        "setup_log": (
-                            "/var/log/bluedata/install/"
-                            "k8shost_setup_10.1.0.186-"
-                            "2020-4-26-18-49-10"
-                        ),
-                        "_links": {"self": {"href": "/api/v2/worker/k8shost/5"}},
-                    }
-                )
+                {
+                    "status": "bundle",
+                    "approved_worker_pubkey": [],
+                    "tags": [],
+                    "hostname": "",
+                    "ipaddr": "10.1.0.186",
+                    "setup_log": (
+                        "/var/log/bluedata/install/"
+                        "k8shost_setup_10.1.0.186-"
+                        "2020-4-26-18-49-10"
+                    ),
+                    "_links": {"self": {"href": "/api/v2/worker/k8shost/5"}},
+                }
+            )
             return worker
 
         def mock_create_with_ssh_key(*args, **kwargs):
@@ -546,19 +576,19 @@ class TestCliCreate(BaseTestCase):
 
         def mock_get_client():
             client = ContainerPlatformClient(
-                username = "",
-                password= "",
-                api_host= "",
+                username="",
+                password="",
+                api_host="",
                 api_port=9090,
                 use_ssl=True,
                 verify_ssl=True,
                 warn_ssl=True,
-                        )
+            )
             client.session_id = "ABC"
             client.k8s_worker.get = mock_k8s_worker_get
             client.k8s_worker.create_with_ssh_key = mock_create_with_ssh_key
             return client
-        
+
         # support debugging if this test fails
         with patch.dict("os.environ", {"LOG_LEVEL": "DEBUG"}):
             hpecp_cli = self.cli.CLI()
@@ -568,7 +598,8 @@ class TestCliCreate(BaseTestCase):
             self.cli.get_client = mock_get_client
 
             hpecp_cli.k8sworker.create_with_ssh_key(
-                ip="127.0.0.1", ssh_key_file=ssh_key_file.name,
+                ip="127.0.0.1", ssh_key_file=ssh_key_file.name
+            )
 
         stdout = self.out.getvalue().strip()
 

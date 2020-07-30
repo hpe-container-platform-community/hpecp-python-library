@@ -188,12 +188,10 @@ class BaseProxy:
         elif output == "json-pp":
             print(json.dumps(json_data, indent=4, sort_keys=True,))
         else:
-            
+
             print(
                 yaml.dump(
-                    yaml.load(
-                        json.dumps(json_data), Loader=yaml.FullLoader,
-                    )
+                    yaml.load(json.dumps(json_data), Loader=yaml.FullLoader,)
                 )
             )
 
