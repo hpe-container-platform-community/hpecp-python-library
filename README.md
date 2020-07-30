@@ -70,6 +70,7 @@ Add gateway:
 ```sh
 hpecp lock create "Install Gateway"
 hpecp gateway create-with-ssh-key --ip 10.1.0.5 --proxy-node-hostname my.gateway.local --ssh-key-file controller_private.key
+hpecp gateway wait-for-state ${GATEWAY_ID} --states [installed] --timeout-secs 1200
 hpecp lock delete-all
 ```
 
