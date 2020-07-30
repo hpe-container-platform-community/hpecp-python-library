@@ -145,7 +145,7 @@ class K8sWorkerController(AbstractWaitableResourceController):
             url="/api/v2/worker/k8shost/",
             http_method="post",
             data=data,
-            description="worker/create_with_ssh_key",
+            description="K8sWorkerController/create_with_ssh_key",
         )
         return CaseInsensitiveDict(response.headers)["location"]
 

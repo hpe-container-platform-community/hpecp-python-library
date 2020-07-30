@@ -11,6 +11,8 @@ RUN sudo apt-get update \
 # FIXME: Python 3.9 returns errors with pip
 RUN echo "Installing python modules" \
     && for v in 2 3 3.5 3.6 3.7 3.8; do python${v} -m pip install -U pylint pytest mock nose flake8-docstrings flake8-per-file-ignores==0.8.1; done \
+    && for v in 3 3.5 3.6 3.7 3.8; do python${v} -m pip install -U black; done \
+    && sudo ln -s /home/theia/.local/bin//black /bin/ \
     && for v in 2 3 3.5 3.6 3.7 3.8; do python${v} -m pip install -r /tmp/requirements.txt; done 
 
 RUN echo 'PATH=$PATH:/home/theia/.local/bin/' >> /home/theia/.bashrc
