@@ -132,7 +132,7 @@ hpecp do-something
 More sophisticated CLI examples [here](https://github.com/bluedata-community/bluedata-demo-env-aws-terraform/tree/master/bin/experimental) 
 
 
-## Basic Library Usage
+## Python Library Examples
 
 See docs: https://hpe-container-platform-community.github.io/hpecp-python-library/index.html
 
