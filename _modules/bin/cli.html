@@ -147,7 +147,7 @@
 <span class="k">def</span> <span class="nf">intercept_exception</span><span class="p">(</span><span class="n">wrapped</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Handle Exceptions.&quot;&quot;&quot;</span>  <span class="c1"># noqa: D202</span>
 
-    <span class="k">def</span> <span class="nf">_handle_unknown_exception</span><span class="p">(</span><span class="n">ex</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_unknown_exception_handler</span><span class="p">(</span><span class="n">ex</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Handle unknown exceptions.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">_log</span><span class="o">.</span><span class="n">level</span> <span class="o">==</span> <span class="mi">10</span><span class="p">:</span>  <span class="c1"># &quot;DEBUG&quot;</span>
             <span class="nb">print</span><span class="p">(</span>
@@ -171,7 +171,7 @@
         <span class="nb">print</span><span class="p">(</span><span class="n">ae</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">APIUnknownException</span> <span class="k">as</span> <span class="n">ue</span><span class="p">:</span>
-        <span class="n">_handle_unknown_exception</span><span class="p">(</span><span class="n">ue</span><span class="p">)</span>
+        <span class="n">_unknown_exception_handler</span><span class="p">(</span><span class="n">ue</span><span class="p">)</span>
     <span class="k">except</span> <span class="p">(</span>
         <span class="n">APIException</span><span class="p">,</span>
         <span class="n">APIItemNotFoundException</span><span class="p">,</span>
@@ -182,7 +182,7 @@
         <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
-        <span class="n">_handle_unknown_exception</span><span class="p">(</span><span class="n">ex</span><span class="p">)</span></div>
+        <span class="n">_unknown_exception_handler</span><span class="p">(</span><span class="n">ex</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="get_client"><a class="viewcode-back" href="../../cli.html#bin.cli.get_client">[docs]</a><span class="nd">@intercept_exception</span>
@@ -227,17 +227,17 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_module_name</span>
         <span class="p">)</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_module_property</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+        <span class="n">json_data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span>
 
         <span class="k">if</span> <span class="n">output</span> <span class="o">==</span> <span class="s2">&quot;json&quot;</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">json_data</span><span class="p">))</span>
         <span class="k">elif</span> <span class="n">output</span> <span class="o">==</span> <span class="s2">&quot;json-pp&quot;</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">,))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">json_data</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">,))</span>
         <span class="k">else</span><span class="p">:</span>
+
             <span class="nb">print</span><span class="p">(</span>
                 <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span>
-                    <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span>
-                        <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">),</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">,</span>
-                    <span class="p">)</span>
+                    <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">json_data</span><span class="p">),</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">,)</span>
                 <span class="p">)</span>
             <span class="p">)</span></div>
 
@@ -725,7 +725,7 @@
         <span class="p">)</span> <span class="ow">and</span> <span class="n">wait_for_operation_secs</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span>
                 <span class="p">(</span>
-                    <span class="s2">&quot;if setting disks &#39;wait-for-operation-secs&#39; parameter&quot;</span>
+                    <span class="s2">&quot;If setting disks, &#39;wait-for-operation-secs&#39; parameter&quot;</span>
                     <span class="s2">&quot; must be greater than zero (recommended 600 seconds)&quot;</span>
                 <span class="p">),</span>
                 <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span>
@@ -739,9 +739,21 @@
         <span class="k">if</span> <span class="n">wait_for_operation_secs</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">wait_for_status</span><span class="p">(</span>
                 <span class="nb">id</span><span class="o">=</span><span class="n">worker_id</span><span class="p">,</span>
-                <span class="n">status</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;storage_pending&quot;</span><span class="p">],</span>
+                <span class="n">status</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;storage_pending&quot;</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">],</span>
                 <span class="n">timeout_secs</span><span class="o">=</span><span class="n">wait_for_operation_secs</span><span class="p">,</span>
             <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">get_client</span><span class="p">()</span><span class="o">.</span><span class="n">k8s_worker</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">worker_id</span><span class="p">)</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s2">&quot;error&quot;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="p">(</span>
+                    <span class="s2">&quot;Create request has errored. &quot;</span>
+                    <span class="s2">&quot;Check status message with `hpecp k8sworker get </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="nb">id</span>
+                    <span class="p">)</span>
+                <span class="p">),</span>
+                <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">ephemeral_disks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">persistent_disks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_storage</span><span class="p">(</span>
