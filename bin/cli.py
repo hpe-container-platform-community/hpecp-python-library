@@ -1647,15 +1647,50 @@ class AutoComplete:
                 cur=${COMP_WORDS[COMP_CWORD]}
                 prev=${COMP_WORDS[COMP_CWORD-1]}
 
+                MODULE=${COMP_WORDS[1]}
+
                 COMP_WORDS_AS_STRING=$(IFS=. ; echo "${COMP_WORDS[*]}")
 
-                # if the last parameter was --*file
+                # from: https://stackoverflow.com/a/58221008/1033422 
+
+                declare -A MODULE_COLUMNS=(
+                    {% for module_name in modules %}
+                        {% set column_names = " ".join(columns[module_name]) %}
+                        ['{{module_name}}']="{{column_names}}"
+                    {% endfor %}
+                )
+
+                # list has uniform behaviour as it is implemented in BaseProxy
+                if [[ "${COMP_WORDS[2]}" == "list" ]];
+                then
+                    declare -a COLUMNS=(${MODULE_COLUMNS[$MODULE]})
+
+                    # if 'list' was the last word
+                    if [[ "${prev}" == "list" ]];
+                    then
+                        COMPREPLY=( $(compgen -W "--columns --query" -- $cur) )
+                        return
+                    fi
+
+                    # if '--columns' was the last word
+                    if [[ "${COMP_WORDS[3]}" == '--columns' ]];
+                    then
+                        COMPREPLY=( $(compgen -W "${COLUMNS[*]}" -- $cur) )
+                        return
+                    fi
+                    return
+                fi
+
+                # if the last parameter was --*file perform
+                # file and directory autocompletion
                 if echo "${prev}" | grep -q '\-\-.*file$'
                 then
                     _filedir;
                     return
                 fi
 
+                # if last input was > for redirecting to a file
+                # perform file and directory autocompletion
                 if echo "${prev}" | grep -q '>'
                 then
                     _filedir;
