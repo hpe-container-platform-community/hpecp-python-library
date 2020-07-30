@@ -101,7 +101,7 @@ else:
 def intercept_exception(wrapped, instance, args, kwargs):
     """Handle Exceptions."""  # noqa: D202
 
-    def _handle_unknown_exception(ex):
+    def _unknown_exception_handler(ex):
         """Handle unknown exceptions."""
         if _log.level == 10:  # "DEBUG"
             print(
@@ -125,7 +125,7 @@ def intercept_exception(wrapped, instance, args, kwargs):
         print(ae, file=sys.stderr)
         sys.exit(1)
     except APIUnknownException as ue:
-        _handle_unknown_exception(ue)
+        _unknown_exception_handler(ue)
     except (
         APIException,
         APIItemNotFoundException,
@@ -136,7 +136,7 @@ def intercept_exception(wrapped, instance, args, kwargs):
         print(e.message, file=sys.stderr)
         sys.exit(1)
     except Exception as ex:
-        _handle_unknown_exception(ex)
+        _unknown_exception_handler(ex)
 
 
 @intercept_exception
@@ -181,17 +181,17 @@ class BaseProxy:
             self.client, self.client_module_name
         )
         response = self.client_module_property.get(id=id, params=params)
+        json_data = response.json
 
         if output == "json":
-            print(json.dumps(response.json))
+            print(json.dumps(json_data))
         elif output == "json-pp":
-            print(json.dumps(response.json, indent=4, sort_keys=True,))
+            print(json.dumps(json_data, indent=4, sort_keys=True,))
         else:
+
             print(
                 yaml.dump(
-                    yaml.load(
-                        json.dumps(response.json), Loader=yaml.FullLoader,
-                    )
+                    yaml.load(json.dumps(json_data), Loader=yaml.FullLoader,)
                 )
             )
 
@@ -679,7 +679,7 @@ class K8sWorkerProxy(BaseProxy):
         ) and wait_for_operation_secs == 0:
             print(
                 (
-                    "if setting disks 'wait-for-operation-secs' parameter"
+                    "If setting disks, 'wait-for-operation-secs' parameter"
                     " must be greater than zero (recommended 600 seconds)"
                 ),
                 file=sys.stderr,
@@ -693,9 +693,21 @@ class K8sWorkerProxy(BaseProxy):
         if wait_for_operation_secs > 0:
             self.wait_for_status(
                 id=worker_id,
-                status=["storage_pending"],
+                status=["storage_pending", "error"],
                 timeout_secs=wait_for_operation_secs,
             )
+
+        if get_client().k8s_worker.get(id=worker_id).status == "error":
+            print(
+                (
+                    "Create request has errored. "
+                    "Check status message with `hpecp k8sworker get {}".format(
+                        id
+                    )
+                ),
+                file=sys.stderr,
+            )
+            sys.exit(1)
 
         if ephemeral_disks is not None or persistent_disks is not None:
             self.set_storage(
