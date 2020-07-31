@@ -101,7 +101,7 @@ else:
 def intercept_exception(wrapped, instance, args, kwargs):
     """Handle Exceptions."""  # noqa: D202
 
-    def _handle_unknown_exception(ex):
+    def _unknown_exception_handler(ex):
         """Handle unknown exceptions."""
         if _log.level == 10:  # "DEBUG"
             print(
@@ -125,7 +125,7 @@ def intercept_exception(wrapped, instance, args, kwargs):
         print(ae, file=sys.stderr)
         sys.exit(1)
     except APIUnknownException as ue:
-        _handle_unknown_exception(ue)
+        _unknown_exception_handler(ue)
     except (
         APIException,
         APIItemNotFoundException,
@@ -136,7 +136,7 @@ def intercept_exception(wrapped, instance, args, kwargs):
         print(e.message, file=sys.stderr)
         sys.exit(1)
     except Exception as ex:
-        _handle_unknown_exception(ex)
+        _unknown_exception_handler(ex)
 
 
 @intercept_exception
@@ -181,17 +181,17 @@ class BaseProxy:
             self.client, self.client_module_name
         )
         response = self.client_module_property.get(id=id, params=params)
+        json_data = response.json
 
         if output == "json":
-            print(json.dumps(response.json))
+            print(json.dumps(json_data))
         elif output == "json-pp":
-            print(json.dumps(response.json, indent=4, sort_keys=True,))
+            print(json.dumps(json_data, indent=4, sort_keys=True,))
         else:
+
             print(
                 yaml.dump(
-                    yaml.load(
-                        json.dumps(response.json), Loader=yaml.FullLoader,
-                    )
+                    yaml.load(json.dumps(json_data), Loader=yaml.FullLoader,)
                 )
             )
 
@@ -679,7 +679,7 @@ class K8sWorkerProxy(BaseProxy):
         ) and wait_for_operation_secs == 0:
             print(
                 (
-                    "if setting disks 'wait-for-operation-secs' parameter"
+                    "If setting disks, 'wait-for-operation-secs' parameter"
                     " must be greater than zero (recommended 600 seconds)"
                 ),
                 file=sys.stderr,
@@ -693,9 +693,21 @@ class K8sWorkerProxy(BaseProxy):
         if wait_for_operation_secs > 0:
             self.wait_for_status(
                 id=worker_id,
-                status=["storage_pending"],
+                status=["storage_pending", "error"],
                 timeout_secs=wait_for_operation_secs,
             )
+
+        if get_client().k8s_worker.get(id=worker_id).status == "error":
+            print(
+                (
+                    "Create request has errored. "
+                    "Check status message with `hpecp k8sworker get {}".format(
+                        id
+                    )
+                ),
+                file=sys.stderr,
+            )
+            sys.exit(1)
 
         if ephemeral_disks is not None or persistent_disks is not None:
             self.set_storage(
@@ -1635,35 +1647,119 @@ class AutoComplete:
                 cur=${COMP_WORDS[COMP_CWORD]}
                 prev=${COMP_WORDS[COMP_CWORD-1]}
 
+                MODULE=${COMP_WORDS[1]}
+
                 COMP_WORDS_AS_STRING=$(IFS=. ; echo "${COMP_WORDS[*]}")
 
-                # if the last parameter was --*file
-                if echo "${prev}" | grep -q '\-\-.*file$'
-                then
-                    _filedir;
-                    return
-                fi
-
+                # if last input was > for redirecting to a file
+                # perform file and directory autocompletion
                 if echo "${prev}" | grep -q '>'
                 then
                     _filedir;
                     return
                 fi
 
+                # from: https://stackoverflow.com/a/58221008/1033422
+
+                declare -A MODULE_COLUMNS=(
+                    {% for module_name in modules %}
+                        {% set column_names = " ".join(columns[module_name]) %}
+                        ['{{module_name}}']="{{column_names}}"
+                    {% endfor %}
+                )
+
                 {% raw %}
-                for (( idx=${#COMP_WORDS[@]}-1 ; idx>=0 ; idx-- )) ; do
-                    item="${COMP_WORDS[idx]}"
-                    if [[ "${item:0:2}" == "--" ]]; then
-                        if [[ "${item}" == "--columns" ]]
-                        then
-                            LAST_PARAM_IS_COLUMNS=1
-                        else
-                            LAST_PARAM_IS_COLUMNS=0
-                        fi
-                        break
+                # list has uniform behaviour as it is implemented in BaseProxy
+                if [[ "${COMP_WORDS[2]}" == "list" ]];
+                then
+
+                    # if 'list' was the last word
+                    if [[ "${prev}" == "list" ]];
+                    then
+                        COMPREPLY=( $(compgen -W "--columns --query" -- $cur) )
+                        return
                     fi
-                done
+
+                    # FIXME: https://unix.stackexchange.com/questions/124539/bash-completion-for-comma-separated-values
+
+                    # '--columns' was the last word and user is entering column names
+                    if [[ "${COMP_WORDS[3]}" == "--columns"* && ${#COMP_WORDS[@]} -le 5 ]];
+                    then
+                        declare -a COLUMNS=(${MODULE_COLUMNS[$MODULE]})
+
+                        local realcur prefix
+                        realcur=${cur##*,} # everything after the last comma, e.g. a,b,c,d -> d
+                        prefix=${cur%,*}   # everything before the lat comma, e.g. a,b,c,d -> a,b,c
+
+                        if [[ "$cur" == *,* ]];
+                        then
+                            IFS=',' ENTERED_COLUMNS_LIST=($prefix)
+                            unset IFS
+                        else
+                            IFS=',' ENTERED_COLUMNS_LIST=($prev)
+                            unset IFS
+                        fi
+
+                        for COLUMN in ${COLUMNS[@]}; do
+                            for ENTERED_COLUMN in ${ENTERED_COLUMNS_LIST[@]}; do
+                                if [[ "${ENTERED_COLUMN}" == "${COLUMN}" ]]
+                                then
+                                    # remove columns already entered by user
+                                    COLUMNS=(${COLUMNS[*]//$ENTERED_COLUMN/})
+                                fi
+                            done
+                        done
+
+                        if [[ "$cur" == *,* ]];
+                        then
+                            COMPREPLY=( $(compgen -W "${COLUMNS[*]}" -P "${prefix}," -S "," -- ${realcur}) )
+                            compopt -o nospace
+                            return
+                        else
+                            COMPREPLY=( $(compgen -W "${COLUMNS[*]}" -S "," -- ${realcur}) )
+                            compopt -o nospace
+                            return
+                        fi
+                    fi
+
+                    # user has finished entering column list or query
+                    if [[ ${#COMP_WORDS[@]} == 6 ]];
+                    then
+                        COMPREPLY=( $(compgen -W "--output" -- $cur) )
+                        return
+                    fi
+
+                    if [[ "${COMP_WORDS[5]}" == "--output"*  ]];
+                    then
+                        if [[ "${COMP_WORDS[3]}" == "--columns"*  ]];
+                        then
+                            COMPREPLY=( $(compgen -W "table text" -- $cur) )
+                            return
+                        else
+                            COMPREPLY=( $(compgen -W "json json-pp text" -- $cur) )
+                            return
+                        fi
+                    fi
+
+                    return
+                fi
                 {% endraw %}
+
+                # if the last parameter was --*file perform
+                # file and directory autocompletion
+                if echo "${prev}" | grep -q '\-\-.*file$'
+                then
+                    _filedir;
+                    return
+                fi
+
+                # if last input was > for redirecting to a file
+                # perform file and directory autocompletion
+                if echo "${prev}" | grep -q '>'
+                then
+                    _filedir;
+                    return
+                fi
 
                 case "$COMP_WORDS_AS_STRING" in
 
@@ -1673,27 +1769,7 @@ class AutoComplete:
                     {% for function_name in modules[module_name] %}
                         {% set param_names = " ".join(modules[module_name][function_name]).replace('_', '-') %}
                         {% if function_name == "list" %}
-                    *"hpecp.{{module_name}}.{{function_name.replace('_', '-')}}."*)
-                        PARAM_NAMES="{{param_names}}"
-                        for PARAM in ${PARAM_NAMES[@]}; do
-                            PARAM="${PARAM//'\'}"
-                            for WORD in ${COMP_WORDS[@]}; do
-                                if [[ "${WORD}" == "${PARAM}" ]]
-                                then
-                                    # remove parameters already entered by user
-                                    PARAM_NAMES=${PARAM_NAMES//$WORD/}
-                                fi
-                            done
-                        done
-                        if [[ $LAST_PARAM_IS_COLUMNS == 1 ]]
-                        then
-                            {% set column_names = " ".join(columns[module_name]) %}
-                            COMPREPLY=( $(compgen -W "{{column_names}}" -- $cur) )
-                            COMPREPLY+=( $(compgen -W "$PARAM_NAMES" -- $cur) )
-                        else
-                            COMPREPLY=( $(compgen -W "$PARAM_NAMES" -- $cur) )
-                        fi
-                        ;;
+                            # do nothing - already handled above
                         {% else %}
                     *"hpecp.{{module_name}}.{{function_name.replace('_', '-')}}."*)
                         PARAM_NAMES="{{param_names}}"

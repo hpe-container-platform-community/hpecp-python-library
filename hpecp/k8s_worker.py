@@ -145,16 +145,17 @@ class K8sWorkerController(AbstractWaitableResourceController):
             url="/api/v2/worker/k8shost/",
             http_method="post",
             data=data,
-            description="worker/create_with_ssh_key",
+            description="K8sWorkerController/create_with_ssh_key",
         )
         return CaseInsensitiveDict(response.headers)["location"]
 
-    def get(self, id, setup_log=False):
+    def get(self, id, params=None, setup_log=False):
+
+        if params is None:
+            params = {}
 
         if setup_log is True:
-            params = {"setup_log": "true"}
-        else:
-            params = {}
+            params["setup_log"] = "true"
 
         return super(K8sWorkerController, self).get(id, params)
 

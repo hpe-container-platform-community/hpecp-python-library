@@ -26,7 +26,9 @@ import json
 import os
 from configparser import SafeConfigParser
 
+import logging
 import requests
+import six
 from six import raise_from
 from urllib3.exceptions import (
     NewConnectionError,
@@ -479,12 +481,22 @@ class ContainerPlatformClient(object):
 
             urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
+        if self.log.level == 10:  # "DEBUG"
+            if six.PY3:
+                import http.client
+
+                http.client.HTTPConnection.debuglevel = 1
+
+            requests_log = logging.getLogger("requests.packages.urllib3")
+            requests_log.setLevel(logging.DEBUG)
+            requests_log.propagate = True
+
         response = None
         try:
             self.log.debug("REQ: {} : {} {}".format("Login", "post", url))
             response = requests.post(
                 url, json=auth, verify=self.verify_ssl, timeout=10
-            )
+            )  # 10 seconds
             response.raise_for_status()
 
         except (

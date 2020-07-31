@@ -9,8 +9,7 @@
 
 [![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/hpe-container-platform-community/hpecp-python-library)
 [![Good first issues open](https://img.shields.io/github/issues/hpe-container-platform-community/hpecp-python-library/good%20first%20issue.svg?label=good%20first%20issue)](https://github.com/hpe-container-platform-community/hpecp-python-library/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)
-
-
+ 
 
 ----
 
@@ -70,6 +69,7 @@ Add gateway:
 ```sh
 hpecp lock create "Install Gateway"
 hpecp gateway create-with-ssh-key --ip 10.1.0.5 --proxy-node-hostname my.gateway.local --ssh-key-file controller_private.key
+hpecp gateway wait-for-state ${GATEWAY_ID} --states [installed] --timeout-secs 1200
 hpecp lock delete-all
 ```
 
@@ -132,7 +132,7 @@ hpecp do-something
 More sophisticated CLI examples [here](https://github.com/bluedata-community/bluedata-demo-env-aws-terraform/tree/master/bin/experimental) 
 
 
-## Basic Library Usage
+## Python Library Examples
 
 See docs: https://hpe-container-platform-community.github.io/hpecp-python-library/index.html
 
