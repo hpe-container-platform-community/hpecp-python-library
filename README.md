@@ -93,6 +93,11 @@ Create k8s cluster:
 hpecp k8scluster create --name myclus1 --k8shosts-config /api/v2/worker/k8shost/1:master --k8s_version=1.17.0
 ```
 
+Add k8s cluster addons:
+```sh
+hpecp k8scluster add-addons --id $CLUSTER_ID --addons [istio,harbor]
+```
+
 List with columns parameter:
 ```sh
 hpecp k8scluster list --columns [id,description,status]
