@@ -1693,35 +1693,119 @@
 <span class="sd">                cur=${COMP_WORDS[COMP_CWORD]}</span>
 <span class="sd">                prev=${COMP_WORDS[COMP_CWORD-1]}</span>
 
+<span class="sd">                MODULE=${COMP_WORDS[1]}</span>
+
 <span class="sd">                COMP_WORDS_AS_STRING=$(IFS=. ; echo &quot;${COMP_WORDS[*]}&quot;)</span>
 
-<span class="sd">                # if the last parameter was --*file</span>
-<span class="sd">                if echo &quot;${prev}&quot; | grep -q &#39;\-\-.*file$&#39;</span>
-<span class="sd">                then</span>
-<span class="sd">                    _filedir;</span>
-<span class="sd">                    return</span>
-<span class="sd">                fi</span>
-
+<span class="sd">                # if last input was &gt; for redirecting to a file</span>
+<span class="sd">                # perform file and directory autocompletion</span>
 <span class="sd">                if echo &quot;${prev}&quot; | grep -q &#39;&gt;&#39;</span>
 <span class="sd">                then</span>
 <span class="sd">                    _filedir;</span>
 <span class="sd">                    return</span>
 <span class="sd">                fi</span>
 
+<span class="sd">                # from: https://stackoverflow.com/a/58221008/1033422</span>
+
+<span class="sd">                declare -A MODULE_COLUMNS=(</span>
+<span class="sd">                    {% for module_name in modules %}</span>
+<span class="sd">                        {% set column_names = &quot; &quot;.join(columns[module_name]) %}</span>
+<span class="sd">                        [&#39;{{module_name}}&#39;]=&quot;{{column_names}}&quot;</span>
+<span class="sd">                    {% endfor %}</span>
+<span class="sd">                )</span>
+
 <span class="sd">                {% raw %}</span>
-<span class="sd">                for (( idx=${#COMP_WORDS[@]}-1 ; idx&gt;=0 ; idx-- )) ; do</span>
-<span class="sd">                    item=&quot;${COMP_WORDS[idx]}&quot;</span>
-<span class="sd">                    if [[ &quot;${item:0:2}&quot; == &quot;--&quot; ]]; then</span>
-<span class="sd">                        if [[ &quot;${item}&quot; == &quot;--columns&quot; ]]</span>
-<span class="sd">                        then</span>
-<span class="sd">                            LAST_PARAM_IS_COLUMNS=1</span>
-<span class="sd">                        else</span>
-<span class="sd">                            LAST_PARAM_IS_COLUMNS=0</span>
-<span class="sd">                        fi</span>
-<span class="sd">                        break</span>
+<span class="sd">                # list has uniform behaviour as it is implemented in BaseProxy</span>
+<span class="sd">                if [[ &quot;${COMP_WORDS[2]}&quot; == &quot;list&quot; ]];</span>
+<span class="sd">                then</span>
+
+<span class="sd">                    # if &#39;list&#39; was the last word</span>
+<span class="sd">                    if [[ &quot;${prev}&quot; == &quot;list&quot; ]];</span>
+<span class="sd">                    then</span>
+<span class="sd">                        COMPREPLY=( $(compgen -W &quot;--columns --query&quot; -- $cur) )</span>
+<span class="sd">                        return</span>
 <span class="sd">                    fi</span>
-<span class="sd">                done</span>
+
+<span class="sd">                    # FIXME: https://unix.stackexchange.com/questions/124539/bash-completion-for-comma-separated-values</span>
+
+<span class="sd">                    # &#39;--columns&#39; was the last word and user is entering column names</span>
+<span class="sd">                    if [[ &quot;${COMP_WORDS[3]}&quot; == &quot;--columns&quot;* &amp;&amp; ${#COMP_WORDS[@]} -le 5 ]];</span>
+<span class="sd">                    then</span>
+<span class="sd">                        declare -a COLUMNS=(${MODULE_COLUMNS[$MODULE]})</span>
+
+<span class="sd">                        local realcur prefix</span>
+<span class="sd">                        realcur=${cur##*,} # everything after the last comma, e.g. a,b,c,d -&gt; d</span>
+<span class="sd">                        prefix=${cur%,*}   # everything before the lat comma, e.g. a,b,c,d -&gt; a,b,c</span>
+
+<span class="sd">                        if [[ &quot;$cur&quot; == *,* ]];</span>
+<span class="sd">                        then</span>
+<span class="sd">                            IFS=&#39;,&#39; ENTERED_COLUMNS_LIST=($prefix)</span>
+<span class="sd">                            unset IFS</span>
+<span class="sd">                        else</span>
+<span class="sd">                            IFS=&#39;,&#39; ENTERED_COLUMNS_LIST=($prev)</span>
+<span class="sd">                            unset IFS</span>
+<span class="sd">                        fi</span>
+
+<span class="sd">                        for COLUMN in ${COLUMNS[@]}; do</span>
+<span class="sd">                            for ENTERED_COLUMN in ${ENTERED_COLUMNS_LIST[@]}; do</span>
+<span class="sd">                                if [[ &quot;${ENTERED_COLUMN}&quot; == &quot;${COLUMN}&quot; ]]</span>
+<span class="sd">                                then</span>
+<span class="sd">                                    # remove columns already entered by user</span>
+<span class="sd">                                    COLUMNS=(${COLUMNS[*]//$ENTERED_COLUMN/})</span>
+<span class="sd">                                fi</span>
+<span class="sd">                            done</span>
+<span class="sd">                        done</span>
+
+<span class="sd">                        if [[ &quot;$cur&quot; == *,* ]];</span>
+<span class="sd">                        then</span>
+<span class="sd">                            COMPREPLY=( $(compgen -W &quot;${COLUMNS[*]}&quot; -P &quot;${prefix},&quot; -S &quot;,&quot; -- ${realcur}) )</span>
+<span class="sd">                            compopt -o nospace</span>
+<span class="sd">                            return</span>
+<span class="sd">                        else</span>
+<span class="sd">                            COMPREPLY=( $(compgen -W &quot;${COLUMNS[*]}&quot; -S &quot;,&quot; -- ${realcur}) )</span>
+<span class="sd">                            compopt -o nospace</span>
+<span class="sd">                            return</span>
+<span class="sd">                        fi</span>
+<span class="sd">                    fi</span>
+
+<span class="sd">                    # user has finished entering column list or query</span>
+<span class="sd">                    if [[ ${#COMP_WORDS[@]} == 6 ]];</span>
+<span class="sd">                    then</span>
+<span class="sd">                        COMPREPLY=( $(compgen -W &quot;--output&quot; -- $cur) )</span>
+<span class="sd">                        return</span>
+<span class="sd">                    fi</span>
+
+<span class="sd">                    if [[ &quot;${COMP_WORDS[5]}&quot; == &quot;--output&quot;*  ]];</span>
+<span class="sd">                    then</span>
+<span class="sd">                        if [[ &quot;${COMP_WORDS[3]}&quot; == &quot;--columns&quot;*  ]];</span>
+<span class="sd">                        then</span>
+<span class="sd">                            COMPREPLY=( $(compgen -W &quot;table text&quot; -- $cur) )</span>
+<span class="sd">                            return</span>
+<span class="sd">                        else</span>
+<span class="sd">                            COMPREPLY=( $(compgen -W &quot;json json-pp text&quot; -- $cur) )</span>
+<span class="sd">                            return</span>
+<span class="sd">                        fi</span>
+<span class="sd">                    fi</span>
+
+<span class="sd">                    return</span>
+<span class="sd">                fi</span>
 <span class="sd">                {% endraw %}</span>
+
+<span class="sd">                # if the last parameter was --*file perform</span>
+<span class="sd">                # file and directory autocompletion</span>
+<span class="sd">                if echo &quot;${prev}&quot; | grep -q &#39;\-\-.*file$&#39;</span>
+<span class="sd">                then</span>
+<span class="sd">                    _filedir;</span>
+<span class="sd">                    return</span>
+<span class="sd">                fi</span>
+
+<span class="sd">                # if last input was &gt; for redirecting to a file</span>
+<span class="sd">                # perform file and directory autocompletion</span>
+<span class="sd">                if echo &quot;${prev}&quot; | grep -q &#39;&gt;&#39;</span>
+<span class="sd">                then</span>
+<span class="sd">                    _filedir;</span>
+<span class="sd">                    return</span>
+<span class="sd">                fi</span>
 
 <span class="sd">                case &quot;$COMP_WORDS_AS_STRING&quot; in</span>
 
@@ -1731,27 +1815,7 @@
 <span class="sd">                    {% for function_name in modules[module_name] %}</span>
 <span class="sd">                        {% set param_names = &quot; &quot;.join(modules[module_name][function_name]).replace(&#39;_&#39;, &#39;-&#39;) %}</span>
 <span class="sd">                        {% if function_name == &quot;list&quot; %}</span>
-<span class="sd">                    *&quot;hpecp.{{module_name}}.{{function_name.replace(&#39;_&#39;, &#39;-&#39;)}}.&quot;*)</span>
-<span class="sd">                        PARAM_NAMES=&quot;{{param_names}}&quot;</span>
-<span class="sd">                        for PARAM in ${PARAM_NAMES[@]}; do</span>
-<span class="sd">                            PARAM=&quot;${PARAM//&#39;\&#39;}&quot;</span>
-<span class="sd">                            for WORD in ${COMP_WORDS[@]}; do</span>
-<span class="sd">                                if [[ &quot;${WORD}&quot; == &quot;${PARAM}&quot; ]]</span>
-<span class="sd">                                then</span>
-<span class="sd">                                    # remove parameters already entered by user</span>
-<span class="sd">                                    PARAM_NAMES=${PARAM_NAMES//$WORD/}</span>
-<span class="sd">                                fi</span>
-<span class="sd">                            done</span>
-<span class="sd">                        done</span>
-<span class="sd">                        if [[ $LAST_PARAM_IS_COLUMNS == 1 ]]</span>
-<span class="sd">                        then</span>
-<span class="sd">                            {% set column_names = &quot; &quot;.join(columns[module_name]) %}</span>
-<span class="sd">                            COMPREPLY=( $(compgen -W &quot;{{column_names}}&quot; -- $cur) )</span>
-<span class="sd">                            COMPREPLY+=( $(compgen -W &quot;$PARAM_NAMES&quot; -- $cur) )</span>
-<span class="sd">                        else</span>
-<span class="sd">                            COMPREPLY=( $(compgen -W &quot;$PARAM_NAMES&quot; -- $cur) )</span>
-<span class="sd">                        fi</span>
-<span class="sd">                        ;;</span>
+<span class="sd">                            # do nothing - already handled above</span>
 <span class="sd">                        {% else %}</span>
 <span class="sd">                    *&quot;hpecp.{{module_name}}.{{function_name.replace(&#39;_&#39;, &#39;-&#39;)}}.&quot;*)</span>
 <span class="sd">                        PARAM_NAMES=&quot;{{param_names}}&quot;</span>
