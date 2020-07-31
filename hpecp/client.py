@@ -28,6 +28,11 @@ from configparser import SafeConfigParser
 
 import requests
 from six import raise_from
+from urllib3.exceptions import (
+    NewConnectionError,
+    ConnectTimeoutError,
+    MaxRetryError,
+)
 
 from .catalog import CatalogController
 from .config import ConfigController
@@ -477,20 +482,26 @@ class ContainerPlatformClient(object):
         response = None
         try:
             self.log.debug("REQ: {} : {} {}".format("Login", "post", url))
-            response = requests.post(url, json=auth, verify=self.verify_ssl)
+            response = requests.post(
+                url, json=auth, verify=self.verify_ssl, timeout=10
+            )
             response.raise_for_status()
 
-        except requests.exceptions.ConnectionError as e:
+        except (
+            requests.exceptions.ConnectionError,
+            NewConnectionError,
+            MaxRetryError,
+            ConnectTimeoutError,
+        ) as e:
             self.log.debug(
                 "RES: {} : {} {} {}".format("Login", "post", url, str(e))
             )
             if self.log.level == 10:  # "DEBUG"
-                msg = "Could not connect to controller."
+                # The error is already output to the log, so this message
+                # can be brief.
+                msg = "Could not connect to the controller."
             else:
-                msg = (
-                    "Could not connect to controller - set LOG_LEVEL=DEBUG to "
-                    "see more detail."
-                )
+                msg = "Could not connect to the controller.\n" + str(e)
             raise_from(
                 APIException(
                     message=msg, request_method="post", request_url=url,

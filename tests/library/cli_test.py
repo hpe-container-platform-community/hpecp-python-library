@@ -337,13 +337,15 @@ class TestCLIHttpClient(BaseTestCase):
 
         self.assertEqual(cm.exception.code, 1)
 
-        self.assertEqual(self.out.getvalue(), "")
+        self.assertEqual(self.out.getvalue().strip(), "")
+
+        actual_err = self.err.getvalue().strip()
+        expected_err = "Could not connect to the controller."
 
         # coverage seems to populate standard error (issues 93)
         self.assertTrue(
-            self.err.getvalue().endswith(
-                "Could not connect to controller - set LOG_LEVEL=DEBUG to see more detail.\n"
-            )
+            self.err.getvalue().strip().endswith(expected_err),
+            "Expected: `{}` Actual: `{}`".format(expected_err, actual_err),
         )
 
     @patch("requests.get", side_effect=mocked_requests_get)
