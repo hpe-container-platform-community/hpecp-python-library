@@ -505,8 +505,9 @@ class ContainerPlatformClient(object):
                 msg = "Could not connect to controller."
             else:
                 msg = (
-                    "Could not connect to controller '{}'\nSet LOG_LEVEL=DEBUG to "
-                    "see more detail.".format(str(e))
+                    "Could not connect to controller.\n"
+                    "{}\n"
+                    "Set LOG_LEVEL=DEBUG to see more detail.".format(str(e))
                 )
             raise_from(
                 APIException(
