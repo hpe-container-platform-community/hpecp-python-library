@@ -108,6 +108,13 @@ List --query examples:
 hpecp tenant examples
 ```
 
+Add LDAP role to Tenant:
+```sh
+ADMIN_GROUP="CN=DemoTenantAdmins,CN=Users,DC=samdom,DC=example,DC=com"
+ADMIN_ROLE=$(hpecp role list  --query "[?label.name == 'Admin'][_links.self.href] | [0][0]" --output json | tr -d '"')
+hpecp tenant add-external-user-group --tenant-id $TENANT_ID --group $ADMIN_GROUP --role-id $ADMIN_ROLE
+```
+
 Tenant kube config:
 ```sh
 PROFILE=tenant1 hpecp tenant k8skubeconfig > tenant1_kube.conf
