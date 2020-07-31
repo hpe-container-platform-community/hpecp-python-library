@@ -1659,7 +1659,7 @@ class AutoComplete:
                     return
                 fi
 
-                # from: https://stackoverflow.com/a/58221008/1033422 
+                # from: https://stackoverflow.com/a/58221008/1033422
 
                 declare -A MODULE_COLUMNS=(
                     {% for module_name in modules %}
@@ -1699,7 +1699,7 @@ class AutoComplete:
                             IFS=',' ENTERED_COLUMNS_LIST=($prev)
                             unset IFS
                         fi
-                            
+
                         for COLUMN in ${COLUMNS[@]}; do
                             for ENTERED_COLUMN in ${ENTERED_COLUMNS_LIST[@]}; do
                                 if [[ "${ENTERED_COLUMN}" == "${COLUMN}" ]]
@@ -1709,7 +1709,7 @@ class AutoComplete:
                                 fi
                             done
                         done
-                            
+
                         if [[ "$cur" == *,* ]];
                         then
                             COMPREPLY=( $(compgen -W "${COLUMNS[*]}" -P "${prefix}," -S "," -- ${realcur}) )
@@ -1740,7 +1740,7 @@ class AutoComplete:
                             return
                         fi
                     fi
-                   
+
                     return
                 fi
                 {% endraw %}
