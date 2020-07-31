@@ -1668,6 +1668,7 @@ class AutoComplete:
                     {% endfor %}
                 )
 
+                {% raw %}
                 # list has uniform behaviour as it is implemented in BaseProxy
                 if [[ "${COMP_WORDS[2]}" == "list" ]];
                 then
@@ -1681,52 +1682,47 @@ class AutoComplete:
 
                     # FIXME: https://unix.stackexchange.com/questions/124539/bash-completion-for-comma-separated-values
 
-                    {% raw %}
-                    # if '--columns' was the last word
+                    # '--columns' was the last word and user is entering column names
                     if [[ "${COMP_WORDS[3]}" == "--columns"* && ${#COMP_WORDS[@]} -le 5 ]];
                     then
                         declare -a COLUMNS=(${MODULE_COLUMNS[$MODULE]})
 
+                        local realcur prefix
+                        realcur=${cur##*,} # everything after the last comma, e.g. a,b,c,d -> d
+                        prefix=${cur%,*}   # everything before the lat comma, e.g. a,b,c,d -> a,b,c
+
                         if [[ "$cur" == *,* ]];
                         then
-                            local realcur prefix
-                            realcur=${cur##*,} # everything after the last comma, e.g. a,b,c,d -> d
-                            prefix=${cur%,*}   # everything before the lat comma, e.g. a,b,c,d -> a,b,c
-
                             IFS=',' ENTERED_COLUMNS_LIST=($prefix)
                             unset IFS
+                        else
+                            IFS=',' ENTERED_COLUMNS_LIST=($prev)
+                            unset IFS
+                        fi
                             
-                            for COLUMN in ${COLUMNS[@]}; do
-                                for ENTERED_COLUMN in ${ENTERED_COLUMNS_LIST[@]}; do
-                                    if [[ "${ENTERED_COLUMN}" == "${COLUMN}" ]]
-                                    then
-                                        # remove columns already entered by user
-                                        COLUMNS=(${COLUMNS[*]//$ENTERED_COLUMN/})
-                                    fi
-                                done
+                        for COLUMN in ${COLUMNS[@]}; do
+                            for ENTERED_COLUMN in ${ENTERED_COLUMNS_LIST[@]}; do
+                                if [[ "${ENTERED_COLUMN}" == "${COLUMN}" ]]
+                                then
+                                    # remove columns already entered by user
+                                    COLUMNS=(${COLUMNS[*]//$ENTERED_COLUMN/})
+                                fi
                             done
+                        done
                             
+                        if [[ "$cur" == *,* ]];
+                        then
                             COMPREPLY=( $(compgen -W "${COLUMNS[*]}" -P "${prefix}," -S "," -- ${realcur}) )
                             compopt -o nospace
                             return
                         else
-                            IFS=',' ENTERED_COLUMNS_LIST=($prev)
-                            unset IFS
-                            
-                            for COLUMN in ${COLUMNS[@]}; do
-                                for ENTERED_COLUMN in ${ENTERED_COLUMNS_LIST[@]}; do
-                                    if [[ "${ENTERED_COLUMN}" == "${COLUMN}" ]]
-                                    then
-                                        # remove columns already entered by user
-                                        COLUMNS=(${COLUMNS[*]//$ENTERED_COLUMN/})
-                                    fi
-                                done
-                            done
                             COMPREPLY=( $(compgen -W "${COLUMNS[*]}" -S "," -- ${realcur}) )
                             compopt -o nospace
                             return
                         fi
                     fi
+
+                    # user has finished entering column list or query
                     if [[ ${#COMP_WORDS[@]} == 6 ]];
                     then
                         COMPREPLY=( $(compgen -W "--output" -- $cur) )
@@ -1744,9 +1740,10 @@ class AutoComplete:
                             return
                         fi
                     fi
-                    {% endraw %}
+                   
                     return
                 fi
+                {% endraw %}
 
                 # if the last parameter was --*file perform
                 # file and directory autocompletion
