@@ -1651,6 +1651,14 @@ class AutoComplete:
 
                 COMP_WORDS_AS_STRING=$(IFS=. ; echo "${COMP_WORDS[*]}")
 
+                # if last input was > for redirecting to a file
+                # perform file and directory autocompletion
+                if echo "${prev}" | grep -q '>'
+                then
+                    _filedir;
+                    return
+                fi
+
                 # from: https://stackoverflow.com/a/58221008/1033422 
 
                 declare -A MODULE_COLUMNS=(
@@ -1663,7 +1671,6 @@ class AutoComplete:
                 # list has uniform behaviour as it is implemented in BaseProxy
                 if [[ "${COMP_WORDS[2]}" == "list" ]];
                 then
-                    declare -a COLUMNS=(${MODULE_COLUMNS[$MODULE]})
 
                     # if 'list' was the last word
                     if [[ "${prev}" == "list" ]];
@@ -1672,12 +1679,72 @@ class AutoComplete:
                         return
                     fi
 
+                    # FIXME: https://unix.stackexchange.com/questions/124539/bash-completion-for-comma-separated-values
+
+                    {% raw %}
                     # if '--columns' was the last word
-                    if [[ "${COMP_WORDS[3]}" == '--columns' ]];
+                    if [[ "${COMP_WORDS[3]}" == "--columns"* && ${#COMP_WORDS[@]} -le 5 ]];
                     then
-                        COMPREPLY=( $(compgen -W "${COLUMNS[*]}" -- $cur) )
+                        declare -a COLUMNS=(${MODULE_COLUMNS[$MODULE]})
+
+                        if [[ "$cur" == *,* ]];
+                        then
+                            local realcur prefix
+                            realcur=${cur##*,} # everything after the last comma, e.g. a,b,c,d -> d
+                            prefix=${cur%,*}   # everything before the lat comma, e.g. a,b,c,d -> a,b,c
+
+                            IFS=',' ENTERED_COLUMNS_LIST=($prefix)
+                            unset IFS
+                            
+                            for COLUMN in ${COLUMNS[@]}; do
+                                for ENTERED_COLUMN in ${ENTERED_COLUMNS_LIST[@]}; do
+                                    if [[ "${ENTERED_COLUMN}" == "${COLUMN}" ]]
+                                    then
+                                        # remove columns already entered by user
+                                        COLUMNS=(${COLUMNS[*]//$ENTERED_COLUMN/})
+                                    fi
+                                done
+                            done
+                            
+                            COMPREPLY=( $(compgen -W "${COLUMNS[*]}" -P "${prefix}," -S "," -- ${realcur}) )
+                            compopt -o nospace
+                            return
+                        else
+                            IFS=',' ENTERED_COLUMNS_LIST=($prev)
+                            unset IFS
+                            
+                            for COLUMN in ${COLUMNS[@]}; do
+                                for ENTERED_COLUMN in ${ENTERED_COLUMNS_LIST[@]}; do
+                                    if [[ "${ENTERED_COLUMN}" == "${COLUMN}" ]]
+                                    then
+                                        # remove columns already entered by user
+                                        COLUMNS=(${COLUMNS[*]//$ENTERED_COLUMN/})
+                                    fi
+                                done
+                            done
+                            COMPREPLY=( $(compgen -W "${COLUMNS[*]}" -S "," -- ${realcur}) )
+                            compopt -o nospace
+                            return
+                        fi
+                    fi
+                    if [[ ${#COMP_WORDS[@]} == 6 ]];
+                    then
+                        COMPREPLY=( $(compgen -W "--output" -- $cur) )
                         return
                     fi
+
+                    if [[ "${COMP_WORDS[5]}" == "--output"*  ]];
+                    then
+                        if [[ "${COMP_WORDS[3]}" == "--columns"*  ]];
+                        then
+                            COMPREPLY=( $(compgen -W "table text" -- $cur) )
+                            return
+                        else
+                            COMPREPLY=( $(compgen -W "json json-pp text" -- $cur) )
+                            return
+                        fi
+                    fi
+                    {% endraw %}
                     return
                 fi
 
@@ -1697,21 +1764,6 @@ class AutoComplete:
                     return
                 fi
 
-                {% raw %}
-                for (( idx=${#COMP_WORDS[@]}-1 ; idx>=0 ; idx-- )) ; do
-                    item="${COMP_WORDS[idx]}"
-                    if [[ "${item:0:2}" == "--" ]]; then
-                        if [[ "${item}" == "--columns" ]]
-                        then
-                            LAST_PARAM_IS_COLUMNS=1
-                        else
-                            LAST_PARAM_IS_COLUMNS=0
-                        fi
-                        break
-                    fi
-                done
-                {% endraw %}
-
                 case "$COMP_WORDS_AS_STRING" in
 
                 {% set module_names = " ".join(modules.keys()) %}
@@ -1720,27 +1772,7 @@ class AutoComplete:
                     {% for function_name in modules[module_name] %}
                         {% set param_names = " ".join(modules[module_name][function_name]).replace('_', '-') %}
                         {% if function_name == "list" %}
-                    *"hpecp.{{module_name}}.{{function_name.replace('_', '-')}}."*)
-                        PARAM_NAMES="{{param_names}}"
-                        for PARAM in ${PARAM_NAMES[@]}; do
-                            PARAM="${PARAM//'\'}"
-                            for WORD in ${COMP_WORDS[@]}; do
-                                if [[ "${WORD}" == "${PARAM}" ]]
-                                then
-                                    # remove parameters already entered by user
-                                    PARAM_NAMES=${PARAM_NAMES//$WORD/}
-                                fi
-                            done
-                        done
-                        if [[ $LAST_PARAM_IS_COLUMNS == 1 ]]
-                        then
-                            {% set column_names = " ".join(columns[module_name]) %}
-                            COMPREPLY=( $(compgen -W "{{column_names}}" -- $cur) )
-                            COMPREPLY+=( $(compgen -W "$PARAM_NAMES" -- $cur) )
-                        else
-                            COMPREPLY=( $(compgen -W "$PARAM_NAMES" -- $cur) )
-                        fi
-                        ;;
+                            # do nothing - already handled above
                         {% else %}
                     *"hpecp.{{module_name}}.{{function_name.replace('_', '-')}}."*)
                         PARAM_NAMES="{{param_names}}"
