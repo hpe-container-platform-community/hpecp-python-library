@@ -11,7 +11,6 @@
 [![Good first issues open](https://img.shields.io/github/issues/hpe-container-platform-community/hpecp-python-library/good%20first%20issue.svg?label=good%20first%20issue)](https://github.com/hpe-container-platform-community/hpecp-python-library/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)
 
 
-
 ----
 
 ## Documentation
