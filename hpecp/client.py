@@ -489,7 +489,9 @@ class ContainerPlatformClient(object):
         response = None
         try:
             self.log.debug("REQ: {} : {} {}".format("Login", "post", url))
-            response = requests.post(url, json=auth, verify=self.verify_ssl)
+            response = requests.post(
+                url, json=auth, verify=self.verify_ssl, timeout=10
+            )  # 10 seconds
             response.raise_for_status()
 
         except requests.exceptions.ConnectionError as e:
