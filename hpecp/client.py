@@ -494,7 +494,10 @@ class ContainerPlatformClient(object):
             )  # 10 seconds
             response.raise_for_status()
 
-        except requests.exceptions.ConnectionError as e:
+        except (
+            requests.exceptions.ConnectionError,
+            urllib3.exceptions.ConnectTimeoutError,
+        ) as e:
             self.log.debug(
                 "RES: {} : {} {} {}".format("Login", "post", url, str(e))
             )
@@ -502,8 +505,8 @@ class ContainerPlatformClient(object):
                 msg = "Could not connect to controller."
             else:
                 msg = (
-                    "Could not connect to controller - set LOG_LEVEL=DEBUG to "
-                    "see more detail."
+                    "Could not connect to controller '{}'\nSet LOG_LEVEL=DEBUG to "
+                    "see more detail.".format(str(e))
                 )
             raise_from(
                 APIException(
