@@ -21,7 +21,7 @@ source ~/.bashrc
 pyenv virtualenv 3.6.10 my-3.6.10
 pyenv activate my-3.6.10
 
-pip install hpecp
+pip install -U hpecp
 ```
 
 Whenever you run the hpecp cli activate python 3.6.10 first, I.e.
