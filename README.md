@@ -134,6 +134,9 @@ PROFILE=tenant1 hpecp tenant k8skubeconfig > tenant1_kube.conf
 
 # get available Kubedirector apps
 kubectl --kubeconfig tenant1_kube.conf -n t1 get kubedirectorapps
+
+# list running applications
+kubectl --kubeconfig tenant1_kube -n t1 describe kubedirectorclusters
 ```
 
 Http call:
