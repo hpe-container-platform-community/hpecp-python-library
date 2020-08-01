@@ -120,6 +120,14 @@ ADMIN_ROLE=$(hpecp role list  --query "[?label.name == 'Admin'][_links.self.href
 hpecp tenant add-external-user-group --tenant-id $TENANT_ID --group $ADMIN_GROUP --role-id $ADMIN_ROLE
 ```
 
+Add internal user to Tenant:
+
+```sh
+ADMIN_USER_ID=$(hpecp user list --query "[?label.name == 'admin'][_links.self.href]" --output text)
+ADMIN_ROLE=$(hpecp role list  --query "[?label.name == 'Admin'][_links.self.href]" --output text)
+hpecp tenant assign-user-to-role --tenant-id $TENANT_ID --role-id $ADMIN_ROLE --user-id $ADMIN_USER_ID
+```
+
 Tenant kube config:
 ```sh
 PROFILE=tenant1 hpecp tenant k8skubeconfig > tenant1_kube.conf
