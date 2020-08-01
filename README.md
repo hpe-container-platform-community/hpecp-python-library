@@ -113,6 +113,12 @@ List --query examples:
 hpecp tenant examples
 ```
 
+Tenant create:
+```sh
+TENANT_ID=$(hpecp tenant create --name tenant1 --description "dev tenant" --k8s-cluster-id $CLUSTER_ID  --tenant-type k8s)
+hpecp tenant wait-for-status --id $TENANT_ID --status [ready] --timeout-secs 600
+```
+
 Add LDAP role to Tenant:
 ```sh
 ADMIN_GROUP="CN=DemoTenantAdmins,CN=Users,DC=samdom,DC=example,DC=com"
