@@ -131,6 +131,9 @@ hpecp tenant assign-user-to-role --tenant-id $TENANT_ID --role-id $ADMIN_ROLE --
 Tenant kube config:
 ```sh
 PROFILE=tenant1 hpecp tenant k8skubeconfig > tenant1_kube.conf
+
+# get available Kubedirector apps
+kubectl --kubeconfig tenant1_kube.conf -n t1 get kubedirectorapps
 ```
 
 Http call:
