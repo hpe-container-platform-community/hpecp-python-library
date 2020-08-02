@@ -34,26 +34,12 @@ import fire
 
 from jinja2 import Environment
 import six
-import traceback
 import yaml
-import wrapt
 
-from hpecp import (
-    APIException,
-    APIItemConflictException,
-    ContainerPlatformClient,
-    ContainerPlatformClientException,
-)
 from hpecp.logger import Logger
-from hpecp.exceptions import (
-    APIForbiddenException,
-    APIItemNotFoundException,
-    APIUnknownException,
-)
 from textwrap import dedent
 import inspect
 import collections
-from hpecp.tenant import Tenant
 from hpecp.user import User
 from hpecp.role import Role
 from hpecp.cli import base
@@ -61,6 +47,9 @@ from hpecp.cli.catalog import CatalogProxy
 from hpecp.cli.gateway import GatewayProxy
 from hpecp.cli.k8sworker import K8sWorkerProxy
 from hpecp.cli.k8scluster import K8sClusterProxy
+from hpecp.cli.tenant import TenantProxy
+from hpecp import ContainerPlatformClient
+
 
 if sys.version_info[0] >= 3:
     unicode = str
@@ -68,175 +57,46 @@ if sys.version_info[0] >= 3:
 _log = Logger.get_logger()
 
 
-@wrapt.decorator
-def intercept_exception(wrapped, instance, args, kwargs):
-    """Handle Exceptions."""  # noqa: D202
+# @wrapt.decorator
+# def intercept_exception(wrapped, instance, args, kwargs):
+#     """Handle Exceptions."""  # noqa: D202
 
-    def _unknown_exception_handler(ex):
-        """Handle unknown exceptions."""
-        if _log.level == 10:  # "DEBUG"
-            print(
-                "Unknown error.", file=sys.stderr,
-            )
-        else:
-            print(
-                "Unknown error. To debug run with env var LOG_LEVEL=DEBUG",
-                file=sys.stderr,
-            )
-        tb = traceback.format_exc()
-        _log.debug(tb)
-        _log.debug(ex)
-        sys.exit(1)
+#     def _unknown_exception_handler(ex):
+#         """Handle unknown exceptions."""
+#         if _log.level == 10:  # "DEBUG"
+#             print(
+#                 "Unknown error.", file=sys.stderr,
+#             )
+#         else:
+#             print(
+#                 "Unknown error. To debug run with env var LOG_LEVEL=DEBUG",
+#                 file=sys.stderr,
+#             )
+#         tb = traceback.format_exc()
+#         _log.debug(tb)
+#         _log.debug(ex)
+#         sys.exit(1)
 
-    try:
-        return wrapped(*args, **kwargs)
-    except SystemExit as se:
-        sys.exit(se.code)
-    except AssertionError as ae:
-        print(ae, file=sys.stderr)
-        sys.exit(1)
-    except APIUnknownException as ue:
-        _unknown_exception_handler(ue)
-    except (
-        APIException,
-        APIItemNotFoundException,
-        APIItemConflictException,
-        APIForbiddenException,
-        ContainerPlatformClientException,
-    ) as e:
-        print(e.message, file=sys.stderr)
-        sys.exit(1)
-    except Exception as ex:
-        _unknown_exception_handler(ex)
-
-
-class TenantProxy(base.BaseProxy):
-    """Proxy object to :py:attr:`<hpecp.client.tenant>`."""
-
-    def __dir__(self):
-        """Return the CLI method names."""
-        return [
-            "add_external_user_group",
-            "assign_user_to_role",
-            "create",
-            "delete",
-            "delete_external_user_group",
-            "examples",
-            "get",
-            "get_external_user_groups",
-            "k8skubeconfig",
-            "list",
-            # "status",  # TODO: implement me!
-            "users",
-            "wait_for_status",
-        ]
-
-    def __init__(self):
-        """Create instance of proxy class with the client module name."""
-        super(TenantProxy, self).new_instance("tenant", Tenant)
-
-    @intercept_exception
-    def create(
-        self,
-        name=None,
-        description=None,
-        tenant_type=None,
-        k8s_cluster_id=None,
-    ):
-        """Create a tenant.
-
-        Parameters
-        ----------
-        name : [type], optional
-            [description], by default None
-        description : [type], optional
-            [description], by default None
-        tenant_type : [type], optional
-            [description], by default None
-        k8s_cluster_id : [type], optional
-            [description], by default None
-        """
-        tenant_id = base.get_client().tenant.create(
-            name=name,
-            description=description,
-            tenant_type=tenant_type,
-            k8s_cluster=k8s_cluster_id,
-        )
-        print(tenant_id)
-
-    def examples(self):
-        """Show usage_examples of the list method."""
-        print(
-            dedent(
-                """\
-
-                hpecp tenant list --query "[?tenant_type == 'k8s']" --output json-pp
-
-                """  # noqa: E501
-            )
-        )
-
-    @intercept_exception
-    def k8skubeconfig(self):
-        """Retrieve the tenant kubeconfig.
-
-        This requires the ContainerPlatformClient to be created with
-        a 'tenant' parameter.
-
-        Returns
-        -------
-        str
-            Tenant KubeConfig
-        """
-        conf = base.get_client().tenant.k8skubeconfig()
-        print(conf)
-
-    @intercept_exception
-    def users(self, id, output="table", columns="ALL", query={}):
-        """Retrieve users assigned to tenant.
-
-        Parameters
-        ----------
-        id : str
-            The tenant ID.
-        """
-        list_instance = base.get_client().tenant.users(id=id)
-        self.print_list(
-            list_instance=list_instance,
-            output=output,
-            columns=columns,
-            query=query,
-        )
-
-    @intercept_exception
-    def assign_user_to_role(self, tenant_id, user_id, role_id):
-        """Assign user to role in tenant."""
-        base.get_client().tenant.assign_user_to_role(
-            tenant_id=tenant_id, user_id=user_id, role_id=role_id
-        )
-
-    @intercept_exception
-    def get_external_user_groups(self, tenant_id):
-        """Retrieve External User Groups."""
-        print(
-            base.get_client().tenant.get_external_user_groups(
-                tenant_id=tenant_id
-            )
-        )
-
-    @intercept_exception
-    def add_external_user_group(self, tenant_id, group, role_id):
-        """Add External User Group."""
-        base.get_client().tenant.add_external_user_group(
-            tenant_id=tenant_id, group=group, role_id=role_id
-        )
-
-    @intercept_exception
-    def delete_external_user_group(self, tenant_id, group):
-        """Delete External User Group."""
-        base.get_client().tenant.delete_external_user_group(
-            tenant_id=tenant_id, group=group
-        )
+#     try:
+#         return wrapped(*args, **kwargs)
+#     except SystemExit as se:
+#         sys.exit(se.code)
+#     except AssertionError as ae:
+#         print(ae, file=sys.stderr)
+#         sys.exit(1)
+#     except APIUnknownException as ue:
+#         _unknown_exception_handler(ue)
+#     except (
+#         APIException,
+#         APIItemNotFoundException,
+#         APIItemConflictException,
+#         APIForbiddenException,
+#         ContainerPlatformClientException,
+#     ) as e:
+#         print(e.message, file=sys.stderr)
+#         sys.exit(1)
+#     except Exception as ex:
+#         _unknown_exception_handler(ex)
 
 
 class LockProxy(object):
@@ -275,21 +135,21 @@ class LockProxy(object):
         else:
             print(json.dumps(response))
 
-    @intercept_exception
+    @base.intercept_exception
     def create(
         self, reason,
     ):
         """Create a lock."""
         print(base.get_client().lock.create(reason), file=sys.stdout)
 
-    @intercept_exception
+    @base.intercept_exception
     def delete(
         self, id,
     ):
         """Delete a user lock."""
         base.get_client().lock.delete(id)
 
-    @intercept_exception
+    @base.intercept_exception
     def delete_all(
         self, timeout_secs=300,
     ):
@@ -307,7 +167,7 @@ class LicenseProxy(object):
         """Return the CLI method names."""
         return ["delete", "delete_all", "list", "platform_id", "register"]
 
-    @intercept_exception
+    @base.intercept_exception
     def platform_id(self,):
         """Get the platform ID."""
         print(base.get_client().license.platform_id())
@@ -337,7 +197,7 @@ class LicenseProxy(object):
             else:
                 print(json.dumps(response))
 
-    @intercept_exception
+    @base.intercept_exception
     def register(
         self, server_filename,
     ):
@@ -394,7 +254,7 @@ class LicenseProxy(object):
     #         "'/srv/bluedata/license/'"
     #     )
 
-    @intercept_exception
+    @base.intercept_exception
     def delete(
         self, license_key,
     ):
@@ -405,7 +265,7 @@ class LicenseProxy(object):
         """
         base.get_client().license.delete(license_key=license_key)
 
-    @intercept_exception
+    @base.intercept_exception
     def delete_all(self,):
         """Delete all licenses."""
         response = base.get_client().license.list()
@@ -423,7 +283,7 @@ class HttpClientProxy(object):
         """Return the CLI method names."""
         return ["delete", "get", "post", "put"]
 
-    @intercept_exception
+    @base.intercept_exception
     def get(
         self, url,
     ):
@@ -438,7 +298,7 @@ class HttpClientProxy(object):
         )
         print(response.text, file=sys.stdout)
 
-    @intercept_exception
+    @base.intercept_exception
     def delete(
         self, url,
     ):
@@ -452,7 +312,7 @@ class HttpClientProxy(object):
             url, http_method="delete", description="CLI HTTP DELETE",
         )
 
-    @intercept_exception
+    @base.intercept_exception
     def post(
         self, url, json_file="",
     ):
@@ -487,7 +347,7 @@ class HttpClientProxy(object):
         )
         print(response.text, file=sys.stdout)
 
-    @intercept_exception
+    @base.intercept_exception
     def put(
         self, url, json_file="",
     ):
@@ -517,7 +377,7 @@ class UserProxy(base.BaseProxy):
         """Create instance of proxy class with the client module name."""
         super(UserProxy, self).new_instance("user", User)
 
-    @intercept_exception
+    @base.intercept_exception
     def create(
         self, name, password, description, is_external=False,
     ):
