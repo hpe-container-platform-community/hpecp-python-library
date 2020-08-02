@@ -272,7 +272,7 @@
 <span class="sd">                    return</span>
 <span class="sd">                fi</span>
 
-<span class="sd">                # from: https://stackoverflow.com/a/58221008/1033422</span>
+
 
 <span class="sd">                declare -A MODULE_COLUMNS=(</span>
 <span class="sd">                    {% for module_name in modules %}</span>
@@ -293,7 +293,7 @@
 <span class="sd">                        return</span>
 <span class="sd">                    fi</span>
 
-<span class="sd">                    # FIXME: https://unix.stackexchange.com/questions/124539/bash-completion-for-comma-separated-values</span>
+
 
 <span class="sd">                    # &#39;--columns&#39; was the last word and user is entering column names</span>
 <span class="sd">                    if [[ &quot;${COMP_WORDS[3]}&quot; == &quot;--columns&quot;* &amp;&amp; ${#COMP_WORDS[@]} -le 5 ]];</span>
