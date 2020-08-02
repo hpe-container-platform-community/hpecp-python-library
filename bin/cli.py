@@ -24,257 +24,30 @@
 
 from __future__ import print_function
 
+import collections
 import configparser
-import json
+import inspect
 import os
 import sys
 from collections import OrderedDict
+from textwrap import dedent
 
 import fire
-
-from jinja2 import Environment
 import six
-import yaml
-
-from hpecp.logger import Logger
-from textwrap import dedent
-import inspect
-import collections
-from hpecp.user import User
-from hpecp.role import Role
-from hpecp.cli import base
-from hpecp.cli.catalog import CatalogProxy
-from hpecp.cli.gateway import GatewayProxy
-from hpecp.cli.k8sworker import K8sWorkerProxy
-from hpecp.cli.k8scluster import K8sClusterProxy
-from hpecp.cli.tenant import TenantProxy
-from hpecp.cli.license import LicenseProxy
+from jinja2 import Environment
 
 from hpecp import ContainerPlatformClient
-
-
-if sys.version_info[0] >= 3:
-    unicode = str
-
-_log = Logger.get_logger()
-
-
-class LockProxy(object):
-    """Proxy object to :py:attr:`<hpecp.client.lock>`."""
-
-    def __dir__(self):
-        """Return the CLI method names."""
-        return [
-            "create",
-            "delete",
-            "delete_all",
-            "list",
-        ]
-
-    def list(
-        self, output="yaml",
-    ):
-        """Get the system and user locks.
-
-        :param output: how to display the output ['yaml'|'json']
-        """
-        if output not in ["yaml", "json"]:
-            print(
-                "'output' parameter must be 'yaml' or 'json'", file=sys.stderr
-            )
-            sys.exit(1)
-
-        response = base.get_client().lock.get()
-
-        if output == "yaml":
-            print(
-                yaml.dump(
-                    yaml.load(json.dumps(response), Loader=yaml.FullLoader,)
-                )
-            )
-        else:
-            print(json.dumps(response))
-
-    @base.intercept_exception
-    def create(
-        self, reason,
-    ):
-        """Create a lock."""
-        print(base.get_client().lock.create(reason), file=sys.stdout)
-
-    @base.intercept_exception
-    def delete(
-        self, id,
-    ):
-        """Delete a user lock."""
-        base.get_client().lock.delete(id)
-
-    @base.intercept_exception
-    def delete_all(
-        self, timeout_secs=300,
-    ):
-        """Delete all locks."""
-        success = base.get_client().lock.delete_all(timeout_secs=timeout_secs)
-        if not success:
-            print("Could not delete locks.", file=sys.stderr)
-            sys.exit(1)
-
-
-class HttpClientProxy(object):
-    """Proxy object to :py:attr:`<hpecp.client._request>`."""
-
-    def __dir__(self):
-        """Return the CLI method names."""
-        return ["delete", "get", "post", "put"]
-
-    @base.intercept_exception
-    def get(
-        self, url,
-    ):
-        """Make HTTP GET request.
-
-        Examples
-        --------
-        $ hpecp httpclient get /api/v1/workers
-        """
-        response = base.get_client()._request(
-            url, http_method="get", description="CLI HTTP GET",
-        )
-        print(response.text, file=sys.stdout)
-
-    @base.intercept_exception
-    def delete(
-        self, url,
-    ):
-        """Make HTTP DELETE request.
-
-        Examples
-        --------
-        $ hpecp httpclient delete /api/v1/workers/1
-        """
-        base.get_client()._request(
-            url, http_method="delete", description="CLI HTTP DELETE",
-        )
-
-    @base.intercept_exception
-    def post(
-        self, url, json_file="",
-    ):
-        """Make HTTP POST request.
-
-        Examples
-        --------
-        $ cat > my.json <<-EOF
-            {
-                "external_identity_server":  {
-                    "bind_pwd":"5ambaPwd@",
-                    "user_attribute":"sAMAccountName",
-                    "bind_type":"search_bind",
-                    "bind_dn":"cn=Administrator,CN=Users,DC=samdom,DC=example,DC=com",
-                    "host":"10.1.0.77",
-                    "security_protocol":"ldaps",
-                    "base_dn":"CN=Users,DC=samdom,DC=example,DC=com",
-                    "verify_peer": false,
-                    "type":"Active Directory",
-                    "port":636
-                }
-            }
-            EOF
-
-            hpecp httpclient post /api/v2/config/auth --json-file my.json
-        """
-        with open(json_file, "r",) as f:
-            data = json.load(f)
-
-        response = base.get_client()._request(
-            url, http_method="post", data=data, description="CLI HTTP POST",
-        )
-        print(response.text, file=sys.stdout)
-
-    @base.intercept_exception
-    def put(
-        self, url, json_file="",
-    ):
-        """Make HTTP PUT request.
-
-        Examples
-        --------
-        $ hpecp httpclient put /api/v2/config/auth --json-file my.json
-        """  # noqa: W293
-        with open(json_file, "r",) as f:
-            data = json.load(f)
-
-        response = base.get_client()._request(
-            url, http_method="put", data=data, description="CLI HTTP PUT",
-        )
-        print(response.text, file=sys.stdout)
-
-
-class UserProxy(base.BaseProxy):
-    """Proxy object to :py:attr:`<hpecp.client.user>`."""
-
-    def __dir__(self):
-        """Return the CLI method names."""
-        return ["create", "get", "delete", "examples", "list"]
-
-    def __init__(self):
-        """Create instance of proxy class with the client module name."""
-        super(UserProxy, self).new_instance("user", User)
-
-    @base.intercept_exception
-    def create(
-        self, name, password, description, is_external=False,
-    ):
-        """Create a User.
-
-        :param name: the user name
-        :param password:  the password
-        :param description: the user descripton
-
-        """
-        user_id = base.get_client().user.create(
-            name=name,
-            password=password,
-            description=description,
-            is_external=is_external,
-        )
-        print(user_id)
-
-    def examples(self):
-        """Show usage_examples of the list method."""
-        print(
-            dedent(
-                """\
-
-                hpecp user list --query '[?is_external]' --output json-pp
-                """  # noqa: E501
-            )
-        )
-
-
-class RoleProxy(base.BaseProxy):
-    """Proxy object to :py:attr:`<hpecp.client.role>`."""
-
-    def __dir__(self):
-        """Return the CLI method names."""
-        return ["delete", "examples", "get", "list"]
-
-    def __init__(self):
-        """Create instance of proxy class with the client module name."""
-        super(RoleProxy, self).new_instance("role", Role)
-
-    def examples(self):
-        """Show examples for working with roles."""
-        print(
-            dedent(
-                """\
-                    
-                # Retrieve the role ID for 'Admin'
-                $ hpecp role list  --query "[?label.name == 'Admin'][_links.self.href] | [0][0]" --output json | tr -d '"'
-                /api/v1/role/2
-                """  # noqa:  E501
-            )
-        )
+from hpecp.cli.catalog import CatalogProxy
+from hpecp.cli.gateway import GatewayProxy
+from hpecp.cli.httpclient import HttpClientProxy
+from hpecp.cli.k8scluster import K8sClusterProxy
+from hpecp.cli.k8sworker import K8sWorkerProxy
+from hpecp.cli.license import LicenseProxy
+from hpecp.cli.lock import LockProxy
+from hpecp.cli.role import RoleProxy
+from hpecp.cli.tenant import TenantProxy
+from hpecp.cli.user import UserProxy
+from hpecp.logger import Logger
 
 
 def configure_cli():
@@ -424,6 +197,7 @@ class AutoComplete:
             modules[module_name] = function_parameters
             columns[module_name] = all_fields
 
+            # _log = Logger.get_logger()
             # _log.debug(modules)
             # _log.debug(columns)
 
