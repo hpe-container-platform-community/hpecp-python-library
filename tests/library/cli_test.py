@@ -285,6 +285,9 @@ class TestBaseProxy(BaseTestCase):
 
 class TestCLIUsingCfgFileEnvVar(TestCase):
     def test_hpe_config_file_var(self):
+
+        from hpecp.cli.base import get_config_file
+
         dummy_filepath = "/not/a/real/dir/not_a_real_file"
 
         env = EnvironmentVarGuard()
@@ -297,7 +300,7 @@ class TestCLIUsingCfgFileEnvVar(TestCase):
             # reload cli module with mock env
             reload(cli)
 
-            self.assertEqual(dummy_filepath, cli.get_config_file())
+            self.assertEqual(dummy_filepath, get_config_file())
 
 
 class TestCLIHttpClient(BaseTestCase):

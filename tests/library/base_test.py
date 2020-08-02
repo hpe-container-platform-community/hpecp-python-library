@@ -144,6 +144,7 @@ class BaseTestCase(unittest.TestCase):
 
         sys.path.insert(0, os.path.abspath("../../"))
         from bin import cli
+        from hpecp.cli import base
 
         try:
             reload
@@ -160,6 +161,7 @@ class BaseTestCase(unittest.TestCase):
 
         # override method to return config file path
         self.cli.get_config_file = get_config_file
+        base.get_config_file = get_config_file
 
     def tearDown(self):
         self.tmpFile.close()

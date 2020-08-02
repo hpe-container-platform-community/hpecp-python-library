@@ -81,6 +81,10 @@ _log.debug(
 )
 
 
+def get_config_file():
+    return get_config_file()
+
+
 @wrapt.decorator
 def intercept_exception(wrapped, instance, args, kwargs):
     """Handle Exceptions."""  # noqa: D202
