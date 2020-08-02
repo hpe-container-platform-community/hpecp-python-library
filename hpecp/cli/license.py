@@ -31,6 +31,7 @@ from hpecp.cli import base
 if sys.version_info[0] >= 3:
     unicode = str
 
+
 class LicenseProxy(object):
     """Proxy object to :py:attr:`<hpecp.client.license>`."""
 
