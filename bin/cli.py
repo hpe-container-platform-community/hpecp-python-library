@@ -48,6 +48,8 @@ from hpecp.cli.gateway import GatewayProxy
 from hpecp.cli.k8sworker import K8sWorkerProxy
 from hpecp.cli.k8scluster import K8sClusterProxy
 from hpecp.cli.tenant import TenantProxy
+from hpecp.cli.license import LicenseProxy
+
 from hpecp import ContainerPlatformClient
 
 
@@ -55,48 +57,6 @@ if sys.version_info[0] >= 3:
     unicode = str
 
 _log = Logger.get_logger()
-
-
-# @wrapt.decorator
-# def intercept_exception(wrapped, instance, args, kwargs):
-#     """Handle Exceptions."""  # noqa: D202
-
-#     def _unknown_exception_handler(ex):
-#         """Handle unknown exceptions."""
-#         if _log.level == 10:  # "DEBUG"
-#             print(
-#                 "Unknown error.", file=sys.stderr,
-#             )
-#         else:
-#             print(
-#                 "Unknown error. To debug run with env var LOG_LEVEL=DEBUG",
-#                 file=sys.stderr,
-#             )
-#         tb = traceback.format_exc()
-#         _log.debug(tb)
-#         _log.debug(ex)
-#         sys.exit(1)
-
-#     try:
-#         return wrapped(*args, **kwargs)
-#     except SystemExit as se:
-#         sys.exit(se.code)
-#     except AssertionError as ae:
-#         print(ae, file=sys.stderr)
-#         sys.exit(1)
-#     except APIUnknownException as ue:
-#         _unknown_exception_handler(ue)
-#     except (
-#         APIException,
-#         APIItemNotFoundException,
-#         APIItemConflictException,
-#         APIForbiddenException,
-#         ContainerPlatformClientException,
-#     ) as e:
-#         print(e.message, file=sys.stderr)
-#         sys.exit(1)
-#     except Exception as ex:
-#         _unknown_exception_handler(ex)
 
 
 class LockProxy(object):
@@ -158,122 +118,6 @@ class LockProxy(object):
         if not success:
             print("Could not delete locks.", file=sys.stderr)
             sys.exit(1)
-
-
-class LicenseProxy(object):
-    """Proxy object to :py:attr:`<hpecp.client.license>`."""
-
-    def __dir__(self):
-        """Return the CLI method names."""
-        return ["delete", "delete_all", "list", "platform_id", "register"]
-
-    @base.intercept_exception
-    def platform_id(self,):
-        """Get the platform ID."""
-        print(base.get_client().license.platform_id())
-
-    def list(
-        self, output="yaml", license_key_only=False,
-    ):
-        """Retrieve the list of licenses.
-
-        :param output: how to display the output ['yaml'|'json']
-        """
-        response = base.get_client().license.list()
-        if license_key_only:
-            response = [
-                str(unicode(li["LicenseKey"])) for li in response["Licenses"]
-            ]
-            print("\n".join(response))
-        else:
-            if output == "yaml":
-                print(
-                    yaml.dump(
-                        yaml.load(
-                            json.dumps(response), Loader=yaml.FullLoader,
-                        )
-                    )
-                )
-            else:
-                print(json.dumps(response))
-
-    @base.intercept_exception
-    def register(
-        self, server_filename,
-    ):
-        """Register a license.
-
-        :param server_filename: Filepath to the license on the server, e.g.
-            '/srv/bluedata/license/LICENSE-1.txt'
-        """
-        print(
-            base.get_client().license.register(server_filename=server_filename)
-        )
-
-    # TODO implement me!
-    # def upload_with_ssh_key(
-    #     self,
-    #     server_filename,
-    #     ssh_key_file=None,
-    #     ssh_key_data=None,
-    #     license_file=None,
-    #     base64enc_license_data=None,
-    # ):
-    #     """Not implemented yet.
-
-    #     Workaround:
-    #     -----------
-    #      - scp your license to '/srv/bluedata/license/' on the controller
-    #      - run client.license.register(server_filename) to register
-    #        the license
-    #     """
-    #     raise Exception(
-    #         "Not implemented yet! Workaround: scp your license to"
-    #         "'/srv/bluedata/license/'"
-    #     )
-
-    # TODO implement me!
-    # def upload_with_ssh_pass(
-    #     self,
-    #     server_filename,
-    #     ssh_username,
-    #     ssh_password,
-    #     license_file=None,
-    #     base64enc_license_data=None,
-    # ):
-    #     """Not implemented yet.
-
-    #     Workaround:
-    #     -----------
-    #      - scp your license to '/srv/bluedata/license/' on the controller
-    #      - run client.license.register(server_filename) to register
-    #        the license
-    #     """
-    #     raise Exception(
-    #         "Not implemented yet! Workaround: scp your license to"
-    #         "'/srv/bluedata/license/'"
-    #     )
-
-    @base.intercept_exception
-    def delete(
-        self, license_key,
-    ):
-        """Delete a license by LicenseKey.
-
-        :param license_key: The license key, e.g. '1234 1234 ... 1234
-            "SOMETEXT"'
-        """
-        base.get_client().license.delete(license_key=license_key)
-
-    @base.intercept_exception
-    def delete_all(self,):
-        """Delete all licenses."""
-        response = base.get_client().license.list()
-        all_license_keys = [
-            str(unicode(li["LicenseKey"])) for li in response["Licenses"]
-        ]
-        for licence_key in all_license_keys:
-            base.get_client().license.delete(license_key=licence_key)
 
 
 class HttpClientProxy(object):
