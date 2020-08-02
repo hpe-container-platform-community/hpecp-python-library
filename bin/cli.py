@@ -47,7 +47,6 @@ from hpecp.cli.lock import LockProxy
 from hpecp.cli.role import RoleProxy
 from hpecp.cli.tenant import TenantProxy
 from hpecp.cli.user import UserProxy
-from hpecp.logger import Logger
 
 
 def configure_cli():
