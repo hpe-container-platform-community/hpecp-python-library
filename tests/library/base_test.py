@@ -154,7 +154,12 @@ class BaseTestCase(unittest.TestCase):
         reload(cli)
 
         self.cli = cli
-        self.cli.HPECP_CONFIG_FILE = self.tmpFile.name
+
+        def get_config_file():
+            return self.tmpFile.name
+
+        # override method to return config file path
+        self.cli.get_config_file = get_config_file
 
     def tearDown(self):
         self.tmpFile.close()

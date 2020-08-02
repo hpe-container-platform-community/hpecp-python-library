@@ -51,9 +51,11 @@ except Exception:
 
 class TestCLI(BaseTestCase):
     def test_config_file_missing(self):
+        def get_config_file():
+            return "this_file_should_not_exist"
 
         with self.assertRaises(SystemExit) as cm:
-            self.cli.HPECP_CONFIG_FILE = "this_file_should_not_exist"
+            self.cli.get_config_file = get_config_file
             self.cli.get_client()
 
         self.assertEqual(cm.exception.code, 1)
@@ -295,7 +297,7 @@ class TestCLIUsingCfgFileEnvVar(TestCase):
             # reload cli module with mock env
             reload(cli)
 
-            self.assertEqual(dummy_filepath, cli.HPECP_CONFIG_FILE)
+            self.assertEqual(dummy_filepath, cli.get_config_file())
 
 
 class TestCLIHttpClient(BaseTestCase):
