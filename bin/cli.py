@@ -72,17 +72,6 @@ if sys.version_info[0] >= 3:
 
 _log = Logger.get_logger()
 
-PROFILE = os.getenv("PROFILE", default="default")
-
-_log.debug(
-    "PROFILE envirionment variable exists with value '{}'".format(PROFILE)
-)
-
-
-def get_config_file():
-    """Retrieve the CLI config file."""
-    return base.get_config_file()
-
 
 @wrapt.decorator
 def intercept_exception(wrapped, instance, args, kwargs):
@@ -124,17 +113,6 @@ def intercept_exception(wrapped, instance, args, kwargs):
         sys.exit(1)
     except Exception as ex:
         _unknown_exception_handler(ex)
-
-
-@intercept_exception
-def get_client(start_session=True):
-    """Retrieve a reference to an authenticated client object."""
-    client = ContainerPlatformClient.create_from_config_file(
-        config_file=get_config_file(), profile=PROFILE,
-    )
-    if start_session:
-        client.create_session()
-    return client
 
 
 class K8sClusterProxy(base.BaseProxy):
@@ -200,7 +178,7 @@ class K8sClusterProxy(base.BaseProxy):
         ]
 
         print(
-            get_client().k8s_cluster.create(
+            base.get_client().k8s_cluster.create(
                 name=name,
                 description=description,
                 k8s_version=k8s_version,
@@ -220,7 +198,7 @@ class K8sClusterProxy(base.BaseProxy):
         :param id: the cluster ID
         """
         print(
-            get_client()
+            base.get_client()
             .k8s_cluster.get(id)
             .admin_kube_config.replace("\\n", "\n",)
         )
@@ -232,7 +210,9 @@ class K8sClusterProxy(base.BaseProxy):
 
         :param id: the cluster ID
         """
-        url = get_client().k8s_cluster.get(id=id).dashboard_endpoint_access
+        url = (
+            base.get_client().k8s_cluster.get(id=id).dashboard_endpoint_access
+        )
         print(url)
 
     def dashboard_token(
@@ -242,7 +222,7 @@ class K8sClusterProxy(base.BaseProxy):
 
         :param id: the cluster ID
         """
-        token = get_client().k8s_cluster.get(id=id).dashboard_token
+        token = base.get_client().k8s_cluster.get(id=id).dashboard_token
         if six.PY2:
             print(base64.b64decode(token.encode()))
         else:
@@ -251,7 +231,7 @@ class K8sClusterProxy(base.BaseProxy):
     @intercept_exception
     def k8smanifest(self):
         """Retrieve the k8smanifest."""
-        response = get_client().k8s_cluster.k8smanifest()
+        response = base.get_client().k8s_cluster.k8smanifest()
         print(
             yaml.dump(yaml.load(json.dumps(response), Loader=yaml.FullLoader,))
         )
@@ -261,7 +241,7 @@ class K8sClusterProxy(base.BaseProxy):
 
         :param id: get installed addons for a specific cluster
         """
-        print(get_client().k8s_cluster.get(id=id).addons)
+        print(base.get_client().k8s_cluster.get(id=id).addons)
 
     def get_available_addons(self, id=None, k8s_version=None):
         """Retrieve the available addons for a cluster.
@@ -284,10 +264,10 @@ class K8sClusterProxy(base.BaseProxy):
             sys.exit(1)
 
         if id:
-            print(get_client().k8s_cluster.get_available_addons(id=id))
+            print(base.get_client().k8s_cluster.get_available_addons(id=id))
         else:
             print(
-                get_client().k8s_cluster.get_available_addons(
+                base.get_client().k8s_cluster.get_available_addons(
                     k8s_version=k8s_version
                 )
             )
@@ -310,7 +290,7 @@ class K8sClusterProxy(base.BaseProxy):
             )
             sys.exit(1)
 
-        get_client().k8s_cluster.add_addons(id=id, addons=addons)
+        base.get_client().k8s_cluster.add_addons(id=id, addons=addons)
 
         if wait_for_ready_sec > 0:
             self.wait_for_status(
@@ -371,7 +351,7 @@ class K8sClusterProxy(base.BaseProxy):
             patch_filter = int(patch_filter)
 
         vers = []
-        for v in get_client().k8s_cluster.k8s_supported_versions():
+        for v in base.get_client().k8s_cluster.k8s_supported_versions():
             (major, minor, patch) = v.split(".")
             major = int(major)
             minor = int(minor)
@@ -437,7 +417,7 @@ class TenantProxy(base.BaseProxy):
         k8s_cluster_id : [type], optional
             [description], by default None
         """
-        tenant_id = get_client().tenant.create(
+        tenant_id = base.get_client().tenant.create(
             name=name,
             description=description,
             tenant_type=tenant_type,
@@ -469,7 +449,7 @@ class TenantProxy(base.BaseProxy):
         str
             Tenant KubeConfig
         """
-        conf = get_client().tenant.k8skubeconfig()
+        conf = base.get_client().tenant.k8skubeconfig()
         print(conf)
 
     @intercept_exception
@@ -481,7 +461,7 @@ class TenantProxy(base.BaseProxy):
         id : str
             The tenant ID.
         """
-        list_instance = get_client().tenant.users(id=id)
+        list_instance = base.get_client().tenant.users(id=id)
         self.print_list(
             list_instance=list_instance,
             output=output,
@@ -492,7 +472,7 @@ class TenantProxy(base.BaseProxy):
     @intercept_exception
     def assign_user_to_role(self, tenant_id, user_id, role_id):
         """Assign user to role in tenant."""
-        get_client().tenant.assign_user_to_role(
+        base.get_client().tenant.assign_user_to_role(
             tenant_id=tenant_id, user_id=user_id, role_id=role_id
         )
 
@@ -500,20 +480,22 @@ class TenantProxy(base.BaseProxy):
     def get_external_user_groups(self, tenant_id):
         """Retrieve External User Groups."""
         print(
-            get_client().tenant.get_external_user_groups(tenant_id=tenant_id)
+            base.get_client().tenant.get_external_user_groups(
+                tenant_id=tenant_id
+            )
         )
 
     @intercept_exception
     def add_external_user_group(self, tenant_id, group, role_id):
         """Add External User Group."""
-        get_client().tenant.add_external_user_group(
+        base.get_client().tenant.add_external_user_group(
             tenant_id=tenant_id, group=group, role_id=role_id
         )
 
     @intercept_exception
     def delete_external_user_group(self, tenant_id, group):
         """Delete External User Group."""
-        get_client().tenant.delete_external_user_group(
+        base.get_client().tenant.delete_external_user_group(
             tenant_id=tenant_id, group=group
         )
 
@@ -543,7 +525,7 @@ class LockProxy(object):
             )
             sys.exit(1)
 
-        response = get_client().lock.get()
+        response = base.get_client().lock.get()
 
         if output == "yaml":
             print(
@@ -559,21 +541,21 @@ class LockProxy(object):
         self, reason,
     ):
         """Create a lock."""
-        print(get_client().lock.create(reason), file=sys.stdout)
+        print(base.get_client().lock.create(reason), file=sys.stdout)
 
     @intercept_exception
     def delete(
         self, id,
     ):
         """Delete a user lock."""
-        get_client().lock.delete(id)
+        base.get_client().lock.delete(id)
 
     @intercept_exception
     def delete_all(
         self, timeout_secs=300,
     ):
         """Delete all locks."""
-        success = get_client().lock.delete_all(timeout_secs=timeout_secs)
+        success = base.get_client().lock.delete_all(timeout_secs=timeout_secs)
         if not success:
             print("Could not delete locks.", file=sys.stderr)
             sys.exit(1)
@@ -589,7 +571,7 @@ class LicenseProxy(object):
     @intercept_exception
     def platform_id(self,):
         """Get the platform ID."""
-        print(get_client().license.platform_id())
+        print(base.get_client().license.platform_id())
 
     def list(
         self, output="yaml", license_key_only=False,
@@ -598,7 +580,7 @@ class LicenseProxy(object):
 
         :param output: how to display the output ['yaml'|'json']
         """
-        response = get_client().license.list()
+        response = base.get_client().license.list()
         if license_key_only:
             response = [
                 str(unicode(li["LicenseKey"])) for li in response["Licenses"]
@@ -625,7 +607,9 @@ class LicenseProxy(object):
         :param server_filename: Filepath to the license on the server, e.g.
             '/srv/bluedata/license/LICENSE-1.txt'
         """
-        print(get_client().license.register(server_filename=server_filename))
+        print(
+            base.get_client().license.register(server_filename=server_filename)
+        )
 
     # TODO implement me!
     # def upload_with_ssh_key(
@@ -680,17 +664,17 @@ class LicenseProxy(object):
         :param license_key: The license key, e.g. '1234 1234 ... 1234
             "SOMETEXT"'
         """
-        get_client().license.delete(license_key=license_key)
+        base.get_client().license.delete(license_key=license_key)
 
     @intercept_exception
     def delete_all(self,):
         """Delete all licenses."""
-        response = get_client().license.list()
+        response = base.get_client().license.list()
         all_license_keys = [
             str(unicode(li["LicenseKey"])) for li in response["Licenses"]
         ]
         for licence_key in all_license_keys:
-            get_client().license.delete(license_key=licence_key)
+            base.get_client().license.delete(license_key=licence_key)
 
 
 class HttpClientProxy(object):
@@ -710,7 +694,7 @@ class HttpClientProxy(object):
         --------
         $ hpecp httpclient get /api/v1/workers
         """
-        response = get_client()._request(
+        response = base.get_client()._request(
             url, http_method="get", description="CLI HTTP GET",
         )
         print(response.text, file=sys.stdout)
@@ -725,7 +709,7 @@ class HttpClientProxy(object):
         --------
         $ hpecp httpclient delete /api/v1/workers/1
         """
-        get_client()._request(
+        base.get_client()._request(
             url, http_method="delete", description="CLI HTTP DELETE",
         )
 
@@ -759,7 +743,7 @@ class HttpClientProxy(object):
         with open(json_file, "r",) as f:
             data = json.load(f)
 
-        response = get_client()._request(
+        response = base.get_client()._request(
             url, http_method="post", data=data, description="CLI HTTP POST",
         )
         print(response.text, file=sys.stdout)
@@ -777,7 +761,7 @@ class HttpClientProxy(object):
         with open(json_file, "r",) as f:
             data = json.load(f)
 
-        response = get_client()._request(
+        response = base.get_client()._request(
             url, http_method="put", data=data, description="CLI HTTP PUT",
         )
         print(response.text, file=sys.stdout)
@@ -805,7 +789,7 @@ class UserProxy(base.BaseProxy):
         :param description: the user descripton
 
         """
-        user_id = get_client().user.create(
+        user_id = base.get_client().user.create(
             name=name,
             password=password,
             description=description,

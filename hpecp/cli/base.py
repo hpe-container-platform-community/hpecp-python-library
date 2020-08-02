@@ -50,7 +50,14 @@ from hpecp.cli_utils import TextOutput
 
 _log = Logger.get_logger()
 
-PROFILE = os.getenv("PROFILE", default="default")
+
+def get_profile():
+    """Retrieve the profile - if supplied."""
+    profile = os.getenv("PROFILE", default="default")
+    _log.debug(
+        "PROFILE envirionment variable exists with value '{}'".format(profile)
+    )
+    return profile
 
 
 def get_config_file():
@@ -118,7 +125,7 @@ def intercept_exception(wrapped, instance, args, kwargs):
 def get_client(start_session=True):
     """Retrieve a reference to an authenticated client object."""
     client = ContainerPlatformClient.create_from_config_file(
-        config_file=get_config_file(), profile=PROFILE,
+        config_file=get_config_file(), profile=get_profile(),
     )
     if start_session:
         client.create_session()
