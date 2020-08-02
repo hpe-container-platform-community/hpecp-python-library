@@ -47,7 +47,6 @@ from hpecp import (
 )
 from hpecp.k8s_worker import WorkerK8sStatus, WorkerK8s
 from hpecp.logger import Logger
-from hpecp.gateway import Gateway, GatewayStatus
 from hpecp.k8s_cluster import (
     K8sCluster,
     K8sClusterHostConfig,
@@ -66,6 +65,7 @@ from hpecp.user import User
 from hpecp.role import Role
 from hpecp.cli import base
 from hpecp.cli.catalog import CatalogProxy
+from hpecp.cli.gateway import GatewayProxy
 
 if sys.version_info[0] >= 3:
     unicode = str
@@ -135,84 +135,6 @@ def get_client(start_session=True):
     if start_session:
         client.create_session()
     return client
-
-
-class GatewayProxy(base.BaseProxy):
-    """Proxy object to :py:attr:`<hpecp.client.gateway>`."""
-
-    def __dir__(self):
-        """Return the CLI method names."""
-        return [
-            "create_with_ssh_key",
-            "delete",
-            "get",
-            "list",
-            "states",
-            "wait_for_state",
-        ]
-
-    def __init__(self):
-        """Create instance of proxy class with the client module name."""
-        super(GatewayProxy, self).new_instance("gateway", Gateway)
-
-    @intercept_exception
-    def create_with_ssh_key(
-        self,
-        ip,
-        proxy_node_hostname,
-        ssh_key=None,
-        ssh_key_file=None,
-        tags=[],
-    ):
-        """Create a Gateway using SSH key authentication.
-
-        Parameters
-        ----------
-        ip : string
-            The IP address of the proxy host.  Used for internal
-            communication.
-        proxy_node_hostname: string
-            Clients will access cluster services will be accessed
-            using this name.
-        ssh_key: string
-            The ssh key data as a string.  Alternatively, use the
-            ssh_key_file parameter.
-        ssh_key_file: string
-            The file path to the ssh key.  Alternatively, use the
-            ssh_key parameter.
-        tags: string
-            Tags to add to the gateway, for example:
-            "{ 'tag1': 'foo', 'tag2', 'bar' }".
-        """
-        if ssh_key is None and ssh_key_file is None:
-            print(
-                "Either ssh_key or ssh_key_file must be provided",
-                file=sys.stderr,
-            )
-            sys.exit(1)
-
-        if ssh_key is not None and ssh_key_file is not None:
-            print(
-                "Either ssh_key or ssh_key_file must be provided",
-                file=sys.stderr,
-            )
-            sys.exit(1)
-
-        if ssh_key_file:
-            with open(ssh_key_file) as f:
-                ssh_key = f.read()
-
-        gateway_id = get_client().gateway.create_with_ssh_key(
-            ip=ip,
-            proxy_node_hostname=proxy_node_hostname,
-            ssh_key_data=ssh_key,
-            tags=tags,
-        )
-        print(gateway_id)
-
-    def states(self,):
-        """Return a list of valid states."""
-        print([s.name for s in GatewayStatus])
 
 
 class K8sWorkerProxy(base.BaseProxy):
