@@ -61,11 +61,11 @@ from hpecp.exceptions import (
 from textwrap import dedent
 import inspect
 import collections
-from hpecp.catalog import Catalog
 from hpecp.tenant import Tenant
 from hpecp.user import User
 from hpecp.role import Role
 from hpecp.cli import base
+from hpecp.cli.catalog import CatalogProxy
 
 if sys.version_info[0] >= 3:
     unicode = str
@@ -135,105 +135,6 @@ def get_client(start_session=True):
     if start_session:
         client.create_session()
     return client
-
-
-class CatalogProxy(base.BaseProxy):
-    """Proxy object to :py:attr:`<hpecp.client.catalog>`."""
-
-    def __init__(self):
-        """Create instance of proxy class with the client module name."""
-        super(CatalogProxy, self).new_instance("catalog", Catalog)
-
-    def __dir__(self):
-        """Return the CLI method names."""
-        return [
-            "get",
-            "list",
-            "delete",
-            "examples",
-            "wait_for_state",
-            "refresh",
-            "install",
-        ]
-
-    def delete(self, id):
-        """Not implemented."""
-        raise AttributeError("'CatalogProxy' object has no attribute 'delete'")
-
-    def refresh(self, catalog_id):
-        """Refresh a catalog.
-
-        Parameters
-        ----------
-        catalog_id : str
-            The ID of the catalog - format: '/api/v1/catalog/[0-9]+'
-
-        Examples
-        --------
-        > hpecp catalog refresh /api/v1/catalog/99
-
-        """
-        try:
-            get_client().catalog.refresh(catalog_id)
-
-            # TODO: Report progress of the refresh workflow
-        except AssertionError as ae:
-            print(ae, file=sys.stderr)
-            sys.exit(1)
-        except (APIException, APIItemNotFoundException) as e:
-            print(e.message, file=sys.stderr)
-            sys.exit(1)
-
-    def install(self, catalog_id):
-        """Install a catalog.
-
-        Parameters
-        ----------
-        catalog_id : str
-            The ID of the catalog - format: '/api/v1/catalog/[0-9]+'
-
-        Examples
-        --------
-        > hpecp catalog install /api/v1/catalog/99
-
-        """
-        try:
-            get_client().catalog.install(catalog_id)
-
-            # TODO: Implement a way to check if the installation is actually
-            # successful (and maybe report progress?) - wait_for_state()?
-        except AssertionError as ae:
-            print(ae, file=sys.stderr)
-            sys.exit(1)
-        except (APIException, APIItemNotFoundException) as e:
-            print(e.message, file=sys.stderr)
-            sys.exit(1)
-
-    def examples(self):
-        """Show examples for working with roles."""
-        print(
-            dedent(
-                """\
-
-                $  hpecp catalog list --query "[?state!='installed' && state!='installing'] | [*].[_links.self.href] | []"  --output json
-                ["/api/v1/catalog/24", "/api/v1/catalog/27", "/api/v1/catalog/14", "/api/v1/catalog/11", "/api/v1/catalog/28", "/api/v1/catalog/18"]
-
-                $  hpecp catalog list --query "[?state!='installed' && state!='installing'] | [*].[_links.self.href] | []"  --output text
-                /api/v1/catalog/24
-                /api/v1/catalog/27
-                /api/v1/catalog/14
-                /api/v1/catalog/11
-                /api/v1/catalog/28
-                /api/v1/catalog/18
-
-                $  hpecp catalog list --query "[?state!='installed' && state!='installing'] | [*].[_links.self.href, distro_id]"  --output text
-                /api/v1/catalog/29	bluedata/spark240juphub7xssl
-                /api/v1/catalog/11	bluedata/ubuntu16
-                /api/v1/catalog/21	bluedata/cdh632multi
-                /api/v1/catalog/2	bluedata/spark231juphub7xssl
-                """  # noqa:  E501
-            )
-        )
 
 
 class GatewayProxy(base.BaseProxy):
