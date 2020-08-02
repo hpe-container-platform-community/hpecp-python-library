@@ -69,7 +69,7 @@ setup(
     author="Chris Snow",
     author_email="chsnow123@gmail.com",
     url="https://github.com/hpe-container-platform-community/hpecp-python-library",
-    packages=["hpecp"],
+    packages=["hpecp", "hpecp.cli"],
     scripts=["bin/hpecp"],
     keywords="",
     version=get_version("hpecp/__init__.py"),
