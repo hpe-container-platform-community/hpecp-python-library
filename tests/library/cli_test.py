@@ -299,6 +299,7 @@ class TestCLIUsingCfgFileEnvVar(TestCase):
 
             # reload cli module with mock env
             reload(cli)
+            # reload(hpecp.cli.base)
 
             self.assertEqual(dummy_filepath, get_config_file())
 

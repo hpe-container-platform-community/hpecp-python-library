@@ -56,6 +56,7 @@ PROFILE = os.getenv("PROFILE", default="default")
 
 
 def get_config_file():
+    """Retrieve the CLI config file."""
     if "HPECP_CONFIG_FILE" in os.environ:
         HPECP_CONFIG_FILE = os.path.expandvars(os.getenv("HPECP_CONFIG_FILE"))
         _log.debug(

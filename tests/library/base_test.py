@@ -142,9 +142,10 @@ class BaseTestCase(unittest.TestCase):
         self.err = StringIO()
         sys.stderr = self.err
 
+        from hpecp.cli import base
+
         sys.path.insert(0, os.path.abspath("../../"))
         from bin import cli
-        from hpecp.cli import base
 
         try:
             reload
@@ -156,6 +157,9 @@ class BaseTestCase(unittest.TestCase):
 
         self.cli = cli
 
+        self.saved_base_get_config_file = base.get_config_file
+        self.saved_cli_get_config_file = self.cli.get_config_file
+
         def get_config_file():
             return self.tmpFile.name
 
@@ -164,6 +168,11 @@ class BaseTestCase(unittest.TestCase):
         base.get_config_file = get_config_file
 
     def tearDown(self):
+        from hpecp.cli import base
+
         self.tmpFile.close()
         sys.stdout = self.saved_stdout
         sys.stderr = self.saved_stderr
+
+        base.get_config_file = self.saved_base_get_config_file
+        self.cli.get_config_file = self.saved_cli_get_config_file

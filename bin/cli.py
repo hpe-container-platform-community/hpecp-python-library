@@ -65,9 +65,7 @@ from hpecp.catalog import Catalog
 from hpecp.tenant import Tenant
 from hpecp.user import User
 from hpecp.role import Role
-
-from hpecp.cli.base import BaseProxy, get_config_file
-
+from hpecp.cli import base
 
 if sys.version_info[0] >= 3:
     unicode = str
@@ -82,7 +80,8 @@ _log.debug(
 
 
 def get_config_file():
-    return get_config_file()
+    """Retrieve the CLI config file."""
+    return base.get_config_file()
 
 
 @wrapt.decorator
@@ -138,7 +137,7 @@ def get_client(start_session=True):
     return client
 
 
-class CatalogProxy(BaseProxy):
+class CatalogProxy(base.BaseProxy):
     """Proxy object to :py:attr:`<hpecp.client.catalog>`."""
 
     def __init__(self):
@@ -237,7 +236,7 @@ class CatalogProxy(BaseProxy):
         )
 
 
-class GatewayProxy(BaseProxy):
+class GatewayProxy(base.BaseProxy):
     """Proxy object to :py:attr:`<hpecp.client.gateway>`."""
 
     def __dir__(self):
@@ -315,7 +314,7 @@ class GatewayProxy(BaseProxy):
         print([s.name for s in GatewayStatus])
 
 
-class K8sWorkerProxy(BaseProxy):
+class K8sWorkerProxy(base.BaseProxy):
     """Proxy object to :py:attr:`<hpecp.client.k8s_worker>`."""
 
     def __dir__(self):
@@ -492,7 +491,7 @@ class K8sWorkerProxy(BaseProxy):
         print([s.name for s in WorkerK8sStatus])
 
 
-class K8sClusterProxy(BaseProxy):
+class K8sClusterProxy(base.BaseProxy):
     """Proxy object to :py:attr:`<hpecp.client.k8s_cluster>`."""
 
     def __dir__(self):
@@ -746,7 +745,7 @@ class K8sClusterProxy(BaseProxy):
             print(" ".join(vers))
 
 
-class TenantProxy(BaseProxy):
+class TenantProxy(base.BaseProxy):
     """Proxy object to :py:attr:`<hpecp.client.tenant>`."""
 
     def __dir__(self):
@@ -1138,7 +1137,7 @@ class HttpClientProxy(object):
         print(response.text, file=sys.stdout)
 
 
-class UserProxy(BaseProxy):
+class UserProxy(base.BaseProxy):
     """Proxy object to :py:attr:`<hpecp.client.user>`."""
 
     def __dir__(self):
@@ -1180,7 +1179,7 @@ class UserProxy(BaseProxy):
         )
 
 
-class RoleProxy(BaseProxy):
+class RoleProxy(base.BaseProxy):
     """Proxy object to :py:attr:`<hpecp.client.role>`."""
 
     def __dir__(self):
@@ -1391,7 +1390,7 @@ class AutoComplete:
                 )
 
                 {% raw %}
-                # list has uniform behaviour as it is implemented in BaseProxy
+                # list has uniform behaviour as it is implemented in base.BaseProxy
                 if [[ "${COMP_WORDS[2]}" == "list" ]];
                 then
 
