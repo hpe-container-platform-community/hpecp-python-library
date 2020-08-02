@@ -5,6 +5,7 @@ import sys
 import os
 import json
 
+from hpecp.cli import base
 from hpecp import ContainerPlatformClient
 from hpecp.k8s_worker import K8sWorkerController, WorkerK8sStatus, WorkerK8s
 from hpecp.exceptions import APIItemConflictException, APIItemNotFoundException
@@ -439,7 +440,7 @@ class TestCliCreate(BaseTestCase):
 
             # manually patch methods due to json serialization error
             # when using Mock or MagicMock
-            self.cli.get_client = mock_get_client
+            base.get_client = mock_get_client
 
             hpecp_cli.k8sworker.create_with_ssh_key(
                 ip="127.0.0.1", ssh_key="test_ssh_key",
@@ -594,7 +595,7 @@ class TestCliCreate(BaseTestCase):
 
             # manually patch methods due to json serialization error
             # when using Mock or MagicMock
-            self.cli.get_client = mock_get_client
+            base.get_client = mock_get_client
 
             hpecp_cli.k8sworker.create_with_ssh_key(
                 ip="127.0.0.1", ssh_key_file=ssh_key_file.name

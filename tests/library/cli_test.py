@@ -27,6 +27,7 @@ from unittest import TestCase
 import requests
 import six
 from mock import mock, mock_open, patch
+from hpecp.cli import base
 
 from .base_test import (
     BaseTestCase,
@@ -51,10 +52,12 @@ except Exception:
 
 class TestCLI(BaseTestCase):
     def test_config_file_missing(self):
+        def get_config_file():
+            return "this_file_should_not_exist"
 
         with self.assertRaises(SystemExit) as cm:
-            self.cli.HPECP_CONFIG_FILE = "this_file_should_not_exist"
-            self.cli.get_client()
+            base.get_config_file = get_config_file
+            base.get_client()
 
         self.assertEqual(cm.exception.code, 1)
 
@@ -190,29 +193,22 @@ class TestCLIConfig(TestCase):
             with patch(builtins_name, mock_open(read_data=mock_data)):
                 with patch("os.path.exists") as os_path_exists:
 
-                    from bin import cli
-
-                    # reload cli module inside patched os.environ
-                    reload(cli)
-
-                    self.cli = cli
-
-                    self.assertEqual(self.cli.PROFILE, "tenant1")
+                    self.assertEqual(base.get_profile(), "tenant1")
 
                     # instruct the CLI that the mock file is actually
                     # ~/.hpecp.conf
                     os_path_exists.return_value = True
 
-                    hpecp_cli = self.cli.get_client(start_session=False)
+                    hpecp_client = base.get_client(start_session=False)
 
                     # this should be from the [default] section
-                    self.assertEqual(hpecp_cli.api_port, 9999)
+                    self.assertEqual(hpecp_client.api_port, 9999)
 
                     # this should be from the [tenant1] section
-                    self.assertEqual(hpecp_cli.api_host, "tenant_mock_host")
-                    self.assertEqual(hpecp_cli.username, "tenant-admin")
+                    self.assertEqual(hpecp_client.api_host, "tenant_mock_host")
+                    self.assertEqual(hpecp_client.username, "tenant-admin")
                     self.assertEqual(
-                        hpecp_cli.tenant_config, "/api/v1/tenant/2"
+                        hpecp_client.tenant_config, "/api/v1/tenant/2"
                     )
 
 
@@ -283,6 +279,9 @@ class TestBaseProxy(BaseTestCase):
 
 class TestCLIUsingCfgFileEnvVar(TestCase):
     def test_hpe_config_file_var(self):
+
+        from hpecp.cli.base import get_config_file
+
         dummy_filepath = "/not/a/real/dir/not_a_real_file"
 
         env = EnvironmentVarGuard()
@@ -294,8 +293,9 @@ class TestCLIUsingCfgFileEnvVar(TestCase):
 
             # reload cli module with mock env
             reload(cli)
+            # reload(hpecp.cli.base)
 
-            self.assertEqual(dummy_filepath, cli.HPECP_CONFIG_FILE)
+            self.assertEqual(dummy_filepath, get_config_file())
 
 
 class TestCLIHttpClient(BaseTestCase):
