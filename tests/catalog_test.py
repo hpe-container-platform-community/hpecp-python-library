@@ -29,7 +29,7 @@ from mock import patch
 from hpecp.base_resource import ResourceList
 from hpecp.exceptions import APIItemNotFoundException
 
-from .base_test import BaseTestCase, MockResponse, get_client
+from .base import BaseTestCase, MockResponse, get_client
 from .catalog_mock_api_responses import mockApiSetup
 
 # setup the mock data

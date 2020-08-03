@@ -7,7 +7,7 @@ from hpecp.cli import base
 from hpecp.exceptions import APIItemConflictException, APIItemNotFoundException
 from hpecp.k8s_worker import K8sWorkerController, WorkerK8s, WorkerK8sStatus
 
-from .base_test import BaseTestCase, MockResponse, get_client
+from .base import BaseTestCase, MockResponse, get_client
 from .k8s_worker_mock_api_responses import mockApiSetup
 
 # setup the mock data

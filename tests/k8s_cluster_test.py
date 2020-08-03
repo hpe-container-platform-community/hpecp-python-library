@@ -30,7 +30,7 @@ from hpecp.k8s_cluster import (
     K8sClusterStatus,
 )
 
-from .base_test import BaseTestCase, MockResponse, get_client
+from .base import BaseTestCase, MockResponse, get_client
 from .k8s_cluster_mock_api_responses import mockApiSetup
 
 # setup the mock data

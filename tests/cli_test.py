@@ -31,7 +31,7 @@ from mock import mock, mock_open, patch
 from hpecp.cli import base
 from hpecp.gateway import Gateway
 
-from .base_test import BaseTestCase, MockResponse
+from .base import BaseTestCase, MockResponse
 from .cli_mock_api_responses import mockApiSetup
 
 # setup the mock data

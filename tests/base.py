@@ -37,16 +37,6 @@ else:
     from io import StringIO
 
 
-# def session_mock_response():
-#     return MockResponse(
-#         json_data={},
-#         status_code=200,
-#         headers={
-#             "location": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
-#         },
-#     )
-
-
 class MockResponse:
     def __init__(
         self,

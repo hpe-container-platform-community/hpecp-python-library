@@ -19,7 +19,7 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 
 
-from .base_test import BaseTestCase, MockResponse
+from .base import BaseTestCase, MockResponse
 
 
 def mockApiGetSetup():
