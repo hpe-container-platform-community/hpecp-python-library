@@ -18,24 +18,21 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
+import os
+import sys
+import tempfile
+from textwrap import dedent
 from unittest import TestCase
 
 import requests
+import six
 from mock import Mock, patch
 
-from hpecp import (
-    APIItemNotFoundException,
-    ContainerPlatformClient,
-)
+from hpecp import APIItemNotFoundException, ContainerPlatformClient
+from hpecp.exceptions import APIItemConflictException
 from hpecp.gateway import GatewayController, GatewayStatus
-from textwrap import dedent
-import tempfile
-import os
-import sys
-import six
 
 from .base_test import BaseTestCase
-from hpecp.exceptions import APIItemConflictException
 
 if six.PY2:
     from io import BytesIO as StringIO

@@ -21,13 +21,13 @@
 from unittest import TestCase
 
 import requests
+import six
 from mock import patch
 
 from hpecp import ContainerPlatformClient
 from hpecp.exceptions import APIItemNotFoundException
 
-from .base_test import MockResponse, BaseTestCase, mocked_login_post
-import six
+from .base_test import BaseTestCase, MockResponse, mocked_login_post
 
 
 def get_client():

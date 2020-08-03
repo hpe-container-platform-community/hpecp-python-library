@@ -19,6 +19,7 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 
 import unittest
+
 from mock import MagicMock
 
 from hpecp.base_resource import (

@@ -19,24 +19,17 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 
 
-import os
-import sys
+import json
 import unittest
 from textwrap import dedent
-import json
-import yaml
 
-import requests
+import yaml
 from mock import patch
 
-from hpecp import ContainerPlatformClient
-from hpecp.exceptions import APIItemNotFoundException
-import tempfile
 from hpecp.base_resource import ResourceList
+from hpecp.exceptions import APIItemNotFoundException
 
 from .base_test import BaseTestCase, MockResponse, get_client
-import six
-
 
 BaseTestCase.registerHttpPostHandler(
     url="https://127.0.0.1:8080/api/v1/catalog/99",
@@ -268,7 +261,7 @@ class TestCatalogGet(BaseTestCase):
     @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_get_catalog(self, mock_get, mock_post):
 
-        catalog = get_client().catalog.get("/api/v1/catalog/99")
+        get_client().catalog.get("/api/v1/catalog/99")
 
         with self.assertRaisesRegexp(
             APIItemNotFoundException,
@@ -402,8 +395,8 @@ class TestCatalogInstall(BaseTestCase):
         self.assertTrue(
             stderr.endswith(expected_stderr),
             (
-                "stderr = `{}`\n".format(stderr)
-                + "stderr does not end with `{}`".format(expected_stderr)
+                "stderr = `{}`\n"
+                "stderr does not end with `{}`".format(stderr, expected_stderr)
             ),
         )
 
@@ -422,7 +415,7 @@ class TestCatalogInstall(BaseTestCase):
         # successful refresh should not output anything
         expected_stdout = ""
 
-        self.assertEqual(stdout, "")
+        self.assertEqual(stdout, expected_stdout)
 
 
 class TestCatalogRefresh(BaseTestCase):
@@ -497,8 +490,8 @@ class TestCatalogRefresh(BaseTestCase):
         self.assertTrue(
             stderr.endswith(expected_stderr),
             (
-                "stderr = `{}`\n".format(stderr)
-                + "stderr does not end with `{}`".format(expected_stderr)
+                "stderr = `{}`\n"
+                "stderr does not end with `{}`".format(stderr, expected_stderr)
             ),
         )
 
@@ -517,7 +510,7 @@ class TestCatalogRefresh(BaseTestCase):
         # successful refresh should not output anything
         expected_stdout = ""
 
-        self.assertEqual(stdout, "")
+        self.assertEqual(stdout, expected_stdout)
 
 
 class TestCLIList(BaseTestCase):
@@ -534,11 +527,13 @@ class TestCLIList(BaseTestCase):
 
         self.assertEqual(
             output,
-            "+------------+--------------------------------------------------------------------------------+\n"
-            + "| label_name |                               label_description                                |\n"
-            + "+------------+--------------------------------------------------------------------------------+\n"
-            + "|  Spark240  | Spark240 multirole with Jupyter Notebook, Jupyterhub with SSL and gateway node |\n"
-            + "+------------+--------------------------------------------------------------------------------+",
+            (
+                "+------------+--------------------------------------------------------------------------------+\n"
+                "| label_name |                               label_description                                |\n"
+                "+------------+--------------------------------------------------------------------------------+\n"
+                "|  Spark240  | Spark240 multirole with Jupyter Notebook, Jupyterhub with SSL and gateway node |\n"
+                "+------------+--------------------------------------------------------------------------------+"
+            ),
         )
 
     @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)

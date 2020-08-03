@@ -18,19 +18,18 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
+import base64
+import json
 import os
 import sys
 import tempfile
 from io import StringIO
 from textwrap import dedent
 from unittest import TestCase
-import json
 
 import requests
 import six
 from mock import patch
-
-from .base_test import BaseTestCase, session_mock_response
 
 from hpecp import (
     APIException,
@@ -42,7 +41,8 @@ from hpecp.k8s_cluster import (
     K8sClusterHostConfig,
     K8sClusterStatus,
 )
-import base64
+
+from .base_test import BaseTestCase, session_mock_response
 
 if six.PY2:
     from io import BytesIO as StringIO  # noqa: F811

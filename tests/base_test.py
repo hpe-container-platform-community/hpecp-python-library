@@ -19,14 +19,15 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 
 import abc
+import json
 import os
 import sys
 import tempfile
+import unittest
 from io import StringIO
 from textwrap import dedent
 from unittest import TestCase
-import json
-import unittest
+
 import requests
 import six
 from mock import patch

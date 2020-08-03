@@ -19,9 +19,10 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 
 from unittest import TestCase
-from mock import patch
 
 import requests
+from mock import patch
+
 from hpecp import ContainerPlatformClient
 
 
