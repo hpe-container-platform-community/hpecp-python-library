@@ -150,12 +150,6 @@ class TestCLI(BaseTestCase):
 
 class TestCLIConfig(TestCase):
     def setUp(self):
-        # try:
-        #     reload
-        # except NameError:
-        #     # Python 3
-        #     from imp import reload
-
         sys.path.insert(0, os.path.abspath("../../"))
 
     def test_configure_cli_reads_hpecp_conf_user_provided_profile(self):
@@ -290,7 +284,6 @@ class TestCLIUsingCfgFileEnvVar(TestCase):
 
             # reload cli module with mock env
             reload(cli)
-            # reload(hpecp.cli.base)
 
             self.assertEqual(dummy_filepath, get_config_file())
 
