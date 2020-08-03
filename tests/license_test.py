@@ -25,94 +25,10 @@ import six
 from mock import patch
 
 from .base_test import BaseTestCase, MockResponse
+from .license_mock_api_responses import mockApiSetup
 
-BaseTestCase.registerHttpPostHandler(
-    url="https://127.0.0.1:8080/api/v2/hpelicense",
-    response=MockResponse(
-        json_data={},
-        status_code=201,
-        headers={"location": "/api/v2/hpeclicense/1"},
-    ),
-)
-
-BaseTestCase.registerHttpDeleteHandler(
-    url="https://127.0.0.1:8080/api/v2/hpelicense/TEST_LICENSE_KEY/",
-    response=MockResponse(json_data={}, status_code=200, headers=dict(),),
-)
-
-BaseTestCase.registerHttpGetHandler(
-    url="https://127.0.0.1:8080/api/v1/license",
-    response=MockResponse(
-        json_data={
-            "_links": {"self": {"href": "/api/v1/license"}},
-            "state": "unlicensed",
-            "uuid": "3c831f6e-f76f-410d-977c-ed13b0c817d1",
-        },
-        status_code=200,
-        headers=dict(),
-    ),
-)
-
-BaseTestCase.registerHttpGetHandler(
-    url="https://127.0.0.1:8080/api/v2/hpelicense",
-    response=MockResponse(
-        json_data={
-            "_links": {"self": {"href": "/api/v2/hpelicense"}},
-            "Licenses": [
-                {
-                    "Label": "The License",
-                    "Feature": "HPE Machine Learning Ops",
-                    "Capacity": 240,
-                    "UnlimitedCapacity": False,
-                    "Start": 1566864000000,
-                    "StartDisplay": "2019-08-27T00:00:00Z",
-                    "Expiration": 1609286399000,
-                    "ExpirationDisplay": "2020-12-29T23:59:59Z",
-                    "LicenseKey": "TEST_LICENSE_KEY",
-                    "DeviceID": "1234 1234",
-                    "Evaluation": False,
-                }
-            ],
-            "Summaries": [
-                {
-                    "Label": "HPE Container Platform",
-                    "UnlimitedCapacity": False,
-                    "TotalCapacity": 240,
-                    "UsedCapacity": 24,
-                    "AvailableCapacity": 216,
-                    "NextExpiration": 1609286399000,
-                    "NextExpirationDisplay": "2020-12-29T23:59:59Z",
-                    "LatestExpiration": 1609286399000,
-                    "LatestExpirationDisplay": "2020-12-29T23:59:59Z",
-                    "Valid": True,
-                    "ValidationTime": 1594758782000,
-                    "RevalidateTime": 1609286400000,
-                },
-                {
-                    "Label": "HPE Machine Learning Ops",
-                    "UnlimitedCapacity": False,
-                    "TotalCapacity": 240,
-                    "UsedCapacity": 0,
-                    "AvailableCapacity": 240,
-                    "NextExpiration": 1609286399000,
-                    "NextExpirationDisplay": "2020-12-29T23:59:59Z",
-                    "LatestExpiration": 1609286399000,
-                    "LatestExpirationDisplay": "2020-12-29T23:59:59Z",
-                    "Valid": True,
-                    "ValidationTime": 1594758782000,
-                    "RevalidateTime": 1609286400000,
-                },
-            ],
-            "Messages": [],
-            "Valid": True,
-            "Enabled": True,
-            "ValidationTime": 1594758782000,
-            "RevalidateTime": 1609286400000,
-        },
-        status_code=200,
-        headers=dict(),
-    ),
-)
+# setup the mock data
+mockApiSetup()
 
 
 class TestCLI(BaseTestCase):

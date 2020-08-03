@@ -26,196 +26,16 @@ from mock import patch
 from hpecp import ContainerPlatformClient
 from hpecp.exceptions import APIItemNotFoundException
 
-from .base_test import MockResponse, get_client
+from .base_test import BaseTestCase, MockResponse, get_client
+from .tenant_mock_api_responses import mockApiSetup
+
+# setup the mock data
+mockApiSetup()
 
 
-class TestTentants(TestCase):
-    def mocked_requests_get(*args, **kwargs):
-        print(args[0])
-        if args[0] == "https://127.0.0.1:8080/api/v1/tenant/":
-            return MockResponse(
-                # This json data was captured from calling the /tenants api on
-                # a clean HPECP 5.0 installation.
-                json_data={
-                    "_embedded": {
-                        "tenants": [
-                            {
-                                "status": "ready",
-                                "tenant_type": "docker",
-                                "features": {
-                                    "ml_project": False,
-                                    "kubernetes_access": False,
-                                },
-                                "persistent_supported": True,
-                                "member_key_available": "all_admins",
-                                "quota": {},
-                                "cluster_isolation_supported": True,
-                                "inusequota": {
-                                    "disk": 0,
-                                    "cores": 0,
-                                    "memory": 0,
-                                    "persistent": 0,
-                                    "gpus": 0,
-                                },
-                                "external_user_groups": [],
-                                "gpu_usage_supported": True,
-                                "_links": {
-                                    "self": {"href": "/api/v1/tenant/1"}
-                                },
-                                "filesystem_mount_supported": True,
-                                "tenant_enforcements": [],
-                                "label": {
-                                    "name": "Site Admin",
-                                    "description": (
-                                        "Site Admin Tenant"
-                                        " for BlueData clusters"
-                                    ),
-                                },
-                                "constraints_supported": False,
-                                "tenant_storage_quota_supported": False,
-                            },
-                            {
-                                "status": "ready",
-                                "tenant_type": "docker",
-                                "features": {
-                                    "ml_project": False,
-                                    "kubernetes_access": False,
-                                },
-                                "persistent_supported": True,
-                                "member_key_available": "all_admins",
-                                "quota": {},
-                                "cluster_isolation_supported": True,
-                                "inusequota": {
-                                    "disk": 0,
-                                    "cores": 0,
-                                    "memory": 0,
-                                    "persistent": 0,
-                                    "gpus": 0,
-                                },
-                                "external_user_groups": [],
-                                "gpu_usage_supported": True,
-                                "_links": {
-                                    "self": {"href": "/api/v1/tenant/2"}
-                                },
-                                "filesystem_mount_supported": True,
-                                "tenant_enforcements": [],
-                                "label": {
-                                    "name": "Demo Tenant",
-                                    "description": (
-                                        "Demo Tenant for BlueData Clusters"
-                                    ),
-                                },
-                                "constraints_supported": True,
-                                "tenant_storage_quota_supported": True,
-                                "qos_multiplier": 1,
-                            },
-                        ]
-                    },
-                    "_links": {"self": {"href": "/api/v1/tenant"}},
-                },
-                status_code=200,
-                headers={},
-            )
-        if args[0] == "https://127.0.0.1:8080/api/v1/tenant/1":
-            # TODO: Get live data for individual tenants
-            return MockResponse(
-                json_data={
-                    "status": "ready",
-                    "features": {
-                        "ml_project": False,
-                        "kubernetes_access": False,
-                    },
-                    "persistent_supported": True,
-                    "member_key_available": "all_admins",
-                    "quota": {},
-                    "cluster_isolation_supported": True,
-                    "inusequota": {
-                        "disk": 0,
-                        "cores": 0,
-                        "memory": 0,
-                        "persistent": 0,
-                        "gpus": 0,
-                    },
-                    "external_user_groups": [],
-                    "gpu_usage_supported": True,
-                    "_links": {"self": {"href": "/api/v1/tenant/1"}},
-                    "filesystem_mount_supported": True,
-                    "tenant_enforcements": [],
-                    "label": {
-                        "name": "Site Admin",
-                        "description": (
-                            "Site Admin Tenant for BlueData clusters"
-                        ),
-                    },
-                    "constraints_supported": False,
-                    "tenant_storage_quota_supported": False,
-                },
-                status_code=200,
-                headers={},
-            )
-        if args[0] == "https://127.0.0.1:8080/api/v1/tenant/2":
-            # TODO: Get live data for individual tenants
-            return MockResponse(
-                json_data={
-                    "status": "ready",
-                    "tenant_type": "docker",
-                    "features": {
-                        "ml_project": False,
-                        "kubernetes_access": False,
-                    },
-                    "persistent_supported": True,
-                    "member_key_available": "all_admins",
-                    "quota": {},
-                    "cluster_isolation_supported": True,
-                    "inusequota": {
-                        "disk": 0,
-                        "cores": 0,
-                        "memory": 0,
-                        "persistent": 0,
-                        "gpus": 0,
-                    },
-                    "external_user_groups": [],
-                    "gpu_usage_supported": True,
-                    "_links": {"self": {"href": "/api/v1/tenant/2"}},
-                    "filesystem_mount_supported": True,
-                    "tenant_enforcements": [],
-                    "label": {
-                        "name": "Demo Tenant",
-                        "description": "Demo Tenant for BlueData Clusters",
-                    },
-                    "constraints_supported": True,
-                    "tenant_storage_quota_supported": True,
-                    "qos_multiplier": 1,
-                },
-                status_code=200,
-                headers={},
-            )
-        if args[0] == "https://127.0.0.1:8080/api/v1/tenant/100":
-            # TODO: Get live data for individual tenants
-            return MockResponse(
-                json_data={},
-                status_code=404,
-                headers={},
-                raise_for_status_flag=True,
-            )
-        raise RuntimeError("Unhandled GET request: " + args[0])
-
-    def mocked_requests_post(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v1/login":
-            return MockResponse(
-                json_data={},
-                status_code=200,
-                headers={
-                    "location": (
-                        "/api/v1/session/"
-                        "df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
-                    )
-                },
-            )
-        raise RuntimeError("Unhandled POST request: " + args[0])
-
-    @patch("requests.get", side_effect=mocked_requests_get)
-    @patch("requests.post", side_effect=mocked_requests_post)
+class TestTentants(BaseTestCase):
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_tenant_list(self, mock_get, mock_post):
 
         client = get_client()
@@ -241,8 +61,8 @@ class TestTentants(TestCase):
             ["/api/v1/tenant/1", "/api/v1/tenant/2"],
         )
 
-    @patch("requests.get", side_effect=mocked_requests_get)
-    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_get_tenant_id_format(self, mock_get, mock_post):
         client = get_client()
 
@@ -251,8 +71,8 @@ class TestTentants(TestCase):
         ):
             client.tenant.get("garbage")
 
-    @patch("requests.get", side_effect=mocked_requests_get)
-    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_get_tenant(self, mock_get, mock_post):
         tenant = get_client().tenant.get("/api/v1/tenant/1")
         self.assertEqual(tenant.id, "/api/v1/tenant/1")

@@ -33,37 +33,15 @@ from .base_test import (
     get_client,
     session_mock_response,
 )
+from .role_mock_api_responses import mockApiSetup
 
-
-# pylint: disable=no-method-argument
-def mocked_requests_get(*args, **kwargs):
-    if args[0] == "https://127.0.0.1:8080/api/v1/role/1":
-        return MockResponse(
-            json_data={
-                "_links": {
-                    "self": {"href": "/api/v1/role/1"},
-                    "all_roles": {"href": "/api/v1/role"},
-                },
-                "label": {
-                    "name": "Site Admin",
-                    "description": "Role for Site Admin",
-                },
-            },
-            status_code=200,
-            headers={},
-        )
-    raise RuntimeError("Unhandle GET request: " + args[0])
-
-
-def mocked_requests_post(*args, **kwargs):
-    if args[0] == "https://127.0.0.1:8080/api/v1/login":
-        return session_mock_response()
-    raise RuntimeError("Unhandle POST request: " + args[0])
+# setup the mock data
+mockApiSetup()
 
 
 class TestRoleGet(TestCase):
-    @patch("requests.get", side_effect=mocked_requests_get)
-    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_get_role_assertions(self, mock_get, mock_post):
 
         with self.assertRaisesRegexp(
@@ -77,8 +55,8 @@ class TestRoleGet(TestCase):
         ):
             get_client().role.get("garbage")
 
-    @patch("requests.get", side_effect=mocked_requests_get)
-    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_get_role(self, mock_get, mock_post):
 
         role = get_client().role.get("/api/v1/role/1")
@@ -89,8 +67,8 @@ class TestRoleGet(TestCase):
 
 
 class TestCLI(BaseTestCase):
-    @patch("requests.get", side_effect=mocked_requests_get)
-    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_get(self, mock_post, mock_delete):
 
         try:
@@ -121,8 +99,8 @@ label:
         if six.PY2:
             self.assertEqual(stderr, expected_stderr)
 
-    @patch("requests.get", side_effect=mocked_requests_get)
-    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_get_json(self, mock_post, mock_delete):
 
         try:
