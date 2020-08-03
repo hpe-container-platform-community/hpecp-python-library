@@ -37,14 +37,14 @@ else:
     from io import StringIO
 
 
-def session_mock_response():
-    return MockResponse(
-        json_data={},
-        status_code=200,
-        headers={
-            "location": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
-        },
-    )
+# def session_mock_response():
+#     return MockResponse(
+#         json_data={},
+#         status_code=200,
+#         headers={
+#             "location": "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+#         },
+#     )
 
 
 class MockResponse:
@@ -90,26 +90,12 @@ def get_client():
     return client
 
 
-# # pylint: disable=no-method-argument
-# def mocked_login_post(*args, **kwargs):
-#     if args[0] == "https://127.0.0.1:8080/api/v1/login":
-#         return MockResponse(
-#             json_data={},
-#             status_code=200,
-#             headers={
-#                 "location": (
-#                     "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
-#                 )
-#             },
-#         )
-#     raise RuntimeError("Unhandle POST request: " + args[0])
-
-
 @six.add_metaclass(abc.ABCMeta)
 class BaseTestCase(unittest.TestCase):
 
     _http_get_handlers = {}
     _http_post_handlers = {}
+    _http_put_handlers = {}
     _http_delete_handlers = {}
 
     @classmethod
@@ -119,6 +105,22 @@ class BaseTestCase(unittest.TestCase):
         except KeyError:
             raise Exception(
                 "Handler not found for POST '{}'.\nDid you register a handler with BaseTestCase.registerHttpPostHandler?".format(
+                    args[0]
+                )
+            )
+
+        if isinstance(handler, Exception):
+            raise handler
+        else:
+            return handler
+
+    @classmethod
+    def httpPutHandlers(cls, *args, **kwargs):
+        try:
+            handler = BaseTestCase._http_put_handlers[args[0]]
+        except KeyError:
+            raise Exception(
+                "Handler not found for PUT '{}'.\nDid you register a handler with BaseTestCase.registerHttpPutHandler?".format(
                     args[0]
                 )
             )
@@ -165,6 +167,10 @@ class BaseTestCase(unittest.TestCase):
         BaseTestCase._http_post_handlers[url] = response
 
     @classmethod
+    def registerHttpPutHandler(cls, url, response):
+        BaseTestCase._http_put_handlers[url] = response
+
+    @classmethod
     def registerHttpGetHandler(cls, url, response):
         BaseTestCase._http_get_handlers[url] = response
 
@@ -177,6 +183,7 @@ class BaseTestCase(unittest.TestCase):
 
         _http_get_handlers = {}
         _http_post_handlers = {}
+        _http_put_handlers = {}
         _http_delete_handlers = {}
 
         # Register the login handler

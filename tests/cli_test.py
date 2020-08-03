@@ -32,7 +32,11 @@ from hpecp.cli import base
 from hpecp.gateway import Gateway
 
 from .base_test import BaseTestCase, MockResponse
-from .base_test import session_mock_response as base_login_post_response
+from .cli_mock_api_responses import mockApiSetup
+
+# setup the mock data
+mockApiSetup()
+
 
 if six.PY2:
     # from io import BytesIO as StringIO  # noqa: F811
@@ -204,7 +208,7 @@ class TestCLIConfig(TestCase):
 
 
 class TestBaseProxy(BaseTestCase):
-    @patch("requests.post", side_effect=base_login_post_response)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_list_with_invalid_column(self, mock_post):
 
         with self.assertRaises(SystemExit) as cm:
@@ -223,7 +227,7 @@ class TestBaseProxy(BaseTestCase):
 
         self.assertEqual(cm.exception.code, 1)
 
-    @patch("requests.post", side_effect=base_login_post_response)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_list_with_invalid_columns_list(self, mock_post):
 
         with self.assertRaises(SystemExit) as cm:
@@ -242,7 +246,7 @@ class TestBaseProxy(BaseTestCase):
 
         self.assertEqual(cm.exception.code, 1)
 
-    @patch("requests.post", side_effect=base_login_post_response)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_list_with_invalid_output_param(self, mock_post):
 
         with self.assertRaises(SystemExit) as cm:
@@ -289,21 +293,6 @@ class TestCLIUsingCfgFileEnvVar(TestCase):
 
 
 class TestCLIHttpClient(BaseTestCase):
-    def mocked_requests_post(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v1/login":
-            return base_login_post_response()
-        raise RuntimeError("Unhandle POST request: " + args[0])
-
-    def mocked_requests_get(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/some/url":
-            return MockResponse(
-                json_data={"foo": "bar"},
-                text_data='{"foo":"bar"}',
-                status_code=200,
-                headers=dict(),
-            )
-        raise RuntimeError("Unhandle GET request: " + args[0])
-
     def mocked_requests_failed_login(*args, **kwargs):
         if args[0] == "https://127.0.0.1:8080/api/v1/login":
             return MockResponse(
@@ -315,7 +304,7 @@ class TestCLIHttpClient(BaseTestCase):
             )
         raise RuntimeError("Unhandle POST request: " + args[0])
 
-    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     @patch("requests.post", side_effect=mocked_requests_failed_login)
     def test_get_failed_login(self, mock_get, mock_post):
 
@@ -338,8 +327,8 @@ class TestCLIHttpClient(BaseTestCase):
             "Expected: `{}` Actual: `{}`".format(expected_err, actual_err),
         )
 
-    @patch("requests.get", side_effect=mocked_requests_get)
-    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_get(self, mock_get, mock_post):
 
         hpecp = self.cli.CLI()
@@ -358,7 +347,7 @@ class TestCLIHttpClient(BaseTestCase):
         raise RuntimeError("Unhandle DELETE request: " + args[0])
 
     @patch("requests.delete", side_effect=mocked_requests_delete)
-    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_delete(self, mock_delete, mock_post):
 
         hpecp = self.cli.CLI()
@@ -367,20 +356,9 @@ class TestCLIHttpClient(BaseTestCase):
         self.assertEqual(self.out.getvalue(), "")
 
     def test_post(self):
-        def mocked_requests_post(*args, **kwargs):
-            if args[0] == "https://127.0.0.1:8080/api/v1/login":
-                return base_login_post_response()
-            if args[0] == "https://127.0.0.1:8080/some/url":
-                return MockResponse(
-                    text_data={"mock_data": True},
-                    json_data={},
-                    status_code=200,
-                    headers={},
-                )
-            raise RuntimeError("Unhandle POST request: " + args[0])
 
         with patch("requests.post") as mock_requests:
-            mock_requests.side_effect = mocked_requests_post
+            mock_requests.side_effect = BaseTestCase.httpPostHandlers
 
             with tempfile.NamedTemporaryFile() as json_file:
                 json_file.write(json.dumps({"abc": "def"}).encode("utf-8"))
@@ -415,20 +393,11 @@ class TestCLIHttpClient(BaseTestCase):
         if six.PY2:
             self.assertEqual(stderr, expected_stderr)
 
-    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_put(self, mock_post):
-        def mocked_requests_put(*args, **kwargs):
-            if args[0] == "https://127.0.0.1:8080/some/url":
-                return MockResponse(
-                    text_data={"mock_data": True},
-                    json_data={},
-                    status_code=200,
-                    headers={},
-                )
-            raise RuntimeError("Unhandle PUT request: " + args[0])
 
         with patch("requests.put") as mock_requests:
-            mock_requests.side_effect = mocked_requests_put
+            mock_requests.side_effect = BaseTestCase.httpPutHandlers
 
             with tempfile.NamedTemporaryFile() as json_file:
                 json_file.write(json.dumps({"abc": "def"}).encode("utf-8"))
