@@ -92,7 +92,7 @@ class TestCreateFromEnvVar(TestCase):
     def test_create_from_env_var_factory_method_with_missing_env_values(self):
 
         try:
-            client = ContainerPlatformClient.create_from_env()
+            ContainerPlatformClient.create_from_env()
         except ContainerPlatformClientException as expected:
             self.assertEqual(
                 expected.message,
@@ -114,7 +114,7 @@ class TestCreateFromEnvVar(TestCase):
     def test_create_from_env_var_factory_method_with_type_error(self):
 
         try:
-            client = ContainerPlatformClient.create_from_env()
+            ContainerPlatformClient.create_from_env()
         except ContainerPlatformClientException as expected:
             self.assertEqual(
                 expected.message,

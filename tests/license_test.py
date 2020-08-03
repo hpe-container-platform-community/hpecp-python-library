@@ -20,117 +20,104 @@
 
 
 import json
-import os
-import sys
-import tempfile
-import unittest
-from textwrap import dedent
 
-import requests
 import six
-import yaml
 from mock import patch
 
-from hpecp import ContainerPlatformClient
-from hpecp.base_resource import ResourceList
-from hpecp.exceptions import APIItemNotFoundException
+from .base_test import BaseTestCase, MockResponse
 
-from .base_test import BaseTestCase, MockResponse, mocked_login_post
+BaseTestCase.registerHttpPostHandler(
+    url="https://127.0.0.1:8080/api/v2/hpelicense",
+    response=MockResponse(
+        json_data={},
+        status_code=201,
+        headers={"location": "/api/v2/hpeclicense/1"},
+    ),
+)
 
+BaseTestCase.registerHttpDeleteHandler(
+    url="https://127.0.0.1:8080/api/v2/hpelicense/TEST_LICENSE_KEY/",
+    response=MockResponse(json_data={}, status_code=200, headers=dict(),),
+)
 
-class TestCLI(BaseTestCase):
-    def mocked_login_post(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v1/login":
-            return MockResponse(
-                json_data={},
-                status_code=200,
-                headers={
-                    "location": (
-                        "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
-                    )
-                },
-            )
-        if args[0] == "https://127.0.0.1:8080/api/v2/hpelicense":
-            return MockResponse(
-                json_data={},
-                status_code=201,
-                headers={"location": "/api/v2/hpeclicense/1"},
-            )
-        raise RuntimeError("Unhandle POST request: " + args[0])
+BaseTestCase.registerHttpGetHandler(
+    url="https://127.0.0.1:8080/api/v1/license",
+    response=MockResponse(
+        json_data={
+            "_links": {"self": {"href": "/api/v1/license"}},
+            "state": "unlicensed",
+            "uuid": "3c831f6e-f76f-410d-977c-ed13b0c817d1",
+        },
+        status_code=200,
+        headers=dict(),
+    ),
+)
 
-    def mocked_requests_get(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v1/license":
-            return MockResponse(
-                json_data={
-                    "_links": {"self": {"href": "/api/v1/license"}},
-                    "state": "unlicensed",
-                    "uuid": "3c831f6e-f76f-410d-977c-ed13b0c817d1",
-                },
-                status_code=200,
-                headers=dict(),
-            )
-        if args[0] == "https://127.0.0.1:8080/api/v2/hpelicense":
-            return MockResponse(
-                json_data={
-                    "_links": {"self": {"href": "/api/v2/hpelicense"}},
-                    "Licenses": [
-                        {
-                            "Label": "The License",
-                            "Feature": "HPE Machine Learning Ops",
-                            "Capacity": 240,
-                            "UnlimitedCapacity": False,
-                            "Start": 1566864000000,
-                            "StartDisplay": "2019-08-27T00:00:00Z",
-                            "Expiration": 1609286399000,
-                            "ExpirationDisplay": "2020-12-29T23:59:59Z",
-                            "LicenseKey": "TEST_LICENSE_KEY",
-                            "DeviceID": "1234 1234",
-                            "Evaluation": False,
-                        }
-                    ],
-                    "Summaries": [
-                        {
-                            "Label": "HPE Container Platform",
-                            "UnlimitedCapacity": False,
-                            "TotalCapacity": 240,
-                            "UsedCapacity": 24,
-                            "AvailableCapacity": 216,
-                            "NextExpiration": 1609286399000,
-                            "NextExpirationDisplay": "2020-12-29T23:59:59Z",
-                            "LatestExpiration": 1609286399000,
-                            "LatestExpirationDisplay": "2020-12-29T23:59:59Z",
-                            "Valid": True,
-                            "ValidationTime": 1594758782000,
-                            "RevalidateTime": 1609286400000,
-                        },
-                        {
-                            "Label": "HPE Machine Learning Ops",
-                            "UnlimitedCapacity": False,
-                            "TotalCapacity": 240,
-                            "UsedCapacity": 0,
-                            "AvailableCapacity": 240,
-                            "NextExpiration": 1609286399000,
-                            "NextExpirationDisplay": "2020-12-29T23:59:59Z",
-                            "LatestExpiration": 1609286399000,
-                            "LatestExpirationDisplay": "2020-12-29T23:59:59Z",
-                            "Valid": True,
-                            "ValidationTime": 1594758782000,
-                            "RevalidateTime": 1609286400000,
-                        },
-                    ],
-                    "Messages": [],
+BaseTestCase.registerHttpGetHandler(
+    url="https://127.0.0.1:8080/api/v2/hpelicense",
+    response=MockResponse(
+        json_data={
+            "_links": {"self": {"href": "/api/v2/hpelicense"}},
+            "Licenses": [
+                {
+                    "Label": "The License",
+                    "Feature": "HPE Machine Learning Ops",
+                    "Capacity": 240,
+                    "UnlimitedCapacity": False,
+                    "Start": 1566864000000,
+                    "StartDisplay": "2019-08-27T00:00:00Z",
+                    "Expiration": 1609286399000,
+                    "ExpirationDisplay": "2020-12-29T23:59:59Z",
+                    "LicenseKey": "TEST_LICENSE_KEY",
+                    "DeviceID": "1234 1234",
+                    "Evaluation": False,
+                }
+            ],
+            "Summaries": [
+                {
+                    "Label": "HPE Container Platform",
+                    "UnlimitedCapacity": False,
+                    "TotalCapacity": 240,
+                    "UsedCapacity": 24,
+                    "AvailableCapacity": 216,
+                    "NextExpiration": 1609286399000,
+                    "NextExpirationDisplay": "2020-12-29T23:59:59Z",
+                    "LatestExpiration": 1609286399000,
+                    "LatestExpirationDisplay": "2020-12-29T23:59:59Z",
                     "Valid": True,
-                    "Enabled": True,
                     "ValidationTime": 1594758782000,
                     "RevalidateTime": 1609286400000,
                 },
-                status_code=200,
-                headers=dict(),
-            )
-        raise RuntimeError("Unhandle GET request: " + args[0])
+                {
+                    "Label": "HPE Machine Learning Ops",
+                    "UnlimitedCapacity": False,
+                    "TotalCapacity": 240,
+                    "UsedCapacity": 0,
+                    "AvailableCapacity": 240,
+                    "NextExpiration": 1609286399000,
+                    "NextExpirationDisplay": "2020-12-29T23:59:59Z",
+                    "LatestExpiration": 1609286399000,
+                    "LatestExpirationDisplay": "2020-12-29T23:59:59Z",
+                    "Valid": True,
+                    "ValidationTime": 1594758782000,
+                    "RevalidateTime": 1609286400000,
+                },
+            ],
+            "Messages": [],
+            "Valid": True,
+            "Enabled": True,
+            "ValidationTime": 1594758782000,
+            "RevalidateTime": 1609286400000,
+        },
+        status_code=200,
+        headers=dict(),
+    ),
+)
 
-    @patch("requests.post", side_effect=mocked_login_post)
-    @patch("requests.get", side_effect=mocked_requests_get)
+
+class TestCLI(BaseTestCase):
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     def test_list(self, mock_post, mock_get):
 
         try:
@@ -198,8 +185,8 @@ _links:
         if six.PY2:
             self.assertEqual(stderr, expected_stderr)
 
-    @patch("requests.post", side_effect=mocked_login_post)
-    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     def test_list_license_key_only(self, mock_post, mock_get):
 
         try:
@@ -221,8 +208,8 @@ _links:
         if six.PY2:
             self.assertEqual(stderr, expected_stderr)
 
-    @patch("requests.post", side_effect=mocked_login_post)
-    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     def test_list_output_json(self, mock_post, mock_get):
 
         self.maxDiff = None
@@ -302,8 +289,8 @@ _links:
         if six.PY2:
             self.assertEqual(stderr, expected_stderr)
 
-    @patch("requests.post", side_effect=mocked_login_post)
-    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     def test_platform_id(self, mock_post, mock_get):
 
         try:
@@ -325,8 +312,8 @@ _links:
         if six.PY2:
             self.assertEqual(stderr, expected_stderr)
 
-    @patch("requests.post", side_effect=mocked_login_post)
-    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     def test_register(self, mock_post, mock_get):
 
         try:
@@ -348,16 +335,8 @@ _links:
         if six.PY2:
             self.assertEqual(stderr, expected_stderr)
 
-    def mocked_requests_delete(*args, **kwargs):
-        if (
-            args[0]
-            == "https://127.0.0.1:8080/api/v2/hpelicense/TEST_LICENSE_KEY/"
-        ):
-            return MockResponse(json_data={}, status_code=200, headers=dict(),)
-        raise RuntimeError("Unhandle DELETE request: " + args[0])
-
-    @patch("requests.post", side_effect=mocked_login_post)
-    @patch("requests.delete", side_effect=mocked_requests_delete)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
+    @patch("requests.delete", side_effect=BaseTestCase.httpDeleteHandlers)
     def test_delete(self, mock_post, mock_delete):
 
         with patch.dict("os.environ", {"LOG_LEVEL": "DEBUG"}):
@@ -376,9 +355,9 @@ _links:
         if six.PY2:
             self.assertEqual(stderr, expected_stderr)
 
-    @patch("requests.post", side_effect=mocked_login_post)
-    @patch("requests.delete", side_effect=mocked_requests_delete)
-    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
+    @patch("requests.delete", side_effect=BaseTestCase.httpDeleteHandlers)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     def test_delete_all(self, mock_post, mock_delete, mock_get):
 
         with patch.dict("os.environ", {"LOG_LEVEL": "DEBUG"}):

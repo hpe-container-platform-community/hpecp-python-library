@@ -1,11 +1,7 @@
-import json
-import os
-import sys
 import tempfile
-from unittest import TestCase
 
 import requests
-from mock import MagicMock, patch
+from mock import patch
 
 from hpecp import ContainerPlatformClient
 from hpecp.cli import base
@@ -14,10 +10,10 @@ from hpecp.k8s_worker import K8sWorkerController, WorkerK8s, WorkerK8sStatus
 
 from .base_test import BaseTestCase, session_mock_response
 
-try:
-    from imp import reload
-except Exception:
-    from importlib import reload
+# try:
+#     from imp import reload
+# except Exception:
+#     from importlib import reload
 
 
 class MockResponse:
@@ -680,7 +676,7 @@ class TestCliSetStorage(BaseTestCase):
 
         with patch.object(
             K8sWorkerController, "set_storage", return_value=None,
-        ) as mock_k8s_worker:
+        ):
 
             with self.assertRaises(SystemExit) as cm:
                 try:
@@ -714,7 +710,7 @@ class TestCliSetStorage(BaseTestCase):
             K8sWorkerController,
             "set_storage",
             side_effect=Exception("TEST_EXCEPTION"),
-        ) as mock_k8s_worker:
+        ):
 
             with self.assertRaises(SystemExit) as cm:
                 try:

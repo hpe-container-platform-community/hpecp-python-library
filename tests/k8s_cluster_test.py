@@ -18,17 +18,10 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-import base64
 import json
-import os
-import sys
-import tempfile
-from io import StringIO
-from textwrap import dedent
 from unittest import TestCase
 
 import requests
-import six
 from mock import patch
 
 from hpecp import (
@@ -44,10 +37,10 @@ from hpecp.k8s_cluster import (
 
 from .base_test import BaseTestCase, session_mock_response
 
-if six.PY2:
-    from io import BytesIO as StringIO  # noqa: F811
-else:
-    from io import StringIO
+# if six.PY2:
+#     from io import BytesIO as StringIO  # noqa: F811
+# else:
+#     from io import StringIO
 
 
 class MockResponse:
