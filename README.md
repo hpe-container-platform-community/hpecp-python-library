@@ -93,6 +93,16 @@ Create k8s cluster:
 hpecp k8scluster create --name myclus1 --k8shosts-config /api/v2/worker/k8shost/1:master --k8s_version=1.17.0
 ```
 
+Get k8s available addons:
+```sh
+hpecp k8scluster get-available-addons --id $CLUSTER_ID
+```
+
+Add k8s cluster addons:
+```sh
+hpecp k8scluster add-addons --id $CLUSTER_ID --addons [istio,harbor]
+```
+
 List with columns parameter:
 ```sh
 hpecp k8scluster list --columns [id,description,status]
@@ -108,9 +118,36 @@ List --query examples:
 hpecp tenant examples
 ```
 
+Tenant create:
+```sh
+TENANT_ID=$(hpecp tenant create --name tenant1 --description "dev tenant" --k8s-cluster-id $CLUSTER_ID  --tenant-type k8s)
+hpecp tenant wait-for-status --id $TENANT_ID --status [ready] --timeout-secs 600
+```
+
+Add LDAP role to Tenant:
+```sh
+ADMIN_GROUP="CN=DemoTenantAdmins,CN=Users,DC=samdom,DC=example,DC=com"
+ADMIN_ROLE=$(hpecp role list  --query "[?label.name == 'Admin'][_links.self.href]" --output text)
+hpecp tenant add-external-user-group --tenant-id $TENANT_ID --group $ADMIN_GROUP --role-id $ADMIN_ROLE
+```
+
+Add internal user to Tenant:
+
+```sh
+ADMIN_USER_ID=$(hpecp user list --query "[?label.name == 'admin'][_links.self.href]" --output text)
+ADMIN_ROLE=$(hpecp role list  --query "[?label.name == 'Admin'][_links.self.href]" --output text)
+hpecp tenant assign-user-to-role --tenant-id $TENANT_ID --role-id $ADMIN_ROLE --user-id $ADMIN_USER_ID
+```
+
 Tenant kube config:
 ```sh
 PROFILE=tenant1 hpecp tenant k8skubeconfig > tenant1_kube.conf
+
+# get available Kubedirector apps
+kubectl --kubeconfig tenant1_kube.conf -n t1 get kubedirectorapps
+
+# list running applications
+kubectl --kubeconfig tenant1_kube.conf -n t1 describe kubedirectorclusters
 ```
 
 Http call:
