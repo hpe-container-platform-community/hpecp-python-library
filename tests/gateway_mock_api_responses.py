@@ -577,20 +577,6 @@ def mockApiGetWorkers99():
         ),
     )
 
-    # BaseTestCase.registerHttpGetHandler(
-    #     url="https://127.0.0.1:8080/api/v1/workers/100",
-    #     response=MockResponse(status_code=200, headers={},),
-    # )
-
-    # BaseTestCase.registerHttpGetHandler(
-    #     url="https://127.0.0.1:8080/api/v1/workers/101",
-    #     response=MockResponse(status_code=200, headers={},),
-    # )
-
-    # BaseTestCase.registerHttpGetHandler(
-    #     response=MockResponse(status_code=200, headers={},),
-    # )
-
 
 def mockApiGetWorkers100():
     BaseTestCase.registerHttpGetHandler(
@@ -610,7 +596,7 @@ def mockApiGetWorkers100():
                 ),
                 "hostname": "ip-10-1-0-37.us-west-2.compute.internal",
                 "state": "installed",
-                "_links": {"self": {"href": "/api/v1/workers/99"}},
+                "_links": {"self": {"href": "/api/v1/workers/100"}},
                 "purpose": "controller",
                 "status_info": "",
                 "sysinfo": {
@@ -895,7 +881,7 @@ def mockApiGetWorkers100():
 # worker that doesn't exist
 def mockApiGetWorkers999():
     BaseTestCase.registerHttpGetHandler(
-        url="https://127.0.0.1:8080/api/v1/workers/100",
+        url="https://127.0.0.1:8080/api/v1/workers/999",
         response=MockResponse(
             json_data={},
             status_code=404,

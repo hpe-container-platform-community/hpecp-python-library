@@ -239,7 +239,7 @@ class TestWaitForGatewayStatus(BaseTestCase):
 
         self.assertTrue(
             get_client().gateway.wait_for_state(
-                gateway_id="/api/v1/workers/123",
+                gateway_id="/api/v1/workers/98",
                 timeout_secs=1,
                 state=[GatewayStatus.installed],
             )
@@ -247,7 +247,7 @@ class TestWaitForGatewayStatus(BaseTestCase):
 
         self.assertFalse(
             get_client().gateway.wait_for_state(
-                gateway_id="/api/v1/workers/123",
+                gateway_id="/api/v1/workers/98",
                 timeout_secs=1,
                 state=[GatewayStatus.deleting],
             )
@@ -255,7 +255,7 @@ class TestWaitForGatewayStatus(BaseTestCase):
 
         self.assertTrue(
             get_client().gateway.wait_for_state(
-                gateway_id="/api/v1/workers/123",
+                gateway_id="/api/v1/workers/98",
                 timeout_secs=1,
                 state=[GatewayStatus.installed, GatewayStatus.deleting],
             )
@@ -263,7 +263,7 @@ class TestWaitForGatewayStatus(BaseTestCase):
 
         self.assertFalse(
             get_client().gateway.wait_for_state(
-                gateway_id="/api/v1/workers/123",
+                gateway_id="/api/v1/workers/98",
                 timeout_secs=1,
                 state=[GatewayStatus.error, GatewayStatus.deleting],
             )
@@ -289,15 +289,12 @@ class TestWaitForGatewayStatus(BaseTestCase):
     @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_wait_for_status_gateway_cli(self, mock_get, mock_post):
 
-        try:
-            hpecp = self.cli.CLI()
-            hpecp.gateway.wait_for_state(
-                id="/api/v1/workers/123",
-                timeout_secs=1,
-                states=[GatewayStatus.installed.name],
-            )
-        except SystemExit:
-            self.fail("Should not raise a SystemExit")
+        hpecp = self.cli.CLI()
+        hpecp.gateway.wait_for_state(
+            id="/api/v1/workers/98",
+            timeout_secs=1,
+            states=[GatewayStatus.installed.name],
+        )
 
     @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
@@ -308,7 +305,7 @@ class TestWaitForGatewayStatus(BaseTestCase):
         with self.assertRaises(SystemExit) as cm:
             hpecp = self.cli.CLI()
             hpecp.gateway.wait_for_state(
-                id="/api/v1/workers/123",
+                id="/api/v1/workers/98",
                 timeout_secs=1,
                 states=[GatewayStatus.deleting.name],
             )
@@ -331,18 +328,15 @@ class TestWaitForGatewayStatus(BaseTestCase):
         self, mock_get, mock_post
     ):
 
-        try:
-            hpecp = self.cli.CLI()
-            hpecp.gateway.wait_for_state(
-                id="/api/v1/workers/123",
-                timeout_secs=1,
-                states=[
-                    GatewayStatus.installed.name,
-                    GatewayStatus.deleting.name,
-                ],
-            )
-        except SystemExit:
-            self.fail("Should not raise a SystemExit")
+        hpecp = self.cli.CLI()
+        hpecp.gateway.wait_for_state(
+            id="/api/v1/workers/98",
+            timeout_secs=1,
+            states=[
+                GatewayStatus.installed.name,
+                GatewayStatus.deleting.name,
+            ],
+        )
 
     @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
