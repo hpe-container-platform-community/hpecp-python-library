@@ -25,7 +25,6 @@ import tempfile
 from textwrap import dedent
 from unittest import TestCase
 
-import requests
 import six
 from mock import mock, mock_open, patch
 
@@ -36,10 +35,10 @@ from .base_test import BaseTestCase, MockResponse
 from .base_test import session_mock_response as base_login_post_response
 
 if six.PY2:
-    from io import BytesIO as StringIO  # noqa: F811
+    # from io import BytesIO as StringIO  # noqa: F811
     from test.test_support import EnvironmentVarGuard
 else:
-    from io import StringIO
+    # from io import StringIO
     from test.support import EnvironmentVarGuard
 
 try:
@@ -151,11 +150,11 @@ class TestCLI(BaseTestCase):
 
 class TestCLIConfig(TestCase):
     def setUp(self):
-        try:
-            reload
-        except NameError:
-            # Python 3
-            from imp import reload
+        # try:
+        #     reload
+        # except NameError:
+        #     # Python 3
+        #     from imp import reload
 
         sys.path.insert(0, os.path.abspath("../../"))
 
@@ -174,7 +173,7 @@ class TestCLIConfig(TestCase):
                 warn_ssl = True
                 username = admin
                 password = admin123
-                
+
                 [tenant1]
                 api_host = tenant_mock_host
                 username = tenant-admin

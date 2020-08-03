@@ -26,93 +26,114 @@ from mock import patch
 from hpecp import ContainerPlatformClient
 from hpecp.exceptions import APIItemNotFoundException
 
-from .base_test import BaseTestCase, MockResponse, mocked_login_post
+from .base_test import BaseTestCase, MockResponse, get_client
 
+BaseTestCase.registerHttpGetHandler(
+    url="https://127.0.0.1:8080/api/v1/user/",
+    response=MockResponse(
+        json_data={
+            "_embedded": {
+                "users": [
+                    {
+                        "_links": {"self": {"href": "/api/v1/user/16"}},
+                        "label": {"name": "csnow", "description": "chris",},
+                        "is_group_added_user": False,
+                        "is_external": False,
+                        "is_service_account": False,
+                        "default_tenant": "",
+                        "is_siteadmin": False,
+                    },
+                    {
+                        "_links": {"self": {"href": "/api/v1/user/5"}},
+                        "label": {
+                            "name": "admin",
+                            "description": "BlueData Administrator",
+                        },
+                        "is_group_added_user": False,
+                        "is_external": False,
+                        "is_service_account": False,
+                        "default_tenant": "/api/v1/tenant/1",
+                        "is_siteadmin": True,
+                    },
+                ]
+            }
+        },
+        status_code=200,
+        headers={},
+    ),
+)
 
-def get_client():
-    client = ContainerPlatformClient(
-        username="admin",
-        password="admin123",
-        api_host="127.0.0.1",
-        api_port=8080,
-        use_ssl=True,
-    )
-    client.create_session()
-    return client
+BaseTestCase.registerHttpGetHandler(
+    url="https://127.0.0.1:8080/api/v1/user/16/",
+    response=MockResponse(
+        json_data={
+            "_links": {"self": {"href": "/api/v1/user/16"}},
+            "label": {"name": "csnow", "description": "chris"},
+            "is_group_added_user": False,
+            "is_external": False,
+            "is_service_account": False,
+            "default_tenant": "",
+            "is_siteadmin": False,
+        },
+        status_code=200,
+        headers={},
+    ),
+)
+
+BaseTestCase.registerHttpGetHandler(
+    url="https://127.0.0.1:8080/api/v1/user/123",
+    response=MockResponse(
+        json_data={
+            "_links": {"self": {"href": "/api/v1/user/123"}},
+            "purpose": "proxy",
+        },
+        status_code=200,
+        headers={},
+    ),
+)
+
+BaseTestCase.registerHttpGetHandler(
+    url="https://127.0.0.1:8080/api/v1/user/999",
+    response=MockResponse(
+        text_data="Not found.",
+        json_data={},
+        status_code=404,
+        raise_for_status_flag=True,
+        headers={},
+    ),
+)
+
+BaseTestCase.registerHttpPostHandler(
+    url="https://127.0.0.1:8080/api/v1/user",
+    response=MockResponse(
+        json_data={},
+        status_code=200,
+        headers={"location": ("/mock/api/user/1")},
+    ),
+)
+
+BaseTestCase.registerHttpDeleteHandler(
+    url="https://127.0.0.1:8080/api/v1/user/999",
+    response=MockResponse(
+        text_data="Not found.",
+        json_data={},
+        status_code=404,
+        raise_for_status_flag=True,
+        headers={},
+    ),
+)
+
+BaseTestCase.registerHttpDeleteHandler(
+    url="https://127.0.0.1:8080/api/v1/user/123",
+    response=MockResponse(
+        text_data="", json_data={}, status_code=200, headers={},
+    ),
+)
 
 
 class TestUsers(TestCase):
-    def mocked_requests_get(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v1/user/":
-            return MockResponse(
-                json_data={
-                    "_embedded": {
-                        "users": [
-                            {
-                                "_links": {
-                                    "self": {"href": "/api/v1/user/16"}
-                                },
-                                "label": {
-                                    "name": "csnow",
-                                    "description": "chris",
-                                },
-                                "is_group_added_user": False,
-                                "is_external": False,
-                                "is_service_account": False,
-                                "default_tenant": "",
-                                "is_siteadmin": False,
-                            },
-                            {
-                                "_links": {"self": {"href": "/api/v1/user/5"}},
-                                "label": {
-                                    "name": "admin",
-                                    "description": "BlueData Administrator",
-                                },
-                                "is_group_added_user": False,
-                                "is_external": False,
-                                "is_service_account": False,
-                                "default_tenant": "/api/v1/tenant/1",
-                                "is_siteadmin": True,
-                            },
-                        ]
-                    }
-                },
-                status_code=200,
-                headers={},
-            )
-        elif args[0] == "https://127.0.0.1:8080/api/v1/user/16/":
-            return MockResponse(
-                json_data={
-                    "_links": {"self": {"href": "/api/v1/user/16"}},
-                    "label": {"name": "csnow", "description": "chris"},
-                    "is_group_added_user": False,
-                    "is_external": False,
-                    "is_service_account": False,
-                    "default_tenant": "",
-                    "is_siteadmin": False,
-                },
-                status_code=200,
-                headers={},
-            )
-        else:
-            raise RuntimeError("Unhandle GET request: " + args[0])
-
-    def mocked_requests_post(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v1/login":
-            return MockResponse(
-                json_data={},
-                status_code=200,
-                headers={
-                    "location": (
-                        "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
-                    )
-                },
-            )
-        else:
-            raise RuntimeError("Unhandle POST request: " + args[0])
-
-    @patch("requests.get", side_effect=mocked_requests_get)
-    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_get_users(self, mock_get, mock_post):
         client = ContainerPlatformClient(
             username="admin",
@@ -144,59 +165,9 @@ class TestUsers(TestCase):
 
 
 class TestDeleteUser(TestCase):
-    # pylint: disable=no-method-argument
-    def mocked_requests_get(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v1/user/123":
-            return MockResponse(
-                json_data={
-                    "_links": {"self": {"href": "/api/v1/user/123"}},
-                    "purpose": "proxy",
-                },
-                status_code=200,
-                headers={},
-            )
-        if args[0] == "https://127.0.0.1:8080/api/v1/user/999":
-            return MockResponse(
-                text_data="Not found.",
-                json_data={},
-                status_code=404,
-                raise_for_status_flag=True,
-                headers={},
-            )
-        raise RuntimeError("Unhandle GET request: " + args[0])
-
-    # pylint: disable=no-method-argument
-    def mocked_requests_delete(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v1/user/999":
-            return MockResponse(
-                text_data="Not found.",
-                json_data={},
-                status_code=404,
-                raise_for_status_flag=True,
-                headers={},
-            )
-        if args[0] == "https://127.0.0.1:8080/api/v1/user/123":
-            return MockResponse(json_data={}, status_code=200, headers={},)
-        raise RuntimeError("Unhandle GET request: " + args[0])
-
-    def mocked_requests_post(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v1/login":
-            return MockResponse(
-                json_data={},
-                status_code=200,
-                headers={
-                    "location": (
-                        "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
-                    )
-                },
-            )
-        raise RuntimeError("Unhandle POST request: " + args[0])
-
-    # delete() does a get() request to check the worker has 'purpose':'proxy'
-    @patch("requests.get", side_effect=mocked_requests_get)
-    @patch("requests.delete", side_effect=mocked_requests_delete)
-    @patch("requests.post", side_effect=mocked_requests_post)
-    def test_delete_user(self, mock_get, mock_post, mock_delete):
+    @patch("requests.delete", side_effect=BaseTestCase.httpDeleteHandlers)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
+    def test_delete_user(self, mock_post, mock_delete):
         with self.assertRaisesRegexp(
             AssertionError, "'id' must be provided and must be a str",
         ):
@@ -213,28 +184,8 @@ class TestDeleteUser(TestCase):
         get_client().user.delete(id="/api/v1/user/123")
 
 
-def mocked_login_post(*args, **kwargs):
-    if args[0] == "https://127.0.0.1:8080/api/v1/login":
-        return MockResponse(
-            json_data={},
-            status_code=200,
-            headers={
-                "location": (
-                    "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
-                )
-            },
-        )
-    if args[0] == "https://127.0.0.1:8080/api/v1/user":
-        return MockResponse(
-            json_data={},
-            status_code=200,
-            headers={"location": ("/mock/api/user/1")},
-        )
-    raise RuntimeError("Unhandle POST request: " + args[0])
-
-
 class TestCLI(BaseTestCase):
-    @patch("requests.post", side_effect=mocked_login_post)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_create(self, mock_post):
 
         hpecp = self.cli.CLI()

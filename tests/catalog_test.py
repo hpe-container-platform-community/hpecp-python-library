@@ -152,6 +152,13 @@ BaseTestCase.registerHttpGetHandler(
 )
 
 BaseTestCase.registerHttpGetHandler(
+    url="https://127.0.0.1:8080/api/v1/catalog/102",
+    response=MockResponse(
+        json_data={"garbage"}, status_code=200, headers=dict(),
+    ),
+)
+
+BaseTestCase.registerHttpGetHandler(
     url="https://127.0.0.1:8080/api/v1/catalog",
     response=MockResponse(
         json_data={
@@ -591,66 +598,8 @@ class TestCLIList(BaseTestCase):
 
 
 class TestCLIGet(BaseTestCase):
-    def mocked_requests_get(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v1/catalog/100":
-            return MockResponse(
-                json_data={
-                    "_links": {
-                        "self": {"href": "/api/v1/catalog/100"},
-                        "feed": [
-                            {
-                                "href": (
-                                    "https://s3.amazonaws.com/bluedata-catalog/"
-                                    "bundles/catalog/external/docker/EPIC-5.0/"
-                                    "feeds/feed.json"
-                                ),
-                                "name": (
-                                    "BlueData EPIC-5.0 catalog feed for docker"
-                                ),
-                            }
-                        ],
-                    },
-                    "id": "/api/v1/catalog/100",
-                    "distro_id": "bluedata/spark240juphub7xssl",
-                    "label": {
-                        "name": "Spark240",
-                        "description": ("The description"),
-                    },
-                    "version": "2.8",
-                    "timestamp": 0,
-                    "isdebug": False,
-                    "osclass": ["centos"],
-                    "logo": {
-                        "checksum": "1471eb59356066ed4a06130566764ea6",
-                        "url": (
-                            "http://10.1.0.53/catalog/logos/"
-                            "bluedata-spark240juphub7xssl-2.8"
-                        ),
-                    },
-                    "documentation": {
-                        "checksum": "52f53f1b2845463b9e370d17fb80bea6",
-                        "mimetype": "text/markdown",
-                        "file": (
-                            "/opt/bluedata/catalog/documentation/"
-                            "bluedata-spark240juphub7xssl-2.8"
-                        ),
-                    },
-                    "state": "initialized",
-                    "state_info": "",
-                },
-                status_code=200,
-                headers=dict(),
-            )
-        if args[0] == "https://127.0.0.1:8080/api/v1/catalog/101":
-            raise APIItemNotFoundException(
-                message="catalog not found with id: " + "/api/v1/catalog/101",
-                request_method="get",
-                request_url=args[0],
-            )
-        raise RuntimeError("Unhandle GET request: " + args[0])
-
     @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
-    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     def test_get_output_is_valid_yaml(self, mock_post, mock_get):
 
         self.maxDiff = None
@@ -665,7 +614,7 @@ class TestCLIGet(BaseTestCase):
             self.fail("Output should be valid yaml")
 
     @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
-    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     def test_get_yaml_output_is_valid(self, mock_post, mock_get):
 
         self.maxDiff = None
@@ -695,7 +644,7 @@ documentation:
 id: /api/v1/catalog/100
 isdebug: false
 label:
-    description: The description
+    description: Spark240 multirole with Jupyter Notebook, Jupyterhub with SSL and gateway node
     name: Spark240
 logo:
     checksum: 1471eb59356066ed4a06130566764ea6
@@ -715,7 +664,7 @@ version: '2.8'"""
         )
 
     @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
-    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     def test_get_json_output(self, mock_post, mock_get):
 
         self.maxDiff = None
@@ -746,7 +695,10 @@ version: '2.8'"""
                 "distro_id": "bluedata/spark240juphub7xssl",
                 "label": {
                     "name": "Spark240",
-                    "description": "The description",
+                    "description": (
+                        "Spark240 multirole with Jupyter Notebook, Jupyterhub"
+                        " with SSL and gateway node"
+                    ),
                 },
                 "state": "initialized",
                 "version": "2.8",
@@ -763,7 +715,7 @@ version: '2.8'"""
         )
 
     @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
-    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     def test_get_output_with_invalid_catalog_id(self, mock_post, mock_get):
 
         with self.assertRaises(SystemExit) as cm:
@@ -794,12 +746,12 @@ version: '2.8'"""
         raise RuntimeError("Unhandle GET request: " + args[0])
 
     @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
-    @patch("requests.get", side_effect=mocked_requests_garbage_data)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     def test_get_output_with_unknown_exception(self, mock_post, mock_get):
 
         with self.assertRaises(SystemExit) as cm:
             hpecp = self.cli.CLI()
-            hpecp.catalog.get("/api/v1/catalog/101")
+            hpecp.catalog.get("/api/v1/catalog/102")
 
         self.assertEqual(cm.exception.code, 1)
 
