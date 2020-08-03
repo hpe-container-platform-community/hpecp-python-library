@@ -110,10 +110,23 @@ class BaseTestCase(unittest.TestCase):
 
     _http_get_handlers = {}
     _http_post_handlers = {}
+    _http_delete_handlers = {}
 
     @classmethod
     def httpPostHandlers(cls, *args, **kwargs):
-        return BaseTestCase._http_post_handlers[args[0]]
+        try:
+            handler = BaseTestCase._http_post_handlers[args[0]]
+        except KeyError:
+            raise Exception(
+                "Handler not found for POST {}.\nDid you register a handler with BaseTestCase.registerHttpGetHandler?".format(
+                    args[0]
+                )
+            )
+
+        if isinstance(handler, Exception):
+            raise handler
+        else:
+            return handler
 
     @classmethod
     def httpGetHandlers(cls, *args, **kwargs):
@@ -132,12 +145,32 @@ class BaseTestCase(unittest.TestCase):
             return handler
 
     @classmethod
+    def httpDeleteHandlers(cls, *args, **kwargs):
+        try:
+            handler = BaseTestCase._http_delete_handlers[args[0]]
+        except KeyError:
+            raise Exception(
+                "Handler not found for DELETE {}.\nDid you register a handler with BaseTestCase.registerHttpDeleteHandler?".format(
+                    args[0]
+                )
+            )
+
+        if isinstance(handler, Exception):
+            raise handler
+        else:
+            return handler
+
+    @classmethod
     def registerHttpPostHandler(cls, url, response):
         BaseTestCase._http_post_handlers[url] = response
 
     @classmethod
     def registerHttpGetHandler(cls, url, response):
         BaseTestCase._http_get_handlers[url] = response
+
+    @classmethod
+    def registerHttpDeleteHandler(cls, url, response):
+        BaseTestCase._http_delete_handlers[url] = response
 
     @classmethod
     def setUpClass(cls):

@@ -112,6 +112,17 @@ BaseTestCase.registerHttpPostHandler(
     ),
 )
 
+BaseTestCase.registerHttpPostHandler(
+    url="https://127.0.0.1:8080/api/v1/user/999",
+    response=MockResponse(
+        text_data="Not found.",
+        json_data={},
+        status_code=404,
+        raise_for_status_flag=True,
+        headers={},
+    ),
+)
+
 
 class TestUsers(TestCase):
     @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
@@ -147,27 +158,9 @@ class TestUsers(TestCase):
 
 
 class TestDeleteUser(TestCase):
-
-    # TODO: refactor me to BaseTestCase http handler
-    # pylint: disable=no-method-argument
-    def mocked_requests_delete(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v1/user/999":
-            return MockResponse(
-                text_data="Not found.",
-                json_data={},
-                status_code=404,
-                raise_for_status_flag=True,
-                headers={},
-            )
-        if args[0] == "https://127.0.0.1:8080/api/v1/user/123":
-            return MockResponse(json_data={}, status_code=200, headers={},)
-        raise RuntimeError("Unhandle GET request: " + args[0])
-
-    # delete() does a get() request to check the worker has 'purpose':'proxy'
-    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
-    @patch("requests.delete", side_effect=mocked_requests_delete)
+    @patch("requests.delete", side_effect=BaseTestCase.httpDeleteHandlers)
     @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
-    def test_delete_user(self, mock_get, mock_post, mock_delete):
+    def test_delete_user(self, mock_post, mock_delete):
         with self.assertRaisesRegexp(
             AssertionError, "'id' must be provided and must be a str",
         ):
