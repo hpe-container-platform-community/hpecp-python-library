@@ -2,8 +2,9 @@
 
 set -e
 
-isort --check-only bin/*.py hpecp/**.py tests/*.py
-
+isort tests/*.py
+isort hpecp/**.py
+isort bin/*.py
 
 black bin/ tests/ hpecp/
 
