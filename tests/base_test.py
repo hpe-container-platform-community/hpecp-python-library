@@ -118,7 +118,7 @@ class BaseTestCase(unittest.TestCase):
             handler = BaseTestCase._http_post_handlers[args[0]]
         except KeyError:
             raise Exception(
-                "Handler not found for POST {}.\nDid you register a handler with BaseTestCase.registerHttpGetHandler?".format(
+                "Handler not found for POST '{}'.\nDid you register a handler with BaseTestCase.registerHttpPostHandler?".format(
                     args[0]
                 )
             )
@@ -134,7 +134,7 @@ class BaseTestCase(unittest.TestCase):
             handler = BaseTestCase._http_get_handlers[args[0]]
         except KeyError:
             raise Exception(
-                "Handler not found for GET {}.\nDid you register a handler with BaseTestCase.registerHttpGetHandler?".format(
+                "Handler not found for GET '{}'.\nDid you register a handler with BaseTestCase.registerHttpGetHandler?".format(
                     args[0]
                 )
             )
@@ -150,7 +150,7 @@ class BaseTestCase(unittest.TestCase):
             handler = BaseTestCase._http_delete_handlers[args[0]]
         except KeyError:
             raise Exception(
-                "Handler not found for DELETE {}.\nDid you register a handler with BaseTestCase.registerHttpDeleteHandler?".format(
+                "Handler not found for DELETE '{}'.\nDid you register a handler with BaseTestCase.registerHttpDeleteHandler?".format(
                     args[0]
                 )
             )

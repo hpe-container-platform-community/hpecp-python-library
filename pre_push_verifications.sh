@@ -2,15 +2,15 @@
 
 set -e
 
-isort --check-only tests/*.py bin/*.py hpecp/b*.py hpecp/c*.py hpecp/g*.py hpecp/l*.py hpecp/r*.py hpecp/t*.py. hpecp/u*.py
+isort --check-only bin/*.py hpecp/**.py tests/*.py
 
 
 black bin/ tests/ hpecp/
 
 #flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-flake8 --exclude hpecp/role.py --docstring-convention numpy bin/ hpecp/
+flake8 --docstring-convention numpy bin/ hpecp/
 
-flake8 --ignore=D,E501 tests/*.py
+flake8 --ignore=D,E501 tests/*.py # don't verify documentation in tests
 
 tox -e py35 -- tests/
 
