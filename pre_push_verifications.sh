@@ -10,7 +10,7 @@ black bin/ tests/ hpecp/
 #flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 flake8 --docstring-convention numpy bin/ hpecp/
 
-flake8 --ignore=D,E501 tests/*.py # don't verify documentation in tests
+flake8 --ignore=D,E501 tests/cli_test.py # don't verify documentation in tests
 
 tox -e py35 -- tests/
 
