@@ -19,29 +19,17 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 
 import abc
-import json
 import os
 import sys
 import tempfile
 import unittest
 from io import StringIO
 from textwrap import dedent
-from unittest import TestCase
 
 import requests
 import six
-from mock import patch
 
-from hpecp import (
-    APIException,
-    APIItemNotFoundException,
-    ContainerPlatformClient,
-)
-from hpecp.k8s_cluster import (
-    K8sCluster,
-    K8sClusterHostConfig,
-    K8sClusterStatus,
-)
+from hpecp import ContainerPlatformClient
 
 if six.PY2:
     from io import BytesIO as StringIO  # noqa: F811
@@ -131,7 +119,7 @@ class BaseTestCase(unittest.TestCase):
     def httpGetHandlers(cls, *args, **kwargs):
         try:
             handler = BaseTestCase._http_get_handlers[args[0]]
-        except KeyError as e:
+        except KeyError:
             raise Exception(
                 "Handler not found for GET {}.\nDid you register a handler with BaseTestCase.registerHttpGetHandler?".format(
                     args[0]

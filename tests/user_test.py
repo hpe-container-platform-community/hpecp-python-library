@@ -20,7 +20,6 @@
 
 from unittest import TestCase
 
-import requests
 import six
 from mock import patch
 
