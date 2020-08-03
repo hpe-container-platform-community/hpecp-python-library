@@ -226,7 +226,7 @@ class AutoComplete:
                     return
                 fi
 
-                # from: https://stackoverflow.com/a/58221008/1033422
+
 
                 declare -A MODULE_COLUMNS=(
                     {% for module_name in modules %}
@@ -247,7 +247,7 @@ class AutoComplete:
                         return
                     fi
 
-                    # FIXME: https://unix.stackexchange.com/questions/124539/bash-completion-for-comma-separated-values
+
 
                     # '--columns' was the last word and user is entering column names
                     if [[ "${COMP_WORDS[3]}" == "--columns"* && ${#COMP_WORDS[@]} -le 5 ]];
