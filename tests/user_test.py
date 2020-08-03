@@ -112,7 +112,7 @@ BaseTestCase.registerHttpPostHandler(
     ),
 )
 
-BaseTestCase.registerHttpPostHandler(
+BaseTestCase.registerHttpDeleteHandler(
     url="https://127.0.0.1:8080/api/v1/user/999",
     response=MockResponse(
         text_data="Not found.",
@@ -120,6 +120,13 @@ BaseTestCase.registerHttpPostHandler(
         status_code=404,
         raise_for_status_flag=True,
         headers={},
+    ),
+)
+
+BaseTestCase.registerHttpDeleteHandler(
+    url="https://127.0.0.1:8080/api/v1/user/123",
+    response=MockResponse(
+        text_data="", json_data={}, status_code=200, headers={},
     ),
 )
 
