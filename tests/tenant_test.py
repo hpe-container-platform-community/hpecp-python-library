@@ -26,43 +26,7 @@ from mock import patch
 from hpecp import ContainerPlatformClient
 from hpecp.exceptions import APIItemNotFoundException
 
-
-class MockResponse:
-    def __init__(
-        self,
-        json_data,
-        status_code,
-        headers,
-        raise_for_status_flag=False,
-        text_data="",
-    ):
-        self.json_data = json_data
-        self.text = text_data
-        self.status_code = status_code
-        self.raise_for_status_flag = raise_for_status_flag
-        self.headers = headers
-
-    def raise_for_status(self):
-        if self.raise_for_status_flag:
-            self.text = "some error occurred"
-            raise requests.exceptions.HTTPError()
-        else:
-            return
-
-    def json(self):
-        return self.json_data
-
-
-def get_client():
-    client = ContainerPlatformClient(
-        username="admin",
-        password="admin123",
-        api_host="127.0.0.1",
-        api_port=8080,
-        use_ssl=True,
-    )
-    client.create_session()
-    return client
+from .base_test import MockResponse, get_client
 
 
 class TestTentants(TestCase):
