@@ -18,15 +18,11 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-import os
-import sys
 import tempfile
-from textwrap import dedent
 from unittest import TestCase
 
 import requests
-import six
-from mock import Mock, patch
+from mock import patch
 
 from hpecp import APIItemNotFoundException, ContainerPlatformClient
 from hpecp.exceptions import APIItemConflictException
@@ -34,10 +30,10 @@ from hpecp.gateway import GatewayController, GatewayStatus
 
 from .base_test import BaseTestCase
 
-if six.PY2:
-    from io import BytesIO as StringIO
-else:
-    from io import StringIO
+# if six.PY2:
+#     from io import BytesIO as StringIO
+# else:
+#     from io import StringIO
 
 
 class MockResponse:
@@ -1057,7 +1053,7 @@ class TestCreateGateway(TestCase):
     @patch("requests.post", side_effect=mocked_requests_create_post)
     def test_create_with_ssh_key_returns_id(self, mock_post):
 
-        id = get_client().gateway.create_with_ssh_key(
+        get_client().gateway.create_with_ssh_key(
             ip="127.0.0.1",
             proxy_node_hostname="my.host.name",
             ssh_key_data="pem encoded key data",
