@@ -68,11 +68,12 @@
 
 <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
 
-<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">APIItemNotFoundException</span>
-
-<span class="kn">from</span> <span class="nn">.base_resource</span> <span class="kn">import</span> <span class="n">AbstractWaitableResourceController</span><span class="p">,</span> <span class="n">AbstractResource</span>
-<span class="kn">from</span> <span class="nn">hpecp.base_resource</span> <span class="kn">import</span> <span class="n">ResourceList</span>
 <span class="kn">from</span> <span class="nn">requests.structures</span> <span class="kn">import</span> <span class="n">CaseInsensitiveDict</span>
+
+<span class="kn">from</span> <span class="nn">hpecp.base_resource</span> <span class="kn">import</span> <span class="n">ResourceList</span>
+
+<span class="kn">from</span> <span class="nn">.base_resource</span> <span class="kn">import</span> <span class="n">AbstractResource</span><span class="p">,</span> <span class="n">AbstractWaitableResourceController</span>
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">APIItemNotFoundException</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="n">basestring</span>

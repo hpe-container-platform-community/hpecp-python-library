@@ -68,19 +68,26 @@
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
 
+<span class="kn">import</span> <span class="nn">ast</span>
+<span class="kn">import</span> <span class="nn">codecs</span>
 <span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">from</span> <span class="nn">configparser</span> <span class="kn">import</span> <span class="n">SafeConfigParser</span>
 
-<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">pkg_resources</span>
 <span class="kn">import</span> <span class="nn">requests</span>
 <span class="kn">import</span> <span class="nn">six</span>
+<span class="kn">from</span> <span class="nn">requests.structures</span> <span class="kn">import</span> <span class="n">CaseInsensitiveDict</span>
 <span class="kn">from</span> <span class="nn">six</span> <span class="kn">import</span> <span class="n">raise_from</span>
 <span class="kn">from</span> <span class="nn">urllib3.exceptions</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">NewConnectionError</span><span class="p">,</span>
     <span class="n">ConnectTimeoutError</span><span class="p">,</span>
     <span class="n">MaxRetryError</span><span class="p">,</span>
+    <span class="n">NewConnectionError</span><span class="p">,</span>
 <span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">hpecp.exceptions</span> <span class="kn">import</span> <span class="n">APIForbiddenException</span>
 
 <span class="kn">from</span> <span class="nn">.catalog</span> <span class="kn">import</span> <span class="n">CatalogController</span>
 <span class="kn">from</span> <span class="nn">.config</span> <span class="kn">import</span> <span class="n">ConfigController</span>
@@ -100,12 +107,6 @@
 <span class="kn">from</span> <span class="nn">.role</span> <span class="kn">import</span> <span class="n">RoleController</span>
 <span class="kn">from</span> <span class="nn">.tenant</span> <span class="kn">import</span> <span class="n">TenantController</span>
 <span class="kn">from</span> <span class="nn">.user</span> <span class="kn">import</span> <span class="n">UserController</span>
-<span class="kn">import</span> <span class="nn">codecs</span>
-<span class="kn">import</span> <span class="nn">ast</span>
-<span class="kn">from</span> <span class="nn">requests.structures</span> <span class="kn">import</span> <span class="n">CaseInsensitiveDict</span>
-<span class="kn">from</span> <span class="nn">hpecp.exceptions</span> <span class="kn">import</span> <span class="n">APIForbiddenException</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">pkg_resources</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="n">basestring</span>
