@@ -22,11 +22,12 @@ from __future__ import absolute_import
 
 from enum import Enum
 
-from .exceptions import APIItemNotFoundException
-
-from .base_resource import AbstractWaitableResourceController, AbstractResource
-from hpecp.base_resource import ResourceList
 from requests.structures import CaseInsensitiveDict
+
+from hpecp.base_resource import ResourceList
+
+from .base_resource import AbstractResource, AbstractWaitableResourceController
+from .exceptions import APIItemNotFoundException
 
 try:
     basestring

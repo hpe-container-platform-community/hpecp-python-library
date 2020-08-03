@@ -20,11 +20,12 @@
 
 from __future__ import absolute_import
 
-from .base_resource import AbstractWaitableResourceController, AbstractResource
-
-from enum import Enum
 import re
+from enum import Enum
+
 from requests.structures import CaseInsensitiveDict
+
+from .base_resource import AbstractResource, AbstractWaitableResourceController
 
 try:
     basestring

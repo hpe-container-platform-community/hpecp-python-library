@@ -22,19 +22,26 @@
 
 from __future__ import absolute_import
 
+import ast
+import codecs
 import json
+import logging
 import os
+import re
 from configparser import SafeConfigParser
 
-import logging
+import pkg_resources
 import requests
 import six
+from requests.structures import CaseInsensitiveDict
 from six import raise_from
 from urllib3.exceptions import (
-    NewConnectionError,
     ConnectTimeoutError,
     MaxRetryError,
+    NewConnectionError,
 )
+
+from hpecp.exceptions import APIForbiddenException
 
 from .catalog import CatalogController
 from .config import ConfigController
@@ -54,12 +61,6 @@ from .logger import Logger
 from .role import RoleController
 from .tenant import TenantController
 from .user import UserController
-import codecs
-import ast
-from requests.structures import CaseInsensitiveDict
-from hpecp.exceptions import APIForbiddenException
-import re
-import pkg_resources
 
 try:
     basestring

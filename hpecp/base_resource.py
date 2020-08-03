@@ -21,13 +21,15 @@
 """Base classes for Controllers and Resources."""
 
 import abc
+import urllib
+
 import polling
 import six
-
 from tabulate import tabulate
+
 from hpecp.exceptions import APIItemNotFoundException
+
 from .logger import Logger
-import urllib
 
 _log = Logger.get_logger()
 

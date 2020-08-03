@@ -24,10 +24,11 @@ from enum import Enum
 
 from requests.structures import CaseInsensitiveDict
 
-from .base_resource import AbstractWaitableResourceController, AbstractResource
-from hpecp.exceptions import ContainerPlatformClientException
 from hpecp.base_resource import ResourceList
+from hpecp.exceptions import ContainerPlatformClientException
 from hpecp.user import User
+
+from .base_resource import AbstractResource, AbstractWaitableResourceController
 
 try:
     basestring

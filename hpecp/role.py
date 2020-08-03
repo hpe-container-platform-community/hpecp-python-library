@@ -22,7 +22,7 @@ from __future__ import absolute_import
 
 import re
 
-from .base_resource import AbstractResourceController, AbstractResource
+from .base_resource import AbstractResource, AbstractResourceController
 
 try:
     basestring

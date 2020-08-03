@@ -2,7 +2,7 @@
 
 set -e
 
-isort --check-only tests/*.py bin/*.py
+isort --check-only tests/*.py bin/*.py hpecp/**.py
 
 black bin/ tests/ hpecp/
 
