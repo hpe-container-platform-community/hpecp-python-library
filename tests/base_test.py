@@ -174,6 +174,11 @@ class BaseTestCase(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+
+        _http_get_handlers = {}
+        _http_post_handlers = {}
+        _http_delete_handlers = {}
+
         # Register the login handler
         BaseTestCase.registerHttpPostHandler(
             "https://127.0.0.1:8080/api/v1/login",
