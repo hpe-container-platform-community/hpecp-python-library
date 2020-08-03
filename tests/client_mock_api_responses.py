@@ -19,34 +19,23 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 
 
+from hpecp.exceptions import APIItemNotFoundException
+
 from .base import BaseTestCase, MockResponse
 
 
 def mockApiSetup():
 
-    BaseTestCase.registerHttpGetHandler(
-        url="https://127.0.0.1:8080/api/v1/lock",
-        response=MockResponse(
-            json_data={
-                "_links": {"self": {"href": "/api/v1/lock"}},
-                "locked": False,
-                "_embedded": {"internal_locks": [], "external_locks": []},
-            },
-            status_code=200,
-            headers=dict(),
-        ),
-    )
-
+    # Mock http (not https) session
     BaseTestCase.registerHttpPostHandler(
-        url="https://127.0.0.1:8080/api/v1/lock",
-        response=MockResponse(
+        "http://127.0.0.1:8080/api/v1/login",
+        MockResponse(
             json_data={},
-            status_code=201,
-            headers={"Location": "/test_location/1"},
+            status_code=200,
+            headers={
+                "location": (
+                    "/api/v1/session/df1bfacb-ssl-false-xxxx-c8f57d8f3c72"
+                )
+            },
         ),
-    )
-
-    BaseTestCase.registerHttpDeleteHandler(
-        url="https://127.0.0.1:8080/api/v1/lock/1",
-        response=MockResponse(json_data={}, status_code=201, headers=dict(),),
     )

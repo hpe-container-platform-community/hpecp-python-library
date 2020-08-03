@@ -21,7 +21,7 @@
 
 from hpecp.exceptions import APIItemNotFoundException
 
-from .base_test import BaseTestCase, MockResponse
+from .base import BaseTestCase, MockResponse
 
 
 def mockApiSetup():

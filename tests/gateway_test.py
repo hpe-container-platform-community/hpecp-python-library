@@ -28,7 +28,7 @@ from hpecp import APIItemNotFoundException, ContainerPlatformClient
 from hpecp.exceptions import APIItemConflictException
 from hpecp.gateway import GatewayController, GatewayStatus
 
-from .base_test import BaseTestCase, MockResponse, get_client
+from .base import BaseTestCase, MockResponse, get_client
 from .gateway_mock_api_responses import mockApiGetSetup, mockApiPostSetup
 
 

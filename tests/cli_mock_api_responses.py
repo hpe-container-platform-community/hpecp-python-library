@@ -19,34 +19,38 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 
 
+from hpecp.exceptions import APIItemNotFoundException
+
 from .base import BaseTestCase, MockResponse
 
 
 def mockApiSetup():
-
     BaseTestCase.registerHttpGetHandler(
-        url="https://127.0.0.1:8080/api/v1/lock",
+        url="https://127.0.0.1:8080/some/url",
         response=MockResponse(
-            json_data={
-                "_links": {"self": {"href": "/api/v1/lock"}},
-                "locked": False,
-                "_embedded": {"internal_locks": [], "external_locks": []},
-            },
+            json_data={"foo": "bar"},
+            text_data='{"foo":"bar"}',
             status_code=200,
             headers=dict(),
         ),
     )
 
     BaseTestCase.registerHttpPostHandler(
-        url="https://127.0.0.1:8080/api/v1/lock",
+        url="https://127.0.0.1:8080/some/url",
         response=MockResponse(
+            text_data={"mock_data": True},
             json_data={},
-            status_code=201,
-            headers={"Location": "/test_location/1"},
+            status_code=200,
+            headers={},
         ),
     )
 
-    BaseTestCase.registerHttpDeleteHandler(
-        url="https://127.0.0.1:8080/api/v1/lock/1",
-        response=MockResponse(json_data={}, status_code=201, headers=dict(),),
+    BaseTestCase.registerHttpPutHandler(
+        url="https://127.0.0.1:8080/some/url",
+        response=MockResponse(
+            text_data={"mock_data": True},
+            json_data={},
+            status_code=200,
+            headers={},
+        ),
     )

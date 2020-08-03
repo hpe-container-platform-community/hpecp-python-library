@@ -7,12 +7,7 @@ from hpecp.cli import base
 from hpecp.exceptions import APIItemConflictException, APIItemNotFoundException
 from hpecp.k8s_worker import K8sWorkerController, WorkerK8s, WorkerK8sStatus
 
-from .base_test import (
-    BaseTestCase,
-    MockResponse,
-    get_client,
-    session_mock_response,
-)
+from .base import BaseTestCase, MockResponse, get_client
 from .k8s_worker_mock_api_responses import mockApiSetup
 
 # setup the mock data
@@ -207,11 +202,6 @@ class TestCliCreate(BaseTestCase):
                 actual_err, expected_err
             ),
         )
-
-    def mocked_requests_post(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v1/login":
-            return session_mock_response()
-        raise RuntimeError("Unhandle POST request: " + args[0])
 
     @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     @patch("hpecp.k8s_worker")
