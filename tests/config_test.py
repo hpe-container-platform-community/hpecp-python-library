@@ -26,7 +26,7 @@ from mock import patch
 from hpecp import ContainerPlatformClient
 
 from .base_test import BaseTestCase, MockResponse
-from .config_mock_api import mockApiSetup
+from .config_mock_api_responses import mockApiSetup
 
 # setup the mock data
 mockApiSetup()

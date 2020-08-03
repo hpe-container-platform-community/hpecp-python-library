@@ -95,7 +95,7 @@ def mockApiSetup():
         ),
     )
 
-    # Response for a cluster that does exist
+    # Response for a cluster that DOES exist
     BaseTestCase.registerHttpGetHandler(
         url="https://127.0.0.1:8080/api/v2/k8scluster/123",
         response=MockResponse(
