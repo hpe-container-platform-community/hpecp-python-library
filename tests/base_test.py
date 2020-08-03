@@ -234,13 +234,11 @@ class BaseTestCase(unittest.TestCase):
 
         self.saved_base_get_config_file = base.get_config_file
         self.saved_base_get_client = base.get_client
-        # self.saved_cli_get_config_file = self.cli.get_config_file
 
         def get_config_file():
             return self.tmpFile.name
 
         # override method to return config file path
-        # self.cli.get_config_file = get_config_file
         base.get_config_file = get_config_file
 
     def tearDown(self):
@@ -252,4 +250,3 @@ class BaseTestCase(unittest.TestCase):
 
         base.get_config_file = self.saved_base_get_config_file
         base.get_client = self.saved_base_get_client
-        # self.cli.get_config_file = self.saved_cli_get_config_file

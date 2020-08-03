@@ -24,6 +24,11 @@ from .base_test import BaseTestCase, MockResponse
 
 def mockApiGetSetup():
     mockApiGetWorkers()
+    mockApiGetWorkers97()
+    mockApiGetWorkers98()
+    mockApiGetWorkers99()
+    mockApiGetWorkers100()
+    mockApiGetWorkers999()
 
 
 def mockApiGetWorkers():
@@ -435,32 +440,494 @@ def mockApiGetWorkers():
     )
 
 
+# purpose=controller (not proxy)
+def mockApiGetWorkers97():
+    BaseTestCase.registerHttpGetHandler(
+        url="https://127.0.0.1:8080/api/v1/workers/97",
+        response=MockResponse(
+            json_data={
+                "hacapable": True,
+                "propinfo": {
+                    "bds_storage_apollo": "false",
+                    "bds_network_publicinterface": "ens5",
+                },
+                "approved_worker_pubkey": ["test pub key"],
+                "schedule": False,
+                "ip": "10.1.0.37",
+                "proxy_nodes_hostname": "ec2-35-165-137-87.us-west-2.compute.amazonaws.com",
+                "hostname": "ip-10-1-0-37.us-west-2.compute.internal",
+                "state": "installed",
+                "_links": {"self": {"href": "/api/v1/workers/97"}},
+                "purpose": "controller",
+                "status_info": "test status info",
+                "sysinfo": "test sysinfo",
+                "tags": ["test tags"],
+            },
+            status_code=200,
+            headers={},
+        ),
+    )
+
+
+# worker with minimum sysinfo for testing
+def mockApiGetWorkers98():
+    BaseTestCase.registerHttpGetHandler(
+        url="https://127.0.0.1:8080/api/v1/workers/98",
+        response=MockResponse(
+            json_data={
+                "hacapable": True,
+                "propinfo": {
+                    "bds_storage_apollo": "false",
+                    "bds_network_publicinterface": "ens5",
+                },
+                "approved_worker_pubkey": ["test pub key"],
+                "schedule": False,
+                "ip": "10.1.0.37",
+                "proxy_nodes_hostname": "ec2-35-165-137-87.us-west-2.compute.amazonaws.com",
+                "hostname": "ip-10-1-0-37.us-west-2.compute.internal",
+                "state": "installed",
+                "_links": {"self": {"href": "/api/v1/workers/98"}},
+                "purpose": "proxy",
+                "status_info": "test status info",
+                "sysinfo": "test sysinfo",
+                "tags": ["test tags"],
+            },
+            status_code=200,
+            headers={},
+        ),
+    )
+
+
 def mockApiGetWorkers99():
     BaseTestCase.registerHttpGetHandler(
         url="https://127.0.0.1:8080/api/v1/workers/99",
-        response=MockResponse(status_code=200, headers={},),
+        response=MockResponse(
+            json_data={
+                "hacapable": True,
+                "propinfo": {
+                    "bds_storage_apollo": "false",
+                    "bds_network_publicinterface": "ens5",
+                },
+                "approved_worker_pubkey": ["test pub key"],
+                "schedule": False,
+                "ip": "10.1.0.37",
+                "proxy_nodes_hostname": "ec2-35-165-137-87.us-west-2.compute.amazonaws.com",
+                "hostname": "ip-10-1-0-37.us-west-2.compute.internal",
+                "state": "installed",
+                "_links": {"self": {"href": "/api/v1/workers/99"}},
+                "purpose": "proxy",
+                "status_info": "test status info",
+                "sysinfo": {
+                    "keys": {
+                        "reported_worker_public_key": (
+                            "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDKonff"
+                            "u4vtTSINNpBwvLd367941fhPyEuVfh7KrohdIUSVEh/p"
+                            "X8FDAO9fi9pH979AzdDVWeUclTmktm63vQ39TVIJQ+rq"
+                            "doZUhtH8rSYFoTFzxUQxONviNJJGTiYYMo4kJsLO1Hk/"
+                            "b9Lz8sxUJWD+e5r2UTM5cDSYT3wBHUCDr/MXAxNC9FAg"
+                            "kpuME5utC1dd1aHj2zgLUP61REjnhy1zVVJnbh/T/y3p"
+                            "8Z5z0ubAQy7pYaMTuWgdVMH6kA/RWzOB2JRj8vFKYp9f"
+                            "ysFe7L/nj+C2LkDr4dmMLNL9ffTvpnMOj5qPgAO8bay5"
+                            "hAgVykUaRInLjuL7p5/nFATm9uI4A2a28m4HO9csywNX"
+                            "pm5TBDWPDxW7Wh7Sdkx0xHwZenXXy/em+4Q4Fk4Oc6Yw"
+                            "YcKOJVsst0qGeCFkhLjzvFHu2ceYf5Q1gg5FlBiX+LsW"
+                            "ngjArsd0sdh+3piH/xFuHdubqHfOFpOlZsQsMX5V/LUA"
+                            "71Wqv/cxMsoD5jybQOUS8o34JjkCZlavuJcIeU4hWlWE"
+                            "liZU5SmppuNkHdosXup20/TyBgg0qYlzc+FKZ/8vlQSj"
+                            "T5WgCNffPgXR94KPF1817RW1YSbR+1oiNg6FXgQrKM/1"
+                            "DiqyQ5D8DjhZWgg33hJ7K/fKCL3qPyWCJEMQ64iLQ4Qt"
+                            "SeU46l+aO490A89u6w== server\n"
+                        )
+                    },
+                    "storage": [
+                        {
+                            "info": {
+                                "IsLogicalVolume": False,
+                                "IsDisk": False,
+                                "Name": "/dev/nvme0n1p1",
+                                "SizeBytes": "429495664128",
+                                "IsReadOnly": False,
+                                "ParentName": "/dev/nvme0n1",
+                                "IsRemovable": False,
+                                "IsRotational": False,
+                                "ParentDeviceType": "disk",
+                                "IsPartition": True,
+                                "DeviceType": "part",
+                                "HasFilesystem": True,
+                                "Mountpoint": "/",
+                            },
+                            "name": "/dev/nvme0n1p1",
+                        }
+                    ],
+                    "swap": {"swap_total": 0},
+                    "memory": {"mem_total": 65842458624},
+                    "gp": {"gpu_count": 0},
+                    "cp": {
+                        "cpu_logical_cores": 16,
+                        "cpu_count": 8,
+                        "cpu_physical_cores": 8,
+                        "cpu_sockets": 1,
+                    },
+                    "mountpoint": [],
+                },
+                "tags": ["test tags"],
+            },
+            status_code=200,
+            headers={},
+        ),
     )
 
+    # BaseTestCase.registerHttpGetHandler(
+    #     url="https://127.0.0.1:8080/api/v1/workers/100",
+    #     response=MockResponse(status_code=200, headers={},),
+    # )
+
+    # BaseTestCase.registerHttpGetHandler(
+    #     url="https://127.0.0.1:8080/api/v1/workers/101",
+    #     response=MockResponse(status_code=200, headers={},),
+    # )
+
+    # BaseTestCase.registerHttpGetHandler(
+    #     response=MockResponse(status_code=200, headers={},),
+    # )
+
+
+def mockApiGetWorkers100():
     BaseTestCase.registerHttpGetHandler(
         url="https://127.0.0.1:8080/api/v1/workers/100",
-        response=MockResponse(status_code=200, headers={},),
+        response=MockResponse(
+            json_data={
+                "hacapable": True,
+                "propinfo": {
+                    "bds_storage_apollo": "false",
+                    "bds_network_publicinterface": "ens5",
+                },
+                "approved_worker_pubkey": ["test pub key"],
+                "schedule": False,
+                "ip": "10.1.0.37",
+                "proxy_nodes_hostname": (
+                    "ec2-35-165-137-87.us-west-2.compute.amazonaws.com"
+                ),
+                "hostname": "ip-10-1-0-37.us-west-2.compute.internal",
+                "state": "installed",
+                "_links": {"self": {"href": "/api/v1/workers/99"}},
+                "purpose": "controller",
+                "status_info": "",
+                "sysinfo": {
+                    "network": [
+                        {
+                            "info": {
+                                "IsVirtual": True,
+                                "IpAddr": {},
+                                "Mt": 9001,
+                                "State": "up",
+                                "Carrier": True,
+                                "HwAddr": "7e:d0:19:00:a1:c0",
+                                "Speed": "10000",
+                            },
+                            "name": "bds-flood-6-r",
+                        },
+                        {
+                            "info": {
+                                "IsVirtual": True,
+                                "IpAddr": {},
+                                "Mt": 9001,
+                                "State": "up",
+                                "Carrier": True,
+                                "HwAddr": "52:c4:7b:93:f2:0a",
+                                "Speed": "10000",
+                            },
+                            "name": "bds-flood-2-r",
+                        },
+                        {
+                            "info": {
+                                "IsVirtual": True,
+                                "IpAddr": {},
+                                "Mt": 9001,
+                                "State": "up",
+                                "Carrier": True,
+                                "HwAddr": "b2:e6:2b:c5:7a:d4",
+                                "Speed": "10000",
+                            },
+                            "name": "bds-flood-0-r",
+                        },
+                        {
+                            "info": {
+                                "IsVirtual": True,
+                                "IpAddr": {},
+                                "Mt": 9001,
+                                "State": "UNKNOWN",
+                                "Carrier": "UNKNOWN",
+                                "HwAddr": "c6:b3:cd:1b:7d:44",
+                                "Speed": "UNKNOWN",
+                            },
+                            "name": "bds-flood",
+                        },
+                        {
+                            "info": {
+                                "IsVirtual": True,
+                                "IpAddr": {},
+                                "Mt": 9001,
+                                "State": "up",
+                                "Carrier": True,
+                                "HwAddr": "5a:16:20:0c:d7:f1",
+                                "Speed": "10000",
+                            },
+                            "name": "bds-flood-1-r",
+                        },
+                        {
+                            "info": {
+                                "IsVirtual": True,
+                                "IpAddr": {},
+                                "Mt": 9001,
+                                "State": "up",
+                                "Carrier": True,
+                                "HwAddr": "c6:bf:e3:af:82:2f",
+                                "Speed": "10000",
+                            },
+                            "name": "bds-flood-1-l",
+                        },
+                        {
+                            "info": {
+                                "IsVirtual": True,
+                                "IpAddr": {},
+                                "Mt": 9001,
+                                "State": "up",
+                                "Carrier": True,
+                                "HwAddr": "0e:d9:23:62:96:94",
+                                "Speed": "10000",
+                            },
+                            "name": "bds-flood-0-l",
+                        },
+                        {
+                            "info": {
+                                "IsVirtual": True,
+                                "IpAddr": {},
+                                "Mt": 9001,
+                                "State": "up",
+                                "Carrier": True,
+                                "HwAddr": "e2:86:7e:62:c0:3c",
+                                "Speed": "10000",
+                            },
+                            "name": "bds-flood-2-l",
+                        },
+                        {
+                            "info": {
+                                "IsVirtual": True,
+                                "IpAddr": {},
+                                "Mt": 9001,
+                                "State": "up",
+                                "Carrier": True,
+                                "HwAddr": "8e:92:dc:b9:b7:d7",
+                                "Speed": "10000",
+                            },
+                            "name": "bds-flood-6-l",
+                        },
+                        {
+                            "info": {
+                                "IsVirtual": False,
+                                "IpAddr": {"dynamic": "10.1.0.37/24"},
+                                "Mt": 9001,
+                                "State": "up",
+                                "Carrier": True,
+                                "HwAddr": "02:72:98:8e:3b:86",
+                                "Speed": "UNKNOWN",
+                            },
+                            "name": "ens5",
+                        },
+                        {
+                            "info": {
+                                "IsVirtual": True,
+                                "IpAddr": {},
+                                "Mt": 9001,
+                                "State": "up",
+                                "Carrier": True,
+                                "HwAddr": "2a:4a:c9:c6:d0:28",
+                                "Speed": "10000",
+                            },
+                            "name": "bds-flood-4-r",
+                        },
+                        {
+                            "info": {
+                                "IsVirtual": True,
+                                "IpAddr": {},
+                                "Mt": 9001,
+                                "State": "up",
+                                "Carrier": True,
+                                "HwAddr": "7a:22:39:fc:11:7e",
+                                "Speed": "10000",
+                            },
+                            "name": "bds-flood-5-r",
+                        },
+                        {
+                            "info": {
+                                "IsVirtual": True,
+                                "IpAddr": {},
+                                "Mt": 9001,
+                                "State": "up",
+                                "Carrier": True,
+                                "HwAddr": "9a:2f:6c:e6:74:30",
+                                "Speed": "10000",
+                            },
+                            "name": "bds-flood-3-l",
+                        },
+                        {
+                            "info": {
+                                "IsVirtual": True,
+                                "IpAddr": {},
+                                "Mt": 9001,
+                                "State": "up",
+                                "Carrier": True,
+                                "HwAddr": "7e:ff:e4:5b:56:0d",
+                                "Speed": "10000",
+                            },
+                            "name": "bds-flood-7-r",
+                        },
+                        {
+                            "info": {
+                                "IsVirtual": True,
+                                "IpAddr": {},
+                                "Mt": 9001,
+                                "State": "up",
+                                "Carrier": True,
+                                "HwAddr": "4a:f7:7e:95:14:2d",
+                                "Speed": "10000",
+                            },
+                            "name": "bds-flood-7-l",
+                        },
+                        {
+                            "info": {
+                                "IsVirtual": True,
+                                "IpAddr": {},
+                                "Mt": 9001,
+                                "State": "up",
+                                "Carrier": True,
+                                "HwAddr": "36:5f:82:61:bf:5c",
+                                "Speed": "10000",
+                            },
+                            "name": "bds-flood-3-r",
+                        },
+                        {
+                            "info": {
+                                "IsVirtual": True,
+                                "IpAddr": {},
+                                "Mt": 9001,
+                                "State": "up",
+                                "Carrier": True,
+                                "HwAddr": "6e:86:7d:52:94:5d",
+                                "Speed": "10000",
+                            },
+                            "name": "bds-flood-5-l",
+                        },
+                        {
+                            "info": {
+                                "IsVirtual": True,
+                                "IpAddr": {},
+                                "Mt": 9001,
+                                "State": "up",
+                                "Carrier": True,
+                                "HwAddr": "e6:24:0f:54:99:a9",
+                                "Speed": "10000",
+                            },
+                            "name": "bds-flood-4-l",
+                        },
+                    ],
+                    "keys": {
+                        "reported_worker_public_key": (
+                            "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDKonff"
+                            "u4vtTSINNpBwvLd367941fhPyEuVfh7KrohdIUSVEh/p"
+                            "X8FDAO9fi9pH979AzdDVWeUclTmktm63vQ39TVIJQ+rq"
+                            "oZUhtH8rSYFoTFzxUQxONviNJJGTiYYMo4kJsLO1Hk/b"
+                            "9Lz8sxUJWD+e5r2UTM5cDSYT3wBHUCDr/MXAxNC9FAgk"
+                            "puME5utC1dd1aHj2zgLUP61REjnhy1zVVJnbh/T/y3p8"
+                            "Z5z0ubAQy7pYaMTuWgdVMH6kA/RWzOB2JRj8vFKYp9fy"
+                            "sFe7L/nj+C2LkDr4dmMLNL9ffTvpnMOj5qPgAO8bay5h"
+                            "AgVykUaRInLjuL7p5/nFATm9uI4A2a28m4HO9csywNXp"
+                            "m5TBDWPDxW7Wh7Sdkx0xHwZenXXy/em+4Q4Fk4Oc6YwY"
+                            "cKOJVsst0qGeCFkhLjzvFHu2ceYf5Q1gg5FlBiX+LsWn"
+                            "gjArsd0sdh+3piH/xFuHdubqHfOFpOlZsQsMX5V/LUA7"
+                            "1Wqv/cxMsoD5jybQOUS8o34JjkCZlavuJcIeU4hWlWEl"
+                            "iZU5SmppuNkHdosXup20/TyBgg0qYlzc+FKZ/8vlQSjT"
+                            "5WgCNffPgXR94KPF1817RW1YSbR+1oiNg6FXgQrKM/1D"
+                            "iqyQ5D8DjhZWgg33hJ7K/fKCL3qPyWCJEMQ64iLQ4QtS"
+                            "eU46l+aO490A89u6w== server\n"
+                        )
+                    },
+                    "storage": [
+                        {
+                            "info": {
+                                "IsLogicalVolume": False,
+                                "IsDisk": False,
+                                "Name": "/dev/nvme0n1p1",
+                                "SizeBytes": "429495664128",
+                                "IsReadOnly": False,
+                                "ParentName": "/dev/nvme0n1",
+                                "IsRemovable": False,
+                                "IsRotational": False,
+                                "ParentDeviceType": "disk",
+                                "IsPartition": True,
+                                "DeviceType": "part",
+                                "HasFilesystem": True,
+                                "Mountpoint": "/",
+                            },
+                            "name": "/dev/nvme0n1p1",
+                        }
+                    ],
+                    "swap": {"swap_total": 0},
+                    "memory": {"mem_total": 65842458624},
+                    "gp": {"gpu_count": 0},
+                    "cp": {
+                        "cpu_logical_cores": 16,
+                        "cpu_count": 8,
+                        "cpu_physical_cores": 8,
+                        "cpu_sockets": 1,
+                    },
+                    "mountpoint": [],
+                },
+                "tags": [],
+            },
+            status_code=200,
+            headers={},
+        ),
     )
 
-    BaseTestCase.registerHttpGetHandler(
-        url="https://127.0.0.1:8080/api/v1/workers/101",
-        response=MockResponse(status_code=200, headers={},),
-    )
 
+# worker that doesn't exist
+def mockApiGetWorkers999():
     BaseTestCase.registerHttpGetHandler(
-        response=MockResponse(status_code=200, headers={},),
+        url="https://127.0.0.1:8080/api/v1/workers/100",
+        response=MockResponse(
+            json_data={},
+            status_code=404,
+            raise_for_status_flag=True,
+            headers={},
+        ),
     )
 
 
 def mockApiPostSetup():
 
     BaseTestCase.registerHttpPostHandler(
-        url="https://127.0.0.1:8080/api/v1/workers",
+        url="https://127.0.0.1:8080/api/v1/workers/",
         response=MockResponse(
-            status_code=200, headers={"Location": "/api/v1/workers/123"},
+            json_data={
+                "hacapable": True,
+                "propinfo": {
+                    "bds_storage_apollo": "false",
+                    "bds_network_publicinterface": "ens5",
+                },
+                "approved_worker_pubkey": ["test pub key"],
+                "schedule": False,
+                "ip": "10.1.0.37",
+                "hostname": "ip-10-1-0-37.us-west-2.compute.internal",
+                "state": "installed",
+                "_links": {"self": {"href": "/api/v1/workers/99"}},
+                "purpose": "proxy",
+                "status_info": "test status info",
+                "sysinfo": "test sysinfo",
+                "tags": ["test tags"],
+            },
+            status_code=200,
+            headers={"Location": "/api/v1/workers/123"},
         ),
     )

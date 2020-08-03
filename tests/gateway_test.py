@@ -63,12 +63,10 @@ class TestGatewayList(BaseTestCase):
 
 
 class TestGatewayGet(BaseTestCase):
-    # def mocked_requests_post(*args, **kwargs):
-    #     if args[0] == "https://127.0.0.1:8080/api/v1/login":
-    #         return session_mock_response()
-    #     if args[0] == "https://127.0.0.1:8080/api/v1/workers/":
-    #         return
-    #     raise RuntimeError("Unhandle POST request: " + args[0])
+    def setUp(self):
+        mockApiGetSetup()
+        mockApiPostSetup()
+        super(TestGatewayGet, self).setUp()
 
     @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
@@ -79,7 +77,6 @@ class TestGatewayGet(BaseTestCase):
         ):
             get_client().gateway.get(123)
 
-        # pylint: disable=anomalous-backslash-in-string
         with self.assertRaisesRegexp(
             AssertionError, "'id' does not start with '/api/v1/workers'"
         ):
@@ -114,37 +111,32 @@ class TestGatewayGet(BaseTestCase):
         self.assertEqual(gateway.status_info, "test status info")
         self.assertEqual(gateway.tags, ["test tags"])
 
-        # /api/v1/workers/100 has "'purpose': 'controller'" so it
+        # /api/v1/workers/97 has "'purpose': 'controller'" so it
         #  isn't a gateway
         with self.assertRaisesRegexp(
             APIItemNotFoundException,
-            "'gateway not found with id: /api/v1/workers/100'",
+            "'gateway not found with id: /api/v1/workers/97'",
         ):
-            get_client().gateway.get("/api/v1/workers/100")
+            get_client().gateway.get("/api/v1/workers/97")
 
     @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_get_gateway_sysinfo(self, mock_get, mock_post):
 
-        gateway = get_client().gateway.get("/api/v1/workers/101")
+        gateway = get_client().gateway.get("/api/v1/workers/98")
 
         self.assertEqual(gateway.sysinfo, "test sysinfo")
-        self.assertEqual(gateway.proxy_nodes_hostname, "")
+        self.assertEqual(
+            gateway.proxy_nodes_hostname,
+            "ec2-35-165-137-87.us-west-2.compute.amazonaws.com",
+        )
 
 
 class TestCreateGateway(BaseTestCase):
-
-    # # pylint: disable=no-method-argument
-    # def mocked_requests_create_post(*args, **kwargs):
-    #     if args[0] == "https://127.0.0.1:8080/api/v1/login":
-    #         return session_mock_response()
-    #     elif args[0] == "https://127.0.0.1:8080/api/v1/workers/":
-    #         return MockResponse(
-    #             json_data={},
-    #             status_code=200,
-    #             headers={"location": "/api/v2/workers/99"},
-    #         )
-    #     raise RuntimeError("Unhandle POST request: " + args[0])
+    def setUp(self):
+        mockApiGetSetup()
+        mockApiPostSetup()
+        super(TestCreateGateway, self).setUp()
 
     @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_create_with_ssh_key_assertions(self, mock_post):
@@ -187,21 +179,12 @@ class TestCreateGateway(BaseTestCase):
 
 
 class TestWaitForGatewayStatus(BaseTestCase):
+    def setUp(self):
+        mockApiGetSetup()
+        mockApiPostSetup()
+        super(TestWaitForGatewayStatus, self).setUp()
 
-    # pylint: disable=no-method-argument
-    def mocked_requests_get(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v1/workers/123":
-            return
-        if args[0] == "https://127.0.0.1:8080/api/v1/workers/999":
-            return MockResponse(
-                json_data={},
-                status_code=404,
-                raise_for_status_flag=True,
-                headers={},
-            )
-        raise RuntimeError("Unhandle GET request: " + args[0])
-
-    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_wait_for_status_gateway_assertions(self, mock_get, mock_post):
 
@@ -250,7 +233,7 @@ class TestWaitForGatewayStatus(BaseTestCase):
                 gateway_id="/api/v1/workers/123", timeout_secs=1, state=["abc"]
             )
 
-    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_wait_for_status_gateway(self, mock_get, mock_post):
 
@@ -302,7 +285,7 @@ class TestWaitForGatewayStatus(BaseTestCase):
             )
         )
 
-    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_wait_for_status_gateway_cli(self, mock_get, mock_post):
 
@@ -316,7 +299,7 @@ class TestWaitForGatewayStatus(BaseTestCase):
         except SystemExit:
             self.fail("Should not raise a SystemExit")
 
-    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_wait_for_status_gateway_cli_fail_to_reach_state(
         self, mock_get, mock_post
@@ -342,7 +325,7 @@ class TestWaitForGatewayStatus(BaseTestCase):
         # coverage seems to populate standard error (issues 93)
         self.assertTrue(stderr.endswith(expected_stderr))
 
-    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_wait_for_status_gateway_cli_multiple_states(
         self, mock_get, mock_post
@@ -361,7 +344,7 @@ class TestWaitForGatewayStatus(BaseTestCase):
         except SystemExit:
             self.fail("Should not raise a SystemExit")
 
-    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_wait_for_status_gateway_cli_fail_to_reach_state_with_multiple_states(
         self, mock_get, mock_post
@@ -389,7 +372,7 @@ class TestWaitForGatewayStatus(BaseTestCase):
         # coverage seems to populate standard error (issues 93)
         self.assertTrue(stderr.endswith(expected_stderr))
 
-    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_wait_for_status_gateway_cli_gateway_id_does_not_exist(
         self, mock_get, mock_post
@@ -405,7 +388,7 @@ class TestWaitForGatewayStatus(BaseTestCase):
             )
         self.assertEqual(cm.exception.code, 1)
 
-    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_wait_for_status_gateway_cli_gateway_id_does_not_exist_and_no_status(
         self, mock_get, mock_post
@@ -421,7 +404,7 @@ class TestWaitForGatewayStatus(BaseTestCase):
         except SystemExit:
             self.fail("Should not raise a SystemExit")
 
-    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_wait_for_delete_gateway_cli_gateway_id_does_not_exist_and_no_status(
         self, mock_get, mock_post
