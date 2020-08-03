@@ -36,7 +36,7 @@ BaseTestCase.registerHttpGetHandler(
                 "users": [
                     {
                         "_links": {"self": {"href": "/api/v1/user/16"}},
-                        "label": {"name": "csnow", "description": "chris",},
+                        "label": {"name": "csnow", "description": "chris"},
                         "is_group_added_user": False,
                         "is_external": False,
                         "is_service_account": False,

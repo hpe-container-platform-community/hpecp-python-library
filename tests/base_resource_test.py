@@ -20,8 +20,6 @@
 
 import unittest
 
-from mock import MagicMock
-
 from hpecp.base_resource import (
     AbstractResourceController,
     AbstractWaitableResourceController,

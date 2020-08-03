@@ -30,11 +30,6 @@ from hpecp.gateway import GatewayController, GatewayStatus
 
 from .base_test import BaseTestCase
 
-# if six.PY2:
-#     from io import BytesIO as StringIO
-# else:
-#     from io import StringIO
-
 
 class MockResponse:
     def __init__(

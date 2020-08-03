@@ -20,20 +20,9 @@
 
 
 import json
-import os
-import sys
-import tempfile
-import unittest
-from textwrap import dedent
 
-import requests
 import six
-import yaml
 from mock import patch
-
-from hpecp import ContainerPlatformClient
-from hpecp.base_resource import ResourceList
-from hpecp.exceptions import APIItemNotFoundException
 
 from .base_test import BaseTestCase, MockResponse, mocked_login_post
 
