@@ -19,12 +19,13 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 
 import os
+import tempfile
+from textwrap import dedent
 from unittest import TestCase
+
+import requests
 from mock import patch
 
-from textwrap import dedent
-import tempfile
-import requests
 from hpecp import ContainerPlatformClient, ContainerPlatformClientException
 
 

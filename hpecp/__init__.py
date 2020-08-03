@@ -26,15 +26,13 @@
 
 from __future__ import absolute_import
 
-__version__ = "0.7.11"
-
+from .client import ContainerPlatformClient
+from .exceptions import (
+    APIException,
+    APIItemConflictException,
+    APIItemNotFoundException,
+    ContainerPlatformClientException,
+)
 from .logger import Logger
 
-from .client import ContainerPlatformClient
-
-from .exceptions import (
-    ContainerPlatformClientException,
-    APIException,
-    APIItemNotFoundException,
-    APIItemConflictException,
-)
+__version__ = "0.7.11"

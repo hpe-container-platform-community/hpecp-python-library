@@ -18,6 +18,7 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
+import json
 import os
 import sys
 import tempfile
@@ -27,15 +28,12 @@ from unittest import TestCase
 import requests
 import six
 from mock import mock, mock_open, patch
-from hpecp.cli import base
 
-from .base_test import (
-    BaseTestCase,
-    MockResponse,
-    session_mock_response as base_login_post_response,
-)
+from hpecp.cli import base
 from hpecp.gateway import Gateway
-import json
+
+from .base_test import BaseTestCase, MockResponse
+from .base_test import session_mock_response as base_login_post_response
 
 if six.PY2:
     from io import BytesIO as StringIO  # noqa: F811

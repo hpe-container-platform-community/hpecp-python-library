@@ -19,23 +19,23 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 
 
+import json
 import os
 import sys
+import tempfile
 import unittest
 from textwrap import dedent
-import json
-import yaml
 
 import requests
+import six
+import yaml
 from mock import patch
 
 from hpecp import ContainerPlatformClient
-from hpecp.exceptions import APIItemNotFoundException
-import tempfile
 from hpecp.base_resource import ResourceList
+from hpecp.exceptions import APIItemNotFoundException
 
 from .base_test import BaseTestCase, MockResponse, mocked_login_post
-import six
 
 
 def mocked_requests_get(*args, **kwargs):

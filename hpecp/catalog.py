@@ -18,7 +18,7 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-from .base_resource import AbstractResourceController, AbstractResource
+from .base_resource import AbstractResource, AbstractResourceController
 
 
 class Catalog(AbstractResource):

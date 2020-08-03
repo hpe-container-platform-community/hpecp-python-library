@@ -1,16 +1,18 @@
-from unittest import TestCase
-import requests
-from mock import patch, MagicMock
-import sys
-import os
 import json
-
-from hpecp.cli import base
-from hpecp import ContainerPlatformClient
-from hpecp.k8s_worker import K8sWorkerController, WorkerK8sStatus, WorkerK8s
-from hpecp.exceptions import APIItemConflictException, APIItemNotFoundException
-from .base_test import session_mock_response, BaseTestCase
+import os
+import sys
 import tempfile
+from unittest import TestCase
+
+import requests
+from mock import MagicMock, patch
+
+from hpecp import ContainerPlatformClient
+from hpecp.cli import base
+from hpecp.exceptions import APIItemConflictException, APIItemNotFoundException
+from hpecp.k8s_worker import K8sWorkerController, WorkerK8s, WorkerK8sStatus
+
+from .base_test import BaseTestCase, session_mock_response
 
 try:
     from imp import reload

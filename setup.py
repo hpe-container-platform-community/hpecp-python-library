@@ -39,23 +39,24 @@ shutil.copyfile(REQ_PATH + "/bin/cli.py", REQ_PATH + "/bin/hpecp")
 os.chmod(REQ_PATH + "/bin/hpecp", 509)
 
 
-
 def read(rel_path):
     here = os.path.abspath(os.path.dirname(__file__))
-    with codecs.open(os.path.join(here, rel_path), 'r') as fp:
+    with codecs.open(os.path.join(here, rel_path), "r") as fp:
         return fp.read()
+
 
 def get_version(rel_path):
     for line in read(rel_path).splitlines():
-        if line.startswith('__version__'):
+        if line.startswith("__version__"):
             delim = '"' if '"' in line else "'"
             return line.split(delim)[1]
     else:
         raise RuntimeError("Unable to find version string.")
 
+
 try:
     this_directory = os.path.abspath(os.path.dirname(__file__))
-    with open(os.path.join(this_directory, 'README.md')) as f:
+    with open(os.path.join(this_directory, "README.md")) as f:
         long_description = f.read()
 except Exception:
     long_description = ""
@@ -65,7 +66,7 @@ setup(
     name="hpecp",
     description="HPE Ezmeral Container Platform client",
     long_description=long_description,
-    long_description_content_type='text/markdown',
+    long_description_content_type="text/markdown",
     author="Chris Snow",
     author_email="chsnow123@gmail.com",
     url="https://github.com/hpe-container-platform-community/hpecp-python-library",

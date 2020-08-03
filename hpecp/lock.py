@@ -20,8 +20,9 @@
 
 from __future__ import absolute_import
 
-import polling
 import re
+
+import polling
 from requests.structures import CaseInsensitiveDict
 
 try:

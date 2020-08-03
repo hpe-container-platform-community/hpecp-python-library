@@ -18,14 +18,15 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
+import json
 from unittest import TestCase
 
-import json
 import requests
 import six
 from mock import patch
 
 from hpecp import ContainerPlatformClient
+
 from .base_test import BaseTestCase
 
 

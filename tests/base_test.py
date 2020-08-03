@@ -22,25 +22,14 @@ import abc
 import os
 import sys
 import tempfile
+import unittest
 from io import StringIO
 from textwrap import dedent
-from unittest import TestCase
-import json
-import unittest
+
 import requests
 import six
-from mock import patch
 
-from hpecp import (
-    APIException,
-    APIItemNotFoundException,
-    ContainerPlatformClient,
-)
-from hpecp.k8s_cluster import (
-    K8sCluster,
-    K8sClusterHostConfig,
-    K8sClusterStatus,
-)
+from hpecp import ContainerPlatformClient
 
 if six.PY2:
     from io import BytesIO as StringIO  # noqa: F811
@@ -118,6 +107,54 @@ def mocked_login_post(*args, **kwargs):
 
 @six.add_metaclass(abc.ABCMeta)
 class BaseTestCase(unittest.TestCase):
+
+    _http_get_handlers = {}
+    _http_post_handlers = {}
+
+    @classmethod
+    def httpPostHandlers(cls, *args, **kwargs):
+        return BaseTestCase._http_post_handlers[args[0]]
+
+    @classmethod
+    def httpGetHandlers(cls, *args, **kwargs):
+        try:
+            handler = BaseTestCase._http_get_handlers[args[0]]
+        except KeyError:
+            raise Exception(
+                "Handler not found for GET {}.\nDid you register a handler with BaseTestCase.registerHttpGetHandler?".format(
+                    args[0]
+                )
+            )
+
+        if isinstance(handler, Exception):
+            raise handler
+        else:
+            return handler
+
+    @classmethod
+    def registerHttpPostHandler(cls, url, response):
+        BaseTestCase._http_post_handlers[url] = response
+
+    @classmethod
+    def registerHttpGetHandler(cls, url, response):
+        BaseTestCase._http_get_handlers[url] = response
+
+    @classmethod
+    def setUpClass(cls):
+        # Register the login handler
+        BaseTestCase.registerHttpPostHandler(
+            "https://127.0.0.1:8080/api/v1/login",
+            MockResponse(
+                json_data={},
+                status_code=200,
+                headers={
+                    "location": (
+                        "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
+                    )
+                },
+            ),
+        )
+
     def setUp(self):
         file_data = dedent(
             """[default]

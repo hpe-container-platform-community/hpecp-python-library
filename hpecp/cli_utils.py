@@ -21,10 +21,10 @@
 """CLI Utilities."""
 
 from collections import OrderedDict
-from six import string_types
 from io import StringIO
-import six
 
+import six
+from six import string_types
 
 # This class has been adapted from knack.
 # See https://github.com/microsoft/knack/blob/master/LICENSE
