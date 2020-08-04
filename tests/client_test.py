@@ -19,39 +19,20 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 
 import os
+import tempfile
+from textwrap import dedent
 from unittest import TestCase
+
+import requests
 from mock import patch
 
-from textwrap import dedent
-import tempfile
-import requests
 from hpecp import ContainerPlatformClient, ContainerPlatformClientException
 
+from .base import BaseTestCase, MockResponse
+from .client_mock_api_responses import mockApiSetup
 
-class MockResponse:
-    def __init__(
-        self,
-        json_data,
-        status_code,
-        headers,
-        raise_for_status_flag=False,
-        text_data="",
-    ):
-        self.json_data = json_data
-        self.text = text_data
-        self.status_code = status_code
-        self.raise_for_status_flag = raise_for_status_flag
-        self.headers = headers
-
-    def raise_for_status(self):
-        if self.raise_for_status_flag:
-            self.text = "some error occurred"
-            raise requests.exceptions.HTTPError()
-        else:
-            return
-
-    def json(self):
-        return self.json_data
+# setup the mock data
+mockApiSetup()
 
 
 class TestCreateFromProperties(TestCase):
@@ -91,7 +72,7 @@ class TestCreateFromEnvVar(TestCase):
     def test_create_from_env_var_factory_method_with_missing_env_values(self):
 
         try:
-            client = ContainerPlatformClient.create_from_env()
+            ContainerPlatformClient.create_from_env()
         except ContainerPlatformClientException as expected:
             self.assertEqual(
                 expected.message,
@@ -113,7 +94,7 @@ class TestCreateFromEnvVar(TestCase):
     def test_create_from_env_var_factory_method_with_type_error(self):
 
         try:
-            client = ContainerPlatformClient.create_from_env()
+            ContainerPlatformClient.create_from_env()
         except ContainerPlatformClientException as expected:
             self.assertEqual(
                 expected.message,
@@ -169,23 +150,8 @@ class TestCreateFromEnvVar(TestCase):
         self.assertEqual(client.warn_ssl, False)
 
 
-class TestAuth(TestCase):
-
-    # pylint: disable=no-method-argument
-    def mocked_requests_post(*args, **kwargs):
-        if args[0] == "http://127.0.0.1:8080/api/v1/login":
-            return MockResponse(
-                json_data={},
-                status_code=200,
-                headers={
-                    "location": (
-                        "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
-                    )
-                },
-            )
-        raise RuntimeError("Unhandle POST request: " + args[0])
-
-    @patch("requests.post", side_effect=mocked_requests_post)
+class TestAuth(BaseTestCase):
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_create_session(self, mock_post):
 
         client = ContainerPlatformClient(
@@ -198,7 +164,7 @@ class TestAuth(TestCase):
 
         self.assertIsInstance(client.create_session(), ContainerPlatformClient)
 
-    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_create_session_chained(self, mock_post):
 
         client = ContainerPlatformClient(
@@ -211,20 +177,7 @@ class TestAuth(TestCase):
 
         self.assertIsInstance(client, ContainerPlatformClient)
 
-    def mocked_requests_post_ssl(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v1/login":
-            return MockResponse(
-                json_data={},
-                status_code=200,
-                headers={
-                    "location": (
-                        "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
-                    )
-                },
-            )
-        raise RuntimeError("Unhandle POST request: " + args[0])
-
-    @patch("requests.post", side_effect=mocked_requests_post_ssl)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_auth_ssl(self, mock_post):
 
         client = ContainerPlatformClient(

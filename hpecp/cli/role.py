@@ -1,9 +1,3 @@
-"""A python library for working with HPE Container Platform.
-
-.. moduleauthor:: Chris Snow <chsnow123@gmail.com>
-
-"""
-
 # (C) Copyright [2020] Hewlett Packard Enterprise Development LP
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
@@ -24,15 +18,35 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-from __future__ import absolute_import
+"""HPE Container Platform CLI."""
 
-from .client import ContainerPlatformClient
-from .exceptions import (
-    APIException,
-    APIItemConflictException,
-    APIItemNotFoundException,
-    ContainerPlatformClientException,
-)
-from .logger import Logger
+from __future__ import print_function
 
-__version__ = "0.7.12"
+from textwrap import dedent
+from hpecp.role import Role
+from hpecp.cli import base
+
+
+class RoleProxy(base.BaseProxy):
+    """Proxy object to :py:attr:`<hpecp.client.role>`."""
+
+    def __dir__(self):
+        """Return the CLI method names."""
+        return ["delete", "examples", "get", "list"]
+
+    def __init__(self):
+        """Create instance of proxy class with the client module name."""
+        super(RoleProxy, self).new_instance("role", Role)
+
+    def examples(self):
+        """Show examples for working with roles."""
+        print(
+            dedent(
+                """\
+                    
+                # Retrieve the role ID for 'Admin'
+                $ hpecp role list  --query "[?label.name == 'Admin'][_links.self.href] | [0][0]" --output json | tr -d '"'
+                /api/v1/role/2
+                """  # noqa:  E501
+            )
+        )

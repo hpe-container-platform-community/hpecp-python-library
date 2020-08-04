@@ -1,9 +1,3 @@
-"""A python library for working with HPE Container Platform.
-
-.. moduleauthor:: Chris Snow <chsnow123@gmail.com>
-
-"""
-
 # (C) Copyright [2020] Hewlett Packard Enterprise Development LP
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
@@ -24,15 +18,35 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-from __future__ import absolute_import
 
-from .client import ContainerPlatformClient
-from .exceptions import (
-    APIException,
-    APIItemConflictException,
-    APIItemNotFoundException,
-    ContainerPlatformClientException,
-)
-from .logger import Logger
+from .base import BaseTestCase, MockResponse
 
-__version__ = "0.7.12"
+
+def mockApiSetup():
+
+    BaseTestCase.registerHttpGetHandler(
+        url="https://127.0.0.1:8080/api/v1/lock",
+        response=MockResponse(
+            json_data={
+                "_links": {"self": {"href": "/api/v1/lock"}},
+                "locked": False,
+                "_embedded": {"internal_locks": [], "external_locks": []},
+            },
+            status_code=200,
+            headers=dict(),
+        ),
+    )
+
+    BaseTestCase.registerHttpPostHandler(
+        url="https://127.0.0.1:8080/api/v1/lock",
+        response=MockResponse(
+            json_data={},
+            status_code=201,
+            headers={"Location": "/test_location/1"},
+        ),
+    )
+
+    BaseTestCase.registerHttpDeleteHandler(
+        url="https://127.0.0.1:8080/api/v1/lock/1",
+        response=MockResponse(json_data={}, status_code=201, headers=dict(),),
+    )

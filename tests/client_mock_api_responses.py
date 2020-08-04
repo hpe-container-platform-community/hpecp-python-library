@@ -1,9 +1,3 @@
-"""A python library for working with HPE Container Platform.
-
-.. moduleauthor:: Chris Snow <chsnow123@gmail.com>
-
-"""
-
 # (C) Copyright [2020] Hewlett Packard Enterprise Development LP
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
@@ -24,15 +18,24 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-from __future__ import absolute_import
 
-from .client import ContainerPlatformClient
-from .exceptions import (
-    APIException,
-    APIItemConflictException,
-    APIItemNotFoundException,
-    ContainerPlatformClientException,
-)
-from .logger import Logger
+from hpecp.exceptions import APIItemNotFoundException
 
-__version__ = "0.7.12"
+from .base import BaseTestCase, MockResponse
+
+
+def mockApiSetup():
+
+    # Mock http (not https) session
+    BaseTestCase.registerHttpPostHandler(
+        "http://127.0.0.1:8080/api/v1/login",
+        MockResponse(
+            json_data={},
+            status_code=200,
+            headers={
+                "location": (
+                    "/api/v1/session/df1bfacb-ssl-false-xxxx-c8f57d8f3c72"
+                )
+            },
+        ),
+    )

@@ -19,42 +19,21 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 
 
-import os
-import sys
-import unittest
-from textwrap import dedent
 import json
-import yaml
 
-import requests
+import six
 from mock import patch
 
-from hpecp import ContainerPlatformClient
-from hpecp.exceptions import APIItemNotFoundException
-import tempfile
-from hpecp.base_resource import ResourceList
+from .base import BaseTestCase, MockResponse
+from .lock_mock_api_responses import mockApiSetup
 
-from .base_test import BaseTestCase, MockResponse, mocked_login_post
-import six
-
-
-def mocked_requests_get(*args, **kwargs):
-    if args[0] == "https://127.0.0.1:8080/api/v1/lock":
-        return MockResponse(
-            json_data={
-                "_links": {"self": {"href": "/api/v1/lock"}},
-                "locked": False,
-                "_embedded": {"internal_locks": [], "external_locks": []},
-            },
-            status_code=200,
-            headers=dict(),
-        )
-    raise RuntimeError("Unhandle GET request: " + args[0])
+# setup the mock data
+mockApiSetup()
 
 
 class TestCLIList(BaseTestCase):
-    @patch("requests.post", side_effect=mocked_login_post)
-    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     def test_list_yaml(self, mock_post, mock_get):
 
         try:
@@ -84,8 +63,8 @@ locked: false"""
         if six.PY2:
             self.assertEqual(stderr, expected_stderr)
 
-    @patch("requests.post", side_effect=mocked_login_post)
-    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     def test_list_json(self, mock_post, mock_get):
 
         self.maxDiff = None
@@ -114,8 +93,8 @@ locked: false"""
             expected_stderr = ""
             self.assertEqual(stderr, expected_stderr)
 
-    @patch("requests.post", side_effect=mocked_login_post)
-    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     def test_list_output_parameter_invalid(self, mock_post, mock_get):
 
         self.maxDiff = None
@@ -137,13 +116,8 @@ locked: false"""
 
 
 class TestCLIDelete(BaseTestCase):
-    def mocked_requests_delete(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v1/lock/1":
-            return MockResponse(json_data={}, status_code=201, headers=dict(),)
-        raise RuntimeError("Unhandle DELETE request: " + args[0])
-
-    @patch("requests.post", side_effect=mocked_login_post)
-    @patch("requests.delete", side_effect=mocked_requests_delete)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
+    @patch("requests.delete", side_effect=BaseTestCase.httpDeleteHandlers)
     def test_delete(self, mock_post, mock_delete):
 
         try:
@@ -165,9 +139,9 @@ class TestCLIDelete(BaseTestCase):
         if six.PY2:
             self.assertEqual(stderr, expected_stderr)
 
-    @patch("requests.get", side_effect=mocked_requests_get)
-    @patch("requests.post", side_effect=mocked_login_post)
-    @patch("requests.delete", side_effect=mocked_requests_delete)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
+    @patch("requests.delete", side_effect=BaseTestCase.httpDeleteHandlers)
     def test_delete_all(self, mock_get, mock_post, mock_delete):
 
         try:
@@ -206,8 +180,8 @@ class TestCLIDelete(BaseTestCase):
         raise RuntimeError("Unhandle GET request: " + args[0])
 
     @patch("requests.get", side_effect=mocked_requests_get_locked)
-    @patch("requests.post", side_effect=mocked_login_post)
-    @patch("requests.delete", side_effect=mocked_requests_delete)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
+    @patch("requests.delete", side_effect=BaseTestCase.httpDeleteHandlers)
     def test_delete_all_timeout(self, mock_get, mock_post, mock_delete):
 
         with self.assertRaises(SystemExit) as cm:
@@ -230,26 +204,7 @@ class TestCLIDelete(BaseTestCase):
 
 
 class TestCLICreate(BaseTestCase):
-    def mocked_requests_post(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v1/login":
-            return MockResponse(
-                json_data={},
-                status_code=200,
-                headers={
-                    "location": (
-                        "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
-                    )
-                },
-            )
-        elif args[0] == "https://127.0.0.1:8080/api/v1/lock":
-            return MockResponse(
-                json_data={},
-                status_code=201,
-                headers={"Location": "/test_location/1"},
-            )
-        raise RuntimeError("Unhandle GET request: " + args[0])
-
-    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_create(self, mock_post):
 
         try:

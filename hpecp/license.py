@@ -20,8 +20,8 @@
 
 from __future__ import absolute_import
 
-
 import urllib
+
 from requests.structures import CaseInsensitiveDict
 
 

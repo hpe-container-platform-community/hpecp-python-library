@@ -20,9 +20,9 @@
 
 from __future__ import absolute_import
 
-from .base_resource import AbstractResourceController, AbstractResource
-
 from requests.structures import CaseInsensitiveDict
+
+from .base_resource import AbstractResource, AbstractResourceController
 
 try:
     basestring

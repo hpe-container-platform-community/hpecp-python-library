@@ -18,142 +18,28 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-import os
-import sys
-import tempfile
-from io import StringIO
-from textwrap import dedent
-from unittest import TestCase
 import json
+from unittest import TestCase
 
-import requests
-import six
 from mock import patch
 
-from .base_test import BaseTestCase, session_mock_response
-
-from hpecp import (
-    APIException,
-    APIItemNotFoundException,
-    ContainerPlatformClient,
-)
+from hpecp import APIException, APIItemNotFoundException
 from hpecp.k8s_cluster import (
     K8sCluster,
     K8sClusterHostConfig,
     K8sClusterStatus,
 )
-import base64
 
-if six.PY2:
-    from io import BytesIO as StringIO  # noqa: F811
-else:
-    from io import StringIO
+from .base import BaseTestCase, MockResponse, get_client
+from .k8s_cluster_mock_api_responses import mockApiSetup
 
-
-class MockResponse:
-    def __init__(
-        self,
-        json_data,
-        status_code,
-        headers,
-        raise_for_status_flag=False,
-        text_data="",
-    ):
-        self.json_data = json_data
-        self.text = text_data
-        self.status_code = status_code
-        self.raise_for_status_flag = raise_for_status_flag
-        self.headers = headers
-
-    def raise_for_status(self):
-        if self.raise_for_status_flag:
-            self.text = "some error occurred"
-            raise requests.exceptions.HTTPError()
-        else:
-            return
-
-    def json(self):
-        return self.json_data
+# setup the mock data
+mockApiSetup()
 
 
-def get_client():
-    client = ContainerPlatformClient(
-        username="admin",
-        password="admin123",
-        api_host="127.0.0.1",
-        api_port=8080,
-        use_ssl=True,
-    )
-    client.create_session()
-    return client
-
-
-class TestClusterList(TestCase):
-
-    # pylint: disable=no-method-argument
-    def mocked_requests_get(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v2/k8scluster":
-            return MockResponse(
-                json_data={
-                    "_links": {"self": {"href": "/api/v2/k8scluster"}},
-                    "_embedded": {
-                        "k8sclusters": [
-                            {
-                                "_links": {
-                                    "self": {"href": "/api/v2/k8scluster/20"}
-                                },
-                                "label": {
-                                    "name": "def",
-                                    "description": "my cluster",
-                                },
-                                "k8s_version": "1.17.0",
-                                "pod_network_range": "10.192.0.0/12",
-                                "service_network_range": "10.96.0.0/12",
-                                "pod_dns_domain": "cluster.local",
-                                "created_by_user_id": "/api/v1/user/5",
-                                "created_by_user_name": "admin",
-                                "created_time": 1588260014,
-                                "k8shosts_config": [
-                                    {
-                                        "node": "/api/v2/worker/k8shost/4",
-                                        "role": "worker",
-                                    },
-                                    {
-                                        "node": "/api/v2/worker/k8shost/5",
-                                        "role": "master",
-                                    },
-                                ],
-                                "status": "ready",
-                                "status_message": "really ready",
-                                "api_endpoint_access": "api:1234",
-                                "dashboard_endpoint_access": "dashboard:1234",
-                                "admin_kube_config": "xyz==",
-                                "dashboard_token": "abc==",
-                                "persistent_storage": {"nimble_csi": False},
-                            }
-                        ]
-                    },
-                },
-                status_code=200,
-                headers={},
-            )
-        raise RuntimeError("Unhandle GET request: " + args[0])
-
-    def mocked_requests_post(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v1/login":
-            return MockResponse(
-                json_data={},
-                status_code=200,
-                headers={
-                    "location": (
-                        "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
-                    )
-                },
-            )
-        raise RuntimeError("Unhandle POST request: " + args[0])
-
-    @patch("requests.get", side_effect=mocked_requests_get)
-    @patch("requests.post", side_effect=mocked_requests_post)
+class TestClusterList(BaseTestCase):
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_get_k8sclusters(self, mock_get, mock_post):
 
         # Makes GET Request: https://127.0.0.1:8080/api/v2/k8sclusters/
@@ -251,7 +137,7 @@ class TestClusterList(TestCase):
     @patch(
         "requests.get", side_effect=mocked_requests_get_missing_cluster_props
     )
-    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_get_k8sclusters_missing_props(self, mock_get, mock_post):
 
         # Makes GET Request: https://127.0.0.1:8080/api/v2/k8sclusters/
@@ -269,8 +155,8 @@ class TestClusterList(TestCase):
         self.assertEqual(clusters[0].dashboard_endpoint_access, "")
         self.assertEqual(clusters[0].status_message, "")
 
-    @patch("requests.get", side_effect=mocked_requests_get)
-    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_k8sclusters_tabulate_all_columns(self, mock_get, mock_post):
 
         expected_tabulate_output = (
@@ -295,8 +181,8 @@ class TestClusterList(TestCase):
             expected_tabulate_output,
         )  # noqa: E501
 
-    @patch("requests.get", side_effect=mocked_requests_get)
-    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_k8sclusters_tabulate_with_column_list(self, mock_get, mock_post):
 
         k8scluster_list = get_client().k8s_cluster.list()
@@ -311,28 +197,7 @@ class TestClusterList(TestCase):
 
 
 class TestCreateCluster(TestCase):
-
-    # pylint: disable=no-method-argument
-    def mocked_requests_create_post(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v1/login":
-            return MockResponse(
-                json_data={},
-                status_code=200,
-                headers={
-                    "location": (
-                        "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
-                    )
-                },
-            )
-        elif args[0] == "https://127.0.0.1:8080/api/v2/k8scluster":
-            return MockResponse(
-                json_data={},
-                status_code=200,
-                headers={"Location": "/api/v2/k8scluster/99"},
-            )
-        raise RuntimeError("Unhandle POST request: " + args[0])
-
-    @patch("requests.post", side_effect=mocked_requests_create_post)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_create(self, mock_post):
 
         with self.assertRaisesRegexp(
@@ -492,90 +357,8 @@ class TestCreateCluster(TestCase):
 
 
 class TestGetCluster(TestCase):
-
-    # pylint: disable=no-method-argument
-    def mocked_requests_get(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v2/k8scluster/999":
-            return MockResponse(
-                json_data={},
-                status_code=404,
-                raise_for_status_flag=True,
-                headers={},
-            )
-        if args[0] == "https://127.0.0.1:8080/api/v2/k8scluster/123":
-            return MockResponse(
-                json_data={
-                    "_links": {"self": {"href": "/api/v2/k8scluster/123"}},
-                    "label": {"name": "def", "description": "my cluster"},
-                    "k8s_version": "1.17.0",
-                    "pod_network_range": "10.192.0.0/12",
-                    "service_network_range": "10.96.0.0/12",
-                    "pod_dns_domain": "cluster.local",
-                    "created_by_user_id": "/api/v1/user/5",
-                    "created_by_user_name": "admin",
-                    "created_time": 1588260014,
-                    "k8shosts_config": [
-                        {"node": "/api/v2/worker/k8shost/4", "role": "worker"},
-                        {"node": "/api/v2/worker/k8shost/5", "role": "master"},
-                    ],
-                    "status": "ready",
-                    "status_message": "really ready",
-                    "api_endpoint_access": "api:1234",
-                    "dashboard_endpoint_access": "dashboard:1234",
-                    "admin_kube_config": "xyz==",
-                    "dashboard_token": "abc==",
-                    "persistent_storage": {"nimble_csi": False},
-                },
-                status_code=200,
-                headers={},
-            )
-        if (
-            args[0]
-            == "https://127.0.0.1:8080/api/v2/k8scluster/123?setup_log=true"
-        ):
-            return MockResponse(
-                json_data={
-                    "_links": {"self": {"href": "/api/v2/k8scluster/123"}},
-                    "label": {"name": "def", "description": "my cluster"},
-                    "k8s_version": "1.17.0",
-                    "pod_network_range": "10.192.0.0/12",
-                    "service_network_range": "10.96.0.0/12",
-                    "pod_dns_domain": "cluster.local",
-                    "created_by_user_id": "/api/v1/user/5",
-                    "created_by_user_name": "admin",
-                    "created_time": 1588260014,
-                    "k8shosts_config": [
-                        {"node": "/api/v2/worker/k8shost/4", "role": "worker"},
-                        {"node": "/api/v2/worker/k8shost/5", "role": "master"},
-                    ],
-                    "status": "ready",
-                    "status_message": "really ready",
-                    "api_endpoint_access": "api:1234",
-                    "dashboard_endpoint_access": "dashboard:1234",
-                    "admin_kube_config": "xyz==",
-                    "dashboard_token": "abc==",
-                    "persistent_storage": {"nimble_csi": False},
-                },
-                status_code=200,
-                headers={},
-            )
-        raise RuntimeError("Unhandle GET request: " + args[0])
-
-    def mocked_requests_post(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v1/login":
-            return MockResponse(
-                json_data={},
-                status_code=200,
-                headers={
-                    "location": (
-                        "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
-                    )
-                },
-            )
-        raise RuntimeError("Unhandle POST request: " + args[0])
-
-    @patch("requests.get", side_effect=mocked_requests_get)
-    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_get_k8scluster(self, mock_get, mock_post):
 
         with self.assertRaises(APIItemNotFoundException):
@@ -592,101 +375,88 @@ class TestGetCluster(TestCase):
         )
 
 
-class TestWaitForClusterStatus(TestCase):
+class TestWaitForClusterStatus(BaseTestCase):
 
     # pylint: disable=no-method-argument
-    def mocked_requests_get(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v2/k8scluster/123":
-            return MockResponse(
-                json_data={
-                    "_links": {"self": {"href": "/api/v2/k8scluster/123"}},
-                    "label": {"name": "def", "description": "my cluster"},
-                    "k8s_version": "1.17.0",
-                    "pod_network_range": "10.192.0.0/12",
-                    "service_network_range": "10.96.0.0/12",
-                    "pod_dns_domain": "cluster.local",
-                    "created_by_user_id": "/api/v1/user/5",
-                    "created_by_user_name": "admin",
-                    "created_time": 1588260014,
-                    "k8shosts_config": [
-                        {"node": "/api/v2/worker/k8shost/4", "role": "worker"},
-                        {"node": "/api/v2/worker/k8shost/5", "role": "master"},
-                    ],
-                    "status": "ready",
-                    "status_message": "really ready",
-                    "api_endpoint_access": "api:1234",
-                    "dashboard_endpoint_access": "dashboard:1234",
-                    "admin_kube_config": "xyz==",
-                    "dashboard_token": "abc==",
-                    "persistent_storage": {"nimble_csi": False},
-                },
-                status_code=200,
-                headers={},
-            )
-        if (
-            args[0]
-            == "https://127.0.0.1:8080/api/v2/k8scluster/123?setup_log=true"
-        ):
-            return MockResponse(
-                json_data={
-                    "_links": {"self": {"href": "/api/v2/k8scluster/123"}},
-                    "label": {"name": "def", "description": "my cluster"},
-                    "k8s_version": "1.17.0",
-                    "pod_network_range": "10.192.0.0/12",
-                    "service_network_range": "10.96.0.0/12",
-                    "pod_dns_domain": "cluster.local",
-                    "created_by_user_id": "/api/v1/user/5",
-                    "created_by_user_name": "admin",
-                    "created_time": 1588260014,
-                    "k8shosts_config": [
-                        {"node": "/api/v2/worker/k8shost/4", "role": "worker"},
-                        {"node": "/api/v2/worker/k8shost/5", "role": "master"},
-                    ],
-                    "status": "ready",
-                    "status_message": "really ready",
-                    "api_endpoint_access": "api:1234",
-                    "dashboard_endpoint_access": "dashboard:1234",
-                    "admin_kube_config": "xyz==",
-                    "dashboard_token": "abc==",
-                    "persistent_storage": {"nimble_csi": False},
-                },
-                status_code=200,
-                headers={},
-            )
-        if args[0] == "https://127.0.0.1:8080/api/v2/k8scluster/999":
-            return MockResponse(
-                json_data={},
-                status_code=404,
-                raise_for_status_flag=True,
-                headers={},
-            )
-        if (
-            args[0]
-            == "https://127.0.0.1:8080/api/v2/k8scluster/999?setup_log=true"
-        ):
-            return MockResponse(
-                json_data={},
-                status_code=404,
-                raise_for_status_flag=True,
-                headers={},
-            )
-        raise RuntimeError("Unhandle GET request: " + args[0])
+    # def mocked_requests_get(*args, **kwargs):
+    #     if args[0] == "https://127.0.0.1:8080/api/v2/k8scluster/123":
+    #         return MockResponse(
+    #             json_data={
+    #                 "_links": {"self": {"href": "/api/v2/k8scluster/123"}},
+    #                 "label": {"name": "def", "description": "my cluster"},
+    #                 "k8s_version": "1.17.0",
+    #                 "pod_network_range": "10.192.0.0/12",
+    #                 "service_network_range": "10.96.0.0/12",
+    #                 "pod_dns_domain": "cluster.local",
+    #                 "created_by_user_id": "/api/v1/user/5",
+    #                 "created_by_user_name": "admin",
+    #                 "created_time": 1588260014,
+    #                 "k8shosts_config": [
+    #                     {"node": "/api/v2/worker/k8shost/4", "role": "worker"},
+    #                     {"node": "/api/v2/worker/k8shost/5", "role": "master"},
+    #                 ],
+    #                 "status": "ready",
+    #                 "status_message": "really ready",
+    #                 "api_endpoint_access": "api:1234",
+    #                 "dashboard_endpoint_access": "dashboard:1234",
+    #                 "admin_kube_config": "xyz==",
+    #                 "dashboard_token": "abc==",
+    #                 "persistent_storage": {"nimble_csi": False},
+    #             },
+    #             status_code=200,
+    #             headers={},
+    #         )
+    #     if (
+    #         args[0]
+    #         == "https://127.0.0.1:8080/api/v2/k8scluster/123?setup_log=true"
+    #     ):
+    #         return MockResponse(
+    #             json_data={
+    #                 "_links": {"self": {"href": "/api/v2/k8scluster/123"}},
+    #                 "label": {"name": "def", "description": "my cluster"},
+    #                 "k8s_version": "1.17.0",
+    #                 "pod_network_range": "10.192.0.0/12",
+    #                 "service_network_range": "10.96.0.0/12",
+    #                 "pod_dns_domain": "cluster.local",
+    #                 "created_by_user_id": "/api/v1/user/5",
+    #                 "created_by_user_name": "admin",
+    #                 "created_time": 1588260014,
+    #                 "k8shosts_config": [
+    #                     {"node": "/api/v2/worker/k8shost/4", "role": "worker"},
+    #                     {"node": "/api/v2/worker/k8shost/5", "role": "master"},
+    #                 ],
+    #                 "status": "ready",
+    #                 "status_message": "really ready",
+    #                 "api_endpoint_access": "api:1234",
+    #                 "dashboard_endpoint_access": "dashboard:1234",
+    #                 "admin_kube_config": "xyz==",
+    #                 "dashboard_token": "abc==",
+    #                 "persistent_storage": {"nimble_csi": False},
+    #             },
+    #             status_code=200,
+    #             headers={},
+    #         )
+    #     if args[0] == "https://127.0.0.1:8080/api/v2/k8scluster/999":
+    #         return MockResponse(
+    #             json_data={},
+    #             status_code=404,
+    #             raise_for_status_flag=True,
+    #             headers={},
+    #         )
+    #     if (
+    #         args[0]
+    #         == "https://127.0.0.1:8080/api/v2/k8scluster/999?setup_log=true"
+    #     ):
+    #         return MockResponse(
+    #             json_data={},
+    #             status_code=404,
+    #             raise_for_status_flag=True,
+    #             headers={},
+    #         )
+    #     raise RuntimeError("Unhandle GET request: " + args[0])
 
-    def mocked_requests_post(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v1/login":
-            return MockResponse(
-                json_data={},
-                status_code=200,
-                headers={
-                    "location": (
-                        "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
-                    )
-                },
-            )
-        raise RuntimeError("Unhandle POST request: " + args[0])
-
-    @patch("requests.get", side_effect=mocked_requests_get)
-    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_wait_for_status_k8scluster_assertions(self, mock_get, mock_post):
 
         # FIXME speed these tests up
@@ -732,8 +502,8 @@ class TestWaitForClusterStatus(TestCase):
                 id="/api/v2/k8scluster/123", timeout_secs=1, status=["abc"],
             )
 
-    @patch("requests.get", side_effect=mocked_requests_get)
-    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_wait_for_status_k8scluster_body(self, mock_get, mock_post):
 
         self.assertTrue(
@@ -792,66 +562,9 @@ class TestDeleteCluster(BaseTestCase):
     existing_cluster_url = "/api/v2/k8scluster/123"
 
     # pylint: disable=no-method-argument
-    def mocked_requests_delete(*args, **kwargs):
-        if (
-            args[0]
-            == "https://127.0.0.1:8080"
-            + TestDeleteCluster.non_existent_cluster_url
-        ):
-            return MockResponse(
-                json_data={},
-                status_code=404,
-                raise_for_status_flag=True,
-                headers={},
-            )
-        if (
-            args[0]
-            == "https://127.0.0.1:8080"
-            + TestDeleteCluster.existing_cluster_url
-        ):
-            return MockResponse(
-                json_data={
-                    "_links": {"self": {"href": "/api/v2/k8scluster/123"}},
-                    "label": {"name": "def", "description": "my cluster"},
-                    "k8s_version": "1.17.0",
-                    "pod_network_range": "10.192.0.0/12",
-                    "service_network_range": "10.96.0.0/12",
-                    "pod_dns_domain": "cluster.local",
-                    "created_by_user_id": "/api/v1/user/5",
-                    "created_by_user_name": "admin",
-                    "created_time": 1588260014,
-                    "k8shosts_config": [
-                        {"node": "/api/v2/worker/k8shost/4", "role": "worker"},
-                        {"node": "/api/v2/worker/k8shost/5", "role": "master"},
-                    ],
-                    "status": "ready",
-                    "status_message": "really ready",
-                    "api_endpoint_access": "api:1234",
-                    "dashboard_endpoint_access": "dashboard:1234",
-                    "admin_kube_config": "xyz==",
-                    "dashboard_token": "abc==",
-                    "persistent_storage": {"nimble_csi": False},
-                },
-                status_code=200,
-                headers={},
-            )
-        raise RuntimeError("Unhandle GET request: " + args[0])
 
-    def mocked_requests_post(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v1/login":
-            return MockResponse(
-                json_data={},
-                status_code=200,
-                headers={
-                    "location": (
-                        "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
-                    )
-                },
-            )
-        raise RuntimeError("Unhandle POST request: " + args[0])
-
-    @patch("requests.delete", side_effect=mocked_requests_delete)
-    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.delete", side_effect=BaseTestCase.httpDeleteHandlers)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_delete_k8scluster(self, mock_get, mock_post):
 
         # pylint: disable=anomalous-backslash-in-string
@@ -869,8 +582,8 @@ class TestDeleteCluster(BaseTestCase):
             id=TestDeleteCluster.existing_cluster_url
         )
 
-    @patch("requests.delete", side_effect=mocked_requests_delete)
-    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.delete", side_effect=BaseTestCase.httpDeleteHandlers)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_delete_k8scluster_cli(self, mock_delete, mock_get):
 
         try:
@@ -891,8 +604,8 @@ class TestDeleteCluster(BaseTestCase):
         except Exception:
             self.fail("Unexpected exception.")
 
-    @patch("requests.delete", side_effect=mocked_requests_delete)
-    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.delete", side_effect=BaseTestCase.httpDeleteHandlers)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_delete_k8scluster_cli_with_exception(self, mock_delete, mock_get):
 
         with self.assertRaises(SystemExit) as cm:
@@ -912,237 +625,209 @@ class TestDeleteCluster(BaseTestCase):
             self.assertEqual(cm.exception.code, 1)
 
 
-class TestK8sSupportVersions(TestCase):
+class TestK8sSupportVersions(BaseTestCase):
 
-    # pylint: disable=no-method-argument
-    def mocked_requests_get(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v2/k8smanifest":
-            return MockResponse(
-                json_data={
-                    "_version": "1.0",
-                    "supported_versions": [
-                        "1.14.10",
-                        "1.15.7",
-                        "1.16.4",
-                        "1.17.0",
-                        "1.18.0",
-                    ],
-                    "version_info": {
-                        "1.14.10": {
-                            "_version": "1.0",
-                            "min_upgrade_version": "1.13.0",
-                            "relnote_url": (
-                                "https://v1-14.docs.kubernetes.io/docs/setup"
-                                "/release/notes/"
-                            ),
-                            "hpecsi": "1.14",
-                        },
-                        "1.15.7": {
-                            "_version": "1.0",
-                            "min_upgrade_version": "1.14.0",
-                            "relnote_url": (
-                                "https://v1-15.docs.kubernetes.io/docs/setup"
-                                "/release/notes/"
-                            ),
-                            "hpecsi": "1.15",
-                        },
-                        "1.16.4": {
-                            "_version": "1.0",
-                            "min_upgrade_version": "1.15.0",
-                            "relnote_url": (
-                                "https://v1-16.docs.kubernetes.io/docs/setup"
-                                "/release/notes/"
-                            ),
-                            "hpecsi": "1.16",
-                        },
-                        "1.17.0": {
-                            "_version": "1.0",
-                            "min_upgrade_version": "1.16.0",
-                            "relnote_url": (
-                                "https://v1-17.docs.kubernetes.io/docs/setup"
-                                "/release/notes/"
-                            ),
-                            "hpecsi": "1.17",
-                        },
-                        "1.18.0": {
-                            "_version": "1.0",
-                            "min_upgrade_version": "1.17.0",
-                            "relnote_url": (
-                                "https://kubernetes.io/docs/setup"
-                                "/release/notes/"
-                            ),
-                            "hpecsi": "1.18",
-                        },
-                    },
-                },
-                status_code=200,
-                headers={},
-            )
-        raise RuntimeError("Unhandle GET request: " + args[0])
+    # # pylint: disable=no-method-argument
+    # def mocked_requests_get(*args, **kwargs):
+    #     if args[0] == "https://127.0.0.1:8080/api/v2/k8smanifest":
+    #         return MockResponse(
+    #             json_data={
+    #                 "_version": "1.0",
+    #                 "supported_versions": [
+    #                     "1.14.10",
+    #                     "1.15.7",
+    #                     "1.16.4",
+    #                     "1.17.0",
+    #                     "1.18.0",
+    #                 ],
+    #                 "version_info": {
+    #                     "1.14.10": {
+    #                         "_version": "1.0",
+    #                         "min_upgrade_version": "1.13.0",
+    #                         "relnote_url": (
+    #                             "https://v1-14.docs.kubernetes.io/docs/setup"
+    #                             "/release/notes/"
+    #                         ),
+    #                         "hpecsi": "1.14",
+    #                     },
+    #                     "1.15.7": {
+    #                         "_version": "1.0",
+    #                         "min_upgrade_version": "1.14.0",
+    #                         "relnote_url": (
+    #                             "https://v1-15.docs.kubernetes.io/docs/setup"
+    #                             "/release/notes/"
+    #                         ),
+    #                         "hpecsi": "1.15",
+    #                     },
+    #                     "1.16.4": {
+    #                         "_version": "1.0",
+    #                         "min_upgrade_version": "1.15.0",
+    #                         "relnote_url": (
+    #                             "https://v1-16.docs.kubernetes.io/docs/setup"
+    #                             "/release/notes/"
+    #                         ),
+    #                         "hpecsi": "1.16",
+    #                     },
+    #                     "1.17.0": {
+    #                         "_version": "1.0",
+    #                         "min_upgrade_version": "1.16.0",
+    #                         "relnote_url": (
+    #                             "https://v1-17.docs.kubernetes.io/docs/setup"
+    #                             "/release/notes/"
+    #                         ),
+    #                         "hpecsi": "1.17",
+    #                     },
+    #                     "1.18.0": {
+    #                         "_version": "1.0",
+    #                         "min_upgrade_version": "1.17.0",
+    #                         "relnote_url": (
+    #                             "https://kubernetes.io/docs/setup"
+    #                             "/release/notes/"
+    #                         ),
+    #                         "hpecsi": "1.18",
+    #                     },
+    #                 },
+    #             },
+    #             status_code=200,
+    #             headers={},
+    #         )
+    #     raise RuntimeError("Unhandle GET request: " + args[0])
 
-    def mocked_requests_post(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v1/login":
-            return MockResponse(
-                json_data={},
-                status_code=200,
-                headers={
-                    "location": (
-                        "/api/v1/session/"
-                        "df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
-                    )
-                },
-            )
-        raise RuntimeError("Unhandle POST request: " + args[0])
-
-    @patch("requests.get", side_effect=mocked_requests_get)
-    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_k8s_supported_versions(self, mock_get, mock_post):
 
         self.assertEquals(
             get_client().k8s_cluster.k8s_supported_versions(),
-            ["1.14.10", "1.15.7", "1.16.4", "1.17.0", "1.18.0"],
+            ["1.14.10", "1.15.7", "1.16.4", "1.17.0", "1.17.1", "1.18.0"],
         )
 
 
 class TestCLI(BaseTestCase):
 
     # pylint: disable=no-method-argument
-    def mocked_requests_post(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v1/login":
-            return MockResponse(
-                json_data={},
-                status_code=200,
-                headers={
-                    "location": (
-                        "/api/v1/session/df1bfacb-xxxx-xxxx-xxxx-c8f57d8f3c71"
-                    )
-                },
-            )
-        raise RuntimeError("Unhandle POST request: " + args[0])
+    # def mocked_requests_get(*args, **kwargs):
+    # if args[0] == "https://127.0.0.1:8080/api/v2/k8scluster":
+    #     return MockResponse(
+    #         json_data={
+    #             "_links": {"self": {"href": "/api/v2/k8scluster"}},
+    #             "_embedded": {
+    #                 "k8sclusters": [
+    #                     {
+    #                         "_links": {
+    #                             "self": {"href": "/api/v2/k8scluster/20"}
+    #                         },
+    #                         "label": {
+    #                             "name": "def",
+    #                             "description": "my cluster",
+    #                         },
+    #                         "k8s_version": "1.17.0",
+    #                         "pod_network_range": "10.192.0.0/12",
+    #                         "service_network_range": "10.96.0.0/12",
+    #                         "pod_dns_domain": "cluster.local",
+    #                         "created_by_user_id": "/api/v1/user/5",
+    #                         "created_by_user_name": "admin",
+    #                         "created_time": 1588260014,
+    #                         "k8shosts_config": [
+    #                             {
+    #                                 "node": "/api/v2/worker/k8shost/4",
+    #                                 "role": "worker",
+    #                             },
+    #                             {
+    #                                 "node": "/api/v2/worker/k8shost/5",
+    #                                 "role": "master",
+    #                             },
+    #                         ],
+    #                         "status": "ready",
+    #                         "status_message": "really ready",
+    #                         "api_endpoint_access": "api:1234",
+    #                         "dashboard_endpoint_access": "dashboard:1234",
+    #                         "admin_kube_config": "xyz==",
+    #                         "dashboard_token": "abc==",
+    #                         "persistent_storage": {"nimble_csi": False},
+    #                     }
+    #                 ]
+    #             },
+    #         },
+    #         status_code=200,
+    #         headers={},
+    #     )
+    # if args[0] == "https://127.0.0.1:8080/api/v2/k8smanifest":
+    #     return MockResponse(
+    #         json_data={
+    #             "_version": "1.0",
+    #             "supported_versions": [
+    #                 "1.14.10",
+    #                 "1.15.7",
+    #                 "1.16.4",
+    #                 "1.17.0",
+    #                 "1.17.1",
+    #                 "1.18.0",
+    #             ],
+    #             "version_info": {
+    #                 "1.14.10": {
+    #                     "_version": "1.0",
+    #                     "min_upgrade_version": "1.13.0",
+    #                     "relnote_url": (
+    #                         "https://v1-14.docs.kubernetes.io/docs/setup"
+    #                         "/release/notes/"
+    #                     ),
+    #                     "hpecsi": "1.14",
+    #                 },
+    #                 "1.15.7": {
+    #                     "_version": "1.0",
+    #                     "min_upgrade_version": "1.14.0",
+    #                     "relnote_url": (
+    #                         "https://v1-15.docs.kubernetes.io/docs/setup"
+    #                         "/release/notes/"
+    #                     ),
+    #                     "hpecsi": "1.15",
+    #                 },
+    #                 "1.16.4": {
+    #                     "_version": "1.0",
+    #                     "min_upgrade_version": "1.15.0",
+    #                     "relnote_url": (
+    #                         "https://v1-16.docs.kubernetes.io/docs/setup"
+    #                         "/release/notes/"
+    #                     ),
+    #                     "hpecsi": "1.16",
+    #                 },
+    #                 "1.17.0": {
+    #                     "_version": "1.0",
+    #                     "min_upgrade_version": "1.16.0",
+    #                     "relnote_url": (
+    #                         "https://v1-17.docs.kubernetes.io/docs/setup"
+    #                         "/release/notes/"
+    #                     ),
+    #                     "hpecsi": "1.17",
+    #                 },
+    #                 "1.17.1": {
+    #                     "_version": "1.0",
+    #                     "min_upgrade_version": "1.17.0",
+    #                     "relnote_url": (
+    #                         "https://v1-17.docs.kubernetes.io/docs/setup"
+    #                         "/release/notes/"
+    #                     ),
+    #                     "hpecsi": "1.17",
+    #                 },
+    #                 "1.18.0": {
+    #                     "_version": "1.0",
+    #                     "min_upgrade_version": "1.17.0",
+    #                     "relnote_url": (
+    #                         "https://kubernetes.io/docs/setup"
+    #                         "/release/notes/"
+    #                     ),
+    #                     "hpecsi": "1.18",
+    #                 },
+    #             },
+    #         },
+    #         status_code=200,
+    #         headers={},
+    #     )
+    # raise RuntimeError("Unhandle GET request: " + args[0])
 
-    # pylint: disable=no-method-argument
-    def mocked_requests_get(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v2/k8scluster":
-            return MockResponse(
-                json_data={
-                    "_links": {"self": {"href": "/api/v2/k8scluster"}},
-                    "_embedded": {
-                        "k8sclusters": [
-                            {
-                                "_links": {
-                                    "self": {"href": "/api/v2/k8scluster/20"}
-                                },
-                                "label": {
-                                    "name": "def",
-                                    "description": "my cluster",
-                                },
-                                "k8s_version": "1.17.0",
-                                "pod_network_range": "10.192.0.0/12",
-                                "service_network_range": "10.96.0.0/12",
-                                "pod_dns_domain": "cluster.local",
-                                "created_by_user_id": "/api/v1/user/5",
-                                "created_by_user_name": "admin",
-                                "created_time": 1588260014,
-                                "k8shosts_config": [
-                                    {
-                                        "node": "/api/v2/worker/k8shost/4",
-                                        "role": "worker",
-                                    },
-                                    {
-                                        "node": "/api/v2/worker/k8shost/5",
-                                        "role": "master",
-                                    },
-                                ],
-                                "status": "ready",
-                                "status_message": "really ready",
-                                "api_endpoint_access": "api:1234",
-                                "dashboard_endpoint_access": "dashboard:1234",
-                                "admin_kube_config": "xyz==",
-                                "dashboard_token": "abc==",
-                                "persistent_storage": {"nimble_csi": False},
-                            }
-                        ]
-                    },
-                },
-                status_code=200,
-                headers={},
-            )
-        if args[0] == "https://127.0.0.1:8080/api/v2/k8smanifest":
-            return MockResponse(
-                json_data={
-                    "_version": "1.0",
-                    "supported_versions": [
-                        "1.14.10",
-                        "1.15.7",
-                        "1.16.4",
-                        "1.17.0",
-                        "1.17.1",
-                        "1.18.0",
-                    ],
-                    "version_info": {
-                        "1.14.10": {
-                            "_version": "1.0",
-                            "min_upgrade_version": "1.13.0",
-                            "relnote_url": (
-                                "https://v1-14.docs.kubernetes.io/docs/setup"
-                                "/release/notes/"
-                            ),
-                            "hpecsi": "1.14",
-                        },
-                        "1.15.7": {
-                            "_version": "1.0",
-                            "min_upgrade_version": "1.14.0",
-                            "relnote_url": (
-                                "https://v1-15.docs.kubernetes.io/docs/setup"
-                                "/release/notes/"
-                            ),
-                            "hpecsi": "1.15",
-                        },
-                        "1.16.4": {
-                            "_version": "1.0",
-                            "min_upgrade_version": "1.15.0",
-                            "relnote_url": (
-                                "https://v1-16.docs.kubernetes.io/docs/setup"
-                                "/release/notes/"
-                            ),
-                            "hpecsi": "1.16",
-                        },
-                        "1.17.0": {
-                            "_version": "1.0",
-                            "min_upgrade_version": "1.16.0",
-                            "relnote_url": (
-                                "https://v1-17.docs.kubernetes.io/docs/setup"
-                                "/release/notes/"
-                            ),
-                            "hpecsi": "1.17",
-                        },
-                        "1.17.1": {
-                            "_version": "1.0",
-                            "min_upgrade_version": "1.17.0",
-                            "relnote_url": (
-                                "https://v1-17.docs.kubernetes.io/docs/setup"
-                                "/release/notes/"
-                            ),
-                            "hpecsi": "1.17",
-                        },
-                        "1.18.0": {
-                            "_version": "1.0",
-                            "min_upgrade_version": "1.17.0",
-                            "relnote_url": (
-                                "https://kubernetes.io/docs/setup"
-                                "/release/notes/"
-                            ),
-                            "hpecsi": "1.18",
-                        },
-                    },
-                },
-                status_code=200,
-                headers={},
-            )
-        raise RuntimeError("Unhandle GET request: " + args[0])
-
-    @patch("requests.post", side_effect=mocked_requests_post)
-    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     def test_k8scluster_list(self, mock_post, mock_get):
 
         hpecp = self.cli.CLI()
@@ -1160,8 +845,8 @@ class TestCLI(BaseTestCase):
             ),
         )
 
-    @patch("requests.post", side_effect=mocked_requests_post)
-    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     def test_k8s_supported_verions_no_filter(self, mock_post, mock_get):
 
         hpecp = self.cli.CLI()
@@ -1173,8 +858,8 @@ class TestCLI(BaseTestCase):
             "['1.14.10', '1.15.7', '1.16.4', '1.17.0', '1.17.1', '1.18.0']",
         )
 
-    @patch("requests.post", side_effect=mocked_requests_post)
-    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     def test_k8s_supported_verions_no_filter_output_json(
         self, mock_post, mock_get
     ):
@@ -1188,8 +873,8 @@ class TestCLI(BaseTestCase):
             "['1.14.10', '1.15.7', '1.16.4', '1.17.0', '1.17.1', '1.18.0']",
         )
 
-    @patch("requests.post", side_effect=mocked_requests_post)
-    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     def test_k8s_supported_verions_no_filter_output_text(
         self, mock_post, mock_get
     ):
@@ -1202,8 +887,8 @@ class TestCLI(BaseTestCase):
             output, "1.14.10 1.15.7 1.16.4 1.17.0 1.17.1 1.18.0",
         )
 
-    @patch("requests.post", side_effect=mocked_requests_post)
-    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     def test_k8s_supported_verions_no_filter_output_invalid(
         self, mock_post, mock_get
     ):
@@ -1225,8 +910,8 @@ class TestCLI(BaseTestCase):
             error, "'output' parameter ust be 'json' or 'text'",
         )
 
-    @patch("requests.post", side_effect=mocked_requests_post)
-    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     def test_k8s_supported_verions_major_filter_match(
         self, mock_post, mock_get
     ):
@@ -1240,8 +925,8 @@ class TestCLI(BaseTestCase):
             "['1.14.10', '1.15.7', '1.16.4', '1.17.0', '1.17.1', '1.18.0']",
         )
 
-    @patch("requests.post", side_effect=mocked_requests_post)
-    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     def test_k8s_supported_verions_major_filter_no_match(
         self, mock_post, mock_get
     ):
@@ -1254,8 +939,8 @@ class TestCLI(BaseTestCase):
             output, "[]",
         )
 
-    @patch("requests.post", side_effect=mocked_requests_post)
-    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     def test_k8s_supported_verions_minor_filter_match(
         self, mock_post, mock_get
     ):
@@ -1268,8 +953,8 @@ class TestCLI(BaseTestCase):
             output, "['1.17.0', '1.17.1']",
         )
 
-    @patch("requests.post", side_effect=mocked_requests_post)
-    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     def test_k8s_supported_verions_minor_filter_no_match(
         self, mock_post, mock_get
     ):
@@ -1282,8 +967,8 @@ class TestCLI(BaseTestCase):
             output, "[]",
         )
 
-    @patch("requests.post", side_effect=mocked_requests_post)
-    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     def test_k8s_supported_verions_patch_filter_match(
         self, mock_post, mock_get
     ):
@@ -1296,8 +981,8 @@ class TestCLI(BaseTestCase):
             output, "['1.17.0', '1.18.0']",
         )
 
-    @patch("requests.post", side_effect=mocked_requests_post)
-    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     def test_k8s_supported_verions_patch_filter_no_match(
         self, mock_post, mock_get
     ):
@@ -1310,8 +995,8 @@ class TestCLI(BaseTestCase):
             output, "[]",
         )
 
-    @patch("requests.post", side_effect=mocked_requests_post)
-    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     def test_k8s_supported_verions_major_filter_invalid(
         self, mock_post, mock_get
     ):
@@ -1328,8 +1013,8 @@ class TestCLI(BaseTestCase):
 
         self.assertEqual(cm.exception.code, 1)
 
-    @patch("requests.post", side_effect=mocked_requests_post)
-    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     def test_k8s_supported_verions_minor_filter_invalid(
         self, mock_post, mock_get
     ):
@@ -1346,8 +1031,8 @@ class TestCLI(BaseTestCase):
 
         self.assertEqual(cm.exception.code, 1)
 
-    @patch("requests.post", side_effect=mocked_requests_post)
-    @patch("requests.get", side_effect=mocked_requests_get)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     def test_k8s_supported_verions_patch_filter_invalid(
         self, mock_post, mock_get
     ):
@@ -1395,38 +1080,8 @@ class TestCLI(BaseTestCase):
         output = self.out.getvalue().strip()
         self.assertEqual(output, "/api/v2/k8sclusters/99")
 
-    def mocked_request_get_k8s_cluster(*args, **kwargs):
-        if args[0] == "https://127.0.0.1:8080/api/v2/k8scluster/123":
-            return MockResponse(
-                json_data={
-                    "_links": {"self": {"href": "/api/v2/k8scluster/123"}},
-                    "label": {"name": "def", "description": "my cluster"},
-                    "k8s_version": "1.17.0",
-                    "pod_network_range": "10.192.0.0/12",
-                    "service_network_range": "10.96.0.0/12",
-                    "pod_dns_domain": "cluster.local",
-                    "created_by_user_id": "/api/v1/user/5",
-                    "created_by_user_name": "admin",
-                    "created_time": 1588260014,
-                    "k8shosts_config": [
-                        {"node": "/api/v2/worker/k8shost/4", "role": "worker"},
-                        {"node": "/api/v2/worker/k8shost/5", "role": "master"},
-                    ],
-                    "status": "ready",
-                    "status_message": "really ready",
-                    "api_endpoint_access": "api:1234",
-                    "dashboard_endpoint_access": "test_dashboard_url",
-                    "admin_kube_config": "test_admin_kube_config",
-                    "dashboard_token": "YWJjCg==",
-                    "persistent_storage": {"nimble_csi": False},
-                },
-                status_code=200,
-                headers={},
-            )
-        raise RuntimeError("Unhandle GET request: " + args[0])
-
-    @patch("requests.get", side_effect=mocked_request_get_k8s_cluster)
-    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_k8scluster_admin_kube_config(self, mock_get, mock_post):
 
         hpecp = self.cli.CLI()
@@ -1435,8 +1090,8 @@ class TestCLI(BaseTestCase):
         output = self.out.getvalue().strip()
         self.assertEqual(output, "test_admin_kube_config")
 
-    @patch("requests.get", side_effect=mocked_request_get_k8s_cluster)
-    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_k8scluster_dashboard_url(self, mock_get, mock_post):
 
         hpecp = self.cli.CLI()
@@ -1445,8 +1100,8 @@ class TestCLI(BaseTestCase):
         output = self.out.getvalue().strip()
         self.assertEqual(output, "test_dashboard_url")
 
-    @patch("requests.get", side_effect=mocked_request_get_k8s_cluster)
-    @patch("requests.post", side_effect=mocked_requests_post)
+    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_k8scluster_dashboard_token(self, mock_get, mock_post):
 
         hpecp = self.cli.CLI()
@@ -1457,7 +1112,7 @@ class TestCLI(BaseTestCase):
 
 
 class TestCliStates(BaseTestCase):
-    @patch("requests.post", side_effect=session_mock_response)
+    @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_get_states(self, mock_post):
 
         self.maxDiff = None

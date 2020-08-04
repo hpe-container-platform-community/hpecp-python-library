@@ -23,16 +23,3 @@
 # OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
-
-from __future__ import absolute_import
-
-from .client import ContainerPlatformClient
-from .exceptions import (
-    APIException,
-    APIItemConflictException,
-    APIItemNotFoundException,
-    ContainerPlatformClientException,
-)
-from .logger import Logger
-
-__version__ = "0.7.12"

@@ -1,9 +1,3 @@
-"""A python library for working with HPE Container Platform.
-
-.. moduleauthor:: Chris Snow <chsnow123@gmail.com>
-
-"""
-
 # (C) Copyright [2020] Hewlett Packard Enterprise Development LP
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
@@ -24,15 +18,39 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-from __future__ import absolute_import
 
-from .client import ContainerPlatformClient
-from .exceptions import (
-    APIException,
-    APIItemConflictException,
-    APIItemNotFoundException,
-    ContainerPlatformClientException,
-)
-from .logger import Logger
+from hpecp.exceptions import APIItemNotFoundException
 
-__version__ = "0.7.12"
+from .base import BaseTestCase, MockResponse
+
+
+def mockApiSetup():
+    BaseTestCase.registerHttpGetHandler(
+        url="https://127.0.0.1:8080/some/url",
+        response=MockResponse(
+            json_data={"foo": "bar"},
+            text_data='{"foo":"bar"}',
+            status_code=200,
+            headers=dict(),
+        ),
+    )
+
+    BaseTestCase.registerHttpPostHandler(
+        url="https://127.0.0.1:8080/some/url",
+        response=MockResponse(
+            text_data={"mock_data": True},
+            json_data={},
+            status_code=200,
+            headers={},
+        ),
+    )
+
+    BaseTestCase.registerHttpPutHandler(
+        url="https://127.0.0.1:8080/some/url",
+        response=MockResponse(
+            text_data={"mock_data": True},
+            json_data={},
+            status_code=200,
+            headers={},
+        ),
+    )
