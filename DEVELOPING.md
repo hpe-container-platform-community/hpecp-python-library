@@ -10,6 +10,10 @@ source <(hpecp autocomplete bash) # setup autocompletion
 hpecp configure-cli
 ```
 
+### Install from branch
+
+pip install --upgrade git+https://github.com/hpe-container-platform-community/hpecp-client@branch_name
+
 #### Mock Rest Service
 
 - First, open a terminal, then run:
