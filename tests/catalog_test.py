@@ -23,6 +23,7 @@ import json
 import unittest
 from textwrap import dedent
 
+import wrapt
 import yaml
 from mock import patch
 
@@ -35,11 +36,27 @@ from .catalog_mock_api_responses import mockApiSetup
 # setup the mock data
 mockApiSetup()
 
+from .catalog_mock_api_responses import BaseTestCase
+
+# httpPostHandlers = BaseTestCase.httpPostHandlers
+
 
 class TestCatalogGet(BaseTestCase):
-    @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
+
+    # TODO: ...
+    # @patch(
+    #     target="requests.post",
+    #     side_effect=catalog_mocks(
+    #         {"default_login_reponse": "https://127.0.0.1:8080/api/v1/login"}
+    #     ),
+    # )
     @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
-    def test_get_catalog_id_type(self, mock_get, mock_post):
+    def test_get_catalog_id_type(self, catalog_mocks):
+
+        # E.g. mock remote exception response for /api/v1/login
+        # catalog_mocks.set(
+        #     "https://127.0.0.1:8080/api/v1/login", "remote_exception"
+        # )
 
         with self.assertRaisesRegexp(
             AssertionError, "'id' must be provided and must be a str",
