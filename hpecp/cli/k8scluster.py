@@ -158,6 +158,7 @@ class K8sClusterProxy(base.BaseProxy):
             yaml.dump(yaml.load(json.dumps(response), Loader=yaml.FullLoader,))
         )
 
+    @base.intercept_exception
     def get_installed_addons(self, id):
         """Retrieve the installed addons on the cluster.
 
@@ -165,6 +166,7 @@ class K8sClusterProxy(base.BaseProxy):
         """
         print(base.get_client().k8s_cluster.get(id=id).addons)
 
+    @base.intercept_exception
     def get_available_addons(self, id=None, k8s_version=None):
         """Retrieve the available addons for a cluster.
 
@@ -194,6 +196,7 @@ class K8sClusterProxy(base.BaseProxy):
                 )
             )
 
+    @base.intercept_exception
     def add_addons(self, id, addons, wait_for_ready_sec=0):
         """Retrieve the installed addons on the cluster.
 
@@ -223,6 +226,7 @@ class K8sClusterProxy(base.BaseProxy):
         """Return a list of valid statuses."""
         print([s.name for s in K8sClusterStatus])
 
+    @base.intercept_exception
     def k8s_supported_versions(
         self,
         output="json",
