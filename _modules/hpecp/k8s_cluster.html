@@ -559,7 +559,41 @@
             <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;post&quot;</span><span class="p">,</span>
             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;k8s_cluster/add_addons&quot;</span><span class="p">,</span>
             <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
-        <span class="p">)</span></div></div>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="K8sClusterController.upgrade_cluster"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.upgrade_cluster">[docs]</a>    <span class="k">def</span> <span class="nf">upgrade_cluster</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">k8s_upgrade_version</span><span class="p">,</span> <span class="n">worker_upgrade_percent</span><span class="o">=</span><span class="mi">20</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Upgrade a cluster.</span>
+
+<span class="sd">        TODO</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        TODO</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        APIException</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;change_spec&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;k8s_upgrade&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;worker_upgrade_percent&quot;</span><span class="p">:</span> <span class="n">worker_upgrade_percent</span><span class="p">,</span>
+                    <span class="s2">&quot;k8s_upgrade_version&quot;</span><span class="p">:</span> <span class="n">k8s_upgrade_version</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;operation&quot;</span><span class="p">:</span> <span class="s2">&quot;reconfigure&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="s2">&quot;Kubernetes upgrade&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
+            <span class="n">url</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">/change_task&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span>
+            <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;post&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;K8sClusterController/upgrade_cluster&quot;</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></div></div>
 </pre></div>
 
             <div class="clearer"></div>
