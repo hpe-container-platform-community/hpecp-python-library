@@ -514,3 +514,37 @@ class K8sClusterController(AbstractWaitableResourceController):
             description="k8s_cluster/add_addons",
             data=data,
         )
+
+    def upgrade_cluster(
+        self, id, k8s_upgrade_version, worker_upgrade_percent=20
+    ):
+        """Upgrade a cluster.
+
+        TODO
+
+        Returns
+        -------
+        TODO
+
+        Raises
+        ------
+        APIException
+        """
+        data = {
+            "change_spec": {
+                "k8s_upgrade": {
+                    "worker_upgrade_percent": worker_upgrade_percent,
+                    "k8s_upgrade_version": k8s_upgrade_version,
+                }
+            },
+            "operation": "reconfigure",
+            "reason": "Kubernetes upgrade",
+        }
+
+        response = self.client._request(
+            url="{}/change_task".format(id),
+            http_method="post",
+            description="K8sClusterController/upgrade_cluster",
+            data=data,
+        )
+        return response.json()

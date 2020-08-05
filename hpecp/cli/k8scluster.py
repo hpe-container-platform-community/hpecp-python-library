@@ -290,3 +290,24 @@ class K8sClusterProxy(base.BaseProxy):
             print(vers)
         else:
             print(" ".join(vers))
+
+    @base.intercept_exception
+    def upgrade_cluster(
+        self, id, k8s_upgrade_version, worker_upgrade_percent=20
+    ):
+        """Upgrade a cluster.
+
+        TODO
+
+        Returns
+        -------
+        TODO
+
+        Raises
+        ------
+        APIException
+        """
+
+        base.get_client().k8s_cluster.upgrade_cluster(
+            id, k8s_upgrade_version, worker_upgrade_percent
+        )
