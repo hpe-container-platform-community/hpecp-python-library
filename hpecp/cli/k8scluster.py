@@ -55,6 +55,7 @@ class K8sClusterProxy(base.BaseProxy):
             "k8s_supported_versions",
             "list",
             "statuses",
+            "upgrade_cluster",
             "wait_for_status",
         ]
 
@@ -307,7 +308,6 @@ class K8sClusterProxy(base.BaseProxy):
         ------
         APIException
         """
-
         base.get_client().k8s_cluster.upgrade_cluster(
             id, k8s_upgrade_version, worker_upgrade_percent
         )
