@@ -13,7 +13,12 @@ flake8 --docstring-convention numpy bin/ hpecp/
 
 flake8 --ignore=D,E501 tests/cli_test.py # don't verify documentation in tests
 
-tox -e py35 -- tests/
+if [[] -d /home/theia/ ]]; 
+then
+    # ensure pyenvs are avaialble
+    /home/theia/.pyenv/bin/pyenv local $(/home/theia/.pyenv/bin/pyenv versions --bare)
+fi
+tox --recreate -- tests/
 
 echo "********** FIXME: tox should test py27 as well **********"
 
