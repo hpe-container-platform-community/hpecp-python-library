@@ -110,7 +110,7 @@ def mockApiSetup():
         response=MockResponse(
             json_data={
                 "status": "ready",
-                "features": {"ml_project": False, "kubernetes_access": False,},
+                "features": {"ml_project": False, "kubernetes_access": False},
                 "persistent_supported": True,
                 "member_key_available": "all_admins",
                 "quota": {},
@@ -145,7 +145,7 @@ def mockApiSetup():
             json_data={
                 "status": "ready",
                 "tenant_type": "docker",
-                "features": {"ml_project": False, "kubernetes_access": False,},
+                "features": {"ml_project": False, "kubernetes_access": False},
                 "persistent_supported": True,
                 "member_key_available": "all_admins",
                 "quota": {},

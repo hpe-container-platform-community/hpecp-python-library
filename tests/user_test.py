@@ -26,7 +26,7 @@ from mock import patch
 from hpecp import ContainerPlatformClient
 from hpecp.exceptions import APIItemNotFoundException
 
-from .base import BaseTestCase, MockResponse, get_client
+from .base import BaseTestCase, get_client
 from .user_mock_api_responses import mockApiSetup
 
 # setup the mock data

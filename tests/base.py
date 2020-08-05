@@ -171,10 +171,10 @@ class BaseTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
 
-        _http_get_handlers = {}
-        _http_post_handlers = {}
-        _http_put_handlers = {}
-        _http_delete_handlers = {}
+        _http_get_handlers = {}  # noqa: F841
+        _http_post_handlers = {}  # noqa: F841
+        _http_put_handlers = {}  # noqa: F841
+        _http_delete_handlers = {}  # noqa: F841
 
         # Register the login handler
         BaseTestCase.registerHttpPostHandler(
