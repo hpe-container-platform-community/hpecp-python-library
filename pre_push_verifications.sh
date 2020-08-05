@@ -2,25 +2,26 @@
 
 set -e
 
-isort tests/*.py
-isort hpecp/**.py
-isort bin/*.py
-
+isort tests/*.py hpecp/**.py bin/*.py
 black bin/ tests/ hpecp/
 
 #flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 flake8 --docstring-convention numpy bin/ hpecp/
 
-flake8 --ignore=D,E501 tests/cli_test.py # don't verify documentation in tests
+flake8 --ignore=D,E501 tests/ # verify tests, but not for documentation
 
-if [[] -d /home/theia/ ]]; 
+if [[  -d /home/theia/ ]]; 
 then
-    # ensure pyenvs are avaialble
-    /home/theia/.pyenv/bin/pyenv local $(/home/theia/.pyenv/bin/pyenv versions --bare)
+    # ensure pyenvs are available to tox
+    eval "$(pyenv init -)"
+    pyenv shell $(/home/theia/.pyenv/bin/pyenv versions --bare)
+    tox --recreate --tox-pyenv-no-fallback -- tests/
+else
+    tox -- tests/
 fi
-tox --recreate -- tests/
 
-echo "********** FIXME: tox should test py27 as well **********"
+
+echo "********** FIXME: 'tox -e py27' is broken **********"
 
 # coverage causes some tests to fail on PY3 so test it (issues 93)
 #coverage3 erase && coverage3 run --source hpecp,bin setup.py test && coverage3 report -m

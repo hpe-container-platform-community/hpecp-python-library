@@ -19,8 +19,6 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 
 
-from hpecp.exceptions import APIItemNotFoundException
-
 from .base import BaseTestCase, MockResponse
 
 

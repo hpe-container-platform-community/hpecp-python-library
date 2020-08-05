@@ -18,15 +18,11 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-from unittest import TestCase
-
-import requests
 from mock import patch
 
-from hpecp import ContainerPlatformClient
 from hpecp.exceptions import APIItemNotFoundException
 
-from .base import BaseTestCase, MockResponse, get_client
+from .base import BaseTestCase, get_client
 from .tenant_mock_api_responses import mockApiSetup
 
 # setup the mock data

@@ -19,12 +19,10 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 
 import tempfile
-from unittest import TestCase
 
-import requests
 from mock import patch
 
-from hpecp import APIItemNotFoundException, ContainerPlatformClient
+from hpecp import APIItemNotFoundException
 from hpecp.exceptions import APIItemConflictException
 from hpecp.gateway import GatewayController, GatewayStatus
 

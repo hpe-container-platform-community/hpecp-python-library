@@ -24,7 +24,7 @@ import json
 import six
 from mock import patch
 
-from .base import BaseTestCase, MockResponse
+from .base import BaseTestCase
 from .license_mock_api_responses import mockApiSetup
 
 # setup the mock data
