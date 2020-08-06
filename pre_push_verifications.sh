@@ -9,9 +9,14 @@ black bin/ tests/ hpecp/
 flake8 --docstring-convention numpy bin/ hpecp/
 flake8 --ignore=D,E501 tests/ # verify tests, but not for documentation
 
+if [[  -d /home/theia/ ]]; 
+then
+    # ensure pyenvs are available to tox
+    eval "$(pyenv init -)"
+    pyenv shell $(pyenv versions --bare)
+fi
+
 tox -- tests/
 
 # coverage causes some tests to fail on PY3 so test it (issues 93)
 #coverage3 erase && coverage3 run --source hpecp,bin setup.py test && coverage3 report -m
-
-
