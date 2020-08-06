@@ -14,14 +14,10 @@ if [[  -d /home/theia/ ]];
 then
     # ensure pyenvs are available to tox
     eval "$(pyenv init -)"
-    pyenv shell $(/home/theia/.pyenv/bin/pyenv versions --bare)
-    tox --recreate --tox-pyenv-no-fallback -- tests/
-else
-    tox -- tests/
+    pyenv shell $(/root/.pyenv/bin/pyenv versions --bare)
 fi
 
-
-echo "********** FIXME: 'tox -e py27' is broken **********"
+tox -- tests/
 
 # coverage causes some tests to fail on PY3 so test it (issues 93)
 #coverage3 erase && coverage3 run --source hpecp,bin setup.py test && coverage3 report -m

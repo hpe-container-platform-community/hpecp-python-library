@@ -27,7 +27,7 @@
     "python.linting.enabled": true,
     "python.formatting.provider": "black",
     "python.formatting.blackPath": "/bin/black",
-    "python.pythonPath": "/usr/bin/python3.5",
+    "python.pythonPath": "/usr/bin/python",
     "python.envFile": "${workspaceFolder}/gitpod.env",
     "editor.formatOnSave": true,
     "files.insertFinalNewline": true,
