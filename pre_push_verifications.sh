@@ -7,16 +7,7 @@ black bin/ tests/ hpecp/
 
 #flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 flake8 --docstring-convention numpy bin/ hpecp/
-
 flake8 --ignore=D,E501 tests/ # verify tests, but not for documentation
-
-# if [[  -d /home/theia/ ]]; 
-# then
-#     # ensure pyenvs are available to tox
-#     eval "$(pyenv init -)"
-#     ls -1 ~/.pyenv/versions/  > /root/.python-version
-#     pyenv shell $(ls -1 ~/.pyenv/versions/)
-# fi
 
 tox -- tests/
 

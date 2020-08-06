@@ -1,15 +1,11 @@
 FROM theiaide/theia-python:latest
 
+ENV DEBIAN_FRONTEND noninteractive
+
 COPY requirements.txt /tmp
 
-## User account
-RUN adduser --disabled-password --gecos '' theia && \
-    adduser theia sudo && \
-    echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers && \
-    chown -R theia:theia /home/theia
-
 RUN  apt-get update \
-   && apt-get install -y vim yarn \
+   && apt-get install -y vim yarn sudo \
    && apt-get install -y make build-essential libssl-dev zlib1g-dev \ 
           libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev \
           libncursesw5-dev xz-utils tk-dev libffi-dev liblzma-dev python-openssl git \
@@ -18,14 +14,19 @@ RUN  apt-get update \
    && rm -rf /var/cache/apt/* \
    && rm -rf /var/lib/apt/lists/* 
 
+## User account
+RUN adduser --disabled-password --gecos '' theia && \
+    adduser theia sudo && \
+    echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers && \
+    chown -R theia:theia /home/theia
+
+
 USER theia
 WORKDIR /home/theia
 
 # Python2 and Python3 are installed by parent Dockerfile:
 # https://github.com/theia-ide/theia-apps/blob/master/theiaide/theia-python/Dockerfile
-
-# Save the preinstalled python paths - do this before setting up pyenv because pyenv may report
-# different binaries with which.
+# Here we save the preinstalled python paths because we need to use them later.
 
 RUN which python > ~/python2_path
 RUN which python3 > ~/python3_path
@@ -52,19 +53,17 @@ RUN export PATH=/home/theia/.pyenv/bin:$PATH; \
    && pyenv local $(pyenv versions --bare) \
    && pyenv versions
 
-# RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py \
-#     && sudo python get-pip.py
 
 USER root
 
 RUN echo "Installing python modules" \
     && PY_PATHS=$(ls -1 /home/theia/.pyenv/versions/*/bin/python?.? && cat /home/theia/python3_path && cat /home/theia/python2_path) \
-    && PY_PATHS=$(cat /home/theia/python3_path && cat /home/theia/python2_path) \
-    && for v in ${PY_PATHS}; do ${v} -m pip install --upgrade pip setuptools wheel; done \
-    && for v in ${PY_PATHS}; do ${v} -m pip install --upgrade tox tox-pyenv ipython pylint pytest mock nose flake8 flake8-docstrings autopep8; done \
-    && /home/theia/.pyenv/versions/*/bin/python3.8 -m pip install -U black isort python-language-server sphinx\
+    && for v in ${PY_PATHS}; do echo "******* ${v} *******"; ${v} -m pip install --upgrade pip setuptools wheel; done \
+    && for v in ${PY_PATHS}; do echo "******* ${v} *******"; ${v} -m pip install --upgrade tox tox-pyenv ipython pylint pytest mock nose flake8 flake8-docstrings autopep8; done \
+    && /home/theia/.pyenv/versions/*/bin/python3.8 -m pip install -U black isort sphinx \
     && ln -f -s /home/theia/.pyenv/versions/*/bin/black /bin/ \
     && ln -f -s /home/theia/.pyenv/versions/*/bin/isort /bin/ \
+    && ln -f -s /home/theia/.pyenv/versions/*/bin/sphinx /bin/ \
     && for v in ${PY_PATHS}; do ${v} -m pip install -r /tmp/requirements.txt; done 
 
 RUN chown -R theia:theia /home/theia 
