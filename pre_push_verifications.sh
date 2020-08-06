@@ -2,6 +2,13 @@
 
 set -e
 
+if [[  -d /home/theia/ ]]; 
+then
+    # black and isort have been installed in the 3.8.x pyenv
+    eval "$(pyenv init -)"
+    pyenv shell $(pyenv versions --bare | grep 3.8)
+fi
+
 isort tests/*.py hpecp/**.py bin/*.py
 black bin/ tests/ hpecp/
 
@@ -12,7 +19,6 @@ flake8 --ignore=D,E501 tests/ # verify tests, but not for documentation
 if [[  -d /home/theia/ ]]; 
 then
     # ensure pyenvs are available to tox
-    eval "$(pyenv init -)"
     pyenv shell $(pyenv versions --bare)
 fi
 
