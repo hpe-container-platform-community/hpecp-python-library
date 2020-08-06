@@ -10,12 +10,13 @@ flake8 --docstring-convention numpy bin/ hpecp/
 
 flake8 --ignore=D,E501 tests/ # verify tests, but not for documentation
 
-if [[  -d /home/theia/ ]]; 
-then
-    # ensure pyenvs are available to tox
-    eval "$(pyenv init -)"
-    pyenv shell $(/root/.pyenv/bin/pyenv versions --bare)
-fi
+# if [[  -d /home/theia/ ]]; 
+# then
+#     # ensure pyenvs are available to tox
+#     eval "$(pyenv init -)"
+#     ls -1 ~/.pyenv/versions/  > /root/.python-version
+#     pyenv shell $(ls -1 ~/.pyenv/versions/)
+# fi
 
 tox -- tests/
 
