@@ -394,7 +394,7 @@ class CLI(object):
 
     def __dir__(self):
         """Return modules names."""
-        return vars(self)
+        return list(vars(self))
 
     def __init__(self,):
         """Create a CLI instance."""
