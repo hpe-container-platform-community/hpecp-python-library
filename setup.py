@@ -71,6 +71,7 @@ setup(
     author_email="chsnow123@gmail.com",
     url="https://github.com/hpe-container-platform-community/hpecp-python-library",
     packages=["hpecp", "hpecp.cli"],
+    package_data={"": ["requirements.txt", "LICENSE"]},
     scripts=["bin/hpecp"],
     keywords="",
     version=get_version("hpecp/__init__.py"),
