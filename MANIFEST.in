@@ -4,4 +4,5 @@ include requirements.txt
 recursive-exclude * __pycache__
 recursive-exclude * *.py[co]
 
-recursive-include bin/ hpecp/
+recursive-include bin/ *.py
+recursive-include hpecp/ *.py
