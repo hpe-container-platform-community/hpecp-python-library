@@ -5,7 +5,7 @@ six
 enum34; python_version == "2.7"
 configparser; python_version == "2.7"
 polling
-pyyaml
+pyyaml>=5.1
 fire
 jmespath
 jinja2
