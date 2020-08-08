@@ -23,10 +23,11 @@ jobs:
         python-version: 2.7
     - name: Install and Run Python 2.7
       run: |
-        sudo apt-get install python-setuptools
+        sudo apt-get install python3-setuptools
         python -c "print('*' * 80)"
-        echo "Running: 'hpecp version'"
         pip install hpecp
+        python -c "print('*' * 80)"
+        echo "Running 'hpecp version':"
         hpecp version
         python -c "print('*' * 80)"
     - uses: actions/setup-python@v2
@@ -36,8 +37,9 @@ jobs:
       run: |
         sudo apt-get install python3-setuptools
         python -c "print('*' * 80)"
-        echo "Running: 'hpecp version'"
         pip3 install hpecp
+        python -c "print('*' * 80)"
+        echo "Running 'hpecp version':"
         hpecp version
         python -c "print('*' * 80)"
         
