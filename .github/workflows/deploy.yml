@@ -23,6 +23,7 @@ jobs:
         python-version: 2.7
     - name: Install and Run
       run: |
+        sudo apt-get install -y python-setuptools
         pip install hpecp
         hpecp version
     - uses: actions/setup-python@v2
@@ -30,6 +31,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install and Run
       run: |
+        sudo apt-get install -y python-setuptools
         pip3 install hpecp
         hpecp version
         
