@@ -24,16 +24,22 @@ jobs:
     - name: Install and Run Python 2.7
       run: |
         sudo apt-get install python-setuptools
+        python -c "print('*' * 80)"
+        echo "Running: 'hpecp version'"
         pip install hpecp
         hpecp version
+        python -c "print('*' * 80)"
     - uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install and Run Python 3.x
       run: |
         sudo apt-get install python3-setuptools
+        python -c "print('*' * 80)"
+        echo "Running: 'hpecp version'"
         pip3 install hpecp
         hpecp version
+        python -c "print('*' * 80)"
         
   deploy:
     name: Deploy
