@@ -14,11 +14,25 @@ jobs:
       with:
         fetch-depth: 0
     - name: Python Semantic Release
-#       uses: snowch/python-semantic-release@master
       uses: relekang/python-semantic-release@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         pypi_token: ${{ secrets.PYPI_TOKEN }}
+    - uses: actions/setup-python@v2
+      with:
+        python-version: 2.7
+    - name: Install and Run
+      run: |
+        pip install hpecp
+        hpecp version
+    - uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install and Run
+      run: |
+        pip3 install hpecp
+        hpecp version
+        
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
