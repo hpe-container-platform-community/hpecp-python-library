@@ -548,3 +548,37 @@ class K8sClusterController(AbstractWaitableResourceController):
             data=data,
         )
         return response.json()
+
+    def import_generic_cluster(
+        self, name, description, pod_dns_domain, server_url, ca, bearer_token
+    ):
+        """Import a generic k8s cluster.
+
+        TODO
+
+        Returns
+        -------
+        TODO
+
+        Raises
+        ------
+        APIException
+        """
+        data = {
+            "label": {"name": name, "description": description},
+            "pod_dns_domain": pod_dns_domain,
+            "type": "generic",
+            "sysadmin_data": {
+                "server_url": server_url,
+                "ca": ca,
+                "bearer_token": bearer_token,
+            },
+        }
+
+        response = self.client._request(
+            url="/api/v2/k8scluster/import",
+            http_method="post",
+            description="K8sClusterController/import_generic_cluster",
+            data=data,
+        )
+        return response.json()
