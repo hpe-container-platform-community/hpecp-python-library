@@ -51,6 +51,7 @@ class K8sClusterProxy(base.BaseProxy):
             "get",
             "get_available_addons",
             "get_installed_addons",
+            "import_generic_cluster",
             "k8smanifest",
             "k8s_supported_versions",
             "list",
@@ -314,4 +315,24 @@ class K8sClusterProxy(base.BaseProxy):
         """
         base.get_client().k8s_cluster.upgrade_cluster(
             id, k8s_upgrade_version, worker_upgrade_percent
+        )
+
+    @base.intercept_exception
+    def import_generic_cluster(
+        self, name, description, pod_dns_domain, server_url, ca, bearer_token
+    ):
+        """Import a generic cluster.
+
+        TODO
+
+        Returns
+        -------
+        TODO
+
+        Raises
+        ------
+        APIException
+        """
+        base.get_client().k8s_cluster.import_generic_cluster(
+            id, name, description, pod_dns_domain, server_url, ca, bearer_token
         )
