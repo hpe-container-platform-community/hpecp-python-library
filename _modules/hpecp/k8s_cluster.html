@@ -593,6 +593,40 @@
             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;K8sClusterController/upgrade_cluster&quot;</span><span class="p">,</span>
             <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
         <span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="K8sClusterController.import_generic_cluster"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.import_generic_cluster">[docs]</a>    <span class="k">def</span> <span class="nf">import_generic_cluster</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">pod_dns_domain</span><span class="p">,</span> <span class="n">server_url</span><span class="p">,</span> <span class="n">ca</span><span class="p">,</span> <span class="n">bearer_token</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Import a generic k8s cluster.</span>
+
+<span class="sd">        TODO</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        TODO</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        APIException</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">description</span><span class="p">},</span>
+            <span class="s2">&quot;pod_dns_domain&quot;</span><span class="p">:</span> <span class="n">pod_dns_domain</span><span class="p">,</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;generic&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;sysadmin_data&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;server_url&quot;</span><span class="p">:</span> <span class="n">server_url</span><span class="p">,</span>
+                <span class="s2">&quot;ca&quot;</span><span class="p">:</span> <span class="n">ca</span><span class="p">,</span>
+                <span class="s2">&quot;bearer_token&quot;</span><span class="p">:</span> <span class="n">bearer_token</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">}</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
+            <span class="n">url</span><span class="o">=</span><span class="s2">&quot;/api/v2/k8scluster/import&quot;</span><span class="p">,</span>
+            <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;post&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;K8sClusterController/import_generic_cluster&quot;</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></div></div>
 </pre></div>
 
