@@ -20,6 +20,7 @@
 
 from __future__ import absolute_import
 
+import re
 from enum import Enum
 
 from requests.structures import CaseInsensitiveDict
@@ -132,7 +133,11 @@ class TenantController(AbstractWaitableResourceController):
         self.client = client
 
     def create(
-        self, name=None, description=None, tenant_type=None, k8s_cluster=None
+        self,
+        name=None,
+        description=None,
+        tenant_type=None,
+        k8s_cluster_id=None,
     ):
 
         assert (
@@ -142,11 +147,15 @@ class TenantController(AbstractWaitableResourceController):
             description, basestring
         ), "'description' if provided, must be a string"
 
+        assert isinstance(k8s_cluster_id, str) and re.match(
+            r"\/api\/v2\/k8scluster\/[0-9]+", k8s_cluster_id
+        ), "'k8s_cluster_id' must have format '/api/v2/k8scluster/[0-9]+'"
+
         data = {
             "label": {"name": name},
             "tenant_type": tenant_type,
             "member_key_available": "all_admins",
-            "k8s_cluster": k8s_cluster,
+            "k8s_cluster": k8s_cluster_id,
         }
         if description is not None:
             data["label"]["description"] = description
