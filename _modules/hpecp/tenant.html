@@ -66,6 +66,7 @@
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
 
+<span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
 
 <span class="kn">from</span> <span class="nn">requests.structures</span> <span class="kn">import</span> <span class="n">CaseInsensitiveDict</span>
@@ -178,7 +179,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">client</span>
 
 <div class="viewcode-block" id="TenantController.create"><a class="viewcode-back" href="../../hpecp.tenant.html#hpecp.tenant.TenantController.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tenant_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">k8s_cluster</span><span class="o">=</span><span class="kc">None</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">tenant_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">k8s_cluster_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
 
         <span class="k">assert</span> <span class="p">(</span>
@@ -188,11 +193,15 @@
             <span class="n">description</span><span class="p">,</span> <span class="n">basestring</span>
         <span class="p">),</span> <span class="s2">&quot;&#39;description&#39; if provided, must be a string&quot;</span>
 
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">k8s_cluster_id</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span>
+            <span class="sa">r</span><span class="s2">&quot;\/api\/v2\/k8scluster\/[0-9]+&quot;</span><span class="p">,</span> <span class="n">k8s_cluster_id</span>
+        <span class="p">),</span> <span class="s2">&quot;&#39;k8s_cluster_id&#39; must have format &#39;/api/v2/k8scluster/[0-9]+&#39;&quot;</span>
+
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">},</span>
             <span class="s2">&quot;tenant_type&quot;</span><span class="p">:</span> <span class="n">tenant_type</span><span class="p">,</span>
             <span class="s2">&quot;member_key_available&quot;</span><span class="p">:</span> <span class="s2">&quot;all_admins&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;k8s_cluster&quot;</span><span class="p">:</span> <span class="n">k8s_cluster</span><span class="p">,</span>
+            <span class="s2">&quot;k8s_cluster&quot;</span><span class="p">:</span> <span class="n">k8s_cluster_id</span><span class="p">,</span>
         <span class="p">}</span>
         <span class="k">if</span> <span class="n">description</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">data</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">][</span><span class="s2">&quot;description&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">description</span>
