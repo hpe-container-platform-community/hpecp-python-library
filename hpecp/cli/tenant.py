@@ -77,7 +77,7 @@ class TenantProxy(base.BaseProxy):
             name=name,
             description=description,
             tenant_type=tenant_type,
-            k8s_cluster=k8s_cluster_id,
+            k8s_cluster_id=k8s_cluster_id,
         )
         print(tenant_id)
 
