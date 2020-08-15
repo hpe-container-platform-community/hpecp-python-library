@@ -60,82 +60,130 @@ class Catalog(AbstractResource):
     @property
     def label_name(self):
         """@Field: from json['label']['name']"""
-        return self.json["label"]["name"]
+        try:
+            return self.json["label"]["name"]
+        except KeyError:
+            return ""
 
     @property
     def label_description(self):
         """@Field: from json['label']['description']"""
-        return self.json["label"]["description"]
+        try:
+            return self.json["label"]["description"]
+        except KeyError:
+            return ""
 
     @property
     def self_href(self):
         """@Field: from json['_links']['self']['href']"""
-        return self.json["_links"]["self"]["href"]
+        try:
+            return self.json["_links"]["self"]["href"]
+        except KeyError:
+            return ""
 
     @property
     def feed(self):
         """@Field: from json['_links']['feed']"""
-        return self.json["_links"]["feed"]
+        try:
+            return self.json["_links"]["feed"]
+        except KeyError:
+            return ""
 
     @property
     def distro_id(self):
         """@Field: from json['distro_id']"""
-        return self.json["distro_id"]
+        try:
+            return self.json["distro_id"]
+        except KeyError:
+            return ""
 
     @property
     def version(self):
         """@Field: from json['version']"""
-        return self.json["version"]
+        try:
+            return self.json["version"]
+        except KeyError:
+            return ""
 
     @property
     def timestamp(self):
         """@Field: from json['timestamp']"""
-        return self.json["timestamp"]
+        try:
+            return self.json["timestamp"]
+        except KeyError:
+            return ""
 
     @property
     def isdebug(self):
         """@Field: from json['isdebug']"""
-        return self.json["isdebug"]
+        try:
+            return self.json["isdebug"]
+        except KeyError:
+            return ""
 
     @property
     def osclass(self):
         """@Field: from json['osclass']"""
-        return self.json["osclass"]
+        try:
+            return self.json["osclass"]
+        except KeyError:
+            return ""
 
     @property
     def logo_checksum(self):
         """@Field: from json['logo']['checksum']"""
-        return self.json["logo"]["checksum"]
+        try:
+            return self.json["logo"]["checksum"]
+        except KeyError:
+            return ""
 
     @property
     def logo_url(self):
         """@Field: from json['logo']['url']"""
-        return self.json["logo"]["url"]
+        try:
+            return self.json["logo"]["url"]
+        except KeyError:
+            return ""
 
     @property
     def documentation_checksum(self):
         """@Field: from json['documentation']['checksum']"""
-        return self.json["documentation"]["checksum"]
+        try:
+            return self.json["documentation"]["checksum"]
+        except KeyError:
+            return ""
 
     @property
     def documentation_mimetype(self):
         """@Field: from json['documentation']['mimetype']"""
-        return self.json["documentation"]["mimetype"]
+        try:
+            return self.json["documentation"]["mimetype"]
+        except KeyError:
+            return ""
 
     @property
     def documentation_file(self):
         """@Field: from json['documentation']['file']"""
-        return self.json["documentation"]["file"]
+        try:
+            return self.json["documentation"]["file"]
+        except KeyError:
+            return ""
 
     @property
     def state(self):
         """@Field: from json['state']"""
-        return self.json["state"]
+        try:
+            return self.json["state"]
+        except KeyError:
+            return ""
 
     @property
     def state_info(self):
         """@Field: from json['state_info']"""
-        return self.json["state_info"]
+        try:
+            return self.json["state_info"]
+        except KeyError:
+            return ""
 
 
 class CatalogController(AbstractResourceController):
