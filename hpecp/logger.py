@@ -30,14 +30,16 @@ class Logger(object):
     @classmethod
     def get_logger(cls):
 
-        if "HPECP_LOG_CONF_FILE" in os.environ:
-            logging.config.fileConfig(os.getenv("HPECP_LOG_CONF_FILE"))
+        if "HPECP_LOG_CONFIG_FILE" in os.environ:
+            logging.config.fileConfig(os.getenv("HPECP_LOG_CONFIG_FILE"))
+            Logger.logger = logging.getLogger("HPECP_CLI")
+        else:
+            format = (
+                "%(asctime)s - %(filename)s "
+                "- %(name)s - %(levelname)s - %(message)s"
+            )
+            logging.basicConfig(format=format)
+            Logger.logger = logging.getLogger("HPECP_CLI")
+            Logger.logger.setLevel(os.getenv("LOG_LEVEL", logging.INFO))
 
-        format = (
-            "%(asctime)s - %(filename)s "
-            "- %(name)s - %(levelname)s - %(message)s"
-        )
-        logging.basicConfig(format=format)
-        Logger.logger = logging.getLogger("HPECP_CLI")
-        Logger.logger.setLevel(os.getenv("LOG_LEVEL", logging.INFO))
         return Logger.logger
