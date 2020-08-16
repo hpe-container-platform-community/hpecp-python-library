@@ -482,15 +482,15 @@ class ContainerPlatformClient(object):
 
             urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-        if self.log.level == 10:  # "DEBUG"
-            if six.PY3:
-                import http.client
+        # if self.log.level == 10:  # "DEBUG"
+        #     if six.PY3:
+        #         import http.client
 
-                http.client.HTTPConnection.debuglevel = 1
+        #         http.client.HTTPConnection.debuglevel = 1
 
-            requests_log = logging.getLogger("requests.packages.urllib3")
-            requests_log.setLevel(logging.DEBUG)
-            requests_log.propagate = True
+        #     requests_log = logging.getLogger("requests.packages.urllib3")
+        #     requests_log.setLevel(logging.DEBUG)
+        #     requests_log.propagate = True
 
         response = None
         try:
