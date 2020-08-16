@@ -10,8 +10,5 @@ Note that until the API of this library will be unstable and subject to change u
 
 .. code-block:: bash
 
-   # ensure you have an up-to-date pip
-   pip3 install -U pip
-
-   pip3 install --upgrade git+https://github.com/hpe-container-platform-community/hpecp-client@master
+   pip3 install --upgrade hpecp
 
