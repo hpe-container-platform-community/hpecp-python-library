@@ -528,15 +528,15 @@
 
             <span class="n">urllib3</span><span class="o">.</span><span class="n">disable_warnings</span><span class="p">(</span><span class="n">urllib3</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">InsecureRequestWarning</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">level</span> <span class="o">==</span> <span class="mi">10</span><span class="p">:</span>  <span class="c1"># &quot;DEBUG&quot;</span>
-            <span class="k">if</span> <span class="n">six</span><span class="o">.</span><span class="n">PY3</span><span class="p">:</span>
-                <span class="kn">import</span> <span class="nn">http.client</span>
+        <span class="c1"># if self.log.level == 10:  # &quot;DEBUG&quot;</span>
+        <span class="c1">#     if six.PY3:</span>
+        <span class="c1">#         import http.client</span>
 
-                <span class="n">http</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">HTTPConnection</span><span class="o">.</span><span class="n">debuglevel</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="c1">#         http.client.HTTPConnection.debuglevel = 1</span>
 
-            <span class="n">requests_log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;requests.packages.urllib3&quot;</span><span class="p">)</span>
-            <span class="n">requests_log</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
-            <span class="n">requests_log</span><span class="o">.</span><span class="n">propagate</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="c1">#     requests_log = logging.getLogger(&quot;requests.packages.urllib3&quot;)</span>
+        <span class="c1">#     requests_log.setLevel(logging.DEBUG)</span>
+        <span class="c1">#     requests_log.propagate = True</span>
 
         <span class="n">response</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">try</span><span class="p">:</span>
