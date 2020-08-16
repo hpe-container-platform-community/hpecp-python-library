@@ -65,31 +65,42 @@ Here is an example config file:
 
 .. code-block:: bash
 
-    [loggers]
-    keys=root,HPECP_CLI
+[loggers]
+keys=root,HPECP_CLI
 
     [handlers]
-    keys=fileHandler
+    keys=consoleHandler,fileHandler
 
     [formatters]
-    keys=simpleFormatter
+    keys=consoleFormatter,fileFormatter
 
     [logger_root]
-    level=DEBUG
-    handlers=fileHandler
+    level=INFO
+    handlers=consoleHandler,fileHandler
 
     [logger_HPECP_CLI]
     level=DEBUG
     handlers=fileHandler
     qualname=HPECP_CLI
+    propagate=0
+
+    [handler_consoleHandler]
+    level=INFO
+    class=StreamHandler
+    formatter=consoleFormatter
+    args=(os.devnull,)
 
     [handler_fileHandler]
-    class=FileHandler
     level=DEBUG
-    formatter=simpleFormatter
+    class=FileHandler
+    formatter=fileFormatter
     args=("/Users/christophersnow/Desktop/hcp-demo-env-aws-terraform/hpecp.log","a")
 
-    [formatter_simpleFormatter]
+    [formatter_consoleFormatter]
+    format=%(asctime)s - %(name)s - %(levelname)s - %(message)s
+    datefmt=
+
+    [formatter_fileFormatter]
     format=%(asctime)s - %(name)s - %(levelname)s - %(message)s
     datefmt=
 
