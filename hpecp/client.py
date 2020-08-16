@@ -25,14 +25,12 @@ from __future__ import absolute_import
 import ast
 import codecs
 import json
-import logging
 import os
 import re
 from configparser import SafeConfigParser
 
 import pkg_resources
 import requests
-import six
 from requests.structures import CaseInsensitiveDict
 from six import raise_from
 from urllib3.exceptions import (
@@ -491,7 +489,6 @@ class ContainerPlatformClient(object):
         #     requests_log = logging.getLogger("requests.packages.urllib3")
         #     requests_log.setLevel(logging.DEBUG)
         #     requests_log.propagate = True
-        
 
         response = None
         try:
