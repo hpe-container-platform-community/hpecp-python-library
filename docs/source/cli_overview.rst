@@ -9,10 +9,7 @@ Install the library:
 
 .. code-block:: bash
 
-   # ensure you have an up-to-date pip
-   pip3 install -U pip
-
-   pip3 install --upgrade git+https://github.com/hpe-container-platform-community/hpecp-client@master
+   pip3 install --upgrade hpecp
 
 
 Create a configuration file:
@@ -62,6 +59,40 @@ Typical valid values are `ERROR`, `WARNING`, `INFO`, `DEBUG` - the default value
     >>> aa8716be-bc74-4ffa-b838-d92e6934d224
 
 See https://docs.python.org/3.7/howto/logging.html for much more info on logging.
+
+To log to a file, set the environment variables `HPECP_LOG_CONFIG_FILE`, e.g. `HPECP_LOG_CONFIG_FILE=~/.hpecp_logging.conf`.  
+Here is an example config file:
+
+.. code-block:: bash
+
+    [loggers]
+    keys=root,HPECP_CLI
+
+    [handlers]
+    keys=fileHandler
+
+    [formatters]
+    keys=simpleFormatter
+
+    [logger_root]
+    level=DEBUG
+    handlers=fileHandler
+
+    [logger_HPECP_CLI]
+    level=DEBUG
+    handlers=fileHandler
+    qualname=HPECP_CLI
+
+    [handler_fileHandler]
+    class=FileHandler
+    level=DEBUG
+    formatter=simpleFormatter
+    args=("/Users/christophersnow/Desktop/hcp-demo-env-aws-terraform/hpecp.log","a")
+
+    [formatter_simpleFormatter]
+    format=%(asctime)s - %(name)s - %(levelname)s - %(message)s
+    datefmt=
+
 
 
 CLI Help
