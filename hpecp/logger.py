@@ -19,6 +19,7 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 
 import logging
+import logging.config
 import os
 
 
@@ -28,6 +29,9 @@ class Logger(object):
 
     @classmethod
     def get_logger(cls):
+
+        if "HPECP_LOG_CONF_FILE" in os.environ:
+            logging.config.fileConfig(os.getenv("HPECP_LOG_CONF_FILE"))
 
         format = (
             "%(asctime)s - %(filename)s "
