@@ -63,7 +63,7 @@ See https://docs.python.org/3.7/howto/logging.html for much more info on logging
 Logging Configuration
 ---------------------
 
-To change logging configuration, e.g. to log to a file set the environment variable `HPECP_LOG_CONFIG_FILE` and provide a configuration file.
+To change logging configuration, e.g. to log to a file, set the environment variable `HPECP_LOG_CONFIG_FILE` and provide a configuration file.
 
 Example: `HPECP_LOG_CONFIG_FILE=~/.hpecp_logging.conf`:
 
