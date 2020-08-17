@@ -60,13 +60,17 @@ Typical valid values are `ERROR`, `WARNING`, `INFO`, `DEBUG` - the default value
 
 See https://docs.python.org/3.7/howto/logging.html for much more info on logging.
 
-To log to a file, set the environment variables `HPECP_LOG_CONFIG_FILE`, e.g. `HPECP_LOG_CONFIG_FILE=~/.hpecp_logging.conf`.  
-Here is an example config file:
+Logging Configuration
+---------------------
+
+To change logging configuration, e.g. to log to a file set the environment variable `HPECP_LOG_CONFIG_FILE` and provide a configuration file.
+
+Example: `HPECP_LOG_CONFIG_FILE=~/.hpecp_logging.conf`:
 
 .. code-block:: bash
 
-[loggers]
-keys=root,HPECP_CLI
+    [loggers]
+    keys=root,HPECP_CLI
 
     [handlers]
     keys=consoleHandler,fileHandler
@@ -94,7 +98,7 @@ keys=root,HPECP_CLI
     level=DEBUG
     class=FileHandler
     formatter=fileFormatter
-    args=("/Users/christophersnow/Desktop/hcp-demo-env-aws-terraform/hpecp.log","a")
+    args=("/MY/LOG/FILE/LOCATION/hpecp.log","a")
 
     [formatter_consoleFormatter]
     format=%(asctime)s - %(name)s - %(levelname)s - %(message)s
@@ -104,6 +108,7 @@ keys=root,HPECP_CLI
     format=%(asctime)s - %(name)s - %(levelname)s - %(message)s
     datefmt=
 
+See https://docs.python.org/3.7/howto/logging.html for much more info on logging.
 
 
 CLI Help

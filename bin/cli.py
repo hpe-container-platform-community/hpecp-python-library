@@ -36,6 +36,7 @@ import fire
 import six
 from jinja2 import Environment
 
+import hpecp
 from hpecp import ContainerPlatformClient
 from hpecp.cli.catalog import CatalogProxy
 from hpecp.cli.gateway import GatewayProxy
@@ -386,7 +387,10 @@ class AutoComplete:
 
 def version():
     """Display version information."""
-    print(ContainerPlatformClient.version())
+    print("HPECP Version:  " + ContainerPlatformClient.version())
+    print("HPECP Path:     " + hpecp.__file__)
+    print("Python Version: " + sys.version.replace("\n", ""))
+    print("Python Path:    " + sys.executable)
 
 
 class CLI(object):
