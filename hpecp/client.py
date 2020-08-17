@@ -658,14 +658,21 @@ class ContainerPlatformClient(object):
             else:
                 response_info = ""
 
+            def log_response():
+                self.log.debug(
+                    "RES: {} : {} {} : {} {}".format(
+                        description,
+                        http_method,
+                        url,
+                        response.status_code,
+                        response_info,
+                    )
+                )
+
             if response.status_code == 403:
                 # This is expected for some method calls so do not log as an
                 # error
-                self.log.debug(
-                    "{} : {} {} REQ: {}".format(
-                        description, http_method, url, json.dumps(data)
-                    )
-                )
+                log_response()
                 raise APIForbiddenException(
                     message=response_info,
                     request_method=http_method,
@@ -675,11 +682,7 @@ class ContainerPlatformClient(object):
             if response.status_code == 404:
                 # This is expected for some method calls so do not log as an
                 # error
-                self.log.debug(
-                    "{} : {} {} REQ: {}".format(
-                        description, http_method, url, json.dumps(data)
-                    )
-                )
+                log_response()
                 raise APIItemNotFoundException(
                     message=response_info,
                     request_method=http_method,
@@ -689,11 +692,7 @@ class ContainerPlatformClient(object):
             if response.status_code == 409:
                 # This is expected for some method calls so do not log as an
                 # error
-                self.log.debug(
-                    "{} : {} {} REQ: {}".format(
-                        description, http_method, url, json.dumps(data)
-                    )
-                )
+                log_response()
                 raise APIItemConflictException(
                     message=response_info,
                     request_method=http_method,
@@ -701,11 +700,7 @@ class ContainerPlatformClient(object):
                     request_data=json.dumps(data),
                 )
             else:
-                self.log.debug(
-                    "{} : {} {} REQ: {}".format(
-                        description, http_method, url, json.dumps(data)
-                    )
-                )
+                log_response()
                 raise APIUnknownException(
                     message=str(re),  # get the exception message
                     request_method=http_method,
