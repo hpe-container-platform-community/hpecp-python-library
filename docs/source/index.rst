@@ -92,6 +92,7 @@ Contents
    installation
    hpecp
    cli_overview
+   logging
    github
    license
 
