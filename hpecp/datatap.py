@@ -30,17 +30,19 @@ class Datatap(AbstractResource):
     # Platform API.
     # TODO: Verify this with the specification
     all_fields = (
+        "self_href",
         "label_name",
         "label_description",
-        "self_href",
-        # "state",
-        # "state_info",
+        "type",
+        "status",
     )
 
     default_display_fields = [
+        "self_href",
         "label_name",
         "label_description",
-        "self_href",
+        "type",
+        "status",
     ]
 
     # These fields are displayed by default, e.g. in tabulate()
@@ -50,17 +52,25 @@ class Datatap(AbstractResource):
 
     @property
     def label_name(self):
-        """@Field: from json['label']['name']."""
+        """@Field: from json['_embedded']['name']."""
         try:
-            return self.json["label"]["name"]
+            return self.json["_embedded"]["name"]
         except KeyError:
             return ""
 
     @property
     def label_description(self):
-        """@Field: from json['label']['description']."""
+        """@Field: from json['_embedded']['description']."""
         try:
-            return self.json["label"]["description"]
+            return self.json["_embedded"]["description"]
+        except KeyError:
+            return ""
+
+    @property
+    def type(self):
+        """@Field: from json['_embedded']['endpoint']['type']."""
+        try:
+            return self.json["_embedded"]["endpoint"]["type"]
         except KeyError:
             return ""
 
@@ -72,21 +82,13 @@ class Datatap(AbstractResource):
         except KeyError:
             return ""
 
-    # @property
-    # def state(self):
-    #     """@Field: from json['state']"""
-    #     try:
-    #         return self.json["state"]
-    #     except KeyError:
-    #         return ""
-
-    # @property
-    # def state_info(self):
-    #     """@Field: from json['state_info']"""
-    #     try:
-    #         return self.json["state_info"]
-    #     except KeyError:
-    #         return ""
+    @property
+    def status(self):
+        """@Field: from json['_embedded']['status']."""
+        try:
+            return self.json["_embedded"]["status"]
+        except KeyError:
+            return ""
 
 
 class DatatapController(AbstractResourceController):
