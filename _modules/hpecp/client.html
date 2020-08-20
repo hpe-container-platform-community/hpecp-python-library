@@ -89,6 +89,7 @@
 
 <span class="kn">from</span> <span class="nn">.catalog</span> <span class="kn">import</span> <span class="n">CatalogController</span>
 <span class="kn">from</span> <span class="nn">.config</span> <span class="kn">import</span> <span class="n">ConfigController</span>
+<span class="kn">from</span> <span class="nn">.datatap</span> <span class="kn">import</span> <span class="n">DatatapController</span>
 <span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">APIException</span><span class="p">,</span>
     <span class="n">APIItemConflictException</span><span class="p">,</span>
@@ -499,6 +500,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_user</span> <span class="o">=</span> <span class="n">UserController</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_catalog</span> <span class="o">=</span> <span class="n">CatalogController</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_role</span> <span class="o">=</span> <span class="n">RoleController</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_datatap</span> <span class="o">=</span> <span class="n">DatatapController</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ContainerPlatformClient.create_session"><a class="viewcode-back" href="../../hpecp.client.html#hpecp.client.ContainerPlatformClient.create_session">[docs]</a>    <span class="k">def</span> <span class="nf">create_session</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create a session with the HPE CP controller.</span>
@@ -1005,7 +1007,26 @@
 <span class="sd">        &gt;&gt;&gt; client.create_session()</span>
 <span class="sd">        &gt;&gt;&gt; client.role.get()</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_role</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_role</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">datatap</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve a reference to a `.datatap.DatatapController` object.</span>
+
+<span class="sd">        See the class :py:class:`.role.DatatapController` for the methods</span>
+<span class="sd">        available.</span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        This example calls the method :py:meth:`get()</span>
+<span class="sd">        &lt;.datatap.DatatapController.get&gt;`</span>
+<span class="sd">        in :py:class:`.datatap.DatatapController`.</span>
+
+<span class="sd">        &gt;&gt;&gt; client = ContainerPlatformClient(...)</span>
+<span class="sd">        &gt;&gt;&gt; client.create_session()</span>
+<span class="sd">        &gt;&gt;&gt; client.datatap.get()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_datatap</span></div>
 </pre></div>
 
             <div class="clearer"></div>
