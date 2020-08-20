@@ -39,6 +39,7 @@ from jinja2 import Environment
 import hpecp
 from hpecp import ContainerPlatformClient
 from hpecp.cli.catalog import CatalogProxy
+from hpecp.cli.datatap import DatatapProxy
 from hpecp.cli.gateway import GatewayProxy
 from hpecp.cli.httpclient import HttpClientProxy
 from hpecp.cli.k8scluster import K8sClusterProxy
@@ -415,6 +416,7 @@ class CLI(object):
         self.user = UserProxy()
         self.role = RoleProxy()
         self.version = version
+        self.datatap = DatatapProxy()
 
 
 if __name__ == "__main__":
