@@ -37,6 +37,7 @@ class DatatapProxy(base.BaseProxy):
     def __dir__(self):
         """Return the CLI method names."""
         return [
+            "create_hdfs_with_kerberos",
             "get",
             "list",
             "delete",
@@ -52,4 +53,75 @@ class DatatapProxy(base.BaseProxy):
                     Coming soon ...
                 """  # noqa:  E501
             )
+        )
+
+    def create_hdfs_with_kerberos(
+        self,
+        name,
+        description,
+        path_from_endpoint,
+        kdc_data_host,
+        kdc_data_port,
+        realm,
+        client_principal,
+        browse_only,
+        host,
+        keytab,
+        service_id,
+        backup_host,
+        endpoint_type,
+        endpoint_port,
+        read_only,
+    ):
+        """TODO.
+
+        Parameters
+        ----------
+        name : [type]
+            [description]
+        description : [type]
+            [description]
+        path_from_endpoint : [type]
+            [description]
+        kdc_data_host : [type]
+            [description]
+        kdc_data_port : [type]
+            [description]
+        realm : [type]
+            [description]
+        client_principal : [type]
+            [description]
+        browse_only : [type]
+            [description]
+        host : [type]
+            [description]
+        keytab : [type]
+            [description]
+        service_id : [type]
+            [description]
+        backup_host : [type]
+            [description]
+        endpoint_type : [type]
+            [description]
+        endpoint_port : [type]
+            [description]
+        read_only : [type]
+            [description]
+        """
+        base.get_client().datatap.create(
+            name,
+            description,
+            path_from_endpoint,
+            kdc_data_host,
+            kdc_data_port,
+            realm,
+            client_principal,
+            browse_only,
+            host,
+            keytab,
+            service_id,
+            backup_host,
+            endpoint_type,
+            endpoint_port,
+            read_only,
         )

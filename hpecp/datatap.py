@@ -109,3 +109,81 @@ class DatatapController(AbstractResourceController):
     resource_list_path = "data_connectors"
 
     resource_class = Datatap
+
+    def create_hdfs_with_kerberos(
+        self,
+        name,
+        description,
+        path_from_endpoint,
+        kdc_data_host,
+        kdc_data_port,
+        realm,
+        client_principal,
+        browse_only,
+        host,
+        keytab,
+        service_id,
+        backup_host,
+        endpoint_type,
+        endpoint_port,
+        read_only,
+    ):
+        """TODO.
+
+        Parameters
+        ----------
+        name : [type]
+            [description]
+        description : [type]
+            [description]
+        path_from_endpoint : [type]
+            [description]
+        kdc_data_host : [type]
+            [description]
+        kdc_data_port : [type]
+            [description]
+        realm : [type]
+            [description]
+        client_principal : [type]
+            [description]
+        browse_only : [type]
+            [description]
+        host : [type]
+            [description]
+        keytab : [type]
+            [description]
+        service_id : [type]
+            [description]
+        backup_host : [type]
+            [description]
+        endpoint_type : [type]
+            [description]
+        endpoint_port : [type]
+            [description]
+        read_only : [type]
+            [description]
+        """
+        _data = {
+            "bdfs_root": {"path_from_endpoint": path_from_endpoint},
+            "endpoint": {
+                "kdc_data": [{"host": kdc_data_host, "port": kdc_data_port}],
+                "realm": realm,
+                "client_principal": client_principal,
+                "browse_only": browse_only,
+                "host": host,
+                "keytab": keytab,
+                "service_id": service_id,
+                "backup_host": backup_host,
+                "type": endpoint_type,
+                "port": endpoint_port,
+            },
+            "flags": {"read_only": read_only},
+            "label": {"name": name, "description": description},
+        }
+
+        self.client._request(
+            url=DatatapController.base_resource_path,
+            http_method="post",
+            description="datatap/create",
+            data=_data,
+        )
