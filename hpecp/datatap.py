@@ -30,17 +30,17 @@ class Datatap(AbstractResource):
     # Platform API.
     # TODO: Verify this with the specification
     all_fields = (
-        "self_href",
-        "label_name",
-        "label_description",
+        "id",
+        "name",
+        "description",
         "type",
         "status",
     )
 
     default_display_fields = [
-        "self_href",
-        "label_name",
-        "label_description",
+        "id",
+        "name",
+        "description",
         "type",
         "status",
     ]
@@ -51,18 +51,18 @@ class Datatap(AbstractResource):
     default_display_fields = all_fields
 
     @property
-    def label_name(self):
-        """@Field: from json['_embedded']['name']."""
+    def name(self):
+        """@Field: from json['_embedded']['label']['name']."""
         try:
-            return self.json["_embedded"]["name"]
+            return self.json["_embedded"]["label"]["name"]
         except KeyError:
             return ""
 
     @property
-    def label_description(self):
-        """@Field: from json['_embedded']['description']."""
+    def description(self):
+        """@Field: from json['_embedded']['label']['description']."""
         try:
-            return self.json["_embedded"]["description"]
+            return self.json["_embedded"]["label"]["description"]
         except KeyError:
             return ""
 
