@@ -66,12 +66,12 @@ class DatatapProxy(base.BaseProxy):
         client_principal,
         browse_only,
         host,
-        keytab,
         service_id,
         backup_host,
         endpoint_type,
         endpoint_port,
         read_only,
+        keytab="",
     ):
         """TODO.
 
