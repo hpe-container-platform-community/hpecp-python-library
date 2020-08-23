@@ -6,6 +6,8 @@ if [[ "$(docker images -q $IMG 2> /dev/null)" == "" ]]; then
   ./build_ide.sh
 fi
 
+echo
+
 git_vars=1
 if [[ -z $GIT_USER ]]; then
   echo "GIT_USER variable not found"
@@ -38,6 +40,7 @@ if [[ -z $GIT_COMMITTER_EMAIL ]]; then
 fi
 
 if [[ $git_vars == 0 ]]; then
+  echo 
   echo "One or more git variables were not set."
   echo "You will not be able to commit inside theia."
   echo 
@@ -51,4 +54,4 @@ if [[ $git_vars == 0 ]]; then
   done
 fi
 
-docker run -it --init -p 3000:3000 -v "$(pwd):/home/project:cached" -e GIT_USER="$GIT_USER" -e GIT_PASS="$GIT_PASS" -e GIT_AUTHOR_NAME="$GIT_AUTHOR_NAME" -e GIT_COMMITTER_NAME="$GIT_COMMITTER_NAME" -e GIT_AUTHOR_EMAIL="$GIT_AUTHOR_EMAIL" -e GIT_COMMITTER_EMAIL="$GIT_COMMITTER_EMAIL" -e GIT_ASKPASS=/home/project/git_env_password.sh $IMG
+docker run --rm -it --init -p 3000:3000 -v "$(pwd):/home/project:cached" -e GIT_USER="$GIT_USER" -e GIT_PASS="$GIT_PASS" -e GIT_AUTHOR_NAME="$GIT_AUTHOR_NAME" -e GIT_COMMITTER_NAME="$GIT_COMMITTER_NAME" -e GIT_AUTHOR_EMAIL="$GIT_AUTHOR_EMAIL" -e GIT_COMMITTER_EMAIL="$GIT_COMMITTER_EMAIL" -e GIT_ASKPASS=/home/project/git_env_password.sh $IMG
