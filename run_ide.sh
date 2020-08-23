@@ -41,11 +41,24 @@ fi
 
 if [[ $git_vars == 0 ]]; then
   echo 
+  echo "WARNING:"
   echo "One or more git variables were not set."
-  echo "You will not be able to commit inside theia."
-  echo 
+  echo "You will not be able to push/pull to github from inside theia."
+  echo
+  echo "TIP:"
+  echo "you can set these variables in .bashrc or .bash_profile, e.g."
+  echo -------------------------------------
+  echo export GIT_USER=your_git_username
+  echo export GIT_PASS=your_git_password
+  echo export GIT_AUTHOR_NAME="Your name"
+  echo export GIT_COMMITTER_NAME="Your name"
+  echo export GIT_AUTHOR_EMAIL=your@email
+  echo export GIT_COMMITTER_EMAIL=your@email
+  echo -------------------------------------
+  echo
+
   while true; do
-      read -p "Do you want to continue?" yn
+      read -p "Do you want to continue without git configured in Theia?" yn
       case $yn in
           [Yy]* ) break;;
           [Nn]* ) exit;;
