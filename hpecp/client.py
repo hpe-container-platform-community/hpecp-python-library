@@ -43,6 +43,7 @@ from hpecp.exceptions import APIForbiddenException
 
 from .catalog import CatalogController
 from .config import ConfigController
+from .datatap import DatatapController
 from .exceptions import (
     APIException,
     APIItemConflictException,
@@ -453,6 +454,7 @@ class ContainerPlatformClient(object):
         self._user = UserController(self)
         self._catalog = CatalogController(self)
         self._role = RoleController(self)
+        self._datatap = DatatapController(self)
 
     def create_session(self):
         """Create a session with the HPE CP controller.
@@ -960,3 +962,22 @@ class ContainerPlatformClient(object):
         >>> client.role.get()
         """
         return self._role
+
+    @property
+    def datatap(self):
+        """Retrieve a reference to a `.datatap.DatatapController` object.
+
+        See the class :py:class:`.role.DatatapController` for the methods
+        available.
+
+        Example
+        -------
+        This example calls the method :py:meth:`get()
+        <.datatap.DatatapController.get>`
+        in :py:class:`.datatap.DatatapController`.
+
+        >>> client = ContainerPlatformClient(...)
+        >>> client.create_session()
+        >>> client.datatap.get()
+        """
+        return self._datatap
