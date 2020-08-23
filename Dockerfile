@@ -23,7 +23,7 @@ RUN adduser --disabled-password --gecos '' theia && \
 RUN echo "Installing python modules in system python versions" \
     && PY_PATHS="/usr/bin/python /usr/bin/python3 and /usr/local/bin/python3" \
     && for v in ${PY_PATHS}; do echo "******* ${v} *******"; ${v} -m pip install --upgrade pip setuptools wheel; done \
-    && for v in ${PY_PATHS}; do echo "******* ${v} *******"; ${v} -m pip install --upgrade tox tox-pyenv ipython pylint pytest mock nose flake8 flake8-docstrings autopep8; done \
+    && for v in ${PY_PATHS}; do echo "******* ${v} *******"; ${v} -m pip install --upgrade tox tox-pyenv ipython pylint pytest mock nose flake8 flake8-docstrings autopep8 jmespath fire jinja2; done \
     && for v in ${PY_PATHS}; do ${v} -m pip install -r /tmp/requirements.txt; done \
     && /usr/local/bin/python3 -m pip install -U black isort 
     #&& ln -f -s /home/theia/.pyenv/versions/*/bin/black /bin/ \
@@ -68,7 +68,7 @@ RUN export PATH=/home/theia/.pyenv/bin:$PATH; \
 RUN echo "Installing python modules in pyenv python versions" \
     && PY_PATHS=$(ls -1 /home/theia/.pyenv/versions/[0-9]*/bin/python?.?) \
     && for v in ${PY_PATHS}; do echo "******* ${v} *******"; ${v} -m pip install --upgrade pip setuptools wheel; done \
-    && for v in ${PY_PATHS}; do echo "******* ${v} *******"; ${v} -m pip install --upgrade tox tox-pyenv ipython pylint pytest mock nose flake8 flake8-docstrings autopep8; done \
+    && for v in ${PY_PATHS}; do echo "******* ${v} *******"; ${v} -m pip install --upgrade tox tox-pyenv ipython pylint pytest mock nose flake8 flake8-docstrings autopep8 jmespath fire jinja2; done \
     && for v in ${PY_PATHS}; do ${v} -m pip install -r /tmp/requirements.txt; done 
 
 
