@@ -52,6 +52,7 @@ class K8sClusterProxy(base.BaseProxy):
             "get_available_addons",
             "get_installed_addons",
             "import_generic_cluster",
+            "import_generic_cluster_with_json",
             "k8smanifest",
             "k8s_supported_versions",
             "list",
@@ -335,4 +336,37 @@ class K8sClusterProxy(base.BaseProxy):
         """
         base.get_client().k8s_cluster.import_generic_cluster(
             name, description, pod_dns_domain, server_url, ca, bearer_token
+        )
+
+    @base.intercept_exception
+    def import_generic_cluster_with_json(
+        self, json_file_path=None, json_content=None
+    ):
+        """Import a generic cluster from json.
+
+        TODO
+
+        Returns
+        -------
+        TODO
+
+        Raises
+        ------
+        APIException
+        """
+        # assert (
+        #     json_file_path is not None or json_content is not None
+        # ), "Either --json-file-path or --json-content must be provided."
+
+        # assert (
+        #     json_file_path is None and json_content is None
+        # ), "Either --json-file-path or --json-content must be provided."
+
+        if json_file_path:
+            # TODO verify file exist, etc
+            with open(json_file_path, "r") as f:
+                json_content = f.read()
+
+        base.get_client().k8s_cluster.import_generic_cluster_with_json(
+            name, json_content
         )

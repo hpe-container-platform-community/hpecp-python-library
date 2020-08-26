@@ -602,7 +602,7 @@ class K8sClusterController(AbstractWaitableResourceController):
         response = self.client._request(
             url="/api/v2/k8scluster/import",
             http_method="post",
-            description="K8sClusterController/import_generic_cluster",
+            description="K8sClusterController/import_generic_cluster_with_json",
             data=json,
         )
         return response.json()
