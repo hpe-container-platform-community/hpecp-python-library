@@ -582,3 +582,27 @@ class K8sClusterController(AbstractWaitableResourceController):
             data=data,
         )
         return response.json()
+
+    def import_generic_cluster_with_json(
+        self, json
+    ):
+        """Import a generic k8s cluster.
+
+        TODO
+
+        Returns
+        -------
+        TODO
+
+        Raises
+        ------
+        APIException
+        """
+
+        response = self.client._request(
+            url="/api/v2/k8scluster/import",
+            http_method="post",
+            description="K8sClusterController/import_generic_cluster",
+            data=json,
+        )
+        return response.json()
