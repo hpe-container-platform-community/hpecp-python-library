@@ -334,8 +334,10 @@ class K8sClusterProxy(base.BaseProxy):
         ------
         APIException
         """
-        base.get_client().k8s_cluster.import_generic_cluster(
-            name, description, pod_dns_domain, server_url, ca, bearer_token
+        print(
+            base.get_client().k8s_cluster.import_generic_cluster(
+                name, description, pod_dns_domain, server_url, ca, bearer_token
+            )
         )
 
     @base.intercept_exception
@@ -369,6 +371,8 @@ class K8sClusterProxy(base.BaseProxy):
 
         json_content = json.loads(json_content)
 
-        base.get_client().k8s_cluster.import_generic_cluster_with_json(
-            json_content
+        print(
+            base.get_client().k8s_cluster.import_generic_cluster_with_json(
+                json_content
+            )
         )
