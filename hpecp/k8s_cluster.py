@@ -581,7 +581,7 @@ class K8sClusterController(AbstractWaitableResourceController):
             description="K8sClusterController/import_generic_cluster",
             data=data,
         )
-        return response.json()
+        return CaseInsensitiveDict(response.headers)["Location"]
 
     def import_generic_cluster_with_json(self, json):
         """Import a generic k8s cluster.
@@ -605,4 +605,4 @@ class K8sClusterController(AbstractWaitableResourceController):
             ),
             data=json,
         )
-        return response.json()
+        return CaseInsensitiveDict(response.headers)["Location"]
