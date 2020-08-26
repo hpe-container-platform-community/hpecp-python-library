@@ -367,6 +367,8 @@ class K8sClusterProxy(base.BaseProxy):
             with open(json_file_path, "r") as f:
                 json_content = f.read()
 
+        json_content = json.loads(json_content)
+
         base.get_client().k8s_cluster.import_generic_cluster_with_json(
             json_content
         )
