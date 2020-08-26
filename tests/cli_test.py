@@ -351,7 +351,9 @@ class TestCLIHttpClient(BaseTestCase):
     def test_delete(self, mock_delete, mock_post):
 
         hpecp = self.cli.CLI()
-        hpecp.httpclient.delete(url="/some/url",)
+        hpecp.httpclient.delete(
+            url="/some/url",
+        )
 
         self.assertEqual(self.out.getvalue(), "")
 
@@ -456,5 +458,6 @@ class TestBash(BaseTestCase):
 
         # test the introspection of CLI gateway.list() parameter names
         self.assertEquals(
-            modules["gateway"]["list"], ["--output", "--columns", "--query"],
+            modules["gateway"]["list"],
+            ["--output", "--columns", "--query"],
         )

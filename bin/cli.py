@@ -61,7 +61,7 @@ def configure_cli():
     controller_username = None
     controller_password = None
 
-    config_path = os.path.join(os.path.expanduser("~"), ".hpecp.conf",)
+    config_path = os.path.join(os.path.expanduser("~"), ".hpecp.conf")
 
     if os.path.exists(config_path):
         config_reader = ContainerPlatformClient.create_from_config_file()
@@ -204,7 +204,7 @@ class AutoComplete:
 
         return (modules, columns)
 
-    def bash(self,):
+    def bash(self):
         """Create autocompletion script for bash."""
         __bash_template = dedent(
             """\
@@ -401,7 +401,7 @@ class CLI(object):
         """Return modules names."""
         return list(vars(self))
 
-    def __init__(self,):
+    def __init__(self):
         """Create a CLI instance."""
         self.autocomplete = AutoComplete(self)
         self.configure_cli = configure_cli

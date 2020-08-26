@@ -37,7 +37,8 @@ class HttpClientProxy(object):
 
     @base.intercept_exception
     def get(
-        self, url,
+        self,
+        url,
     ):
         """Make HTTP GET request.
 
@@ -46,13 +47,16 @@ class HttpClientProxy(object):
         $ hpecp httpclient get /api/v1/workers
         """
         response = base.get_client()._request(
-            url, http_method="get", description="CLI HTTP GET",
+            url,
+            http_method="get",
+            description="CLI HTTP GET",
         )
         print(response.text, file=sys.stdout)
 
     @base.intercept_exception
     def delete(
-        self, url,
+        self,
+        url,
     ):
         """Make HTTP DELETE request.
 
@@ -61,12 +65,16 @@ class HttpClientProxy(object):
         $ hpecp httpclient delete /api/v1/workers/1
         """
         base.get_client()._request(
-            url, http_method="delete", description="CLI HTTP DELETE",
+            url,
+            http_method="delete",
+            description="CLI HTTP DELETE",
         )
 
     @base.intercept_exception
     def post(
-        self, url, json_file="",
+        self,
+        url,
+        json_file="",
     ):
         """Make HTTP POST request.
 
@@ -91,17 +99,25 @@ class HttpClientProxy(object):
 
             hpecp httpclient post /api/v2/config/auth --json-file my.json
         """
-        with open(json_file, "r",) as f:
+        with open(
+            json_file,
+            "r",
+        ) as f:
             data = json.load(f)
 
         response = base.get_client()._request(
-            url, http_method="post", data=data, description="CLI HTTP POST",
+            url,
+            http_method="post",
+            data=data,
+            description="CLI HTTP POST",
         )
         print(response.text, file=sys.stdout)
 
     @base.intercept_exception
     def put(
-        self, url, json_file="",
+        self,
+        url,
+        json_file="",
     ):
         """Make HTTP PUT request.
 
@@ -109,10 +125,16 @@ class HttpClientProxy(object):
         --------
         $ hpecp httpclient put /api/v2/config/auth --json-file my.json
         """  # noqa: W293
-        with open(json_file, "r",) as f:
+        with open(
+            json_file,
+            "r",
+        ) as f:
             data = json.load(f)
 
         response = base.get_client()._request(
-            url, http_method="put", data=data, description="CLI HTTP PUT",
+            url,
+            http_method="put",
+            data=data,
+            description="CLI HTTP PUT",
         )
         print(response.text, file=sys.stdout)

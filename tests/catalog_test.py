@@ -42,12 +42,14 @@ class TestCatalogGet(BaseTestCase):
     def test_get_catalog_id_type(self, mock_get, mock_post):
 
         with self.assertRaisesRegexp(
-            AssertionError, "'id' must be provided and must be a str",
+            AssertionError,
+            "'id' must be provided and must be a str",
         ):
             get_client().catalog.get(123)
 
         with self.assertRaisesRegexp(
-            AssertionError, "'id' must be provided and must be a str",
+            AssertionError,
+            "'id' must be provided and must be a str",
         ):
             get_client().catalog.get(False)
 
@@ -134,12 +136,14 @@ class TestCatalogInstall(BaseTestCase):
         client = get_client()
 
         with self.assertRaisesRegexp(
-            AssertionError, "'id' must be provided and must be a str",
+            AssertionError,
+            "'id' must be provided and must be a str",
         ):
             client.catalog.install(999)
 
         with self.assertRaisesRegexp(
-            AssertionError, "'id' does not start with '/api/v1/catalog'",
+            AssertionError,
+            "'id' does not start with '/api/v1/catalog'",
         ):
             client.catalog.install("garbage")
 
@@ -229,12 +233,14 @@ class TestCatalogRefresh(BaseTestCase):
         client = get_client()
 
         with self.assertRaisesRegexp(
-            AssertionError, "'id' must be provided and must be a str",
+            AssertionError,
+            "'id' must be provided and must be a str",
         ):
             client.catalog.install(999)
 
         with self.assertRaisesRegexp(
-            AssertionError, "'id' does not start with '/api/v1/catalog'",
+            AssertionError,
+            "'id' does not start with '/api/v1/catalog'",
         ):
             client.catalog.refresh("garbage")
 
@@ -537,7 +543,9 @@ version: '2.8'"""
     def mocked_requests_garbage_data(*args, **kwargs):
         if args[0] == "https://127.0.0.1:8080/api/v1/catalog/100":
             return MockResponse(
-                json_data={"garbage"}, status_code=200, headers=dict(),
+                json_data={"garbage"},
+                status_code=200,
+                headers=dict(),
             )
         raise RuntimeError("Unhandle GET request: " + args[0])
 
@@ -570,7 +578,8 @@ class TestCLIDelete(BaseTestCase):
     def test_delete(self, mock_post):
 
         with self.assertRaisesRegexp(
-            AttributeError, "'CatalogProxy' object has no attribute 'delete'",
+            AttributeError,
+            "'CatalogProxy' object has no attribute 'delete'",
         ):
             hpecp = self.cli.CLI()
             hpecp.catalog.delete("/any/id")

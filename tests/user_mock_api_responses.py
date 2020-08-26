@@ -122,6 +122,9 @@ def mockApiSetup():
     BaseTestCase.registerHttpDeleteHandler(
         url="https://127.0.0.1:8080/api/v1/user/123",
         response=MockResponse(
-            text_data="", json_data={}, status_code=200, headers={},
+            text_data="",
+            json_data={},
+            status_code=200,
+            headers={},
         ),
     )

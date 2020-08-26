@@ -63,7 +63,8 @@ class TestTentants(BaseTestCase):
         client = get_client()
 
         with self.assertRaisesRegexp(
-            AssertionError, ("'id' does not start with '/api/v1/tenant/'"),
+            AssertionError,
+            ("'id' does not start with '/api/v1/tenant/'"),
         ):
             client.tenant.get("garbage")
 

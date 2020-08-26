@@ -39,8 +39,7 @@ class LicenseController:
         return response.json()["uuid"]
 
     def list(self):
-        """Retrieve the list of licenses
-        """
+        """Retrieve the list of licenses"""
         response = self.client._request(
             url="/api/v2/hpelicense",
             http_method="get",

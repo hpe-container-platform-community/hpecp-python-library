@@ -465,15 +465,20 @@ class TestWaitForClusterStatus(BaseTestCase):
             AssertionError, "'id' must be provided and must be a str"
         ):
             get_client().k8s_cluster.wait_for_status(
-                id=1, timeout_secs=1, status=[K8sClusterStatus.ready],
+                id=1,
+                timeout_secs=1,
+                status=[K8sClusterStatus.ready],
             )
 
         # pylint: disable=anomalous-backslash-in-string
         with self.assertRaisesRegexp(
-            AssertionError, "'id' does not start with '/api/v2/k8scluster'",
+            AssertionError,
+            "'id' does not start with '/api/v2/k8scluster'",
         ):
             get_client().k8s_cluster.wait_for_status(
-                id="garbage", timeout_secs=1, status=[K8sClusterStatus.ready],
+                id="garbage",
+                timeout_secs=1,
+                status=[K8sClusterStatus.ready],
             )
 
         with self.assertRaisesRegexp(
@@ -499,7 +504,9 @@ class TestWaitForClusterStatus(BaseTestCase):
             "'status' item '0' is not of type <enum 'K8sClusterStatus'>",
         ):
             get_client().k8s_cluster.wait_for_status(
-                id="/api/v2/k8scluster/123", timeout_secs=1, status=["abc"],
+                id="/api/v2/k8scluster/123",
+                timeout_secs=1,
+                status=["abc"],
             )
 
     @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
@@ -550,7 +557,9 @@ class TestWaitForClusterStatus(BaseTestCase):
         # without providing a status
         self.assertTrue(
             get_client().k8s_cluster.wait_for_status(
-                id="/api/v2/k8scluster/999", timeout_secs=1, status=[],
+                id="/api/v2/k8scluster/999",
+                timeout_secs=1,
+                status=[],
             )
         )
 
@@ -569,7 +578,8 @@ class TestDeleteCluster(BaseTestCase):
 
         # pylint: disable=anomalous-backslash-in-string
         with self.assertRaisesRegexp(
-            AssertionError, ("'id' does not start with '/api/v2/k8scluster'"),
+            AssertionError,
+            ("'id' does not start with '/api/v2/k8scluster'"),
         ):
             get_client().k8s_cluster.delete(id="garbage")
 
@@ -884,7 +894,8 @@ class TestCLI(BaseTestCase):
 
         output = self.out.getvalue().strip()
         self.assertEqual(
-            output, "1.14.10 1.15.7 1.16.4 1.17.0 1.17.1 1.18.0",
+            output,
+            "1.14.10 1.15.7 1.16.4 1.17.0 1.17.1 1.18.0",
         )
 
     @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
@@ -902,12 +913,14 @@ class TestCLI(BaseTestCase):
 
         output = self.out.getvalue().strip()
         self.assertEqual(
-            output, "",
+            output,
+            "",
         )
 
         error = self.err.getvalue().strip()
         self.assertEqual(
-            error, "'output' parameter ust be 'json' or 'text'",
+            error,
+            "'output' parameter ust be 'json' or 'text'",
         )
 
     @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
@@ -936,7 +949,8 @@ class TestCLI(BaseTestCase):
 
         output = self.out.getvalue().strip()
         self.assertEqual(
-            output, "[]",
+            output,
+            "[]",
         )
 
     @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
@@ -950,7 +964,8 @@ class TestCLI(BaseTestCase):
 
         output = self.out.getvalue().strip()
         self.assertEqual(
-            output, "['1.17.0', '1.17.1']",
+            output,
+            "['1.17.0', '1.17.1']",
         )
 
     @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
@@ -964,7 +979,8 @@ class TestCLI(BaseTestCase):
 
         output = self.out.getvalue().strip()
         self.assertEqual(
-            output, "[]",
+            output,
+            "[]",
         )
 
     @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
@@ -978,7 +994,8 @@ class TestCLI(BaseTestCase):
 
         output = self.out.getvalue().strip()
         self.assertEqual(
-            output, "['1.17.0', '1.18.0']",
+            output,
+            "['1.17.0', '1.18.0']",
         )
 
     @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
@@ -992,7 +1009,8 @@ class TestCLI(BaseTestCase):
 
         output = self.out.getvalue().strip()
         self.assertEqual(
-            output, "[]",
+            output,
+            "[]",
         )
 
     @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
@@ -1144,7 +1162,8 @@ class TestK8sClusterHostConfig(TestCase):
             K8sClusterHostConfig.create_from_list(noderole=[1, 2, 3])
         except AssertionError as e:
             self.assertEquals(
-                e.args[0], expected_error,
+                e.args[0],
+                expected_error,
             )
 
         conf = K8sClusterHostConfig.create_from_list(

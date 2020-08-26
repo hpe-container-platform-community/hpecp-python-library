@@ -121,7 +121,9 @@ class K8sWorkerProxy(base.BaseProxy):
             sys.exit(1)
 
         worker_id = base.get_client().k8s_worker.create_with_ssh_key(
-            ip=ip, ssh_key_data=ssh_key, tags=tags,
+            ip=ip,
+            ssh_key_data=ssh_key,
+            tags=tags,
         )
 
         if wait_for_operation_secs > 0:
@@ -170,7 +172,10 @@ class K8sWorkerProxy(base.BaseProxy):
 
     @base.intercept_exception
     def set_storage(
-        self, id, ephemeral_disks, persistent_disks=None,
+        self,
+        id,
+        ephemeral_disks,
+        persistent_disks=None,
     ):
         """Set storage for a k8s worker.
 
@@ -196,9 +201,13 @@ class K8sWorkerProxy(base.BaseProxy):
         e_disks = ephemeral_disks.split(",")
 
         base.get_client().k8s_worker.set_storage(
-            worker_id=id, persistent_disks=p_disks, ephemeral_disks=e_disks,
+            worker_id=id,
+            persistent_disks=p_disks,
+            ephemeral_disks=e_disks,
         )
 
-    def statuses(self,):
+    def statuses(
+        self,
+    ):
         """Return a list of valid statuses."""
         print([s.name for s in WorkerK8sStatus])

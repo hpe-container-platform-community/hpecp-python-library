@@ -87,7 +87,8 @@ def intercept_exception(wrapped, instance, args, kwargs):
         """Handle unknown exceptions."""
         if _log.level == 10:  # "DEBUG"
             print(
-                "Unknown error.", file=sys.stderr,
+                "Unknown error.",
+                file=sys.stderr,
             )
         else:
             print(
@@ -125,7 +126,8 @@ def intercept_exception(wrapped, instance, args, kwargs):
 def get_client(start_session=True):
     """Retrieve a reference to an authenticated client object."""
     client = ContainerPlatformClient.create_from_config_file(
-        config_file=get_config_file(), profile=get_profile(),
+        config_file=get_config_file(),
+        profile=get_profile(),
     )
     if start_session:
         client.create_session()
@@ -168,12 +170,21 @@ class BaseProxy:
         if output == "json":
             print(json.dumps(json_data))
         elif output == "json-pp":
-            print(json.dumps(json_data, indent=4, sort_keys=True,))
+            print(
+                json.dumps(
+                    json_data,
+                    indent=4,
+                    sort_keys=True,
+                )
+            )
         else:
 
             print(
                 yaml.dump(
-                    yaml.load(json.dumps(json_data), Loader=yaml.FullLoader,)
+                    yaml.load(
+                        json.dumps(json_data),
+                        Loader=yaml.FullLoader,
+                    )
                 )
             )
 
@@ -337,16 +348,26 @@ class BaseProxy:
                 obj = jmespath.search(str(query), data)
                 print(TextOutput.dump(obj))
             else:
-                print(json.dumps(jmespath.search(str(query), data),))
+                print(
+                    json.dumps(
+                        jmespath.search(str(query), data),
+                    )
+                )
 
     def wait_for_state(
-        self, id, states=[], timeout_secs=60,
+        self,
+        id,
+        states=[],
+        timeout_secs=60,
     ):
         """See wait_for_status()."""
         self.wait_for_status(id, states, timeout_secs)
 
     def wait_for_status(
-        self, id, status=[], timeout_secs=60,
+        self,
+        id,
+        status=[],
+        timeout_secs=60,
     ):
         """Wait for resource to have one or more statuses.
 
@@ -370,7 +391,9 @@ class BaseProxy:
 
         try:
             success = self.client_module_property.wait_for_status(
-                id=id, status=resource_status, timeout_secs=timeout_secs,
+                id=id,
+                status=resource_status,
+                timeout_secs=timeout_secs,
             )
         except Exception:
             success = False
@@ -378,14 +401,17 @@ class BaseProxy:
         if not success:
             print(
                 "Failed to reach state(s) {} in {}s".format(
-                    str(status), str(timeout_secs),
+                    str(status),
+                    str(timeout_secs),
                 ),
                 file=sys.stderr,
             )
             sys.exit(1)
 
     def wait_for_delete(
-        self, id, timeout_secs=1200,
+        self,
+        id,
+        timeout_secs=1200,
     ):
         """Wait for Gateway to be deleted.
 
@@ -394,5 +420,6 @@ class BaseProxy:
         :returns True if gateway was deleted within timeout_secs.
         """
         self.wait_for_state(
-            id=id, timeout_secs=timeout_secs,
+            id=id,
+            timeout_secs=timeout_secs,
         )

@@ -40,12 +40,16 @@ class LicenseProxy(object):
         return ["delete", "delete_all", "list", "platform_id", "register"]
 
     @base.intercept_exception
-    def platform_id(self,):
+    def platform_id(
+        self,
+    ):
         """Get the platform ID."""
         print(base.get_client().license.platform_id())
 
     def list(
-        self, output="yaml", license_key_only=False,
+        self,
+        output="yaml",
+        license_key_only=False,
     ):
         """Retrieve the list of licenses.
 
@@ -62,7 +66,8 @@ class LicenseProxy(object):
                 print(
                     yaml.dump(
                         yaml.load(
-                            json.dumps(response), Loader=yaml.FullLoader,
+                            json.dumps(response),
+                            Loader=yaml.FullLoader,
                         )
                     )
                 )
@@ -71,7 +76,8 @@ class LicenseProxy(object):
 
     @base.intercept_exception
     def register(
-        self, server_filename,
+        self,
+        server_filename,
     ):
         """Register a license.
 
@@ -128,7 +134,8 @@ class LicenseProxy(object):
 
     @base.intercept_exception
     def delete(
-        self, license_key,
+        self,
+        license_key,
     ):
         """Delete a license by LicenseKey.
 
@@ -138,7 +145,9 @@ class LicenseProxy(object):
         base.get_client().license.delete(license_key=license_key)
 
     @base.intercept_exception
-    def delete_all(self,):
+    def delete_all(
+        self,
+    ):
         """Delete all licenses."""
         response = base.get_client().license.list()
         all_license_keys = [

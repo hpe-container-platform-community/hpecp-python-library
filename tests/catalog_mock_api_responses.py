@@ -152,7 +152,9 @@ def mockApiSetup():
     BaseTestCase.registerHttpGetHandler(
         url="https://127.0.0.1:8080/api/v1/catalog/102",
         response=MockResponse(
-            json_data={"garbage"}, status_code=200, headers=dict(),
+            json_data={"garbage"},
+            status_code=200,
+            headers=dict(),
         ),
     )
 

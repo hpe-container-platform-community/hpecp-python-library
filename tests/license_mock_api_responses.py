@@ -35,7 +35,11 @@ def mockApiSetup():
 
     BaseTestCase.registerHttpDeleteHandler(
         url="https://127.0.0.1:8080/api/v2/hpelicense/TEST_LICENSE_KEY/",
-        response=MockResponse(json_data={}, status_code=200, headers=dict(),),
+        response=MockResponse(
+            json_data={},
+            status_code=200,
+            headers=dict(),
+        ),
     )
 
     BaseTestCase.registerHttpGetHandler(

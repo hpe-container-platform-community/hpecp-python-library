@@ -48,5 +48,9 @@ def mockApiSetup():
 
     BaseTestCase.registerHttpDeleteHandler(
         url="https://127.0.0.1:8080/api/v1/lock/1",
-        response=MockResponse(json_data={}, status_code=201, headers=dict(),),
+        response=MockResponse(
+            json_data={},
+            status_code=201,
+            headers=dict(),
+        ),
     )

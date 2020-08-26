@@ -100,6 +100,8 @@ class GatewayProxy(base.BaseProxy):
         )
         print(gateway_id)
 
-    def states(self,):
+    def states(
+        self,
+    ):
         """Return a list of valid states."""
         print([s.name for s in GatewayStatus])

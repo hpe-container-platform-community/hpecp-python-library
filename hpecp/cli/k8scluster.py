@@ -124,11 +124,15 @@ class K8sClusterProxy(base.BaseProxy):
         print(
             base.get_client()
             .k8s_cluster.get(id)
-            .admin_kube_config.replace("\\n", "\n",)
+            .admin_kube_config.replace(
+                "\\n",
+                "\n",
+            )
         )
 
     def dashboard_url(
-        self, id,
+        self,
+        id,
     ):
         """Retrieve a K8s Cluster Dashboard URL.
 
@@ -140,7 +144,8 @@ class K8sClusterProxy(base.BaseProxy):
         print(url)
 
     def dashboard_token(
-        self, id,
+        self,
+        id,
     ):
         """Retrieve a K8s Cluster Dashboard Token.
 
@@ -157,7 +162,12 @@ class K8sClusterProxy(base.BaseProxy):
         """Retrieve the k8smanifest."""
         response = base.get_client().k8s_cluster.k8smanifest()
         print(
-            yaml.dump(yaml.load(json.dumps(response), Loader=yaml.FullLoader,))
+            yaml.dump(
+                yaml.load(
+                    json.dumps(response),
+                    Loader=yaml.FullLoader,
+                )
+            )
         )
 
     @base.intercept_exception
@@ -224,7 +234,9 @@ class K8sClusterProxy(base.BaseProxy):
                 id=id, status=["ready"], timeout_secs=wait_for_ready_sec
             )
 
-    def statuses(self,):
+    def statuses(
+        self,
+    ):
         """Return a list of valid statuses."""
         print([s.name for s in K8sClusterStatus])
 

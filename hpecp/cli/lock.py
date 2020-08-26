@@ -42,7 +42,8 @@ class LockProxy(object):
         ]
 
     def list(
-        self, output="yaml",
+        self,
+        output="yaml",
     ):
         """Get the system and user locks.
 
@@ -59,7 +60,10 @@ class LockProxy(object):
         if output == "yaml":
             print(
                 yaml.dump(
-                    yaml.load(json.dumps(response), Loader=yaml.FullLoader,)
+                    yaml.load(
+                        json.dumps(response),
+                        Loader=yaml.FullLoader,
+                    )
                 )
             )
         else:
@@ -67,21 +71,24 @@ class LockProxy(object):
 
     @base.intercept_exception
     def create(
-        self, reason,
+        self,
+        reason,
     ):
         """Create a lock."""
         print(base.get_client().lock.create(reason), file=sys.stdout)
 
     @base.intercept_exception
     def delete(
-        self, id,
+        self,
+        id,
     ):
         """Delete a user lock."""
         base.get_client().lock.delete(id)
 
     @base.intercept_exception
     def delete_all(
-        self, timeout_secs=300,
+        self,
+        timeout_secs=300,
     ):
         """Delete all locks."""
         success = base.get_client().lock.delete_all(timeout_secs=timeout_secs)

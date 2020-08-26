@@ -71,12 +71,14 @@ class TestDeleteUser(TestCase):
     @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_delete_user(self, mock_post, mock_delete):
         with self.assertRaisesRegexp(
-            AssertionError, "'id' must be provided and must be a str",
+            AssertionError,
+            "'id' must be provided and must be a str",
         ):
             get_client().user.delete(id=999)
 
         with self.assertRaisesRegexp(
-            AssertionError, "'id' does not start with '/api/v1/user/'",
+            AssertionError,
+            "'id' does not start with '/api/v1/user/'",
         ):
             get_client().user.delete(id="garbage")
 

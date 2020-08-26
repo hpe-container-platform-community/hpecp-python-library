@@ -201,7 +201,9 @@ class TenantController(AbstractWaitableResourceController):
         return self.get(tenant_id).external_user_groups
 
     def delete_external_user_group(
-        self, tenant_id, group,
+        self,
+        tenant_id,
+        group,
     ):
         user_groups = self.get_external_user_groups(tenant_id)
 
@@ -219,7 +221,10 @@ class TenantController(AbstractWaitableResourceController):
         )
 
     def add_external_user_group(
-        self, tenant_id, group, role_id,
+        self,
+        tenant_id,
+        group,
+        role_id,
     ):
         user_groups = self.get_external_user_groups(tenant_id)
 
@@ -239,9 +244,14 @@ class TenantController(AbstractWaitableResourceController):
 
     def users(self, id):
         response = self.client._request(
-            url=id + "?user", http_method="get", description="tenant/users",
+            url=id + "?user",
+            http_method="get",
+            description="tenant/users",
         )
-        return ResourceList(User, response.json()["_embedded"]["users"],)
+        return ResourceList(
+            User,
+            response.json()["_embedded"]["users"],
+        )
 
     def assign_user_to_role(self, tenant_id, role_id, user_id):
         """Assign a user to a given role using the tenant.

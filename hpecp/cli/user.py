@@ -40,7 +40,11 @@ class UserProxy(base.BaseProxy):
 
     @base.intercept_exception
     def create(
-        self, name, password, description, is_external=False,
+        self,
+        name,
+        password,
+        description,
+        is_external=False,
     ):
         """Create a User.
 

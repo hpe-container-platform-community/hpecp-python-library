@@ -71,7 +71,8 @@ class TestGatewayGet(BaseTestCase):
     def test_get_gateway_assertions(self, mock_get, mock_post):
 
         with self.assertRaisesRegexp(
-            AssertionError, "'id' must be provided and must be a str",
+            AssertionError,
+            "'id' must be provided and must be a str",
         ):
             get_client().gateway.get(123)
 
@@ -163,7 +164,9 @@ class TestCreateGateway(BaseTestCase):
             "'ssh_key_data' must be provided and must be a string",
         ):
             get_client().gateway.create_with_ssh_key(
-                ip="127.0.0.1", proxy_node_hostname="abc", ssh_key_data=1234,
+                ip="127.0.0.1",
+                proxy_node_hostname="abc",
+                ssh_key_data=1234,
             )
 
     @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
@@ -466,7 +469,11 @@ class TestDeleteGateway(BaseTestCase):
                 headers={},
             )
         if args[0] == "https://127.0.0.1:8080/api/v1/workers/123":
-            return MockResponse(json_data={}, status_code=200, headers={},)
+            return MockResponse(
+                json_data={},
+                status_code=200,
+                headers={},
+            )
         raise RuntimeError("Unhandle GET request: " + args[0])
 
     def mocked_requests_post(*args, **kwargs):
@@ -500,7 +507,9 @@ class TestDeleteGateway(BaseTestCase):
 
 
 class TestCliCreate(BaseTestCase):
-    def test_key_or_keycontent_provided(self,):
+    def test_key_or_keycontent_provided(
+        self,
+    ):
 
         hpecp = self.cli.CLI()
         with self.assertRaises(SystemExit) as cm:
@@ -522,7 +531,9 @@ class TestCliCreate(BaseTestCase):
             ),
         )
 
-    def test_key_and_keycontent_provided(self,):
+    def test_key_and_keycontent_provided(
+        self,
+    ):
 
         hpecp = self.cli.CLI()
         with self.assertRaises(SystemExit) as cm:

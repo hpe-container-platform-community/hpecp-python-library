@@ -517,7 +517,9 @@ class ContainerPlatformClient(object):
                 msg = "Could not connect to the controller.\n" + str(e)
             raise_from(
                 APIException(
-                    message=msg, request_method="post", request_url=url,
+                    message=msg,
+                    request_method="post",
+                    request_url=url,
                 ),
                 None,
             )

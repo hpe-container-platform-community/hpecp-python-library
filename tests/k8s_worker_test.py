@@ -65,7 +65,8 @@ class TestWorkers(BaseTestCase):
         )
 
         self.assertEquals(
-            worker.ipaddr, "10.1.0.186",
+            worker.ipaddr,
+            "10.1.0.186",
         )
 
     @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
@@ -161,7 +162,9 @@ class TestWorkers(BaseTestCase):
 
 
 class TestCliCreate(BaseTestCase):
-    def test_key_or_keycontent_provided(self,):
+    def test_key_or_keycontent_provided(
+        self,
+    ):
 
         hpecp = self.cli.CLI()
         with self.assertRaises(SystemExit) as cm:
@@ -181,7 +184,9 @@ class TestCliCreate(BaseTestCase):
             ),
         )
 
-    def test_key_and_keycontent_provided(self,):
+    def test_key_and_keycontent_provided(
+        self,
+    ):
 
         hpecp_cli = self.cli.CLI()
         with self.assertRaises(SystemExit) as cm:
@@ -258,7 +263,8 @@ class TestCliCreate(BaseTestCase):
             base.get_client = mock_get_client
 
             hpecp_cli.k8sworker.create_with_ssh_key(
-                ip="127.0.0.1", ssh_key="test_ssh_key",
+                ip="127.0.0.1",
+                ssh_key="test_ssh_key",
             )
 
         stdout = self.out.getvalue().strip()
@@ -279,7 +285,8 @@ class TestCliCreate(BaseTestCase):
             with self.assertRaises(SystemExit) as cm:
                 hpecp_cli = self.cli.CLI()
                 hpecp_cli.k8sworker.create_with_ssh_key(
-                    ip="127.0.0.1", ssh_key="test_ssh_key",
+                    ip="127.0.0.1",
+                    ssh_key="test_ssh_key",
                 )
 
         self.assertEqual(cm.exception.code, 1)
@@ -313,7 +320,8 @@ class TestCliCreate(BaseTestCase):
             with self.assertRaises(SystemExit) as cm:
                 hpecp_cli = self.cli.CLI()
                 hpecp_cli.k8sworker.create_with_ssh_key(
-                    ip="127.0.0.1", ssh_key="test_ssh_key",
+                    ip="127.0.0.1",
+                    ssh_key="test_ssh_key",
                 )
 
         self.assertEqual(cm.exception.code, 1)
@@ -343,7 +351,8 @@ class TestCliCreate(BaseTestCase):
             with self.assertRaises(SystemExit) as cm:
                 hpecp_cli = self.cli.CLI()
                 hpecp_cli.k8sworker.create_with_ssh_key(
-                    ip="127.0.0.1", ssh_key="test_ssh_key",
+                    ip="127.0.0.1",
+                    ssh_key="test_ssh_key",
                 )
 
         self.assertEqual(cm.exception.code, 1)
@@ -494,7 +503,9 @@ class TestCliSetStorage(BaseTestCase):
     def test_wwithout_ephemeral_storage_prints_err(self, mock_k8sworker):
 
         with patch.object(
-            K8sWorkerController, "set_storage", return_value=None,
+            K8sWorkerController,
+            "set_storage",
+            return_value=None,
         ):
 
             with self.assertRaises(SystemExit) as cm:
