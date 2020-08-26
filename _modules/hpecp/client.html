@@ -563,7 +563,9 @@
                 <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Could not connect to the controller.</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
             <span class="n">raise_from</span><span class="p">(</span>
                 <span class="n">APIException</span><span class="p">(</span>
-                    <span class="n">message</span><span class="o">=</span><span class="n">msg</span><span class="p">,</span> <span class="n">request_method</span><span class="o">=</span><span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="n">request_url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
+                    <span class="n">message</span><span class="o">=</span><span class="n">msg</span><span class="p">,</span>
+                    <span class="n">request_method</span><span class="o">=</span><span class="s2">&quot;post&quot;</span><span class="p">,</span>
+                    <span class="n">request_url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
                 <span class="p">),</span>
                 <span class="kc">None</span><span class="p">,</span>
             <span class="p">)</span>

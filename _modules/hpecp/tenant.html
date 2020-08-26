@@ -247,7 +247,9 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">tenant_id</span><span class="p">)</span><span class="o">.</span><span class="n">external_user_groups</span></div>
 
 <div class="viewcode-block" id="TenantController.delete_external_user_group"><a class="viewcode-back" href="../../hpecp.tenant.html#hpecp.tenant.TenantController.delete_external_user_group">[docs]</a>    <span class="k">def</span> <span class="nf">delete_external_user_group</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">tenant_id</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">tenant_id</span><span class="p">,</span>
+        <span class="n">group</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="n">user_groups</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_external_user_groups</span><span class="p">(</span><span class="n">tenant_id</span><span class="p">)</span>
 
@@ -265,7 +267,10 @@
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="TenantController.add_external_user_group"><a class="viewcode-back" href="../../hpecp.tenant.html#hpecp.tenant.TenantController.add_external_user_group">[docs]</a>    <span class="k">def</span> <span class="nf">add_external_user_group</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">tenant_id</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span> <span class="n">role_id</span><span class="p">,</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">tenant_id</span><span class="p">,</span>
+        <span class="n">group</span><span class="p">,</span>
+        <span class="n">role_id</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="n">user_groups</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_external_user_groups</span><span class="p">(</span><span class="n">tenant_id</span><span class="p">)</span>
 
@@ -285,9 +290,14 @@
 
 <div class="viewcode-block" id="TenantController.users"><a class="viewcode-back" href="../../hpecp.tenant.html#hpecp.tenant.TenantController.users">[docs]</a>    <span class="k">def</span> <span class="nf">users</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
-            <span class="n">url</span><span class="o">=</span><span class="nb">id</span> <span class="o">+</span> <span class="s2">&quot;?user&quot;</span><span class="p">,</span> <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;tenant/users&quot;</span><span class="p">,</span>
+            <span class="n">url</span><span class="o">=</span><span class="nb">id</span> <span class="o">+</span> <span class="s2">&quot;?user&quot;</span><span class="p">,</span>
+            <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;get&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;tenant/users&quot;</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="k">return</span> <span class="n">ResourceList</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;_embedded&quot;</span><span class="p">][</span><span class="s2">&quot;users&quot;</span><span class="p">],)</span></div>
+        <span class="k">return</span> <span class="n">ResourceList</span><span class="p">(</span>
+            <span class="n">User</span><span class="p">,</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;_embedded&quot;</span><span class="p">][</span><span class="s2">&quot;users&quot;</span><span class="p">],</span>
+        <span class="p">)</span></div>
 
 <div class="viewcode-block" id="TenantController.assign_user_to_role"><a class="viewcode-back" href="../../hpecp.tenant.html#hpecp.tenant.TenantController.assign_user_to_role">[docs]</a>    <span class="k">def</span> <span class="nf">assign_user_to_role</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tenant_id</span><span class="p">,</span> <span class="n">role_id</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Assign a user to a given role using the tenant.</span>
