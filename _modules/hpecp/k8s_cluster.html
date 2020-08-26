@@ -627,7 +627,7 @@
             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;K8sClusterController/import_generic_cluster&quot;</span><span class="p">,</span>
             <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></div>
+        <span class="k">return</span> <span class="n">CaseInsensitiveDict</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">)[</span><span class="s2">&quot;Location&quot;</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="K8sClusterController.import_generic_cluster_with_json"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.import_generic_cluster_with_json">[docs]</a>    <span class="k">def</span> <span class="nf">import_generic_cluster_with_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Import a generic k8s cluster.</span>
@@ -651,7 +651,7 @@
             <span class="p">),</span>
             <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></div></div>
+        <span class="k">return</span> <span class="n">CaseInsensitiveDict</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">)[</span><span class="s2">&quot;Location&quot;</span><span class="p">]</span></div></div>
 </pre></div>
 
             <div class="clearer"></div>
