@@ -386,12 +386,19 @@ class AutoComplete:
         )
 
 
-def version():
+def version(debug=False):
     """Display version information."""
-    print("HPECP Version:  " + ContainerPlatformClient.version())
-    print("HPECP Path:     " + hpecp.__file__)
-    print("Python Version: " + sys.version.replace("\n", ""))
-    print("Python Path:    " + sys.executable)
+    print("HPECP Version:   " + ContainerPlatformClient.version())
+
+    if debug:
+        print("HPECP Bin Path:  " + os.path.dirname(os.path.abspath(__file__)))
+        print(
+            "HPECP Lib Path:  " + os.path.dirname(os.path.abspath(hpecp.__file__))
+        )
+        print("Python Version:  " + sys.version.replace("\n", ""))
+        print("Python Exe Path: " + sys.executable)
+        print("Python Path:     " + os.pathsep.join(sys.path))
+        print("System Path:     " + os.environ.get("PATH", ""))
 
 
 class CLI(object):
