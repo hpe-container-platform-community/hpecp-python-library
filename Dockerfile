@@ -18,7 +18,8 @@ RUN  apt-get update \
 RUN adduser --disabled-password --gecos '' theia && \
     adduser theia sudo && \
     echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers && \
-    chown -R theia:theia /home/theia
+    chown -R theia:theia /home/theia && \
+    chmod 777 /home/theia 
 
 RUN echo "Installing python modules in system python versions" \
     && PY_PATHS="/usr/bin/python /usr/bin/python3 and /usr/local/bin/python3" \

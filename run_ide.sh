@@ -67,4 +67,19 @@ if [[ $git_vars == 0 ]]; then
   done
 fi
 
-docker run --rm -it --init -p 3000:3000 -v "$(pwd):/home/project:cached" -e GIT_USER="$GIT_USER" -e GIT_PASS="$GIT_PASS" -e GIT_AUTHOR_NAME="$GIT_AUTHOR_NAME" -e GIT_COMMITTER_NAME="$GIT_COMMITTER_NAME" -e GIT_AUTHOR_EMAIL="$GIT_AUTHOR_EMAIL" -e GIT_COMMITTER_EMAIL="$GIT_COMMITTER_EMAIL" -e GIT_ASKPASS=/home/project/git_env_password.sh $IMG
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+  UID_GID_OPTION="-u $(id -u ${USER}):$(id -g ${USER})" 
+fi
+
+docker run -it --init \
+   -p 3000:3000 \
+   ${UID_GID_OPTION} \
+   -v "$(pwd):/home/project:cached" \
+   -e GIT_USER="$GIT_USER" \
+   -e GIT_PASS="$GIT_PASS" \
+   -e GIT_AUTHOR_NAME="$GIT_AUTHOR_NAME" \
+   -e GIT_COMMITTER_NAME="$GIT_COMMITTER_NAME" \
+   -e GIT_AUTHOR_EMAIL="$GIT_AUTHOR_EMAIL" \
+   -e GIT_COMMITTER_EMAIL="$GIT_COMMITTER_EMAIL" \
+   -e GIT_ASKPASS=/home/project/git_env_password.sh \
+   $IMG
