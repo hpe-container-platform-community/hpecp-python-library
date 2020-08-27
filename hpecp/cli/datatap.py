@@ -58,20 +58,19 @@ class DatatapProxy(base.BaseProxy):
     def create_hdfs_with_kerberos(
         self,
         name,
-        description,
-        path_from_endpoint,
-        kdc_data_host,
-        kdc_data_port,
-        realm,
-        client_principal,
-        browse_only,
-        host,
-        service_id,
-        backup_host,
-        endpoint_type,
-        endpoint_port,
-        read_only,
+        description="",
+        path_from_endpoint="",
+        kdc_data_host="",
+        kdc_data_port="",
+        realm="",
+        client_principal="",
+        browse_only=True,
+        host="",
         keytab="",
+        backup_host="",
+        type="",
+        port="",
+        read_only=False,
     ):
         """TODO.
 
@@ -108,7 +107,7 @@ class DatatapProxy(base.BaseProxy):
         read_only : [type]
             [description]
         """
-        base.get_client().datatap.create(
+        base.get_client().datatap.create_hdfs_with_kerberos(
             name,
             description,
             path_from_endpoint,
@@ -119,9 +118,8 @@ class DatatapProxy(base.BaseProxy):
             browse_only,
             host,
             keytab,
-            service_id,
             backup_host,
-            endpoint_type,
-            endpoint_port,
+            type,
+            port,
             read_only,
         )
