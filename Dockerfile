@@ -26,9 +26,9 @@ RUN echo "Installing python modules in system python versions" \
     && for v in ${PY_PATHS}; do echo "******* ${v} *******"; ${v} -m pip install --upgrade pip setuptools wheel; done \
     && for v in ${PY_PATHS}; do echo "******* ${v} *******"; ${v} -m pip install --upgrade tox tox-pyenv ipython pylint pytest mock nose flake8 flake8-docstrings autopep8 jmespath fire jinja2; done \
     && for v in ${PY_PATHS}; do ${v} -m pip install -r /tmp/requirements.txt; done \
-    && /usr/local/bin/python3 -m pip install -U black isort 
-    #&& ln -f -s /home/theia/.pyenv/versions/*/bin/black /bin/ \
-    #&& ln -f -s /home/theia/.pyenv/versions/*/bin/isort /bin/ 
+    && /usr/local/bin/python3 -m pip install -U black isort \
+    && ln -f -s /usr/local/bin/black /bin/ \
+    && ln -f -s /usr/local/bin/isort /bin/ 
 
 # Setup ssh for git
 RUN test -d /home/theia/.ssh || mkdir /home/theia/.ssh \
