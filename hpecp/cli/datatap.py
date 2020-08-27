@@ -55,6 +55,7 @@ class DatatapProxy(base.BaseProxy):
             )
         )
 
+    @base.intercept_exception
     def create_hdfs_with_kerberos(
         self,
         name,
@@ -107,11 +108,11 @@ class DatatapProxy(base.BaseProxy):
         read_only : [type]
             [description]
         """
-        assert isinstance(
+        assert browse_only is not None and isinstance(
             browse_only, bool
         ), "'browse-only' parameter must be 'true' or 'false'"
 
-        assert isinstance(
+        assert read_only is not None and isinstance(
             read_only, bool
         ), "'read-only' parameter must be 'true' or 'false'"
 
