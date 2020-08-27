@@ -368,18 +368,26 @@ class K8sClusterProxy(base.BaseProxy):
         ------
         APIException
         """
-        # assert (
-        #     json_file_path is not None or json_content is not None
-        # ), "Either --json-file-path or --json-content must be provided."
+        assert (
+            json_file_path is not None or json_content is not None
+        ), "Either --json-file-path or --json-content must be provided"
 
-        # assert (
-        #     json_file_path is None and json_content is None
-        # ), "Either --json-file-path or --json-content must be provided."
+        assert (
+            json_file_path is None or json_content is None
+        ), "Either --json-file-path or --json-content must be provided."
 
         if json_file_path:
-            # TODO verify file exist, etc
-            with open(json_file_path, "r") as f:
-                json_content = f.read()
+            try:
+                with open(json_file_path, "r") as f:
+                    json_content = f.read()
+            except OSError:
+                print(
+                    "Could not open/read json-file-path: {}".format(
+                        json_file_path
+                    ),
+                    file=sys.stderr,
+                )
+                sys.exit(1)
 
         json_content = json.loads(json_content)
 

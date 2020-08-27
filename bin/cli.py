@@ -393,7 +393,8 @@ def version(debug=False):
     if debug:
         print("HPECP Bin Path:  " + os.path.dirname(os.path.abspath(__file__)))
         print(
-            "HPECP Lib Path:  " + os.path.dirname(os.path.abspath(hpecp.__file__))
+            "HPECP Lib Path:  "
+            + os.path.dirname(os.path.abspath(hpecp.__file__))
         )
         print("Python Version:  " + sys.version.replace("\n", ""))
         print("Python Exe Path: " + sys.executable)

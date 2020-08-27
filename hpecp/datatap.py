@@ -153,28 +153,23 @@ class DatatapController(AbstractResourceController):
             [description]
         keytab : [type]
             [description]
-        service_id : [type]
-            [description]
         backup_host : [type]
             [description]
-        endpoint_type : [type]
+        type : [type]
             [description]
-        endpoint_port : [type]
+        port : [type]
             [description]
         read_only : [type]
             [description]
         """
         _data = {
-            "bdfs_root": {
-                #"path_from_endpoint": path_from_endpoint
-                },
+            "bdfs_root": {},
             "endpoint": {
                 "kdc_data": [
                     {
-                        "host": kdc_data_host, 
-                        #"port": kdc_data_port
-                        }
-                    ],
+                        "host": kdc_data_host,
+                    }
+                ],
                 "realm": realm,
                 "client_principal": client_principal,
                 "browse_only": browse_only,
@@ -188,15 +183,12 @@ class DatatapController(AbstractResourceController):
             "flags": {"read_only": read_only},
             "label": {"name": name, "description": description},
         }
-        
+
         if path_from_endpoint != "":
             _data["bdfs_root"]["path_from_endpoint"] = path_from_endpoint
 
         if kdc_data_port != "":
             _data["endpoint"]["kdc_data"]["kdc_data_port"] = kdc_data_port
-
-        #if keytab != "":
-        #    _data["endpoint"]["keytab"] = keytab
 
         self.client._request(
             url=DatatapController.base_resource_path,
