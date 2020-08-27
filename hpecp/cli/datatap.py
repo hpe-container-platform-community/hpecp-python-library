@@ -64,13 +64,13 @@ class DatatapProxy(base.BaseProxy):
         kdc_data_port="",
         realm="",
         client_principal="",
-        browse_only=True,
+        browse_only=None,
         host="",
         keytab="",
         backup_host="",
         type="",
         port="",
-        read_only=False,
+        read_only=None,
     ):
         """TODO.
 
@@ -100,13 +100,21 @@ class DatatapProxy(base.BaseProxy):
             [description]
         backup_host : [type]
             [description]
-        endpoint_type : [type]
+        type : [type]
             [description]
-        endpoint_port : [type]
+        port : [type]
             [description]
         read_only : [type]
             [description]
         """
+        assert isinstance(
+            browse_only, bool
+        ), "'browse-only' parameter must be 'true' or 'false'"
+
+        assert isinstance(
+            read_only, bool
+        ), "'read-only' parameter must be 'true' or 'false'"
+
         base.get_client().datatap.create_hdfs_with_kerberos(
             name,
             description,
