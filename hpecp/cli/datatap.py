@@ -110,11 +110,11 @@ class DatatapProxy(base.BaseProxy):
         """
         assert browse_only is not None and isinstance(
             browse_only, bool
-        ), "'browse-only' parameter must be 'true' or 'false'"
+        ), "'browse-only' parameter must be 'True' or 'False'"
 
         assert read_only is not None and isinstance(
             read_only, bool
-        ), "'read-only' parameter must be 'true' or 'false'"
+        ), "'read-only' parameter must be 'True' or 'False'"
 
         base.get_client().datatap.create_hdfs_with_kerberos(
             name,
