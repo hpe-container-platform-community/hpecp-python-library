@@ -207,6 +207,22 @@ available.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt id="hpecp.client.ContainerPlatformClient.install">
+<em class="property">property </em><code class="sig-name descname">install</code><a class="headerlink" href="#hpecp.client.ContainerPlatformClient.install" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve a reference to <cite>.install.InstallController</cite> object.</p>
+<p>See the class <code class="xref py py-class docutils literal notranslate"><span class="pre">install.InstallController</span></code> for the
+methods available.</p>
+<p>This example calls the method
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">get()</span></code> in
+<code class="xref py py-class docutils literal notranslate"><span class="pre">install.InstallController</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">client</span> <span class="o">=</span> <span class="n">ContainerPlatformClient</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">client</span><span class="o">.</span><span class="n">create_session</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">client</span><span class="o">.</span><span class="n">install</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt id="hpecp.client.ContainerPlatformClient.k8s_cluster">
 <em class="property">property </em><code class="sig-name descname">k8s_cluster</code><a class="headerlink" href="#hpecp.client.ContainerPlatformClient.k8s_cluster" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve a reference to <cite>.k8s_cluster.K8sClusterController</cite> object.</p>

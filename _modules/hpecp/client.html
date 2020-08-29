@@ -492,6 +492,7 @@
         <span class="c1"># for each module</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_tenant</span> <span class="o">=</span> <span class="n">TenantController</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="n">ConfigController</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_install</span> <span class="o">=</span> <span class="n">InstallController</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_gateway</span> <span class="o">=</span> <span class="n">GatewayController</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_k8s_worker</span> <span class="o">=</span> <span class="n">K8sWorkerController</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_k8s_cluster</span> <span class="o">=</span> <span class="n">K8sClusterController</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -836,6 +837,25 @@
 <span class="sd">        ...    )</span>
 <span class="sd">        &quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">install</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve a reference to `.install.InstallController` object.</span>
+
+<span class="sd">        See the class :py:class:`.install.InstallController` for the</span>
+<span class="sd">        methods available.</span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        This example calls the method</span>
+<span class="sd">        :py:meth:`get() &lt;.install.InstallController.get&gt;` in</span>
+<span class="sd">        :py:class:`.install.InstallController`.</span>
+
+<span class="sd">        &gt;&gt;&gt; client = ContainerPlatformClient(...)</span>
+<span class="sd">        &gt;&gt;&gt; client.create_session()</span>
+<span class="sd">        &gt;&gt;&gt; client.install.get()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_install</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">k8s_cluster</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
