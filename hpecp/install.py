@@ -43,3 +43,26 @@ class InstallController:
             description="install/get",
         )
         return response.json()
+
+    # def set_gateway_ssl(self, ):
+    #     """Set Gateway SSL."""
+    #     _data = {
+    #         "gateway_ssl_cert_info": {
+    #             "cert_file": {
+    #                 "content": "-----BEGIN CERTIFICATE-----XXXX-----END CERTIFICATE-----\n",
+    #                 "file_name": "cert.pem",
+    #             },
+    #             "key_file": {
+    #                 "content": "-----BEGIN RSA PRIVATE KEY-----XXXX-----END RSA PRIVATE KEY-----\n",
+    #                 "file_name": "key.pem",
+    #             },
+    #         }
+    #     }
+
+    #     response = self.client._request(
+    #         url="/api/v1/install?install_reconfig",
+    #         http_method="put",
+    #         data=_data,
+    #         description="install/set_gateway_ssl",
+    #     )
+    #     return response.json()

@@ -37,10 +37,7 @@ class InstallProxy(object):
 
     def __dir__(self):
         """Return the CLI method names."""
-        return [
-            # "examples",
-            "get"
-        ]
+        return ["examples", "get"]
 
     @base.intercept_exception
     def get(self, output="yaml", query=None):
@@ -94,6 +91,9 @@ class InstallProxy(object):
         print(
             dedent(
                 """\
+
+                $ hpecp install get --query 'objects.[cpu_allocation_ratio]' --output json
+                1
 
                 """  # noqa:  E501
             )
