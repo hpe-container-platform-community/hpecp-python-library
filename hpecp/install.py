@@ -18,14 +18,25 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
+"""Python library code for working with install API."""
+
 from __future__ import absolute_import
 
 
 class InstallController:
+    """Controller for working with the install API."""
+
     def __init__(self, client):
         self.client = client
 
     def get(self):
+        """Get Install information.
+
+        Returns
+        -------
+        [type]
+            [description]
+        """
         response = self.client._request(
             url="/api/v1/install",
             http_method="get",

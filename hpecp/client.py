@@ -52,6 +52,7 @@ from .exceptions import (
     ContainerPlatformClientException,
 )
 from .gateway import GatewayController
+from .install import InstallController
 from .k8s_cluster import K8sClusterController
 from .k8s_worker import K8sWorkerController
 from .license import LicenseController
