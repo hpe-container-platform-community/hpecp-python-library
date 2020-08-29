@@ -26,6 +26,7 @@ import json
 import jmespath
 import sys
 import yaml
+from textwrap import dedent
 
 from hpecp.cli import base
 from hpecp.cli_utils import TextOutput
@@ -36,9 +37,7 @@ class ConfigProxy(object):
 
     def __dir__(self):
         """Return the CLI method names."""
-        return [
-            "get",
-        ]
+        return ["examples", "get"]
 
     @base.intercept_exception
     def get(self, output="yaml", query=None):
@@ -86,3 +85,20 @@ class ConfigProxy(object):
                 print(TextOutput.dump(data))
             else:
                 print(json.dumps(data))
+
+    def examples(self):
+        """Show examples for working with roles."""
+        print(
+            dedent(
+                """\
+
+                $ hpecp config get --query 'objects.[bds_global_version]' --output text
+                5.1.1
+
+                $ hpecp config get --query 'objects.[bds_global_version, bds_global_buildnumber]' --output text
+                5.1.1
+                2347
+
+                """  # noqa:  E501
+            )
+        )
