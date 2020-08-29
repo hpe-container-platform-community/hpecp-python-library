@@ -23,10 +23,12 @@
 from __future__ import print_function
 
 import json
+import jmespath
 import sys
 import yaml
 
 from hpecp.cli import base
+from hpecp.cli_utils import TextOutput
 
 
 class ConfigProxy(object):
@@ -46,14 +48,17 @@ class ConfigProxy(object):
         """
         if output not in ["yaml", "json", "json-pp", "text"]:
             print(
-                "'output' parameter must be 'yaml', 'json', 'json-pp' or 'text'.",
+                (
+                    "'output' parameter must be 'yaml', 'json', "
+                    "'json-pp' or 'text'."
+                ),
                 file=sys.stderr,
             )
             sys.exit(1)
 
         if output == "yaml" and query is not None:
             print(
-                "output=yaml is not supported when providing the query parameter.",
+                "output=yaml is not supported with the query parameter.",
                 file=sys.stderr,
             )
             sys.exit(1)
