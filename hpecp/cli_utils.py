@@ -86,7 +86,8 @@ class TextOutput(object):
 
         io = MyStringIO()
         for item in data:
-            TextOutput._dump_row(item, io)
+            if item is not None:
+                TextOutput._dump_row(item, io)
 
         result = io.getvalue()
         io.close()
