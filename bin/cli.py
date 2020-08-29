@@ -43,6 +43,7 @@ from hpecp.cli.config import ConfigProxy
 from hpecp.cli.datatap import DatatapProxy
 from hpecp.cli.gateway import GatewayProxy
 from hpecp.cli.httpclient import HttpClientProxy
+from hpecp.cli.install import InstallProxy
 from hpecp.cli.k8scluster import K8sClusterProxy
 from hpecp.cli.k8sworker import K8sWorkerProxy
 from hpecp.cli.license import LicenseProxy
@@ -416,6 +417,7 @@ class CLI(object):
         self.configure_cli = configure_cli
         self.catalog = CatalogProxy()
         self.config = ConfigProxy()
+        self.install = InstallProxy()
         self.k8sworker = K8sWorkerProxy()
         self.k8scluster = K8sClusterProxy()
         self.tenant = TenantProxy()

@@ -446,6 +446,7 @@ class ContainerPlatformClient(object):
         # for each module
         self._tenant = TenantController(self)
         self._config = ConfigController(self)
+        self._install = InstallController(self)
         self._gateway = GatewayController(self)
         self._k8s_worker = K8sWorkerController(self)
         self._k8s_cluster = K8sClusterController(self)
@@ -790,6 +791,25 @@ class ContainerPlatformClient(object):
         ...    )
         """  # noqa: E501
         return self._config
+
+    @property
+    def install(self):
+        """Retrieve a reference to `.install.InstallController` object.
+
+        See the class :py:class:`.install.InstallController` for the
+        methods available.
+
+        Example
+        -------
+        This example calls the method
+        :py:meth:`get() <.install.InstallController.get>` in
+        :py:class:`.install.InstallController`.
+
+        >>> client = ContainerPlatformClient(...)
+        >>> client.create_session()
+        >>> client.install.get()
+        """
+        return self._install
 
     @property
     def k8s_cluster(self):
