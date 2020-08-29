@@ -25,6 +25,14 @@ class ConfigController:
     def __init__(self, client):
         self.client = client
 
+    def get(self):
+        response = self.client._request(
+            url="/api/v2/config",
+            http_method="get",
+            description="config/get",
+        )
+        return response.json()
+
     def auth(self, data):
         """
         Example::
