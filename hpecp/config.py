@@ -27,7 +27,7 @@ class ConfigController:
 
     def get(self):
         response = self.client._request(
-            url="/api/v2/config",
+            url="/api/v1/config",
             http_method="get",
             description="config/get",
         )
