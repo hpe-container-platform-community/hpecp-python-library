@@ -37,7 +37,7 @@ class InstallProxy(object):
 
     def __dir__(self):
         """Return the CLI method names."""
-        return ["examples", "get"]
+        return ["examples", "get", "set_gateway_ssl"]
 
     @base.intercept_exception
     def get(self, output="yaml", query=None):
@@ -62,7 +62,7 @@ class InstallProxy(object):
             )
             sys.exit(1)
 
-        response = base.get_client().config.get()
+        response = base.get_client().install.get()
 
         if output == "yaml":
             print(
@@ -92,9 +92,27 @@ class InstallProxy(object):
             dedent(
                 """\
 
-                $ hpecp install get --query 'objects.[cpu_allocation_ratio]' --output json
-                1
-
                 """  # noqa:  E501
             )
+        )
+
+    @base.intercept_exception
+    def set_gateway_ssl(
+        self, cert_content, cert_file_name, key_content, key_file_name
+    ):
+        """Set Gateway SSL.
+
+        Parameters
+        ----------
+        cert_content : [type]
+            [description]
+        cert_file_name : [type]
+            [description]
+        key_content : [type]
+            [description]
+        key_file_name : [type]
+            [description]
+        """
+        base.get_client().install.set_gateway_ssl(
+            cert_content, cert_file_name, key_content, key_file_name
         )
