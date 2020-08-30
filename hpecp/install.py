@@ -61,10 +61,9 @@ class InstallController:
             }
         }
 
-        response = self.client._request(
+        self.client._request(
             url="/api/v1/install?install_reconfig",
             http_method="put",
             data=_data,
             description="install/set_gateway_ssl",
         )
-        return response.json()
