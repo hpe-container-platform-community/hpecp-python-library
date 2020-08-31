@@ -149,7 +149,7 @@ class InstallProxy(object):
             try:
                 with open(cert_file, "r") as f:
                     cert_content = (
-                        f.read().replace("\n", "\\n").replace("\t", "\\t")
+                        f.read().replace("\n", "\n").replace("\t", "\t")
                     )
                 cert_file_name = cert_file
             except OSError:
@@ -163,7 +163,7 @@ class InstallProxy(object):
             try:
                 with open(key_file, "r") as f:
                     key_content = (
-                        f.read().replace("\n", "\\n").replace("\t", "\\t")
+                        f.read().replace("\n", "\n").replace("\t", "\t")
                     )
                 key_file_name = key_file
             except OSError:
