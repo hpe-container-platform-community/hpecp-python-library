@@ -148,7 +148,9 @@ class InstallProxy(object):
         if cert_file:
             try:
                 with open(cert_file, "r") as f:
-                    cert_content = f.read()
+                    cert_content = (
+                        f.read().replace("\n", "\\n").replace("\t", "\\t")
+                    )
                 cert_file_name = cert_file
             except OSError:
                 print(
@@ -160,7 +162,9 @@ class InstallProxy(object):
         if key_file:
             try:
                 with open(key_file, "r") as f:
-                    key_content = f.read()
+                    key_content = (
+                        f.read().replace("\n", "\\n").replace("\t", "\\t")
+                    )
                 key_file_name = key_file
             except OSError:
                 print(
@@ -168,6 +172,8 @@ class InstallProxy(object):
                     file=sys.stderr,
                 )
                 sys.exit(1)
+
+        print(cert_content)
 
         base.get_client().install.set_gateway_ssl(
             cert_content, cert_file_name, key_content, key_file_name
