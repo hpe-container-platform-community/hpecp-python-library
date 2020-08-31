@@ -98,21 +98,77 @@ class InstallProxy(object):
 
     @base.intercept_exception
     def set_gateway_ssl(
-        self, cert_content, cert_file_name, key_content, key_file_name
+        self,
+        cert_file=None,
+        cert_content=None,
+        cert_file_name=None,
+        key_file=None,
+        key_content=None,
+        key_file_name=None,
     ):
         """Set Gateway SSL.
 
         Parameters
         ----------
+        cert_file : [type]
+            [description]
         cert_content : [type]
             [description]
         cert_file_name : [type]
+            [description]
+        key_file : [type]
             [description]
         key_content : [type]
             [description]
         key_file_name : [type]
             [description]
         """
+        assert (
+            cert_file is None
+            and (cert_content is not None and cert_file_name is not None)
+        ) or (
+            cert_file is not None
+            and (cert_content is None and cert_file_name is None)
+        ), (
+            "('cert-content' and 'cert-file-name') or 'cert-file' "
+            "must be provided."
+        )
+
+        assert (
+            key_file is None
+            and (key_content is not None and key_file_name is not None)
+        ) or (
+            key_file is not None
+            and (key_content is None and key_file_name is None)
+        ), (
+            "('key_content' and 'key_file-name') or 'key_file' "
+            "must be provided."
+        )
+
+        if cert_file:
+            try:
+                with open(cert_file, "r") as f:
+                    cert_content = f.read()
+                cert_file_name = cert_file
+            except OSError:
+                print(
+                    "Could not open/read 'cert-file': {}".format(cert_file),
+                    file=sys.stderr,
+                )
+                sys.exit(1)
+
+        if key_file:
+            try:
+                with open(key_file, "r") as f:
+                    key_content = f.read()
+                key_file_name = key_file
+            except OSError:
+                print(
+                    "Could not open/read 'key-file': {}".format(key_file),
+                    file=sys.stderr,
+                )
+                sys.exit(1)
+
         base.get_client().install.set_gateway_ssl(
             cert_content, cert_file_name, key_content, key_file_name
         )
