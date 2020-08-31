@@ -173,8 +173,6 @@ class InstallProxy(object):
                 )
                 sys.exit(1)
 
-        print(cert_content)
-
         base.get_client().install.set_gateway_ssl(
             cert_content, cert_file_name, key_content, key_file_name
         )
