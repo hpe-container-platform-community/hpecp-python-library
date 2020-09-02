@@ -138,6 +138,10 @@ class TenantController(AbstractWaitableResourceController):
         description=None,
         tenant_type=None,
         k8s_cluster_id=None,
+        is_namespace_owner=None,
+        map_services_to_gateway=None,
+        specified_namespace_name=None,
+        adopt_existing_namespace=None,
     ):
 
         assert (
@@ -159,6 +163,23 @@ class TenantController(AbstractWaitableResourceController):
         }
         if description is not None:
             data["label"]["description"] = description
+        if is_namespace_owner is not None:
+            data["tenant_type_info"]["is_namespace_owner"] = is_namespace_owner
+        if map_services_to_gateway is not None:
+            data["map_services_to_gateway"] = map_services_to_gateway
+            data["tenant_type_info"][
+                "map_services_to_gateway"
+            ] = map_services_to_gateway
+        if specified_namespace_name is not None:
+            data["specified_namespace_name"] = specified_namespace_name
+            data["tenant_type_info"][
+                "specified_namespace_name"
+            ] = specified_namespace_name
+        if adopt_existing_namespace is not None:
+            data["adopt_existing_namespace"] = adopt_existing_namespace
+            data["tenant_type_info"][
+                "adopt_existing_namespace"
+            ] = adopt_existing_namespace
 
         response = self.client._request(
             url="/api/v1/tenant",
