@@ -59,6 +59,10 @@ class TenantProxy(base.BaseProxy):
         description=None,
         tenant_type=None,
         k8s_cluster_id=None,
+        is_namespace_owner=None,
+        map_services_to_gateway=None,
+        specified_namespace_name=None,
+        adopt_existing_namespace=None,
     ):
         """Create a tenant.
 
@@ -72,12 +76,24 @@ class TenantProxy(base.BaseProxy):
             [description], by default None
         k8s_cluster_id : [type], optional
             [description], by default None
+        is_namespace_owner : [type], optional
+            [description], by default None
+        map_services_to_gateway : [type], optional
+            [description], by default None
+        specified_namespace_name : [type], optional
+            [description], by default None
+        adopt_existing_namespace : [type], optional
+            [description], by default None
         """
         tenant_id = base.get_client().tenant.create(
             name=name,
             description=description,
             tenant_type=tenant_type,
             k8s_cluster_id=k8s_cluster_id,
+            is_namespace_owner=is_namespace_owner,
+            map_services_to_gateway=map_services_to_gateway,
+            specified_namespace_name=specified_namespace_name,
+            adopt_existing_namespace=adopt_existing_namespace,
         )
         print(tenant_id)
 
