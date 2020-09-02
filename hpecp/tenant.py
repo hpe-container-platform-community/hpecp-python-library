@@ -160,6 +160,7 @@ class TenantController(AbstractWaitableResourceController):
             "tenant_type": tenant_type,
             "member_key_available": "all_admins",
             "k8s_cluster": k8s_cluster_id,
+            "tenant_type_info": {},
         }
         if description is not None:
             data["label"]["description"] = description
@@ -180,6 +181,9 @@ class TenantController(AbstractWaitableResourceController):
             data["tenant_type_info"][
                 "adopt_existing_namespace"
             ] = adopt_existing_namespace
+
+        if data["tenant_type_info"] == {}:
+            data.pop("tenant_type_info", None)
 
         response = self.client._request(
             url="/api/v1/tenant",
