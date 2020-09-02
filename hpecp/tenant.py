@@ -161,11 +161,11 @@ class TenantController(AbstractWaitableResourceController):
             "member_key_available": "all_admins",
             "k8s_cluster": k8s_cluster_id,
         }
-        if description is not None:
+tenant_type_info""        if description is not None:
             data["label"]["description"] = description
         if is_namespace_owner is not None:
-            data["tenant_type_info"]["is_namespace_owner"] = is_namespace_owner
-        if map_services_to_gateway is not None:
+            data["tenant_type_info"]["is_n
+            data["is_namespace_owner"] = is_namespace_owneramespace_owner"] = is_namespace_owner
             data["map_services_to_gateway"] = map_services_to_gateway
             data["tenant_type_info"][
                 "map_services_to_gateway"
