@@ -92,6 +92,7 @@
 <span class="kn">from</span> <span class="nn">hpecp.cli.install</span> <span class="kn">import</span> <span class="n">InstallProxy</span>
 <span class="kn">from</span> <span class="nn">hpecp.cli.k8scluster</span> <span class="kn">import</span> <span class="n">K8sClusterProxy</span>
 <span class="kn">from</span> <span class="nn">hpecp.cli.k8sworker</span> <span class="kn">import</span> <span class="n">K8sWorkerProxy</span>
+<span class="kn">from</span> <span class="nn">hpecp.cli.epicworker</span> <span class="kn">import</span> <span class="n">EpicWorkerProxy</span>
 <span class="kn">from</span> <span class="nn">hpecp.cli.license</span> <span class="kn">import</span> <span class="n">LicenseProxy</span>
 <span class="kn">from</span> <span class="nn">hpecp.cli.lock</span> <span class="kn">import</span> <span class="n">LockProxy</span>
 <span class="kn">from</span> <span class="nn">hpecp.cli.role</span> <span class="kn">import</span> <span class="n">RoleProxy</span>
@@ -464,6 +465,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">catalog</span> <span class="o">=</span> <span class="n">CatalogProxy</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">ConfigProxy</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">install</span> <span class="o">=</span> <span class="n">InstallProxy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epicworker</span> <span class="o">=</span> <span class="n">EpicWorkerProxy</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k8sworker</span> <span class="o">=</span> <span class="n">K8sWorkerProxy</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k8scluster</span> <span class="o">=</span> <span class="n">K8sClusterProxy</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tenant</span> <span class="o">=</span> <span class="n">TenantProxy</span><span class="p">()</span>

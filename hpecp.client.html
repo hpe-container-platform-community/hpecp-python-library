@@ -255,6 +255,22 @@ methods available.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt id="hpecp.client.ContainerPlatformClient.epic_worker">
+<em class="property">property </em><code class="sig-name descname">epic_worker</code><a class="headerlink" href="#hpecp.client.ContainerPlatformClient.epic_worker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve a reference to <cite>.epic_worker.EpicWorkerController</cite> object.</p>
+<p>See the class <code class="xref py py-class docutils literal notranslate"><span class="pre">epic_worker.EpicWorkerController</span></code> for the
+methods available.</p>
+<p>This example calls the method
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">list()</span></code> in
+<code class="xref py py-class docutils literal notranslate"><span class="pre">epic_worker.EpicWorkerController</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">client</span> <span class="o">=</span> <span class="n">ContainerPlatformClient</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">client</span><span class="o">.</span><span class="n">create_session</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">client</span><span class="o">.</span><span class="n">epic_worker</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt id="hpecp.client.ContainerPlatformClient.gateway">
 <em class="property">property </em><code class="sig-name descname">gateway</code><a class="headerlink" href="#hpecp.client.ContainerPlatformClient.gateway" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve a reference to <cite>.gateway.GatewayController</cite> object.</p>
