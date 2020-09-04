@@ -127,17 +127,17 @@ class EpicWorkerProxy(base.BaseProxy):
         )
 
         if wait_for_operation_secs > 0:
-            self.wait_for_status(
+            self.wait_for_state(
                 id=worker_id,
-                status=["storage_pending", "error"],
+                state=["storage_pending", "error"],
                 timeout_secs=wait_for_operation_secs,
             )
 
-        if base.get_client().epic_worker.get(id=worker_id).status == "error":
+        if base.get_client().epic_worker.get(id=worker_id).state == "error":
             print(
                 (
                     "Create request has errored. "
-                    "Check status message with "
+                    "Check state message with "
                     "`hpecp epicworker get {}".format(id)
                 ),
                 file=sys.stderr,
@@ -152,9 +152,9 @@ class EpicWorkerProxy(base.BaseProxy):
             )
 
         if wait_for_operation_secs > 0:
-            self.wait_for_status(
+            self.wait_for_state(
                 id=worker_id,
-                status=["ready"],
+                state=["ready"],
                 timeout_secs=wait_for_operation_secs,
             )
 
