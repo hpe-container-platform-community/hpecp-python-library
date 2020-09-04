@@ -38,8 +38,8 @@ class EpicWorkerProxy(base.BaseProxy):
             "get",
             "list",
             "set_storage",
-            "statuses",
-            "wait_for_status",
+            "states",
+            "wait_for_state",
         ]
 
     def __init__(self):
@@ -205,8 +205,8 @@ class EpicWorkerProxy(base.BaseProxy):
             ephemeral_disks=e_disks,
         )
 
-    def statuses(
+    def states(
         self,
     ):
-        """Return a list of valid statuses."""
+        """Return a list of valid states."""
         print([s.name for s in WorkerEpicStatus])
