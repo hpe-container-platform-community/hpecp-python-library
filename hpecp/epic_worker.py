@@ -104,7 +104,7 @@ class EpicWorkerController(AbstractWaitableResourceController):
 
     status_class = WorkerEpicStatus
 
-    status_fieldname = "status"
+    status_fieldname = "state"
 
     # TODO implement me!
     # def create_with_ssh_password(self, username, password):
