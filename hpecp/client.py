@@ -55,6 +55,7 @@ from .gateway import GatewayController
 from .install import InstallController
 from .k8s_cluster import K8sClusterController
 from .k8s_worker import K8sWorkerController
+from .epic_worker import EpicWorkerController
 from .license import LicenseController
 from .lock import LockController
 from .logger import Logger
@@ -449,6 +450,7 @@ class ContainerPlatformClient(object):
         self._config = ConfigController(self)
         self._install = InstallController(self)
         self._gateway = GatewayController(self)
+        self._epic_worker = EpicWorkerController(self)
         self._k8s_worker = K8sWorkerController(self)
         self._k8s_cluster = K8sClusterController(self)
         self._license = LicenseController(self)
@@ -849,6 +851,25 @@ class ContainerPlatformClient(object):
         >>> client.k8s_worker.list()
         """
         return self._k8s_worker
+
+    @property
+    def epic_worker(self):
+        """Retrieve a reference to `.epic_worker.EpicWorkerController` object.
+
+        See the class :py:class:`.epic_worker.EpicWorkerController` for the
+        methods available.
+
+        Example
+        -------
+        This example calls the method
+        :py:meth:`list() <.epic_worker.EpicWorkerController.list>` in
+        :py:class:`.epic_worker.EpicWorkerController`.
+
+        >>> client = ContainerPlatformClient(...)
+        >>> client.create_session()
+        >>> client.epic_worker.list()
+        """
+        return self._epic_worker
 
     @property
     def gateway(self):

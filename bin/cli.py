@@ -46,6 +46,7 @@ from hpecp.cli.httpclient import HttpClientProxy
 from hpecp.cli.install import InstallProxy
 from hpecp.cli.k8scluster import K8sClusterProxy
 from hpecp.cli.k8sworker import K8sWorkerProxy
+from hpecp.cli.epicworker import EpicWorkerProxy
 from hpecp.cli.license import LicenseProxy
 from hpecp.cli.lock import LockProxy
 from hpecp.cli.role import RoleProxy
@@ -418,6 +419,7 @@ class CLI(object):
         self.catalog = CatalogProxy()
         self.config = ConfigProxy()
         self.install = InstallProxy()
+        self.epicworker = EpicWorkerProxy()
         self.k8sworker = K8sWorkerProxy()
         self.k8scluster = K8sClusterProxy()
         self.tenant = TenantProxy()
