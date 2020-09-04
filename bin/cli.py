@@ -41,12 +41,12 @@ from hpecp import ContainerPlatformClient
 from hpecp.cli.catalog import CatalogProxy
 from hpecp.cli.config import ConfigProxy
 from hpecp.cli.datatap import DatatapProxy
+from hpecp.cli.epicworker import EpicWorkerProxy
 from hpecp.cli.gateway import GatewayProxy
 from hpecp.cli.httpclient import HttpClientProxy
 from hpecp.cli.install import InstallProxy
 from hpecp.cli.k8scluster import K8sClusterProxy
 from hpecp.cli.k8sworker import K8sWorkerProxy
-from hpecp.cli.epicworker import EpicWorkerProxy
 from hpecp.cli.license import LicenseProxy
 from hpecp.cli.lock import LockProxy
 from hpecp.cli.role import RoleProxy

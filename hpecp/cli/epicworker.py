@@ -137,9 +137,8 @@ class EpicWorkerProxy(base.BaseProxy):
             print(
                 (
                     "Create request has errored. "
-                    "Check status message with `hpecp epicworker get {}".format(
-                        id
-                    )
+                    "Check status message with "
+                    "`hpecp epicworker get {}".format(id)
                 ),
                 file=sys.stderr,
             )

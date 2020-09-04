@@ -44,6 +44,7 @@ from hpecp.exceptions import APIForbiddenException
 from .catalog import CatalogController
 from .config import ConfigController
 from .datatap import DatatapController
+from .epic_worker import EpicWorkerController
 from .exceptions import (
     APIException,
     APIItemConflictException,
@@ -55,7 +56,6 @@ from .gateway import GatewayController
 from .install import InstallController
 from .k8s_cluster import K8sClusterController
 from .k8s_worker import K8sWorkerController
-from .epic_worker import EpicWorkerController
 from .license import LicenseController
 from .lock import LockController
 from .logger import Logger

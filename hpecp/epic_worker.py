@@ -24,6 +24,8 @@ from enum import Enum
 
 from requests.structures import CaseInsensitiveDict
 
+from hpecp.exceptions import APIItemNotFoundException
+
 from .base_resource import (
     AbstractResource,
     AbstractWaitableResourceController,
