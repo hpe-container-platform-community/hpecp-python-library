@@ -232,19 +232,20 @@ class EpicWorkerController(AbstractWaitableResourceController):
             persistent_disks, list
         ), "'persistent_disks' must be a list"
 
-        # Prepare the payload
         data = {
-            "op_spec": {
-                "ephemeral_disks": ephemeral_disks,
-                "persistent_disks": persistent_disks,
-            },
-            "op": "storage",
+            "workers": [
+                {
+                    "containerdisks": ephemeral_disks,
+                    "hdfsdisks": persistent_disks,
+                    "id": worker_id,
+                }
+            ]
         }
 
         # Make the request
         self.client._request(
-            url=worker_id,
-            http_method="post",
+            url="/api/v1/install/?install_alter",
+            http_method="put",
             data=data,
             description="worker/set_storage",
         )
