@@ -48,6 +48,7 @@ class K8sClusterProxy(base.BaseProxy):
             "dashboard_url",
             "dashboard_token",
             "delete",
+            "examples",
             "get",
             "get_available_addons",
             "get_installed_addons",
@@ -156,6 +157,18 @@ class K8sClusterProxy(base.BaseProxy):
             print(base64.b64decode(token.encode()))
         else:
             print(base64.b64decode(token.encode()).decode("utf-8"))
+
+    def examples(self):
+        """Show examples for working with k8sclusters."""
+        print(
+            dedent(
+                """\
+                # retrieve id of k8s cluster with name 'c1'
+                $ hpecp k8scluster list --query "[?label.name == 'c1'] | [0] | [_links.self.href]" --output text
+                /api/v2/k8scluster/1
+                """  # noqa:  E501
+            )
+        )
 
     @base.intercept_exception
     def k8smanifest(self):
