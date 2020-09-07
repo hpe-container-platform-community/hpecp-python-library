@@ -22,11 +22,14 @@
 
 from __future__ import print_function
 
+
 import base64
 import json
 import six
 import sys
 import yaml
+
+from textwrap import dedent
 
 from hpecp.k8s_cluster import (
     K8sCluster,

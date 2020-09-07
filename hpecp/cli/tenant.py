@@ -105,7 +105,7 @@ class TenantProxy(base.BaseProxy):
                 # retrieve k8s tenants
                 $ hpecp tenant list --query "[?tenant_type == 'k8s']" --output json-pp
                 ... json output ...
-                
+
                 # retrieve tenant id of k8s tenant with name 'tenant1'
                 $ hpecp tenant list --query "[?tenant_type == 'k8s' && label.name == 'tenant1'] | [0] | [_links.self.href]" --output text
                 /api/v1/tenant/4
