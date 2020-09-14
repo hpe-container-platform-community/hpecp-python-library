@@ -166,7 +166,7 @@ export LOG_LEVEL=DEBUG
 hpecp do-something
 ```
 
-More sophisticated CLI examples [here](https://github.com/bluedata-community/bluedata-demo-env-aws-terraform/tree/master/bin/experimental) 
+More sophisticated CLI examples [here](https://github.com/hpe-container-platform-community/hcp-demo-env-aws-terraform/tree/master/bin/experimental) 
 
 
 ## Python Library Examples
