@@ -132,3 +132,15 @@ class DatatapProxy(base.BaseProxy):
             port=port,
             read_only=read_only,
         )
+        
+    def examples(self):
+        """Show examples for working with roles."""
+        print(
+            dedent(
+                """\
+                # lookup datatap by name and retrieve ID
+                $ PROFILE=tenant2 hpecp datatap list --query "[?_embedded.label.name=='int-mapr-generic'] | [0] | [_links.self.href]" --output text
+                /api/v1/dataconn/11
+                """  # noqa:  E501
+            )
+        )
