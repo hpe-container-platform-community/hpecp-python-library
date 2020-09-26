@@ -45,16 +45,6 @@ class DatatapProxy(base.BaseProxy):
             "wait_for_state",
         ]
 
-    def examples(self):
-        """Show examples for working with roles."""
-        print(
-            dedent(
-                """\
-                    Coming soon ...
-                """  # noqa:  E501
-            )
-        )
-
     @base.intercept_exception
     def create_hdfs_with_kerberos(
         self,
@@ -132,7 +122,7 @@ class DatatapProxy(base.BaseProxy):
             port=port,
             read_only=read_only,
         )
-        
+
     def examples(self):
         """Show examples for working with roles."""
         print(
