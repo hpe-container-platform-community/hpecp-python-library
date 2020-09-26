@@ -32,7 +32,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install coverage
           pip install flake8 flake8-docstrings flake8-per-file-ignores==0.8.1
-          pip uninstall typing
+          pip uninstall -y typing
           pip install black
       - name: Run linter (flake8)
         run: |
