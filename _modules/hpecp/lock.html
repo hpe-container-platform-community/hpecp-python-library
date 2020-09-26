@@ -71,6 +71,10 @@
 <span class="kn">import</span> <span class="nn">polling</span>
 <span class="kn">from</span> <span class="nn">requests.structures</span> <span class="kn">import</span> <span class="n">CaseInsensitiveDict</span>
 
+<span class="kn">from</span> <span class="nn">.logger</span> <span class="kn">import</span> <span class="n">Logger</span>
+
+<span class="n">_log</span> <span class="o">=</span> <span class="n">Logger</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span>
+
 <span class="k">try</span><span class="p">:</span>
     <span class="n">basestring</span>
 <span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>
@@ -118,8 +122,14 @@
             <span class="k">return</span> <span class="n">lock_id</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
+
+                <span class="k">def</span> <span class="nf">poll</span><span class="p">():</span>
+                    <span class="n">locked</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">()[</span><span class="s2">&quot;locked&quot;</span><span class="p">]</span>
+                    <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;In poll loop - locked=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">locked</span><span class="p">))</span>
+                    <span class="k">return</span> <span class="n">locked</span>
+
                 <span class="n">polling</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span>
-                    <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">()[</span><span class="s2">&quot;locked&quot;</span><span class="p">],</span>
+                    <span class="k">lambda</span><span class="p">:</span> <span class="n">poll</span><span class="p">(),</span>
                     <span class="n">step</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
                     <span class="n">poll_forever</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                     <span class="n">timeout</span><span class="o">=</span><span class="n">timeout_secs</span><span class="p">,</span>
