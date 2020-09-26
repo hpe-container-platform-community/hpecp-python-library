@@ -25,6 +25,10 @@ import re
 import polling
 from requests.structures import CaseInsensitiveDict
 
+from .logger import Logger
+
+_log = Logger.get_logger()
+
 try:
     basestring
 except NameError:
@@ -72,8 +76,14 @@ class LockController:
             return lock_id
         else:
             try:
+
+                def poll():
+                    locked = self.get()["locked"]
+                    _log.debug("In poll loop - locked={}".format(locked))
+                    return locked
+
                 polling.poll(
-                    lambda: self.get()["locked"],
+                    lambda: poll(),
                     step=10,
                     poll_forever=False,
                     timeout=timeout_secs,
