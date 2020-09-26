@@ -70,12 +70,17 @@ class LockProxy(object):
             print(json.dumps(response))
 
     @base.intercept_exception
-    def create(
-        self,
-        reason,
-    ):
+    def create(self, reason, timeout_secs=300):
         """Create a lock."""
-        print(base.get_client().lock.create(reason), file=sys.stdout)
+        response = base.get_client().lock.create(reason, timeout_secs)
+        if response is False:
+            print(
+                "Unabled to lock within '{}'".format(timeout_secs),
+                file=sys.stderr,
+            )
+        else:
+            # reponse contains lock ID
+            print(response, file=sys.stderr)
 
     @base.intercept_exception
     def delete(

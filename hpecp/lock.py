@@ -45,13 +45,15 @@ class LockController:
         """Retrieve the locks"""
         return self.get()
 
-    def create(self, reason=None):
+    def create(self, reason=None, timeout_secs=300):
         """Create a new lock.
 
         Arguments
         ---------
         reason: str
             Provide a reason for the lock.
+        timeout_secs: int
+            Time to wait for lock to be successful
 
         Raises
         ------
@@ -64,7 +66,21 @@ class LockController:
             data=data,
             description="lock/set_lock",
         )
-        return CaseInsensitiveDict(response.headers)["Location"]
+        id = CaseInsensitiveDict(response.headers)["Location"]
+
+        if timeout_secs == 0:
+            return id
+        else:
+            try:
+                polling.poll(
+                    lambda: self.get()["locked"],
+                    step=10,
+                    poll_forever=False,
+                    timeout=timeout_secs,
+                )
+                return id
+            except polling.TimeoutException:
+                return False
 
     def delete(self, lock_id):
         """Delete a lock.
