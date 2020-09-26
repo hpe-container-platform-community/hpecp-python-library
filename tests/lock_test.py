@@ -204,8 +204,25 @@ class TestCLIDelete(BaseTestCase):
 
 
 class TestCLICreate(BaseTestCase):
+    def mocked_requests_get_locked(*args, **kwargs):
+        if args[0] == "https://127.0.0.1:8080/api/v1/lock":
+            return MockResponse(
+                json_data={
+                    "_links": {"self": {"href": "/api/v1/lock"}},
+                    "locked": True,
+                    "_embedded": {
+                        "internal_locks": ["1"],
+                        "external_locks": [],
+                    },
+                },
+                status_code=200,
+                headers=dict(),
+            )
+        raise RuntimeError("Unhandle GET request: " + args[0])
+
     @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
-    def test_create(self, mock_post):
+    @patch("requests.get", side_effect=mocked_requests_get_locked)
+    def test_create(self, mock_post, mock_get):
 
         try:
             hpecp = self.cli.CLI()
@@ -220,7 +237,11 @@ class TestCLICreate(BaseTestCase):
         expected_stdout = "/test_location/1"
         expected_stderr = ""
 
-        self.assertEqual(stdout, expected_stdout)
+        self.assertEqual(
+            stdout,
+            expected_stdout,
+            "Expected: '{}' Actual: '{}'".format(expected_stdout, stdout),
+        )
 
         # coverage seems to populate standard error on PY3 (issues 93)
         if six.PY2:

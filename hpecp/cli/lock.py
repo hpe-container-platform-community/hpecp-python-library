@@ -75,12 +75,12 @@ class LockProxy(object):
         response = base.get_client().lock.create(reason, timeout_secs)
         if response is False:
             print(
-                "Unabled to lock within '{}'".format(timeout_secs),
+                "Unable to lock within '{}'".format(timeout_secs),
                 file=sys.stderr,
             )
         else:
             # reponse contains lock ID
-            print(response, file=sys.stderr)
+            print(response, file=sys.stdout)
 
     @base.intercept_exception
     def delete(

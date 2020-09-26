@@ -66,10 +66,10 @@ class LockController:
             data=data,
             description="lock/set_lock",
         )
-        id = CaseInsensitiveDict(response.headers)["Location"]
+        lock_id = CaseInsensitiveDict(response.headers)["Location"]
 
         if timeout_secs == 0:
-            return id
+            return lock_id
         else:
             try:
                 polling.poll(
@@ -78,7 +78,7 @@ class LockController:
                     poll_forever=False,
                     timeout=timeout_secs,
                 )
-                return id
+                return lock_id
             except polling.TimeoutException:
                 return False
 
