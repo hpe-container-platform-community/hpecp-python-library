@@ -210,6 +210,7 @@ class TestCLICreate(BaseTestCase):
                 json_data={
                     "_links": {"self": {"href": "/api/v1/lock"}},
                     "locked": True,
+                    "quiesced": True,
                     "_embedded": {
                         "internal_locks": ["1"],
                         "external_locks": [],

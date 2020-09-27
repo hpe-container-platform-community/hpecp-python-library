@@ -79,8 +79,13 @@ class LockController:
 
                 def poll():
                     locked = self.get()["locked"]
-                    _log.debug("In poll loop - locked={}".format(locked))
-                    return locked
+                    quiesced = self.get()["quiesced"]
+                    _log.debug(
+                        "In poll loop - locked={} quiesced={}".format(
+                            locked, quiesced
+                        )
+                    )
+                    return locked and quiesced
 
                 polling.poll(
                     lambda: poll(),
