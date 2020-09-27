@@ -125,8 +125,13 @@
 
                 <span class="k">def</span> <span class="nf">poll</span><span class="p">():</span>
                     <span class="n">locked</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">()[</span><span class="s2">&quot;locked&quot;</span><span class="p">]</span>
-                    <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;In poll loop - locked=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">locked</span><span class="p">))</span>
-                    <span class="k">return</span> <span class="n">locked</span>
+                    <span class="n">quiesced</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">()[</span><span class="s2">&quot;quiesced&quot;</span><span class="p">]</span>
+                    <span class="n">_log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                        <span class="s2">&quot;In poll loop - locked=</span><span class="si">{}</span><span class="s2"> quiesced=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                            <span class="n">locked</span><span class="p">,</span> <span class="n">quiesced</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
+                    <span class="k">return</span> <span class="n">locked</span> <span class="ow">and</span> <span class="n">quiesced</span>
 
                 <span class="n">polling</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span>
                     <span class="k">lambda</span><span class="p">:</span> <span class="n">poll</span><span class="p">(),</span>
