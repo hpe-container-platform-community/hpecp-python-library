@@ -222,6 +222,50 @@ class TenantController(AbstractWaitableResourceController):
         )
         return CaseInsensitiveDict(response.headers)["Location"]
 
+    def update(
+        self,
+        tenant_id,
+        quota_memory=None,
+        quota_persistent=None,
+        quota_gpus=None,
+        quota_cores=None,
+        quota_disk=None,
+        quota_tenant_storage=None,
+    ):
+
+        data = {}
+
+        if (
+            quota_memory is not None
+            or quota_persistent is not None
+            or quota_gpus is not None
+            or quota_cores is not None
+            or quota_disk is not None
+            or quota_tenant_storage is not None
+        ):
+            data["quota"] = {}
+
+            if quota_memory is not None:
+                data["quota"]["quota_memory"] = quota_memory
+            if quota_persistent is not None:
+                data["quota"]["quota_persistent"] = quota_persistent
+            if quota_gpus is not None:
+                data["quota"]["quota_gpus"] = quota_gpus
+            if quota_cores is not None:
+                data["quota"]["quota_cores"] = quota_cores
+            if quota_disk is not None:
+                data["quota"]["quota_disk"] = quota_disk
+            if quota_tenant_storage is not None:
+                data["quota"]["quota_tenant_storage"] = quota_tenant_storage
+
+        response = self.client._request(
+            url="/api/v1/tenant/" + tenant_id,
+            http_method="put",
+            data=data,
+            description="tenant/update",
+        )
+        return CaseInsensitiveDict(response.headers)["Location"]
+
     def k8skubeconfig(self):
         """Retrieve the tenant kubeconfig.
 

@@ -109,6 +109,28 @@ class TenantProxy(base.BaseProxy):
         )
         print(tenant_id)
 
+    @base.intercept_exception
+    def update(
+        self,
+        tenant_id,
+        quota_memory=None,
+        quota_persistent=None,
+        quota_gpus=None,
+        quota_cores=None,
+        quota_disk=None,
+        quota_tenant_storage=None,
+    ):
+        """Update a tenant."""
+        base.get_client().tenant.update(
+            tenant_id,
+            quota_memory=quota_memory,
+            quota_persistent=quota_persistent,
+            quota_gpus=quota_gpus,
+            quota_cores=quota_cores,
+            quota_disk=quota_disk,
+            quota_tenant_storage=quota_tenant_storage,
+        )
+
     def examples(self):
         """Show usage_examples of the list method."""
         print(
