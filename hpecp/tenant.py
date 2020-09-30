@@ -142,6 +142,12 @@ class TenantController(AbstractWaitableResourceController):
         map_services_to_gateway=None,
         specified_namespace_name=None,
         adopt_existing_namespace=None,
+        quota_memory=None,
+        quota_persistent=None,
+        quota_gpus=None,
+        quota_cores=None,
+        quota_disk=None,
+        quota_tenant_storage=None,
     ):
 
         assert (
@@ -184,6 +190,29 @@ class TenantController(AbstractWaitableResourceController):
 
         if data["tenant_type_info"] == {}:
             data.pop("tenant_type_info", None)
+
+        if (
+            quota_memory is not None
+            or quota_persistent is not None
+            or quota_gpus is not None
+            or quota_cores is not None
+            or quota_disk is not None
+            or quota_tenant_storage is not None
+        ):
+            data["quota"] = {}
+
+            if quota_memory is not None:
+                data["quota"]["quota_memory"] = quota_memory
+            if quota_persistent is not None:
+                data["quota"]["quota_persistent"] = quota_persistent
+            if quota_gpus is not None:
+                data["quota"]["quota_gpus"] = quota_gpus
+            if quota_cores is not None:
+                data["quota"]["quota_cores"] = quota_cores
+            if quota_disk is not None:
+                data["quota"]["quota_disk"] = quota_disk
+            if quota_tenant_storage is not None:
+                data["quota"]["quota_tenant_storage"] = quota_tenant_storage
 
         response = self.client._request(
             url="/api/v1/tenant",

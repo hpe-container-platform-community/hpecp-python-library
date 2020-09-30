@@ -63,6 +63,12 @@ class TenantProxy(base.BaseProxy):
         map_services_to_gateway=None,
         specified_namespace_name=None,
         adopt_existing_namespace=None,
+        quota_memory=None,
+        quota_persistent=None,
+        quota_gpus=None,
+        quota_cores=None,
+        quota_disk=None,
+        quota_tenant_storage=None,
     ):
         """Create a tenant.
 
@@ -94,6 +100,12 @@ class TenantProxy(base.BaseProxy):
             map_services_to_gateway=map_services_to_gateway,
             specified_namespace_name=specified_namespace_name,
             adopt_existing_namespace=adopt_existing_namespace,
+            quota_memory=quota_memory,
+            quota_persistent=quota_persistent,
+            quota_gpus=quota_gpus,
+            quota_cores=quota_cores,
+            quota_disk=quota_disk,
+            quota_tenant_storage=quota_tenant_storage,
         )
         print(tenant_id)
 
