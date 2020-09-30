@@ -188,6 +188,12 @@
         <span class="n">map_services_to_gateway</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">specified_namespace_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">adopt_existing_namespace</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">quota_memory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">quota_persistent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">quota_gpus</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">quota_cores</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">quota_disk</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">quota_tenant_storage</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
 
         <span class="k">assert</span> <span class="p">(</span>
@@ -230,6 +236,29 @@
 
         <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;tenant_type_info&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="p">{}:</span>
             <span class="n">data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;tenant_type_info&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">quota_memory</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">or</span> <span class="n">quota_persistent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">or</span> <span class="n">quota_gpus</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">or</span> <span class="n">quota_cores</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">or</span> <span class="n">quota_disk</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">or</span> <span class="n">quota_tenant_storage</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="p">):</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;quota&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+            <span class="k">if</span> <span class="n">quota_memory</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">data</span><span class="p">[</span><span class="s2">&quot;quota&quot;</span><span class="p">][</span><span class="s2">&quot;quota_memory&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">quota_memory</span>
+            <span class="k">if</span> <span class="n">quota_persistent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">data</span><span class="p">[</span><span class="s2">&quot;quota&quot;</span><span class="p">][</span><span class="s2">&quot;quota_persistent&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">quota_persistent</span>
+            <span class="k">if</span> <span class="n">quota_gpus</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">data</span><span class="p">[</span><span class="s2">&quot;quota&quot;</span><span class="p">][</span><span class="s2">&quot;quota_gpus&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">quota_gpus</span>
+            <span class="k">if</span> <span class="n">quota_cores</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">data</span><span class="p">[</span><span class="s2">&quot;quota&quot;</span><span class="p">][</span><span class="s2">&quot;quota_cores&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">quota_cores</span>
+            <span class="k">if</span> <span class="n">quota_disk</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">data</span><span class="p">[</span><span class="s2">&quot;quota&quot;</span><span class="p">][</span><span class="s2">&quot;quota_disk&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">quota_disk</span>
+            <span class="k">if</span> <span class="n">quota_tenant_storage</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">data</span><span class="p">[</span><span class="s2">&quot;quota&quot;</span><span class="p">][</span><span class="s2">&quot;quota_tenant_storage&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">quota_tenant_storage</span>
 
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
             <span class="n">url</span><span class="o">=</span><span class="s2">&quot;/api/v1/tenant&quot;</span><span class="p">,</span>
