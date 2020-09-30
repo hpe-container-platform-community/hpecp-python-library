@@ -44,6 +44,7 @@ class TenantProxy(base.BaseProxy):
             "k8skubeconfig",
             "list",
             # "status",  # TODO: implement me!
+            "update",
             "users",
             "wait_for_status",
         ]
