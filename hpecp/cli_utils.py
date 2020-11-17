@@ -76,6 +76,9 @@ class TextOutput(object):
     def dump(data):
         """Dump the python object as text."""  # noqa: D202
 
+        if data is None:
+            return str("")
+
         class MyStringIO(StringIO):
             def write(self, b):
                 if six.PY2:
