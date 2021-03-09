@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.18.1 (2021-03-09)
+### Fix
+* **tenant:** Quota ([`171f223`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/171f223d4c0dbdedc206caa5670a45b2810fc530))
+
 ## v0.18.0 (2021-03-09)
 ### Feature
 * **tenant:** Ml_project ([`6c1f4d7`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/6c1f4d729dc943c77beccade3fa5b1cabce39f3a))
