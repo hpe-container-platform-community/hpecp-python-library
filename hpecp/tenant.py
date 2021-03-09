@@ -206,17 +206,17 @@ class TenantController(AbstractWaitableResourceController):
             data["quota"] = {}
 
             if quota_memory is not None:
-                data["quota"]["quota_memory"] = quota_memory
+                data["quota"]["memory"] = quota_memory
             if quota_persistent is not None:
-                data["quota"]["quota_persistent"] = quota_persistent
+                data["quota"]["persistent"] = quota_persistent
             if quota_gpus is not None:
-                data["quota"]["quota_gpus"] = quota_gpus
+                data["quota"]["gpus"] = quota_gpus
             if quota_cores is not None:
-                data["quota"]["quota_cores"] = quota_cores
+                data["quota"]["cores"] = quota_cores
             if quota_disk is not None:
-                data["quota"]["quota_disk"] = quota_disk
+                data["quota"]["disk"] = quota_disk
             if quota_tenant_storage is not None:
-                data["quota"]["quota_tenant_storage"] = quota_tenant_storage
+                data["quota"]["tenant_storage"] = quota_tenant_storage
 
         response = self.client._request(
             url="/api/v1/tenant",
