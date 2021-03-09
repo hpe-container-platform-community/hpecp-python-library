@@ -14,7 +14,6 @@
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/language_data.js"></script>
     <script src="../../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -338,6 +337,7 @@
         <span class="n">persistent_storage_nimble_csi</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">k8shosts_config</span><span class="o">=</span><span class="p">[],</span>
         <span class="n">addons</span><span class="o">=</span><span class="p">[],</span>
+        <span class="n">external_identity_server</span><span class="o">=</span><span class="p">{},</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Send an API request to create a K8s Cluster.  The cluster creation</span>
 <span class="sd">        will be asynchronous - use the :py:meth:`wait_for_status` method to</span>
@@ -375,6 +375,19 @@
 <span class="sd">        k8shosts_config: list[K8sClusterHostConfig]</span>
 <span class="sd">            list of :py:class:`K8sClusterHostConfig` objects determining</span>
 <span class="sd">            which hosts to add and their role (master or worker)</span>
+<span class="sd">        external_identity_server: dict</span>
+<span class="sd">            Example {</span>
+<span class="sd">                &quot;bind_pwd&quot;:&quot;password&quot;,</span>
+<span class="sd">                &quot;user_attribute&quot;:&quot;CN&quot;,</span>
+<span class="sd">                &quot;bind_type&quot;:&quot;search_bind&quot;,</span>
+<span class="sd">                &quot;bind_dn&quot;:&quot;cn=Administrator,CN=Users,DC=samdom,DC=example,DC=com&quot;,</span>
+<span class="sd">                &quot;host&quot;:&quot;10.1.0.15&quot;,</span>
+<span class="sd">                &quot;group_attribute&quot;:&quot;member&quot;,</span>
+<span class="sd">                &quot;security_protocol&quot;:&quot;ldaps&quot;,</span>
+<span class="sd">                &quot;base_dn&quot;:&quot;CN=Users,DC=samdom,DC=example,DC=com&quot;,</span>
+<span class="sd">                &quot;verify_peer&quot;:false,</span>
+<span class="sd">                &quot;type&quot;:&quot;Active Directory&quot;,</span>
+<span class="sd">                &quot;port&quot;:636}</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -439,6 +452,8 @@
             <span class="n">data</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">][</span><span class="s2">&quot;description&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">description</span>
         <span class="k">if</span> <span class="n">k8s_version</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">data</span><span class="p">[</span><span class="s2">&quot;k8s_version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">k8s_version</span>
+        <span class="k">if</span> <span class="n">external_identity_server</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;external_identity_server&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">external_identity_server</span>
 
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
             <span class="n">url</span><span class="o">=</span><span class="s2">&quot;/api/v2/k8scluster&quot;</span><span class="p">,</span>
@@ -701,7 +716,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Chris Snow.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.3.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.2.
     </div>
   </body>
 </html>

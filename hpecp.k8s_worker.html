@@ -14,7 +14,6 @@
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
     <script src="_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -55,158 +54,212 @@
 <span id="hpecp-k8s-worker-module"></span><h1>hpecp.k8s_worker module<a class="headerlink" href="#module-hpecp.k8s_worker" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="hpecp.k8s_worker.WorkerK8sStatus">
-<em class="property">class </em><code class="sig-prename descclassname">hpecp.k8s_worker.</code><code class="sig-name descname">WorkerK8sStatus</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_worker.html#WorkerK8sStatus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8sStatus" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">hpecp.k8s_worker.</span></code><code class="sig-name descname"><span class="pre">WorkerK8sStatus</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_worker.html#WorkerK8sStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8sStatus" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
 <p>An enumeration.</p>
 <dl class="py attribute">
 <dt id="hpecp.k8s_worker.WorkerK8sStatus.bundle">
-<code class="sig-name descname">bundle</code><em class="property"> = 1</em><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8sStatus.bundle" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">bundle</span></code><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8sStatus.bundle" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hpecp.k8s_worker.WorkerK8sStatus.installing">
-<code class="sig-name descname">installing</code><em class="property"> = 2</em><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8sStatus.installing" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">installing</span></code><em class="property"> <span class="pre">=</span> <span class="pre">2</span></em><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8sStatus.installing" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hpecp.k8s_worker.WorkerK8sStatus.installed">
-<code class="sig-name descname">installed</code><em class="property"> = 3</em><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8sStatus.installed" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">installed</span></code><em class="property"> <span class="pre">=</span> <span class="pre">3</span></em><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8sStatus.installed" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hpecp.k8s_worker.WorkerK8sStatus.ready">
-<code class="sig-name descname">ready</code><em class="property"> = 4</em><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8sStatus.ready" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">ready</span></code><em class="property"> <span class="pre">=</span> <span class="pre">4</span></em><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8sStatus.ready" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hpecp.k8s_worker.WorkerK8sStatus.unlicensed">
-<code class="sig-name descname">unlicensed</code><em class="property"> = 5</em><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8sStatus.unlicensed" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">unlicensed</span></code><em class="property"> <span class="pre">=</span> <span class="pre">5</span></em><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8sStatus.unlicensed" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hpecp.k8s_worker.WorkerK8sStatus.configuring">
-<code class="sig-name descname">configuring</code><em class="property"> = 6</em><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8sStatus.configuring" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">configuring</span></code><em class="property"> <span class="pre">=</span> <span class="pre">6</span></em><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8sStatus.configuring" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hpecp.k8s_worker.WorkerK8sStatus.configured">
-<code class="sig-name descname">configured</code><em class="property"> = 7</em><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8sStatus.configured" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">configured</span></code><em class="property"> <span class="pre">=</span> <span class="pre">7</span></em><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8sStatus.configured" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hpecp.k8s_worker.WorkerK8sStatus.error">
-<code class="sig-name descname">error</code><em class="property"> = 8</em><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8sStatus.error" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">error</span></code><em class="property"> <span class="pre">=</span> <span class="pre">8</span></em><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8sStatus.error" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hpecp.k8s_worker.WorkerK8sStatus.sysinfo">
-<code class="sig-name descname">sysinfo</code><em class="property"> = 9</em><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8sStatus.sysinfo" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">sysinfo</span></code><em class="property"> <span class="pre">=</span> <span class="pre">9</span></em><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8sStatus.sysinfo" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hpecp.k8s_worker.WorkerK8sStatus.unconfiguring">
-<code class="sig-name descname">unconfiguring</code><em class="property"> = 10</em><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8sStatus.unconfiguring" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">unconfiguring</span></code><em class="property"> <span class="pre">=</span> <span class="pre">10</span></em><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8sStatus.unconfiguring" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hpecp.k8s_worker.WorkerK8sStatus.deleting">
-<code class="sig-name descname">deleting</code><em class="property"> = 11</em><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8sStatus.deleting" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">deleting</span></code><em class="property"> <span class="pre">=</span> <span class="pre">11</span></em><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8sStatus.deleting" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hpecp.k8s_worker.WorkerK8sStatus.storage_pending">
-<code class="sig-name descname">storage_pending</code><em class="property"> = 12</em><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8sStatus.storage_pending" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">storage_pending</span></code><em class="property"> <span class="pre">=</span> <span class="pre">12</span></em><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8sStatus.storage_pending" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hpecp.k8s_worker.WorkerK8sStatus.storage_configuring">
-<code class="sig-name descname">storage_configuring</code><em class="property"> = 13</em><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8sStatus.storage_configuring" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">storage_configuring</span></code><em class="property"> <span class="pre">=</span> <span class="pre">13</span></em><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8sStatus.storage_configuring" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hpecp.k8s_worker.WorkerK8sStatus.storage_error">
-<code class="sig-name descname">storage_error</code><em class="property"> = 14</em><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8sStatus.storage_error" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">storage_error</span></code><em class="property"> <span class="pre">=</span> <span class="pre">14</span></em><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8sStatus.storage_error" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt id="hpecp.k8s_worker.WorkerK8s">
-<em class="property">class </em><code class="sig-prename descclassname">hpecp.k8s_worker.</code><code class="sig-name descname">WorkerK8s</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">json</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_worker.html#WorkerK8s"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8s" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">hpecp.k8s_worker.</span></code><code class="sig-name descname"><span class="pre">WorkerK8s</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_worker.html#WorkerK8s"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8s" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="hpecp.base_resource.html#hpecp.base_resource.AbstractResource" title="hpecp.base_resource.AbstractResource"><code class="xref py py-class docutils literal notranslate"><span class="pre">hpecp.base_resource.AbstractResource</span></code></a></p>
 <dl class="py attribute">
 <dt id="hpecp.k8s_worker.WorkerK8s.all_fields">
-<code class="sig-name descname">all_fields</code><em class="property"> = ['id', 'status', 'hostname', 'ipaddr', 'href', '_links']</em><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8s.all_fields" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">all_fields</span></code><em class="property"> <span class="pre">=</span> <span class="pre">['id',</span> <span class="pre">'status',</span> <span class="pre">'hostname',</span> <span class="pre">'ipaddr',</span> <span class="pre">'href',</span> <span class="pre">'_links']</span></em><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8s.all_fields" title="Permalink to this definition">¶</a></dt>
 <dd><p>All of the fields of a K8s Cluster objects that are returned by the HPE
 Container Platform API</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt id="hpecp.k8s_worker.WorkerK8s.default_display_fields">
-<code class="sig-name descname">default_display_fields</code><em class="property"> = ['id', 'status', 'hostname', 'ipaddr']</em><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8s.default_display_fields" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">default_display_fields</span></code><em class="property"> <span class="pre">=</span> <span class="pre">['id',</span> <span class="pre">'status',</span> <span class="pre">'hostname',</span> <span class="pre">'ipaddr']</span></em><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8s.default_display_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="hpecp.k8s_worker.WorkerK8s.worker_id">
-<em class="property">property </em><code class="sig-name descname">worker_id</code><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8s.worker_id" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">worker_id</span></code><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8s.worker_id" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="hpecp.k8s_worker.WorkerK8s.status">
-<em class="property">property </em><code class="sig-name descname">status</code><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8s.status" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">status</span></code><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8s.status" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="hpecp.k8s_worker.WorkerK8s.hostname">
-<em class="property">property </em><code class="sig-name descname">hostname</code><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8s.hostname" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">hostname</span></code><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8s.hostname" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="hpecp.k8s_worker.WorkerK8s.ipaddr">
-<em class="property">property </em><code class="sig-name descname">ipaddr</code><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8s.ipaddr" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">ipaddr</span></code><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8s.ipaddr" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="hpecp.k8s_worker.WorkerK8s.href">
-<em class="property">property </em><code class="sig-name descname">href</code><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8s.href" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">href</span></code><a class="headerlink" href="#hpecp.k8s_worker.WorkerK8s.href" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt id="hpecp.k8s_worker.K8sWorkerController">
-<em class="property">class </em><code class="sig-prename descclassname">hpecp.k8s_worker.</code><code class="sig-name descname">K8sWorkerController</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">client</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_worker.html#K8sWorkerController"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_worker.K8sWorkerController" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">hpecp.k8s_worker.</span></code><code class="sig-name descname"><span class="pre">K8sWorkerController</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_worker.html#K8sWorkerController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hpecp.k8s_worker.K8sWorkerController" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="hpecp.base_resource.html#hpecp.base_resource.AbstractWaitableResourceController" title="hpecp.base_resource.AbstractWaitableResourceController"><code class="xref py py-class docutils literal notranslate"><span class="pre">hpecp.base_resource.AbstractWaitableResourceController</span></code></a></p>
 <dl class="py attribute">
 <dt id="hpecp.k8s_worker.K8sWorkerController.base_resource_path">
-<code class="sig-name descname">base_resource_path</code><em class="property"> = '/api/v2/worker/k8shost'</em><a class="headerlink" href="#hpecp.k8s_worker.K8sWorkerController.base_resource_path" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname"><span class="pre">base_resource_path</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'/api/v2/worker/k8shost'</span></em><a class="headerlink" href="#hpecp.k8s_worker.K8sWorkerController.base_resource_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Declare the resource base path for the API resource.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Getter</dt>
+<dd class="field-odd"><p>Returns the resource base path</p>
+</dd>
+<dt class="field-even">Setter</dt>
+<dd class="field-even"><p>Sets the resource base path</p>
+</dd>
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>class K8sClusterController(AbstractResourceController):</dt><dd><p>…
+base_resource_path = “/api/v2/k8scluster”</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt id="hpecp.k8s_worker.K8sWorkerController.resource_list_path">
-<code class="sig-name descname">resource_list_path</code><em class="property"> = 'k8shosts'</em><a class="headerlink" href="#hpecp.k8s_worker.K8sWorkerController.resource_list_path" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname"><span class="pre">resource_list_path</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'k8shosts'</span></em><a class="headerlink" href="#hpecp.k8s_worker.K8sWorkerController.resource_list_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Declare the implementing resource list path for the API resource.
+The resource list path is where the resources are after the
+‘_embedded’ element in the API response json.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Getter</dt>
+<dd class="field-odd"><p>Returns the resource list path</p>
+</dd>
+<dt class="field-even">Setter</dt>
+<dd class="field-even"><p>Sets the resource list path</p>
+</dd>
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>class K8sClusterController(AbstractResourceController):</dt><dd><p>…
+resource_list_path = “k8sclusters”</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt id="hpecp.k8s_worker.K8sWorkerController.resource_class">
-<code class="sig-name descname">resource_class</code><a class="headerlink" href="#hpecp.k8s_worker.K8sWorkerController.resource_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#hpecp.k8s_worker.WorkerK8s" title="hpecp.k8s_worker.WorkerK8s"><code class="xref py py-class docutils literal notranslate"><span class="pre">WorkerK8s</span></code></a></p>
+<code class="sig-name descname"><span class="pre">resource_class</span></code><a class="headerlink" href="#hpecp.k8s_worker.K8sWorkerController.resource_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#hpecp.k8s_worker.WorkerK8s" title="hpecp.k8s_worker.WorkerK8s"><code class="xref py py-class docutils literal notranslate"><span class="pre">hpecp.k8s_worker.WorkerK8s</span></code></a></p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt id="hpecp.k8s_worker.K8sWorkerController.status_class">
-<code class="sig-name descname">status_class</code><a class="headerlink" href="#hpecp.k8s_worker.K8sWorkerController.status_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#hpecp.k8s_worker.WorkerK8sStatus" title="hpecp.k8s_worker.WorkerK8sStatus"><code class="xref py py-class docutils literal notranslate"><span class="pre">WorkerK8sStatus</span></code></a></p>
+<code class="sig-name descname"><span class="pre">status_class</span></code><a class="headerlink" href="#hpecp.k8s_worker.K8sWorkerController.status_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#hpecp.k8s_worker.WorkerK8sStatus" title="hpecp.k8s_worker.WorkerK8sStatus"><code class="xref py py-class docutils literal notranslate"><span class="pre">hpecp.k8s_worker.WorkerK8sStatus</span></code></a></p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt id="hpecp.k8s_worker.K8sWorkerController.status_fieldname">
-<code class="sig-name descname">status_fieldname</code><em class="property"> = 'status'</em><a class="headerlink" href="#hpecp.k8s_worker.K8sWorkerController.status_fieldname" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname"><span class="pre">status_fieldname</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'status'</span></em><a class="headerlink" href="#hpecp.k8s_worker.K8sWorkerController.status_fieldname" title="Permalink to this definition">¶</a></dt>
+<dd><p>Declare the Status fieldname in the API resource.</p>
+<p>Usually either: status or state</p>
+<dl class="field-list simple">
+<dt class="field-odd">Getter</dt>
+<dd class="field-odd"><p>Returns the Status fieldname</p>
+</dd>
+<dt class="field-even">Setter</dt>
+<dd class="field-even"><p>Sets the Status fieldname</p>
+</dd>
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>class K8sClusterController(AbstractResourceController):</dt><dd><p>…
+status_fieldname = status</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt id="hpecp.k8s_worker.K8sWorkerController.create_with_ssh_key">
-<code class="sig-name descname">create_with_ssh_key</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ip</span></em>, <em class="sig-param"><span class="n">ssh_key_data</span></em>, <em class="sig-param"><span class="n">tags</span><span class="o">=</span><span class="default_value">[]</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_worker.html#K8sWorkerController.create_with_ssh_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_worker.K8sWorkerController.create_with_ssh_key" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">create_with_ssh_key</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ssh_key_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_worker.html#K8sWorkerController.create_with_ssh_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hpecp.k8s_worker.K8sWorkerController.create_with_ssh_key" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a gateway instance using SSH key credentials to access the host.</p>
 <dl class="simple">
 <dt>ip: str</dt><dd><p>The IP address of the proxy host.  Used for internal
@@ -225,7 +278,7 @@ communication.</p>
 
 <dl class="py method">
 <dt id="hpecp.k8s_worker.K8sWorkerController.get">
-<code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">setup_log</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_worker.html#K8sWorkerController.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_worker.K8sWorkerController.get" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">setup_log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_worker.html#K8sWorkerController.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hpecp.k8s_worker.K8sWorkerController.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make an API call to retrieve a Resource.</p>
 <dl class="simple">
 <dt>id<span class="classifier">str</span></dt><dd><p>The ID with the format /resource/path/id</p>
@@ -248,7 +301,7 @@ self.resource_class</p>
 
 <dl class="py method">
 <dt id="hpecp.k8s_worker.K8sWorkerController.set_storage">
-<code class="sig-name descname">set_storage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">worker_id</span></em>, <em class="sig-param"><span class="n">ephemeral_disks</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">persistent_disks</span><span class="o">=</span><span class="default_value">[]</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_worker.html#K8sWorkerController.set_storage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.k8s_worker.K8sWorkerController.set_storage" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">set_storage</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">worker_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ephemeral_disks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">persistent_disks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_worker.html#K8sWorkerController.set_storage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hpecp.k8s_worker.K8sWorkerController.set_storage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set storage for a k8s worker.</p>
 <dl class="simple">
 <dt>worker_id<span class="classifier">str</span></dt><dd><p>The k8s worker ID, format - ‘/api/v2/worker/k8shost/[0-9]+’</p>
@@ -348,7 +401,7 @@ AssertionError</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Chris Snow.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.3.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.2.
     </div>
   </body>
 </html>

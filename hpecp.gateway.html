@@ -14,7 +14,6 @@
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
     <script src="_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -55,7 +54,7 @@
 <span id="hpecp-gateway-module"></span><h1>hpecp.gateway module<a class="headerlink" href="#module-hpecp.gateway" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="hpecp.gateway.GatewayStatus">
-<em class="property">class </em><code class="sig-prename descclassname">hpecp.gateway.</code><code class="sig-name descname">GatewayStatus</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayStatus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.gateway.GatewayStatus" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">hpecp.gateway.</span></code><code class="sig-name descname"><span class="pre">GatewayStatus</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hpecp.gateway.GatewayStatus" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
 <p>Bases: enum.Enum</p>
 <p>The statuses for a Gateway</p>
@@ -65,89 +64,89 @@ The API uses a string identifier with the status name rather than an
 integer value.</p>
 <dl class="py attribute">
 <dt id="hpecp.gateway.GatewayStatus.bundle">
-<code class="sig-name descname">bundle</code><em class="property"> = 1</em><a class="headerlink" href="#hpecp.gateway.GatewayStatus.bundle" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">bundle</span></code><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#hpecp.gateway.GatewayStatus.bundle" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hpecp.gateway.GatewayStatus.installing">
-<code class="sig-name descname">installing</code><em class="property"> = 2</em><a class="headerlink" href="#hpecp.gateway.GatewayStatus.installing" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">installing</span></code><em class="property"> <span class="pre">=</span> <span class="pre">2</span></em><a class="headerlink" href="#hpecp.gateway.GatewayStatus.installing" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hpecp.gateway.GatewayStatus.installed">
-<code class="sig-name descname">installed</code><em class="property"> = 3</em><a class="headerlink" href="#hpecp.gateway.GatewayStatus.installed" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">installed</span></code><em class="property"> <span class="pre">=</span> <span class="pre">3</span></em><a class="headerlink" href="#hpecp.gateway.GatewayStatus.installed" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hpecp.gateway.GatewayStatus.ready">
-<code class="sig-name descname">ready</code><em class="property"> = 4</em><a class="headerlink" href="#hpecp.gateway.GatewayStatus.ready" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">ready</span></code><em class="property"> <span class="pre">=</span> <span class="pre">4</span></em><a class="headerlink" href="#hpecp.gateway.GatewayStatus.ready" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hpecp.gateway.GatewayStatus.unlicensed">
-<code class="sig-name descname">unlicensed</code><em class="property"> = 5</em><a class="headerlink" href="#hpecp.gateway.GatewayStatus.unlicensed" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">unlicensed</span></code><em class="property"> <span class="pre">=</span> <span class="pre">5</span></em><a class="headerlink" href="#hpecp.gateway.GatewayStatus.unlicensed" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hpecp.gateway.GatewayStatus.configuring">
-<code class="sig-name descname">configuring</code><em class="property"> = 6</em><a class="headerlink" href="#hpecp.gateway.GatewayStatus.configuring" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">configuring</span></code><em class="property"> <span class="pre">=</span> <span class="pre">6</span></em><a class="headerlink" href="#hpecp.gateway.GatewayStatus.configuring" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hpecp.gateway.GatewayStatus.configured">
-<code class="sig-name descname">configured</code><em class="property"> = 7</em><a class="headerlink" href="#hpecp.gateway.GatewayStatus.configured" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">configured</span></code><em class="property"> <span class="pre">=</span> <span class="pre">7</span></em><a class="headerlink" href="#hpecp.gateway.GatewayStatus.configured" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hpecp.gateway.GatewayStatus.error">
-<code class="sig-name descname">error</code><em class="property"> = 8</em><a class="headerlink" href="#hpecp.gateway.GatewayStatus.error" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">error</span></code><em class="property"> <span class="pre">=</span> <span class="pre">8</span></em><a class="headerlink" href="#hpecp.gateway.GatewayStatus.error" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hpecp.gateway.GatewayStatus.sysinfo">
-<code class="sig-name descname">sysinfo</code><em class="property"> = 9</em><a class="headerlink" href="#hpecp.gateway.GatewayStatus.sysinfo" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">sysinfo</span></code><em class="property"> <span class="pre">=</span> <span class="pre">9</span></em><a class="headerlink" href="#hpecp.gateway.GatewayStatus.sysinfo" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hpecp.gateway.GatewayStatus.unconfiguring">
-<code class="sig-name descname">unconfiguring</code><em class="property"> = 10</em><a class="headerlink" href="#hpecp.gateway.GatewayStatus.unconfiguring" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">unconfiguring</span></code><em class="property"> <span class="pre">=</span> <span class="pre">10</span></em><a class="headerlink" href="#hpecp.gateway.GatewayStatus.unconfiguring" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hpecp.gateway.GatewayStatus.deleting">
-<code class="sig-name descname">deleting</code><em class="property"> = 11</em><a class="headerlink" href="#hpecp.gateway.GatewayStatus.deleting" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">deleting</span></code><em class="property"> <span class="pre">=</span> <span class="pre">11</span></em><a class="headerlink" href="#hpecp.gateway.GatewayStatus.deleting" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hpecp.gateway.GatewayStatus.storage_pending">
-<code class="sig-name descname">storage_pending</code><em class="property"> = 12</em><a class="headerlink" href="#hpecp.gateway.GatewayStatus.storage_pending" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">storage_pending</span></code><em class="property"> <span class="pre">=</span> <span class="pre">12</span></em><a class="headerlink" href="#hpecp.gateway.GatewayStatus.storage_pending" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hpecp.gateway.GatewayStatus.storage_configuring">
-<code class="sig-name descname">storage_configuring</code><em class="property"> = 13</em><a class="headerlink" href="#hpecp.gateway.GatewayStatus.storage_configuring" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">storage_configuring</span></code><em class="property"> <span class="pre">=</span> <span class="pre">13</span></em><a class="headerlink" href="#hpecp.gateway.GatewayStatus.storage_configuring" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hpecp.gateway.GatewayStatus.storage_error">
-<code class="sig-name descname">storage_error</code><em class="property"> = 14</em><a class="headerlink" href="#hpecp.gateway.GatewayStatus.storage_error" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">storage_error</span></code><em class="property"> <span class="pre">=</span> <span class="pre">14</span></em><a class="headerlink" href="#hpecp.gateway.GatewayStatus.storage_error" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hpecp.gateway.GatewayStatus.decommission_in_progress">
-<code class="sig-name descname">decommission_in_progress</code><em class="property"> = 15</em><a class="headerlink" href="#hpecp.gateway.GatewayStatus.decommission_in_progress" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">decommission_in_progress</span></code><em class="property"> <span class="pre">=</span> <span class="pre">15</span></em><a class="headerlink" href="#hpecp.gateway.GatewayStatus.decommission_in_progress" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hpecp.gateway.GatewayStatus.delete_in_progress">
-<code class="sig-name descname">delete_in_progress</code><em class="property"> = 16</em><a class="headerlink" href="#hpecp.gateway.GatewayStatus.delete_in_progress" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">delete_in_progress</span></code><em class="property"> <span class="pre">=</span> <span class="pre">16</span></em><a class="headerlink" href="#hpecp.gateway.GatewayStatus.delete_in_progress" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt id="hpecp.gateway.Gateway">
-<em class="property">class </em><code class="sig-prename descclassname">hpecp.gateway.</code><code class="sig-name descname">Gateway</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">json</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#Gateway"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.gateway.Gateway" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">hpecp.gateway.</span></code><code class="sig-name descname"><span class="pre">Gateway</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#Gateway"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hpecp.gateway.Gateway" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="hpecp.base_resource.html#hpecp.base_resource.AbstractResource" title="hpecp.base_resource.AbstractResource"><code class="xref py py-class docutils literal notranslate"><span class="pre">hpecp.base_resource.AbstractResource</span></code></a></p>
 <p>Create an instance of Gateway from json data returned from the HPE</p>
 <p>Container Platform API. Users of this library are not expected to create an
@@ -162,83 +161,83 @@ instance of this class.</p>
 </dl>
 <dl class="py attribute">
 <dt id="hpecp.gateway.Gateway.all_fields">
-<code class="sig-name descname">all_fields</code><em class="property"> = ['id', 'hacapable', 'propinfo', 'approved_worker_pubkey', 'schedule', 'ip', 'proxy_nodes_hostname', 'hostname', 'state', 'status_info', 'purpose', 'sysinfo', 'tags']</em><a class="headerlink" href="#hpecp.gateway.Gateway.all_fields" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">all_fields</span></code><em class="property"> <span class="pre">=</span> <span class="pre">['id',</span> <span class="pre">'hacapable',</span> <span class="pre">'propinfo',</span> <span class="pre">'approved_worker_pubkey',</span> <span class="pre">'schedule',</span> <span class="pre">'ip',</span> <span class="pre">'proxy_nodes_hostname',</span> <span class="pre">'hostname',</span> <span class="pre">'state',</span> <span class="pre">'status_info',</span> <span class="pre">'purpose',</span> <span class="pre">'sysinfo',</span> <span class="pre">'tags']</span></em><a class="headerlink" href="#hpecp.gateway.Gateway.all_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="hpecp.gateway.Gateway.default_display_fields">
-<code class="sig-name descname">default_display_fields</code><em class="property"> = ['id', 'ip', 'proxy_nodes_hostname', 'hostname', 'state', 'status_info', 'purpose', 'tags']</em><a class="headerlink" href="#hpecp.gateway.Gateway.default_display_fields" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">default_display_fields</span></code><em class="property"> <span class="pre">=</span> <span class="pre">['id',</span> <span class="pre">'ip',</span> <span class="pre">'proxy_nodes_hostname',</span> <span class="pre">'hostname',</span> <span class="pre">'state',</span> <span class="pre">'status_info',</span> <span class="pre">'purpose',</span> <span class="pre">'tags']</span></em><a class="headerlink" href="#hpecp.gateway.Gateway.default_display_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="hpecp.gateway.Gateway.state">
-<em class="property">property </em><code class="sig-name descname">state</code><a class="headerlink" href="#hpecp.gateway.Gateway.state" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">state</span></code><a class="headerlink" href="#hpecp.gateway.Gateway.state" title="Permalink to this definition">¶</a></dt>
 <dd><p>&#64;Field: from json[‘state’]</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="hpecp.gateway.Gateway.hacapable">
-<em class="property">property </em><code class="sig-name descname">hacapable</code><a class="headerlink" href="#hpecp.gateway.Gateway.hacapable" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">hacapable</span></code><a class="headerlink" href="#hpecp.gateway.Gateway.hacapable" title="Permalink to this definition">¶</a></dt>
 <dd><p>&#64;Field: from json[‘hacapable’]</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="hpecp.gateway.Gateway.propinfo">
-<em class="property">property </em><code class="sig-name descname">propinfo</code><a class="headerlink" href="#hpecp.gateway.Gateway.propinfo" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">propinfo</span></code><a class="headerlink" href="#hpecp.gateway.Gateway.propinfo" title="Permalink to this definition">¶</a></dt>
 <dd><p>&#64;Field: from json[‘propinfo’]</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="hpecp.gateway.Gateway.approved_worker_pubkey">
-<em class="property">property </em><code class="sig-name descname">approved_worker_pubkey</code><a class="headerlink" href="#hpecp.gateway.Gateway.approved_worker_pubkey" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">approved_worker_pubkey</span></code><a class="headerlink" href="#hpecp.gateway.Gateway.approved_worker_pubkey" title="Permalink to this definition">¶</a></dt>
 <dd><p>&#64;Field: from json[‘approved_worker_pubkey’]</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="hpecp.gateway.Gateway.schedule">
-<em class="property">property </em><code class="sig-name descname">schedule</code><a class="headerlink" href="#hpecp.gateway.Gateway.schedule" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">schedule</span></code><a class="headerlink" href="#hpecp.gateway.Gateway.schedule" title="Permalink to this definition">¶</a></dt>
 <dd><p>&#64;Field: from json[‘schedule’]</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="hpecp.gateway.Gateway.ip">
-<em class="property">property </em><code class="sig-name descname">ip</code><a class="headerlink" href="#hpecp.gateway.Gateway.ip" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">ip</span></code><a class="headerlink" href="#hpecp.gateway.Gateway.ip" title="Permalink to this definition">¶</a></dt>
 <dd><p>&#64;Field: from json[‘ip’]</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="hpecp.gateway.Gateway.proxy_nodes_hostname">
-<em class="property">property </em><code class="sig-name descname">proxy_nodes_hostname</code><a class="headerlink" href="#hpecp.gateway.Gateway.proxy_nodes_hostname" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">proxy_nodes_hostname</span></code><a class="headerlink" href="#hpecp.gateway.Gateway.proxy_nodes_hostname" title="Permalink to this definition">¶</a></dt>
 <dd><p>&#64;Field: from json[‘proxy_nodes_hostname’]</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="hpecp.gateway.Gateway.hostname">
-<em class="property">property </em><code class="sig-name descname">hostname</code><a class="headerlink" href="#hpecp.gateway.Gateway.hostname" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">hostname</span></code><a class="headerlink" href="#hpecp.gateway.Gateway.hostname" title="Permalink to this definition">¶</a></dt>
 <dd><p>&#64;Field: from json[‘hostname’]</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="hpecp.gateway.Gateway.purpose">
-<em class="property">property </em><code class="sig-name descname">purpose</code><a class="headerlink" href="#hpecp.gateway.Gateway.purpose" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">purpose</span></code><a class="headerlink" href="#hpecp.gateway.Gateway.purpose" title="Permalink to this definition">¶</a></dt>
 <dd><p>&#64;Field: from json[‘purpose’]</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="hpecp.gateway.Gateway.status_info">
-<em class="property">property </em><code class="sig-name descname">status_info</code><a class="headerlink" href="#hpecp.gateway.Gateway.status_info" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">status_info</span></code><a class="headerlink" href="#hpecp.gateway.Gateway.status_info" title="Permalink to this definition">¶</a></dt>
 <dd><p>&#64;Field: from json[‘status_info’]</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="hpecp.gateway.Gateway.sysinfo">
-<em class="property">property </em><code class="sig-name descname">sysinfo</code><a class="headerlink" href="#hpecp.gateway.Gateway.sysinfo" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">sysinfo</span></code><a class="headerlink" href="#hpecp.gateway.Gateway.sysinfo" title="Permalink to this definition">¶</a></dt>
 <dd><p>&#64;Field: from json[‘sysinfo’]</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="hpecp.gateway.Gateway.tags">
-<em class="property">property </em><code class="sig-name descname">tags</code><a class="headerlink" href="#hpecp.gateway.Gateway.tags" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">tags</span></code><a class="headerlink" href="#hpecp.gateway.Gateway.tags" title="Permalink to this definition">¶</a></dt>
 <dd><p>&#64;Field: from json[‘tags’]</p>
 </dd></dl>
 
@@ -246,7 +245,7 @@ instance of this class.</p>
 
 <dl class="py class">
 <dt id="hpecp.gateway.GatewayController">
-<em class="property">class </em><code class="sig-prename descclassname">hpecp.gateway.</code><code class="sig-name descname">GatewayController</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">client</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayController"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.gateway.GatewayController" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">hpecp.gateway.</span></code><code class="sig-name descname"><span class="pre">GatewayController</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hpecp.gateway.GatewayController" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="hpecp.base_resource.html#hpecp.base_resource.AbstractWaitableResourceController" title="hpecp.base_resource.AbstractWaitableResourceController"><code class="xref py py-class docutils literal notranslate"><span class="pre">hpecp.base_resource.AbstractWaitableResourceController</span></code></a></p>
 <p>Class that users will interact with to work with Gateways. An instance
 of this class is available in the
@@ -260,34 +259,88 @@ example below:</p>
 </div>
 <dl class="py attribute">
 <dt id="hpecp.gateway.GatewayController.base_resource_path">
-<code class="sig-name descname">base_resource_path</code><em class="property"> = '/api/v1/workers'</em><a class="headerlink" href="#hpecp.gateway.GatewayController.base_resource_path" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname"><span class="pre">base_resource_path</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'/api/v1/workers'</span></em><a class="headerlink" href="#hpecp.gateway.GatewayController.base_resource_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Declare the resource base path for the API resource.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Getter</dt>
+<dd class="field-odd"><p>Returns the resource base path</p>
+</dd>
+<dt class="field-even">Setter</dt>
+<dd class="field-even"><p>Sets the resource base path</p>
+</dd>
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>class K8sClusterController(AbstractResourceController):</dt><dd><p>…
+base_resource_path = “/api/v2/k8scluster”</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt id="hpecp.gateway.GatewayController.resource_list_path">
-<code class="sig-name descname">resource_list_path</code><em class="property"> = 'workers'</em><a class="headerlink" href="#hpecp.gateway.GatewayController.resource_list_path" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname"><span class="pre">resource_list_path</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'workers'</span></em><a class="headerlink" href="#hpecp.gateway.GatewayController.resource_list_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Declare the implementing resource list path for the API resource.
+The resource list path is where the resources are after the
+‘_embedded’ element in the API response json.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Getter</dt>
+<dd class="field-odd"><p>Returns the resource list path</p>
+</dd>
+<dt class="field-even">Setter</dt>
+<dd class="field-even"><p>Sets the resource list path</p>
+</dd>
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>class K8sClusterController(AbstractResourceController):</dt><dd><p>…
+resource_list_path = “k8sclusters”</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt id="hpecp.gateway.GatewayController.resource_class">
-<code class="sig-name descname">resource_class</code><a class="headerlink" href="#hpecp.gateway.GatewayController.resource_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#hpecp.gateway.Gateway" title="hpecp.gateway.Gateway"><code class="xref py py-class docutils literal notranslate"><span class="pre">Gateway</span></code></a></p>
+<code class="sig-name descname"><span class="pre">resource_class</span></code><a class="headerlink" href="#hpecp.gateway.GatewayController.resource_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#hpecp.gateway.Gateway" title="hpecp.gateway.Gateway"><code class="xref py py-class docutils literal notranslate"><span class="pre">hpecp.gateway.Gateway</span></code></a></p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt id="hpecp.gateway.GatewayController.status_class">
-<code class="sig-name descname">status_class</code><a class="headerlink" href="#hpecp.gateway.GatewayController.status_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#hpecp.gateway.GatewayStatus" title="hpecp.gateway.GatewayStatus"><code class="xref py py-class docutils literal notranslate"><span class="pre">GatewayStatus</span></code></a></p>
+<code class="sig-name descname"><span class="pre">status_class</span></code><a class="headerlink" href="#hpecp.gateway.GatewayController.status_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#hpecp.gateway.GatewayStatus" title="hpecp.gateway.GatewayStatus"><code class="xref py py-class docutils literal notranslate"><span class="pre">hpecp.gateway.GatewayStatus</span></code></a></p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt id="hpecp.gateway.GatewayController.status_fieldname">
-<code class="sig-name descname">status_fieldname</code><em class="property"> = 'state'</em><a class="headerlink" href="#hpecp.gateway.GatewayController.status_fieldname" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname"><span class="pre">status_fieldname</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'state'</span></em><a class="headerlink" href="#hpecp.gateway.GatewayController.status_fieldname" title="Permalink to this definition">¶</a></dt>
+<dd><p>Declare the Status fieldname in the API resource.</p>
+<p>Usually either: status or state</p>
+<dl class="field-list simple">
+<dt class="field-odd">Getter</dt>
+<dd class="field-odd"><p>Returns the Status fieldname</p>
+</dd>
+<dt class="field-even">Setter</dt>
+<dd class="field-even"><p>Sets the Status fieldname</p>
+</dd>
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>class K8sClusterController(AbstractResourceController):</dt><dd><p>…
+status_fieldname = status</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt id="hpecp.gateway.GatewayController.create_with_ssh_key">
-<code class="sig-name descname">create_with_ssh_key</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ip</span></em>, <em class="sig-param"><span class="n">proxy_node_hostname</span></em>, <em class="sig-param"><span class="n">ssh_key_data</span></em>, <em class="sig-param"><span class="n">tags</span><span class="o">=</span><span class="default_value">[]</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayController.create_with_ssh_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.gateway.GatewayController.create_with_ssh_key" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">create_with_ssh_key</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proxy_node_hostname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ssh_key_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayController.create_with_ssh_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hpecp.gateway.GatewayController.create_with_ssh_key" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a gateway instance using SSH key credentials to access the
 host.</p>
 <dl class="simple">
@@ -310,7 +363,7 @@ this name.</p>
 
 <dl class="py method">
 <dt id="hpecp.gateway.GatewayController.get">
-<code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayController.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.gateway.GatewayController.get" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayController.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hpecp.gateway.GatewayController.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve a Gateway by ID.</p>
 <dl class="simple">
 <dt>id: str</dt><dd><p>The gateway ID - format: ‘/api/v1/workers/[0-9]+’</p>
@@ -325,7 +378,7 @@ this name.</p>
 
 <dl class="py method">
 <dt id="hpecp.gateway.GatewayController.list">
-<code class="sig-name descname">list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayController.list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.gateway.GatewayController.list" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">list</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayController.list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hpecp.gateway.GatewayController.list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make an API call to retrieve a list of Resources.</p>
 <dl class="simple">
 <dt>ResourceList</dt><dd><p>The ResourceList will contain instances of the class defined by
@@ -336,7 +389,7 @@ the property self.resource_class</p>
 
 <dl class="py method">
 <dt id="hpecp.gateway.GatewayController.wait_for_state">
-<code class="sig-name descname">wait_for_state</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gateway_id</span></em>, <em class="sig-param"><span class="n">state</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">timeout_secs</span><span class="o">=</span><span class="default_value">1200</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayController.wait_for_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hpecp.gateway.GatewayController.wait_for_state" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">wait_for_state</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gateway_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout_secs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1200</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayController.wait_for_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hpecp.gateway.GatewayController.wait_for_state" title="Permalink to this definition">¶</a></dt>
 <dd><p>See wait_for_status().</p>
 </dd></dl>
 
@@ -424,7 +477,7 @@ the property self.resource_class</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Chris Snow.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.3.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.2.
     </div>
   </body>
 </html>
