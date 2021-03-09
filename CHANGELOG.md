@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.18.0 (2021-03-09)
+### Feature
+* **tenant:** Ml_project ([`6c1f4d7`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/6c1f4d729dc943c77beccade3fa5b1cabce39f3a))
+
 ## v0.17.0 (2021-03-09)
 ### Feature
 * **k8scluster:** Add external_identity_server ([`54fec45`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/54fec458397dd59740cd9bf75c3c308334e9b7ed))
