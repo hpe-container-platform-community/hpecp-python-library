@@ -292,6 +292,7 @@ class K8sClusterController(AbstractWaitableResourceController):
         persistent_storage_nimble_csi=False,
         k8shosts_config=[],
         addons=[],
+        external_identity_server={},
     ):
         """Send an API request to create a K8s Cluster.  The cluster creation
         will be asynchronous - use the :py:meth:`wait_for_status` method to
@@ -329,6 +330,19 @@ class K8sClusterController(AbstractWaitableResourceController):
         k8shosts_config: list[K8sClusterHostConfig]
             list of :py:class:`K8sClusterHostConfig` objects determining
             which hosts to add and their role (master or worker)
+        external_identity_server: dict
+            Example {
+                "bind_pwd":"password",
+                "user_attribute":"CN",
+                "bind_type":"search_bind",
+                "bind_dn":"cn=Administrator,CN=Users,DC=samdom,DC=example,DC=com",
+                "host":"10.1.0.15",
+                "group_attribute":"member",
+                "security_protocol":"ldaps",
+                "base_dn":"CN=Users,DC=samdom,DC=example,DC=com",
+                "verify_peer":false,
+                "type":"Active Directory",
+                "port":636}
 
         Returns
         -------
@@ -393,6 +407,8 @@ class K8sClusterController(AbstractWaitableResourceController):
             data["label"]["description"] = description
         if k8s_version is not None:
             data["k8s_version"] = k8s_version
+        if external_identity_server is not None:
+            data["external_identity_server"] = external_identity_server
 
         response = self.client._request(
             url="/api/v2/k8scluster",

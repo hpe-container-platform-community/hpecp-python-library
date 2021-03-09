@@ -82,6 +82,7 @@ class K8sClusterProxy(base.BaseProxy):
         persistent_storage_local=False,
         persistent_storage_nimble_csi=False,
         addons=[],
+        external_identity_server={},
     ):
         """Create a K8s Cluster.
 
@@ -99,6 +100,19 @@ class K8sClusterProxy(base.BaseProxy):
         :param persistent_storage_nimble_csi: True/False
         :param addons: list of required addons. See:
             `hpecp k8scluster get-available-addons`
+        :param external_identity_server: dict
+           Example {
+                "bind_pwd":"password",
+                "user_attribute":"CN",
+                "bind_type":"search_bind",
+                "bind_dn":"cn=Administrator,CN=Users,DC=samdom,DC=example,DC=com",
+                "host":"10.1.0.15",
+                "group_attribute":"member",
+                "security_protocol":"ldaps",
+                "base_dn":"CN=Users,DC=samdom,DC=example,DC=com",
+                "verify_peer":false,
+                "type":"Active Directory",
+                "port":636}
         """
         host_config = [
             K8sClusterHostConfig.create_from_list(h.split(":"))
@@ -117,6 +131,7 @@ class K8sClusterProxy(base.BaseProxy):
                 persistent_storage_nimble_csi=persistent_storage_nimble_csi,
                 k8shosts_config=host_config,
                 addons=addons,
+                external_identity_server=external_identity_server,
             )
         )
 
