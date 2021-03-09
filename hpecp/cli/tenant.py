@@ -69,6 +69,7 @@ class TenantProxy(base.BaseProxy):
         quota_cores=None,
         quota_disk=None,
         quota_tenant_storage=None,
+        features=None,
     ):
         """Create a tenant.
 
@@ -106,6 +107,7 @@ class TenantProxy(base.BaseProxy):
             quota_cores=quota_cores,
             quota_disk=quota_disk,
             quota_tenant_storage=quota_tenant_storage,
+            features=features,
         )
         print(tenant_id)
 

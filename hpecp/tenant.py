@@ -148,6 +148,7 @@ class TenantController(AbstractWaitableResourceController):
         quota_cores=None,
         quota_disk=None,
         quota_tenant_storage=None,
+        features=None,
     ):
 
         assert (
@@ -187,6 +188,9 @@ class TenantController(AbstractWaitableResourceController):
             data["tenant_type_info"][
                 "adopt_existing_namespace"
             ] = adopt_existing_namespace
+
+        if features is not None:
+            data["features"] = features
 
         if data["tenant_type_info"] == {}:
             data.pop("tenant_type_info", None)
