@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.18.2 (2021-03-12)
+### Fix
+* **k8scluster:** Don't add empty ext id server ([`e89ffaf`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/e89ffaf9ab2a89f8a96d930c56004a79d004aaee))
+
 ## v0.18.1 (2021-03-09)
 ### Fix
 * **tenant:** Quota ([`171f223`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/171f223d4c0dbdedc206caa5670a45b2810fc530))
