@@ -407,7 +407,7 @@ class K8sClusterController(AbstractWaitableResourceController):
             data["label"]["description"] = description
         if k8s_version is not None:
             data["k8s_version"] = k8s_version
-        if external_identity_server is not None:
+        if external_identity_server:
             data["external_identity_server"] = external_identity_server
 
         response = self.client._request(
