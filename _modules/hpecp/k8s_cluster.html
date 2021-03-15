@@ -338,6 +338,7 @@
         <span class="n">k8shosts_config</span><span class="o">=</span><span class="p">[],</span>
         <span class="n">addons</span><span class="o">=</span><span class="p">[],</span>
         <span class="n">external_identity_server</span><span class="o">=</span><span class="p">{},</span>
+        <span class="n">external_groups</span><span class="o">=</span><span class="p">[],</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Send an API request to create a K8s Cluster.  The cluster creation</span>
 <span class="sd">        will be asynchronous - use the :py:meth:`wait_for_status` method to</span>
@@ -454,6 +455,8 @@
             <span class="n">data</span><span class="p">[</span><span class="s2">&quot;k8s_version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">k8s_version</span>
         <span class="k">if</span> <span class="n">external_identity_server</span><span class="p">:</span>
             <span class="n">data</span><span class="p">[</span><span class="s2">&quot;external_identity_server&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">external_identity_server</span>
+        <span class="k">if</span> <span class="n">external_groups</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;external_groups&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">external_groups</span>
 
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
             <span class="n">url</span><span class="o">=</span><span class="s2">&quot;/api/v2/k8scluster&quot;</span><span class="p">,</span>
