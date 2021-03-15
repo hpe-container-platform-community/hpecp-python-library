@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.19.0 (2021-03-15)
+### Feature
+* **k8scluster:** Add external_groups ([`0dde621`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/0dde62126a6e23b1143e277bd70372b820a71e55))
+
 ## v0.18.2 (2021-03-12)
 ### Fix
 * **k8scluster:** Don't add empty ext id server ([`e89ffaf`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/e89ffaf9ab2a89f8a96d930c56004a79d004aaee))
