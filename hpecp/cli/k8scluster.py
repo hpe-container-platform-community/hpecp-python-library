@@ -83,6 +83,7 @@ class K8sClusterProxy(base.BaseProxy):
         persistent_storage_nimble_csi=False,
         addons=[],
         external_identity_server={},
+        external_groups=[],
     ):
         """Create a K8s Cluster.
 
@@ -132,6 +133,7 @@ class K8sClusterProxy(base.BaseProxy):
                 k8shosts_config=host_config,
                 addons=addons,
                 external_identity_server=external_identity_server,
+                external_groups=external_groups,
             )
         )
 

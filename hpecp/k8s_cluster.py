@@ -293,6 +293,7 @@ class K8sClusterController(AbstractWaitableResourceController):
         k8shosts_config=[],
         addons=[],
         external_identity_server={},
+        external_groups=[],
     ):
         """Send an API request to create a K8s Cluster.  The cluster creation
         will be asynchronous - use the :py:meth:`wait_for_status` method to
@@ -409,6 +410,8 @@ class K8sClusterController(AbstractWaitableResourceController):
             data["k8s_version"] = k8s_version
         if external_identity_server:
             data["external_identity_server"] = external_identity_server
+        if external_groups:
+            data["external_groups"] = external_groups
 
         response = self.client._request(
             url="/api/v2/k8scluster",
