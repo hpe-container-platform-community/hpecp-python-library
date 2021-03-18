@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.19.1 (2021-03-18)
+### Fix
+* **httpclient:** Json output ([`42c80c9`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/42c80c999c34a0b90959099defe26cdc6438edf0))
+
 ## v0.19.0 (2021-03-15)
 ### Feature
 * **k8scluster:** Add external_groups ([`0dde621`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/0dde62126a6e23b1143e277bd70372b820a71e55))
