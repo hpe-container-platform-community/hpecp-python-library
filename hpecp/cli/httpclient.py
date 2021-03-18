@@ -45,7 +45,12 @@ class HttpClientProxy(object):
         Examples
         --------
         $ hpecp httpclient get /api/v1/workers
-        """
+        > some output
+
+        $ hpecp httpclient get /api/v2/tag | python3 -c \
+            'import json,sys;obj=json.load(sys.stdin);[ print(t["_links"]["self"]["href"]) for t in obj["_embedded"]["tags"] if t["label"]["name"] == "Datafabric"]'
+        /api/v2/tag/1
+        """  # noqa:  E501
         response = base.get_client()._request(
             url,
             http_method="get",
