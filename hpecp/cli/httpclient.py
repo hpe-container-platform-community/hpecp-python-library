@@ -51,7 +51,13 @@ class HttpClientProxy(object):
             http_method="get",
             description="CLI HTTP GET",
         )
-        print(response.text, file=sys.stdout)
+
+        try:
+            response_info = json.dumps(response.json())
+        except Exception:
+            response_info = response.text
+
+        print(response_info, file=sys.stdout)
 
     @base.intercept_exception
     def delete(

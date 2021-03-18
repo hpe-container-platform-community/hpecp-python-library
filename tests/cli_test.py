@@ -334,7 +334,7 @@ class TestCLIHttpClient(BaseTestCase):
         hpecp = self.cli.CLI()
         hpecp.httpclient.get(url="/some/url")
 
-        self.assertEqual(self.out.getvalue(), '{"foo":"bar"}\n')
+        self.assertEqual(self.out.getvalue(), '{"foo": "bar"}\n')
 
     def mocked_requests_delete(*args, **kwargs):
         if args[0] == "https://127.0.0.1:8080/some/url":
