@@ -26,6 +26,8 @@ import sys
 from hpecp.k8s_worker import WorkerK8sStatus, WorkerK8s
 from hpecp.cli import base
 
+from textwrap import dedent
+
 
 class K8sWorkerProxy(base.BaseProxy):
     """Proxy object to :py:attr:`<hpecp.client.k8s_worker>`."""
@@ -35,6 +37,7 @@ class K8sWorkerProxy(base.BaseProxy):
         return [
             "create_with_ssh_key",
             "delete",
+            "examples",
             "get",
             "list",
             "set_storage",
@@ -160,6 +163,19 @@ class K8sWorkerProxy(base.BaseProxy):
             )
 
         print(worker_id)
+
+    def examples(self):
+        """Show examples for working with k8sclusters."""
+        print(
+            dedent(
+                """\
+                # Find id of k8s workers by ip address
+                $ hpecp k8sworker list --query "[*] | @[?contains('10.0.1.10 10.0.1.210', ipaddr)] | [*][_links.self.href]" --output text
+                /api/v2/worker/k8shost/5
+                /api/v2/worker/k8shost/7
+                """  # noqa:  E501
+            )
+        )
 
     # TODO: verify with engineering if setup_log is a valid parameter
     # def get(self, id, setup_log=False):
