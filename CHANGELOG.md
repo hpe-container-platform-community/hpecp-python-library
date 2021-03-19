@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.20.0 (2021-03-19)
+### Feature
+* **k8sworker:** Add examples ([`8a4a03b`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/8a4a03b074a9c2f03df036157ed3ae742a8b1fdf))
+
 ## v0.19.2 (2021-03-18)
 ### Fix
 * **httpclient:** Add example ([`91d1840`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/91d1840be5293fb30bc1f28fe288bb30a4bc0cfb))
