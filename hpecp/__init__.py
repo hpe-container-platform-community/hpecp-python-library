@@ -35,4 +35,4 @@ from .exceptions import (
 )
 from .logger import Logger
 
-__version__ = "0.20.0"
+__version__ = "0.20.1"
