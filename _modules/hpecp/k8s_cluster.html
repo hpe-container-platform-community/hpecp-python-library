@@ -339,6 +339,8 @@
         <span class="n">addons</span><span class="o">=</span><span class="p">[],</span>
         <span class="n">external_identity_server</span><span class="o">=</span><span class="p">{},</span>
         <span class="n">external_groups</span><span class="o">=</span><span class="p">[],</span>
+        <span class="n">datafabric</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">datafabric_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Send an API request to create a K8s Cluster.  The cluster creation</span>
 <span class="sd">        will be asynchronous - use the :py:meth:`wait_for_status` method to</span>
@@ -389,6 +391,8 @@
 <span class="sd">                &quot;verify_peer&quot;:false,</span>
 <span class="sd">                &quot;type&quot;:&quot;Active Directory&quot;,</span>
 <span class="sd">                &quot;port&quot;:636}</span>
+<span class="sd">        datafabric: bool</span>
+<span class="sd">        datafabric_name: str optional</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -457,6 +461,9 @@
             <span class="n">data</span><span class="p">[</span><span class="s2">&quot;external_identity_server&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">external_identity_server</span>
         <span class="k">if</span> <span class="n">external_groups</span><span class="p">:</span>
             <span class="n">data</span><span class="p">[</span><span class="s2">&quot;external_groups&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">external_groups</span>
+        <span class="k">if</span> <span class="n">datafabric</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;datafabric&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;datafabric_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">datafabric_name</span>
 
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
             <span class="n">url</span><span class="o">=</span><span class="s2">&quot;/api/v2/k8scluster&quot;</span><span class="p">,</span>
