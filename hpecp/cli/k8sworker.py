@@ -86,14 +86,14 @@ class K8sWorkerProxy(base.BaseProxy):
         """
         if ssh_key is None and ssh_key_file is None:
             print(
-                "Either ssh_key or ssh_key_file must be provided",
+                "At least one of ssh_key or ssh_key_file must be provided",
                 file=sys.stderr,
             )
             sys.exit(1)
 
         if ssh_key is not None and ssh_key_file is not None:
             print(
-                "Either ssh_key or ssh_key_file must be provided",
+                "Either ssh_key or ssh_key_file must be provided, but not both.",
                 file=sys.stderr,
             )
             sys.exit(1)
