@@ -173,7 +173,9 @@ class TestCliCreate(BaseTestCase):
         self.assertEqual(cm.exception.code, 1)
 
         actual_err = self.err.getvalue().strip()
-        expected_err = "At least one of ssh_key or ssh_key_file must be provided"
+        expected_err = (
+            "At least one of ssh_key or ssh_key_file must be provided"
+        )
 
         self.assertEqual(self.out.getvalue(), "", "stdout should be empty")
 
@@ -197,7 +199,9 @@ class TestCliCreate(BaseTestCase):
         self.assertEqual(cm.exception.code, 1)
 
         actual_err = self.err.getvalue().strip()
-        expected_err = "Either ssh_key or ssh_key_file must be provided, but not both."
+        expected_err = (
+            "Either ssh_key or ssh_key_file must be provided, but not both."
+        )
 
         self.assertEqual(self.out.getvalue(), "", "stdout should be empty")
 

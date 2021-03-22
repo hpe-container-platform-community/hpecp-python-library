@@ -123,9 +123,9 @@ class K8sWorkerProxy(base.BaseProxy):
             )
             sys.exit(1)
 
-        tags_parsed=[]
+        tags_parsed = []
         if tags is not None:
-            tags_parsed=[dict(item.split(":") for item in tags.split(','))]
+            tags_parsed = [dict(item.split(":") for item in tags.split(","))]
 
         worker_id = base.get_client().k8s_worker.create_with_ssh_key(
             ip=ip,
