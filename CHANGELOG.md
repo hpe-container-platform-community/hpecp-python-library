@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.20.1 (2021-03-22)
+### Fix
+* **k8sworker:** Error messager ([`d0eb9fb`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/d0eb9fb403b9f502f46442d5fe5efae205e0dbaa))
+
 ## v0.20.0 (2021-03-19)
 ### Feature
 * **k8sworker:** Add examples ([`8a4a03b`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/8a4a03b074a9c2f03df036157ed3ae742a8b1fdf))
