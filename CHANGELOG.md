@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.21.0 (2021-03-22)
+### Feature
+* **k8scluster:** Support datafabric ([`a7bb00a`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/a7bb00aa11039a6b6220b2e1f164475644b85e27))
+
 ## v0.20.4 (2021-03-22)
 ### Fix
 * **k8sworker:** Tags ([`b1dfa95`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/b1dfa957b7bc804983a5bcd0bd0b2e4376c9993d))
