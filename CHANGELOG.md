@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.20.2 (2021-03-22)
+### Fix
+* **k8sworker:** Tags ([`21abc58`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/21abc583d02ae1a058e8143c7262f883df668912))
+
 ## v0.20.1 (2021-03-22)
 ### Fix
 * **k8sworker:** Error messager ([`d0eb9fb`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/d0eb9fb403b9f502f46442d5fe5efae205e0dbaa))
