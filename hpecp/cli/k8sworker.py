@@ -73,7 +73,8 @@ class K8sWorkerProxy(base.BaseProxy):
         ssh_key_file : str, optional
             The SSH key file path, by default None
         tags : list, optional
-            Tags to use, e.g. /api/v2/tag/1:foo,/api/v2/tag/1:bar, by default None
+            Tags to use, e.g. /api/v2/tag/1:foo,/api/v2/tag/1:bar,
+            by default None
         ephemeral_disks : str
             Comma separated string containing ephemeral disks.
             e.g: "/dev/nvme2n1,/dev/nvme2n2"
@@ -93,7 +94,10 @@ class K8sWorkerProxy(base.BaseProxy):
 
         if ssh_key is not None and ssh_key_file is not None:
             print(
-                "Either ssh_key or ssh_key_file must be provided, but not both.",
+                (
+                    "Either ssh_key or ssh_key_file must be provided,"
+                    " but not both."
+                ),
                 file=sys.stderr,
             )
             sys.exit(1)
@@ -125,7 +129,9 @@ class K8sWorkerProxy(base.BaseProxy):
 
         tags_parsed = []
         if tags is not None:
-            tags_parsed = [dict(item.split(":") for item in tags.split(","))]
+            for tag in tags.split(","):
+                k, v = tag.split(":")
+                tags_parsed.append({"tag_id": k, "tag_value": v})
 
         worker_id = base.get_client().k8s_worker.create_with_ssh_key(
             ip=ip,
