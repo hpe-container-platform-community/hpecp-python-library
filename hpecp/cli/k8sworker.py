@@ -55,7 +55,7 @@ class K8sWorkerProxy(base.BaseProxy):
         ip=None,
         ssh_key=None,
         ssh_key_file=None,
-        tags=[],
+        tags=None,
         ephemeral_disks=None,
         persistent_disks=None,
         wait_for_operation_secs=0,
@@ -73,7 +73,7 @@ class K8sWorkerProxy(base.BaseProxy):
         ssh_key_file : str, optional
             The SSH key file path, by default None
         tags : list, optional
-            Tags to use, e.g. "{ "tag1": "foo", "tag2": "bar"}", by default []
+            Tags to use, e.g. /api/v2/tag/1:foo,/api/v2/tag/1:bar, by default None
         ephemeral_disks : str
             Comma separated string containing ephemeral disks.
             e.g: "/dev/nvme2n1,/dev/nvme2n2"
@@ -123,10 +123,14 @@ class K8sWorkerProxy(base.BaseProxy):
             )
             sys.exit(1)
 
+        tags_parsed=[]
+        if tags is not None:
+            tags_parsed=[dict(item.split(":") for item in tags.split(','))]
+
         worker_id = base.get_client().k8s_worker.create_with_ssh_key(
             ip=ip,
             ssh_key_data=ssh_key,
-            tags=tags,
+            tags=tags_parsed,
         )
 
         if wait_for_operation_secs > 0:
