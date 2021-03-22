@@ -84,6 +84,8 @@ class K8sClusterProxy(base.BaseProxy):
         addons=[],
         external_identity_server={},
         external_groups=[],
+        datafabric=False,
+        datafabric_name=None,
     ):
         """Create a K8s Cluster.
 
@@ -134,6 +136,8 @@ class K8sClusterProxy(base.BaseProxy):
                 addons=addons,
                 external_identity_server=external_identity_server,
                 external_groups=external_groups,
+                datafabric=datafabric,
+                datafabric_name=datafabric_name,
             )
         )
 

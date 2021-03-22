@@ -294,6 +294,8 @@ class K8sClusterController(AbstractWaitableResourceController):
         addons=[],
         external_identity_server={},
         external_groups=[],
+        datafabric=False,
+        datafabric_name=None,
     ):
         """Send an API request to create a K8s Cluster.  The cluster creation
         will be asynchronous - use the :py:meth:`wait_for_status` method to
@@ -344,6 +346,8 @@ class K8sClusterController(AbstractWaitableResourceController):
                 "verify_peer":false,
                 "type":"Active Directory",
                 "port":636}
+        datafabric: bool
+        datafabric_name: str optional
 
         Returns
         -------
@@ -412,6 +416,9 @@ class K8sClusterController(AbstractWaitableResourceController):
             data["external_identity_server"] = external_identity_server
         if external_groups:
             data["external_groups"] = external_groups
+        if datafabric:
+            data["datafabric"] = True
+            data["datafabric_name"] = datafabric_name
 
         response = self.client._request(
             url="/api/v2/k8scluster",
