@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.20.4 (2021-03-22)
+### Fix
+* **k8sworker:** Tags ([`b1dfa95`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/b1dfa957b7bc804983a5bcd0bd0b2e4376c9993d))
+
 ## v0.20.3 (2021-03-22)
 ### Fix
 * **k8sworker:** Formatting ([`98ae245`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/98ae245398e4cc371758123a69172559a7fb48e5))
