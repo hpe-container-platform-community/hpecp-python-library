@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.21.1 (2021-03-26)
+### Fix
+* **k8scluster:** Better validation of parms ([`c32b5db`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/c32b5dbe74c7f1f4860585605939bf4cafef3f6c))
+
 ## v0.21.0 (2021-03-22)
 ### Feature
 * **k8scluster:** Support datafabric ([`a7bb00a`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/a7bb00aa11039a6b6220b2e1f164475644b85e27))
