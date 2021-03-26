@@ -122,6 +122,19 @@ class K8sClusterProxy(base.BaseProxy):
             for h in k8shosts_config.split(",")
         ]
 
+        if external_identity_server:
+            try:
+                external_identity_server = json.loads(external_identity_server)
+            except ValueError:
+                print(
+                    (
+                        "could not parse 'external_identity_server' parameter"
+                        " - is it valid json?"
+                    ),
+                    file=sys.stderr,
+                )
+                sys.exit(1)
+
         print(
             base.get_client().k8s_cluster.create(
                 name=name,

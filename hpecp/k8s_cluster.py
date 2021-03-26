@@ -396,6 +396,10 @@ class K8sClusterController(AbstractWaitableResourceController):
             ).format(i)
         assert isinstance(addons, list), "'addons' must be a list"
 
+        assert isinstance(
+            external_identity_server, dict
+        ), "'external_identity_server' must be a dict"
+
         data = {
             "label": {"name": name},
             "pod_network_range": pod_network_range,

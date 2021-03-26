@@ -1098,6 +1098,49 @@ class TestCLI(BaseTestCase):
         output = self.out.getvalue().strip()
         self.assertEqual(output, "/api/v2/k8sclusters/99")
 
+    @patch("requests.post", side_effect=mocked_requests_create_post)
+    def test_k8scluster_create_valid_external_identity_server_json(
+        self, mock_post
+    ):
+
+        hpecp = self.cli.CLI()
+
+        hpecp.k8scluster.create(
+            name="mycluster",
+            k8shosts_config="/api/v2/worker/k8shost/1:master,/api/v2/worker/k8shost/2:worker",
+            external_identity_server='{"valid_json": true}',
+        )
+
+        output = self.out.getvalue().strip()
+        self.assertEqual(output, "/api/v2/k8sclusters/99")
+
+        error = self.err.getvalue().strip()
+        self.assertEqual(error, "")
+
+    @patch("requests.post", side_effect=mocked_requests_create_post)
+    def test_k8scluster_create_invalid_external_identity_server_json(
+        self, mock_post
+    ):
+
+        hpecp = self.cli.CLI()
+        with self.assertRaises(SystemExit) as cm:
+            hpecp.k8scluster.create(
+                name="mycluster",
+                k8shosts_config="/api/v2/worker/k8shost/1:master,/api/v2/worker/k8shost/2:worker",
+                external_identity_server='{\\"not_valid_json\\": true}',
+            )
+
+        output = self.out.getvalue().strip()
+        self.assertEqual(output, "")
+
+        error = self.err.getvalue().strip()
+        self.assertEqual(
+            error,
+            "could not parse 'external_identity_server' parameter - is it valid json?",
+        )
+
+        self.assertEqual(cm.exception.code, 1)
+
     @patch("requests.get", side_effect=BaseTestCase.httpGetHandlers)
     @patch("requests.post", side_effect=BaseTestCase.httpPostHandlers)
     def test_k8scluster_admin_kube_config(self, mock_get, mock_post):
