@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.21.2 (2021-03-28)
+### Fix
+* **k8scluster:** Better err handling ([`db57b13`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/db57b13e548e98f502501a8f325e8739384e02ca))
+
 ## v0.21.1 (2021-03-26)
 ### Fix
 * **k8scluster:** Better validation of parms ([`c32b5db`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/c32b5dbe74c7f1f4860585605939bf4cafef3f6c))
