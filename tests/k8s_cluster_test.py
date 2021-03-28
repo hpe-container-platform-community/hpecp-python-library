@@ -1108,7 +1108,7 @@ class TestCLI(BaseTestCase):
         hpecp.k8scluster.create(
             name="mycluster",
             k8shosts_config="/api/v2/worker/k8shost/1:master,/api/v2/worker/k8shost/2:worker",
-            external_identity_server='{"valid_json": true}',
+            external_identity_server={"valid_json": True},
         )
 
         output = self.out.getvalue().strip()
@@ -1136,7 +1136,10 @@ class TestCLI(BaseTestCase):
         error = self.err.getvalue().strip()
         self.assertEqual(
             error,
-            "could not parse 'external_identity_server' parameter - is it valid json?",
+            (
+                "Could not parse 'external_identity_server' parameter - is it valid json?\n"
+                'Received: {\\"not_valid_json\\": true}'
+            ),
         )
 
         self.assertEqual(cm.exception.code, 1)

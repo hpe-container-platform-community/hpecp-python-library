@@ -104,8 +104,7 @@ class K8sClusterProxy(base.BaseProxy):
         :param addons: list of required addons. See:
             `hpecp k8scluster get-available-addons`
         :param external_identity_server: dict
-           Example {
-                "bind_pwd":"password",
+           Example '{"bind_pwd":"password",
                 "user_attribute":"CN",
                 "bind_type":"search_bind",
                 "bind_dn":"cn=Administrator,CN=Users,DC=samdom,DC=example,DC=com",
@@ -115,25 +114,25 @@ class K8sClusterProxy(base.BaseProxy):
                 "base_dn":"CN=Users,DC=samdom,DC=example,DC=com",
                 "verify_peer":false,
                 "type":"Active Directory",
-                "port":636}
+                "port":636}'
         """
         host_config = [
             K8sClusterHostConfig.create_from_list(h.split(":"))
             for h in k8shosts_config.split(",")
         ]
 
-        if external_identity_server:
-            try:
-                external_identity_server = json.loads(external_identity_server)
-            except ValueError:
-                print(
-                    (
-                        "could not parse 'external_identity_server' parameter"
-                        " - is it valid json?"
-                    ),
-                    file=sys.stderr,
-                )
-                sys.exit(1)
+        if external_identity_server and not isinstance(
+            external_identity_server, dict
+        ):
+            print(
+                (
+                    "Could not parse 'external_identity_server' parameter"
+                    " - is it valid json?\n"
+                    "Received: " + external_identity_server + "\n"
+                ),
+                file=sys.stderr,
+            )
+            sys.exit(1)
 
         print(
             base.get_client().k8s_cluster.create(
