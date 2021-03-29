@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.21.3 (2021-03-29)
+### Fix
+* **k8sworker:** Fine grained create params ([`65b3269`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/65b32690b7303b61b552b0bb4eb0903a0fdb4e39))
+
 ## v0.21.2 (2021-03-28)
 ### Fix
 * **k8scluster:** Better err handling ([`db57b13`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/db57b13e548e98f502501a8f325e8739384e02ca))
