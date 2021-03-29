@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.21.5 (2021-03-29)
+### Fix
+* **k8sworker:** Fix typos ([`f7619b4`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/f7619b41127545dd56bde21da4a1a012212f4f72))
+
 ## v0.21.4 (2021-03-29)
 ### Fix
 * **k8sworker:** Tidy up ([`469e798`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/469e79894d14fc779c9bfdb65bc9234b7e42b051))
