@@ -134,56 +134,69 @@ class K8sClusterProxy(base.BaseProxy):
         :param ext_id_svr_group_attribute str
         :param ext_id_svr_security_protocol str
         :param ext_id_svr_base_dn str
-        :param ext_id_svr_verify_peer str
+        :param ext_id_svr_verify_peer bool
         :param ext_id_svr_type str
-        :param ext_id_svr_port str
+        :param ext_id_svr_port int
         """
         host_config = [
             K8sClusterHostConfig.create_from_list(h.split(":"))
             for h in k8shosts_config.split(",")
         ]
 
-        if external_identity_server and not isinstance(
-            external_identity_server, dict
-        ):
-            print(
-                (
-                    "Could not parse 'external_identity_server' parameter"
-                    " - is it valid json?\n"
-                    "Received: " + external_identity_server + "\n"
-                ),
-                file=sys.stderr,
-            )
-            sys.exit(1)
+        if external_identity_server:
+            if not isinstance(external_identity_server, dict):
+                print(
+                    (
+                        "Could not parse 'external_identity_server' parameter"
+                        " - is it valid json?\n"
+                        "Received: " + external_identity_server + "\n"
+                    ),
+                    file=sys.stderr,
+                )
+                sys.exit(1)
+        else:
+            external_identity_server = {}
 
         if ext_id_svr_bind_pwd is not None:
             external_identity_server["bind_pwd"] = ext_id_svr_bind_pwd
+
         if ext_id_svr_user_attribute is not None:
             external_identity_server[
                 "user_attribute"
             ] = ext_id_svr_user_attribute
+
         if ext_id_svr_bind_type is not None:
             external_identity_server["bind_type"] = ext_id_svr_bind_type
+
         if ext_id_svr_bind_dn is not None:
             external_identity_server["bind_dn"] = ext_id_svr_bind_dn
+
         if ext_id_svr_host is not None:
             external_identity_server["host"] = ext_id_svr_host
+
         if ext_id_svr_group_attribute is not None:
             external_identity_server[
                 "group_attribute"
             ] = ext_id_svr_group_attribute
+
         if ext_id_svr_security_protocol is not None:
             external_identity_server[
                 "security_protocol"
             ] = ext_id_svr_security_protocol
+
         if ext_id_svr_base_dn is not None:
             external_identity_server["base_dn"] = ext_id_svr_base_dn
+
         if ext_id_svr_verify_peer is not None:
-            external_identity_server["verify_peer"] = ext_id_svr_verify_peer
+            external_identity_server["verify_peer"] = json.loads(
+                ext_id_svr_verify_peer.lower()
+            )
+
         if ext_id_svr_type is not None:
             external_identity_server["svr_type"] = ext_id_svr_type
+
         if ext_id_svr_port is not None:
-            external_identity_server["svr_port"] = ext_id_svr_port
+            external_identity_server["svr_port"] = int(ext_id_svr_port)
 
         print(
             base.get_client().k8s_cluster.create(
