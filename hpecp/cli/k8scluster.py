@@ -193,10 +193,10 @@ class K8sClusterProxy(base.BaseProxy):
             )
 
         if ext_id_svr_type is not None:
-            external_identity_server["svr_type"] = ext_id_svr_type
+            external_identity_server["type"] = ext_id_svr_type
 
         if ext_id_svr_port is not None:
-            external_identity_server["svr_port"] = int(ext_id_svr_port)
+            external_identity_server["port"] = int(ext_id_svr_port)
 
         print(
             base.get_client().k8s_cluster.create(
