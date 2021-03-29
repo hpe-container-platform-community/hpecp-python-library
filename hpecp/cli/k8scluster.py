@@ -83,6 +83,17 @@ class K8sClusterProxy(base.BaseProxy):
         persistent_storage_nimble_csi=False,
         addons=[],
         external_identity_server={},
+        ext_id_svr_bind_pwd=None,
+        ext_id_svr_user_attribute=None,
+        ext_id_svr_bind_type=None,
+        ext_id_svr_bind_dn=None,
+        ext_id_svr_host=None,
+        ext_id_svr_group_attribute=None,
+        ext_id_svr_security_protocol=None,
+        ext_id_svr_base_dn=None,
+        ext_id_svr_verify_peer=None,
+        ext_id_svr_type=None,
+        ext_id_svr_port=None,
         external_groups=[],
         datafabric=False,
         datafabric_name=None,
@@ -103,7 +114,7 @@ class K8sClusterProxy(base.BaseProxy):
         :param persistent_storage_nimble_csi: True/False
         :param addons: list of required addons. See:
             `hpecp k8scluster get-available-addons`
-        :param external_identity_server: dict
+        :param external_identity_server: dict (deprecated)
            Example '{"bind_pwd":"password",
                 "user_attribute":"CN",
                 "bind_type":"search_bind",
@@ -115,6 +126,17 @@ class K8sClusterProxy(base.BaseProxy):
                 "verify_peer":false,
                 "type":"Active Directory",
                 "port":636}'
+        :param ext_id_svr_bind_pwd str
+        :param ext_id_svr_user_attribute str
+        :param ext_id_svr_bind_type str
+        :param ext_id_svr_bind_dn str
+        :param ext_id_svr_host str
+        :param ext_id_svr_group_attribute str
+        :param ext_id_svr_security_protocol str
+        :param ext_id_svr_base_dn str
+        :param ext_id_svr_verify_peer str
+        :param ext_id_svr_type str
+        :param ext_id_svr_port str
         """
         host_config = [
             K8sClusterHostConfig.create_from_list(h.split(":"))
@@ -133,6 +155,35 @@ class K8sClusterProxy(base.BaseProxy):
                 file=sys.stderr,
             )
             sys.exit(1)
+
+        if ext_id_svr_bind_pwd is not None:
+            external_identity_server["bind_pwd"] = ext_id_svr_bind_pwd
+        if ext_id_svr_user_attribute is not None:
+            external_identity_server[
+                "user_attribute"
+            ] = ext_id_svr_user_attribute
+        if ext_id_svr_bind_type is not None:
+            external_identity_server["bind_type"] = ext_id_svr_bind_type
+        if ext_id_svr_bind_dn is not None:
+            external_identity_server["bind_dn"] = ext_id_svr_bind_dn
+        if ext_id_svr_host is not None:
+            external_identity_server["host"] = ext_id_svr_host
+        if ext_id_svr_group_attribute is not None:
+            external_identity_server[
+                "group_attribute"
+            ] = ext_id_svr_group_attribute
+        if ext_id_svr_security_protocol is not None:
+            external_identity_server[
+                "security_protocol"
+            ] = ext_id_svr_security_protocol
+        if ext_id_svr_base_dn is not None:
+            external_identity_server["base_dn"] = ext_id_svr_base_dn
+        if ext_id_svr_verify_peer is not None:
+            external_identity_server["verify_peer"] = ext_id_svr_verify_peer
+        if ext_id_svr_type is not None:
+            external_identity_server["svr_type"] = ext_id_svr_type
+        if ext_id_svr_port is not None:
+            external_identity_server["svr_port"] = ext_id_svr_port
 
         print(
             base.get_client().k8s_cluster.create(
