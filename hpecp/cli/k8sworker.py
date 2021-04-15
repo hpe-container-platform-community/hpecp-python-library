@@ -183,6 +183,10 @@ class K8sWorkerProxy(base.BaseProxy):
                 $ hpecp k8sworker list --query "[*] | @[?contains('10.0.1.10 10.0.1.210', ipaddr)] | [*][_links.self.href]" --output text
                 /api/v2/worker/k8shost/5
                 /api/v2/worker/k8shost/7
+
+                # Retrieve the first master node of a K8S Cluster
+                $ hpecp k8scluster list --query "[?_links.self.href == '/api/v2/k8scluster/1'] | [0] | [k8shosts_config] | [0] | [?role == 'master'] | [0] | [node]" -o text
+                /api/v2/worker/k8shost/7
                 """  # noqa:  E501
             )
         )
