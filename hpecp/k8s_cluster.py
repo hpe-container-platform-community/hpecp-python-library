@@ -406,10 +406,6 @@ class K8sClusterController(AbstractWaitableResourceController):
             "service_network_range": service_network_range,
             "pod_dns_domain": pod_dns_domain,
             "addons": addons,
-            "persistent_storage": {
-                "local": persistent_storage_local,
-                "nimble_csi": persistent_storage_nimble_csi,
-            },
             "k8shosts_config": [c.to_dict() for c in k8shosts_config],
         }
         if description is not None:
@@ -423,6 +419,15 @@ class K8sClusterController(AbstractWaitableResourceController):
         if datafabric:
             data["datafabric"] = True
             data["datafabric_name"] = datafabric_name
+        if len(addons) == 0:
+            # TODO persistent storage was deprecated in 5.x?
+            # check server version rather than addons
+            data["persistent_storage"] = (
+                {
+                    "local": persistent_storage_local,
+                    "nimble_csi": persistent_storage_nimble_csi,
+                },
+            )
 
         response = self.client._request(
             url="/api/v2/k8scluster",
