@@ -451,10 +451,6 @@
             <span class="s2">&quot;service_network_range&quot;</span><span class="p">:</span> <span class="n">service_network_range</span><span class="p">,</span>
             <span class="s2">&quot;pod_dns_domain&quot;</span><span class="p">:</span> <span class="n">pod_dns_domain</span><span class="p">,</span>
             <span class="s2">&quot;addons&quot;</span><span class="p">:</span> <span class="n">addons</span><span class="p">,</span>
-            <span class="s2">&quot;persistent_storage&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;local&quot;</span><span class="p">:</span> <span class="n">persistent_storage_local</span><span class="p">,</span>
-                <span class="s2">&quot;nimble_csi&quot;</span><span class="p">:</span> <span class="n">persistent_storage_nimble_csi</span><span class="p">,</span>
-            <span class="p">},</span>
             <span class="s2">&quot;k8shosts_config&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">k8shosts_config</span><span class="p">],</span>
         <span class="p">}</span>
         <span class="k">if</span> <span class="n">description</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -468,6 +464,15 @@
         <span class="k">if</span> <span class="n">datafabric</span><span class="p">:</span>
             <span class="n">data</span><span class="p">[</span><span class="s2">&quot;datafabric&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">data</span><span class="p">[</span><span class="s2">&quot;datafabric_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">datafabric_name</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">addons</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># TODO persistent storage was deprecated in 5.x?</span>
+            <span class="c1"># check server version rather than addons</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;persistent_storage&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;local&quot;</span><span class="p">:</span> <span class="n">persistent_storage_local</span><span class="p">,</span>
+                    <span class="s2">&quot;nimble_csi&quot;</span><span class="p">:</span> <span class="n">persistent_storage_nimble_csi</span><span class="p">,</span>
+                <span class="p">},</span>
+            <span class="p">)</span>
 
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
             <span class="n">url</span><span class="o">=</span><span class="s2">&quot;/api/v2/k8scluster&quot;</span><span class="p">,</span>
