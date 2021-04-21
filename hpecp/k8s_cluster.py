@@ -420,8 +420,8 @@ class K8sClusterController(AbstractWaitableResourceController):
             data["datafabric"] = True
             data["datafabric_name"] = datafabric_name
         if len(addons) == 0:
-            # TODO persistent storage was deprecated in 5.x?
-            # check server version rather than addons
+            # TODO persistent storage was deprecated in 5.1
+            # check server version rather than len(addons)
             data["persistent_storage"] = (
                 {
                     "local": persistent_storage_local,
