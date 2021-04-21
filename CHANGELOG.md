@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.21.6 (2021-04-21)
+### Fix
+* **k8scluster:** Remove persistent storage if addons ([`e3eb5fa`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/e3eb5fafc1096c2bfbc528fdfe9bc9920d30c9eb))
+
 ## v0.21.5 (2021-03-29)
 ### Fix
 * **k8sworker:** Fix typos ([`f7619b4`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/f7619b41127545dd56bde21da4a1a012212f4f72))
