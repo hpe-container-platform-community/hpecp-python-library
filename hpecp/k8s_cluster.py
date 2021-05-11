@@ -24,6 +24,7 @@ import re
 from enum import Enum
 
 from requests.structures import CaseInsensitiveDict
+from distutils.version import LooseVersion, StrictVersion
 
 from .base_resource import AbstractResource, AbstractWaitableResourceController
 
@@ -419,9 +420,8 @@ class K8sClusterController(AbstractWaitableResourceController):
         if datafabric:
             data["datafabric"] = True
             data["datafabric_name"] = datafabric_name
-        if len(addons) == 0:
-            # TODO persistent storage was deprecated in 5.1
-            # check server version rather than len(addons)
+        if LooseVersion(self.client.config.get()['objects']['bds_global_version']) <= LooseVersion("5.1"):
+            # persistent_storage was deprecated after 5.1
             data["persistent_storage"] = (
                 {
                     "local": persistent_storage_local,
