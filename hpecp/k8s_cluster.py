@@ -21,10 +21,10 @@
 from __future__ import absolute_import
 
 import re
+from distutils.version import LooseVersion
 from enum import Enum
 
 from requests.structures import CaseInsensitiveDict
-from distutils.version import LooseVersion, StrictVersion
 
 from .base_resource import AbstractResource, AbstractWaitableResourceController
 
@@ -420,7 +420,9 @@ class K8sClusterController(AbstractWaitableResourceController):
         if datafabric:
             data["datafabric"] = True
             data["datafabric_name"] = datafabric_name
-        if LooseVersion(self.client.config.get()['objects']['bds_global_version']) <= LooseVersion("5.1"):
+        if LooseVersion(
+            self.client.config.get()["objects"]["bds_global_version"]
+        ) <= LooseVersion("5.1"):
             # persistent_storage was deprecated after 5.1
             data["persistent_storage"] = (
                 {
