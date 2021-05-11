@@ -7,10 +7,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>hpecp.k8s_cluster &#8212; HPE Container Platform Python Library  documentation</title>
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bizstyle.css" />
     
-    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
@@ -69,6 +69,7 @@
 <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
 
 <span class="kn">from</span> <span class="nn">requests.structures</span> <span class="kn">import</span> <span class="n">CaseInsensitiveDict</span>
+<span class="kn">from</span> <span class="nn">distutils.version</span> <span class="kn">import</span> <span class="n">LooseVersion</span><span class="p">,</span> <span class="n">StrictVersion</span>
 
 <span class="kn">from</span> <span class="nn">.base_resource</span> <span class="kn">import</span> <span class="n">AbstractResource</span><span class="p">,</span> <span class="n">AbstractWaitableResourceController</span>
 
@@ -464,9 +465,8 @@
         <span class="k">if</span> <span class="n">datafabric</span><span class="p">:</span>
             <span class="n">data</span><span class="p">[</span><span class="s2">&quot;datafabric&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">data</span><span class="p">[</span><span class="s2">&quot;datafabric_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">datafabric_name</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">addons</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="c1"># TODO persistent storage was deprecated in 5.1</span>
-            <span class="c1"># check server version rather than len(addons)</span>
+        <span class="k">if</span> <span class="n">LooseVersion</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">()[</span><span class="s1">&#39;objects&#39;</span><span class="p">][</span><span class="s1">&#39;bds_global_version&#39;</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="n">LooseVersion</span><span class="p">(</span><span class="s2">&quot;5.1&quot;</span><span class="p">):</span>
+            <span class="c1"># persistent_storage was deprecated after 5.1</span>
             <span class="n">data</span><span class="p">[</span><span class="s2">&quot;persistent_storage&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="p">{</span>
                     <span class="s2">&quot;local&quot;</span><span class="p">:</span> <span class="n">persistent_storage_local</span><span class="p">,</span>
@@ -735,7 +735,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Chris Snow.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.4.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
     </div>
   </body>
 </html>
