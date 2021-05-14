@@ -444,6 +444,41 @@ class K8sClusterProxy(base.BaseProxy):
         )
 
     @base.intercept_exception
+    def import_cluster(
+        self,
+        cluster_type,
+        name,
+        description,
+        pod_dns_domain,
+        server_url,
+        ca,
+        bearer_token,
+    ):
+        """Import a k8s cluster.
+
+        TODO
+
+        Returns
+        -------
+        TODO
+
+        Raises
+        ------
+        APIException
+        """
+        print(
+            base.get_client().k8s_cluster.import_cluster(
+                cluster_type,
+                name,
+                description,
+                pod_dns_domain,
+                server_url,
+                ca,
+                bearer_token,
+            )
+        )
+
+    @base.intercept_exception
     def import_generic_cluster(
         self, name, description, pod_dns_domain, server_url, ca, bearer_token
     ):

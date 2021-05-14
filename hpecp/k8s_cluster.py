@@ -586,10 +586,17 @@ class K8sClusterController(AbstractWaitableResourceController):
         )
         return response.json()
 
-    def import_generic_cluster(
-        self, name, description, pod_dns_domain, server_url, ca, bearer_token
+    def import_cluster(
+        self,
+        cluster_type,
+        name,
+        description,
+        pod_dns_domain,
+        server_url,
+        ca,
+        bearer_token,
     ):
-        """Import a generic k8s cluster.
+        """Import a k8s cluster.
 
         TODO
 
@@ -601,10 +608,18 @@ class K8sClusterController(AbstractWaitableResourceController):
         ------
         APIException
         """
+        assert cluster_type in [
+            "generic",
+            "eks",
+            "aks",
+            "gke",
+            "pks",
+        ], 'cluster_type must be either "generic", "eks", "aks", "gke", "pks"'
+
         data = {
             "label": {"name": name, "description": description},
             "pod_dns_domain": pod_dns_domain,
-            "type": "generic",
+            "type": cluster_type,
             "sysadmin_data": {
                 "server_url": server_url,
                 "ca": ca,
@@ -619,6 +634,19 @@ class K8sClusterController(AbstractWaitableResourceController):
             data=data,
         )
         return CaseInsensitiveDict(response.headers)["Location"]
+
+    def import_generic_cluster(
+        self, name, description, pod_dns_domain, server_url, ca, bearer_token
+    ):
+        return self.import_cluster(
+            "generic",
+            name,
+            description,
+            pod_dns_domain,
+            server_url,
+            ca,
+            bearer_token,
+        )
 
     def import_generic_cluster_with_json(self, json):
         """Import a generic k8s cluster.
