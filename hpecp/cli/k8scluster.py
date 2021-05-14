@@ -55,6 +55,7 @@ class K8sClusterProxy(base.BaseProxy):
             "get",
             "get_available_addons",
             "get_installed_addons",
+            "import_cluster",
             "import_generic_cluster",
             "import_generic_cluster_with_json",
             "k8smanifest",
