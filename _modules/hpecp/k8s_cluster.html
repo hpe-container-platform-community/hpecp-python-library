@@ -631,10 +631,17 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="K8sClusterController.import_generic_cluster"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.import_generic_cluster">[docs]</a>    <span class="k">def</span> <span class="nf">import_generic_cluster</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">pod_dns_domain</span><span class="p">,</span> <span class="n">server_url</span><span class="p">,</span> <span class="n">ca</span><span class="p">,</span> <span class="n">bearer_token</span>
+<div class="viewcode-block" id="K8sClusterController.import_cluster"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.import_cluster">[docs]</a>    <span class="k">def</span> <span class="nf">import_cluster</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">cluster_type</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">,</span>
+        <span class="n">description</span><span class="p">,</span>
+        <span class="n">pod_dns_domain</span><span class="p">,</span>
+        <span class="n">server_url</span><span class="p">,</span>
+        <span class="n">ca</span><span class="p">,</span>
+        <span class="n">bearer_token</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Import a generic k8s cluster.</span>
+        <span class="sd">&quot;&quot;&quot;Import a k8s cluster.</span>
 
 <span class="sd">        TODO</span>
 
@@ -646,10 +653,18 @@
 <span class="sd">        ------</span>
 <span class="sd">        APIException</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">cluster_type</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="s2">&quot;generic&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;eks&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;aks&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;gke&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;pks&quot;</span><span class="p">,</span>
+        <span class="p">],</span> <span class="s1">&#39;cluster_type must be either &quot;generic&quot;, &quot;eks&quot;, &quot;aks&quot;, &quot;gke&quot;, &quot;pks&quot;&#39;</span>
+
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">description</span><span class="p">},</span>
             <span class="s2">&quot;pod_dns_domain&quot;</span><span class="p">:</span> <span class="n">pod_dns_domain</span><span class="p">,</span>
-            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;generic&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">cluster_type</span><span class="p">,</span>
             <span class="s2">&quot;sysadmin_data&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;server_url&quot;</span><span class="p">:</span> <span class="n">server_url</span><span class="p">,</span>
                 <span class="s2">&quot;ca&quot;</span><span class="p">:</span> <span class="n">ca</span><span class="p">,</span>
@@ -664,6 +679,19 @@
             <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">CaseInsensitiveDict</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">)[</span><span class="s2">&quot;Location&quot;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="K8sClusterController.import_generic_cluster"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.import_generic_cluster">[docs]</a>    <span class="k">def</span> <span class="nf">import_generic_cluster</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">pod_dns_domain</span><span class="p">,</span> <span class="n">server_url</span><span class="p">,</span> <span class="n">ca</span><span class="p">,</span> <span class="n">bearer_token</span>
+    <span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">import_cluster</span><span class="p">(</span>
+            <span class="s2">&quot;generic&quot;</span><span class="p">,</span>
+            <span class="n">name</span><span class="p">,</span>
+            <span class="n">description</span><span class="p">,</span>
+            <span class="n">pod_dns_domain</span><span class="p">,</span>
+            <span class="n">server_url</span><span class="p">,</span>
+            <span class="n">ca</span><span class="p">,</span>
+            <span class="n">bearer_token</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 <div class="viewcode-block" id="K8sClusterController.import_generic_cluster_with_json"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.import_generic_cluster_with_json">[docs]</a>    <span class="k">def</span> <span class="nf">import_generic_cluster_with_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Import a generic k8s cluster.</span>
