@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.22.1 (2021-05-14)
+### Fix
+* **k8scluster:** Meta ([`d82b954`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/d82b95497ee1cb86d2ae22c86dba6af5830a32dc))
+
 ## v0.22.0 (2021-05-14)
 ### Feature
 * **k8scluster:** Add supported cluster types ([`2271b58`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/2271b583060a0fb0dcd21e2c9b0595a0ba5759f4))
