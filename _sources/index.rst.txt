@@ -3,8 +3,8 @@ Overview
 
 Python library and Command Line Interface (CLI) for HPE Container Platform (HPECP).
 
-This library is pre-alpha. The API of this library may be unstable and 
-subject to change until this library reaches beta.
+This library is beta. The API of this library may be unstable and 
+subject to change until this library reaches GA.
 
 Library Example
 ---------------
