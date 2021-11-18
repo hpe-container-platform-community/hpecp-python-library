@@ -56,12 +56,12 @@
 <span class="target" id="module-hpecp.base_resource"></span><p>Base classes for Controllers and Resources.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="hpecp.base_resource.AbstractResourceController">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">hpecp.base_resource.</span></span><span class="sig-name descname"><span class="pre">AbstractResourceController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/base_resource.html#AbstractResourceController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hpecp.base_resource.AbstractResourceController" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hpecp.base_resource.</span></span><span class="sig-name descname"><span class="pre">AbstractResourceController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/base_resource.html#AbstractResourceController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hpecp.base_resource.AbstractResourceController" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Base class for Resource Controllers.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="hpecp.base_resource.AbstractResourceController.base_resource_path">
-<em class="property"><span class="pre">abstract</span> <span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">base_resource_path</span></span><a class="headerlink" href="#hpecp.base_resource.AbstractResourceController.base_resource_path" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">base_resource_path</span></span><a class="headerlink" href="#hpecp.base_resource.AbstractResourceController.base_resource_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Declare the resource base path for the API resource.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Getter</dt>
@@ -83,7 +83,7 @@ base_resource_path = “/api/v2/k8scluster”</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="hpecp.base_resource.AbstractResourceController.resource_class">
-<em class="property"><span class="pre">abstract</span> <span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">resource_class</span></span><a class="headerlink" href="#hpecp.base_resource.AbstractResourceController.resource_class" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">resource_class</span></span><a class="headerlink" href="#hpecp.base_resource.AbstractResourceController.resource_class" title="Permalink to this definition">¶</a></dt>
 <dd><p>Declare the implementing Resource class for the API resource.
 The resource class contains properties mapping to attributes in the
 response.</p>
@@ -107,7 +107,7 @@ resource_class = K8sCluster</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="hpecp.base_resource.AbstractResourceController.resource_list_path">
-<em class="property"><span class="pre">abstract</span> <span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">resource_list_path</span></span><a class="headerlink" href="#hpecp.base_resource.AbstractResourceController.resource_list_path" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">resource_list_path</span></span><a class="headerlink" href="#hpecp.base_resource.AbstractResourceController.resource_list_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Declare the implementing resource list path for the API resource.
 The resource list path is where the resources are after the
 ‘_embedded’ element in the API response json.</p>
@@ -183,12 +183,12 @@ the property self.resource_class</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="hpecp.base_resource.AbstractWaitableResourceController">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">hpecp.base_resource.</span></span><span class="sig-name descname"><span class="pre">AbstractWaitableResourceController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/base_resource.html#AbstractWaitableResourceController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hpecp.base_resource.AbstractWaitableResourceController" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hpecp.base_resource.</span></span><span class="sig-name descname"><span class="pre">AbstractWaitableResourceController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/base_resource.html#AbstractWaitableResourceController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hpecp.base_resource.AbstractWaitableResourceController" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#hpecp.base_resource.AbstractResourceController" title="hpecp.base_resource.AbstractResourceController"><code class="xref py py-class docutils literal notranslate"><span class="pre">hpecp.base_resource.AbstractResourceController</span></code></a></p>
 <p>Resource Controller that is able to wait for the resource’s status.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="hpecp.base_resource.AbstractWaitableResourceController.status_class">
-<em class="property"><span class="pre">abstract</span> <span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">status_class</span></span><a class="headerlink" href="#hpecp.base_resource.AbstractWaitableResourceController.status_class" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">status_class</span></span><a class="headerlink" href="#hpecp.base_resource.AbstractWaitableResourceController.status_class" title="Permalink to this definition">¶</a></dt>
 <dd><p>Declare the implementing Status class for the API resource.
 The status class contains properties mapping to attributes in the
 response.</p>
@@ -212,7 +212,7 @@ status_class = K8sClusterStatus</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="hpecp.base_resource.AbstractWaitableResourceController.status_fieldname">
-<em class="property"><span class="pre">abstract</span> <span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">status_fieldname</span></span><a class="headerlink" href="#hpecp.base_resource.AbstractWaitableResourceController.status_fieldname" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">status_fieldname</span></span><a class="headerlink" href="#hpecp.base_resource.AbstractWaitableResourceController.status_fieldname" title="Permalink to this definition">¶</a></dt>
 <dd><p>Declare the Status fieldname in the API resource.</p>
 <p>Usually either: status or state</p>
 <dl class="field-list simple">
@@ -264,7 +264,7 @@ True if item does not exist before timeout and status is empty</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="hpecp.base_resource.AbstractResource">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">hpecp.base_resource.</span></span><span class="sig-name descname"><span class="pre">AbstractResource</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/base_resource.html#AbstractResource"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hpecp.base_resource.AbstractResource" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hpecp.base_resource.</span></span><span class="sig-name descname"><span class="pre">AbstractResource</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/base_resource.html#AbstractResource"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hpecp.base_resource.AbstractResource" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Base class for Resource class repreenting an API resource.</p>
 <p>The resource class contains properties mapping to attributes in the
@@ -277,12 +277,12 @@ resource_class = K8sCluster</p>
 </dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="hpecp.base_resource.AbstractResource.all_fields">
-<em class="property"><span class="pre">abstract</span> <span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">all_fields</span></span><a class="headerlink" href="#hpecp.base_resource.AbstractResource.all_fields" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all_fields</span></span><a class="headerlink" href="#hpecp.base_resource.AbstractResource.all_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="hpecp.base_resource.AbstractResource.id">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#hpecp.base_resource.AbstractResource.id" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#hpecp.base_resource.AbstractResource.id" title="Permalink to this definition">¶</a></dt>
 <dd><p>&#64;Field: from json[‘_links’][‘self’][‘href’].</p>
 </dd></dl>
 
@@ -290,7 +290,7 @@ resource_class = K8sCluster</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="hpecp.base_resource.ResourceList">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">hpecp.base_resource.</span></span><span class="sig-name descname"><span class="pre">ResourceList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resource_class</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">json</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/base_resource.html#ResourceList"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hpecp.base_resource.ResourceList" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hpecp.base_resource.</span></span><span class="sig-name descname"><span class="pre">ResourceList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resource_class</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">json</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/base_resource.html#ResourceList"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hpecp.base_resource.ResourceList" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>List of Resource objects.</p>
 <dl class="py method">
@@ -390,7 +390,7 @@ for more information</p>
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -422,7 +422,7 @@ for more information</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Chris Snow.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.0.
     </div>
   </body>
 </html>
