@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.22.2 (2021-12-01)
+### Fix
+* **cli:** Better err msg for k8s_version parameter ([`d32f2b5`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/d32f2b5700a6a1b8ebd272afbfff47ffbb3f8c00))
+
 ## v0.22.1 (2021-05-14)
 ### Fix
 * **k8scluster:** Meta ([`d82b954`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/d82b95497ee1cb86d2ae22c86dba6af5830a32dc))
