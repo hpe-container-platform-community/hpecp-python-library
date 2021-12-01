@@ -316,6 +316,12 @@ class K8sClusterProxy(base.BaseProxy):
         if id:
             print(base.get_client().k8s_cluster.get_available_addons(id=id))
         else:
+            if not isinstance(k8s_version, str):
+                print(
+                    "'k8s_version' parameter must be quoted, e.g. \\\"1.20.11\\\" or \"'1.20.11'\"",
+                    file=sys.stderr,
+                    )
+                sys.exit(1)
             print(
                 base.get_client().k8s_cluster.get_available_addons(
                     k8s_version=k8s_version
