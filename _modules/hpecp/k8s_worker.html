@@ -162,6 +162,8 @@
 <span class="sd">            communication.</span>
 <span class="sd">        ssh_key_data: str</span>
 <span class="sd">            The ssh key data as a string.</span>
+<span class="sd">        ssh_passphrase: str</span>
+<span class="sd">            The ssh passphrase</span>
 <span class="sd">        tags: list</span>
 <span class="sd">            Tags to use, e.g. &quot;{ &#39;tag1&#39;: &#39;foo&#39;, &#39;tag2&#39;, &#39;bar&#39; }&quot;.</span>
 
@@ -186,6 +188,9 @@
             <span class="p">},</span>
             <span class="s2">&quot;tags&quot;</span><span class="p">:</span> <span class="n">tags</span><span class="p">,</span>
         <span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">ssh_passphrase</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s1">&#39;credentials&#39;</span><span class="p">][</span><span class="s1">&#39;ssh_passphrase&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ssh_passphrase</span>
 
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
             <span class="n">url</span><span class="o">=</span><span class="s2">&quot;/api/v2/worker/k8shost/&quot;</span><span class="p">,</span>
