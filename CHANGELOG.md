@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.22.4 (2022-02-21)
+### Fix
+* **build:** Fix broken build ([`9ee71bf`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/9ee71bf01e824f9200ce6e4e09b94ff8ad5583ca))
+
 ## v0.22.3 (2022-02-21)
 ### Fix
 * **build:** Fix broken build ([`7d5f2ee`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/7d5f2ee88c218a4d40d59949eedfb8abfbca3712))
