@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.22.3 (2022-02-21)
+### Fix
+* **build:** Fix broken build ([`7d5f2ee`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/7d5f2ee88c218a4d40d59949eedfb8abfbca3712))
+
 ## v0.22.2 (2021-12-01)
 ### Fix
 * **cli:** Better err msg for k8s_version parameter ([`d32f2b5`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/d32f2b5700a6a1b8ebd272afbfff47ffbb3f8c00))
