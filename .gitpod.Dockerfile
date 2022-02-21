@@ -12,7 +12,7 @@ RUN sudo apt-get -q update && sudo apt-get install -y shellcheck tox python3-sph
 ENV PATH=$PATH:/home/gitpod/.local/bin
 
 # setup the gitpod bundled python
-RUN /home/gitpod/.pyenv/versions/2.7.*/bin/python2 -m pip install --upgrade pip
+# RUN /home/gitpod/.pyenv/versions/2.7.*/bin/python2 -m pip install --upgrade pip
 RUN /home/gitpod/.pyenv/versions/3.8.*/bin/python3 -m pip install --upgrade pip
 
 # additional python versions
