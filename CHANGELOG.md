@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.22.6 (2022-02-21)
+### Fix
+* **k8sworker:** Ssh passphrase ([`c9d3849`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/c9d3849e56ccab0e946150bdcc517ca6fbeb407a))
+
 ## v0.22.5 (2022-02-21)
 ### Fix
 * **gateway:** Missing arg ([`c5d0d21`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/c5d0d21b3fab24b2c2220dbe6f9814a8161d1192))
