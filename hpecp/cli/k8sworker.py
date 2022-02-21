@@ -55,6 +55,7 @@ class K8sWorkerProxy(base.BaseProxy):
         ip=None,
         ssh_key=None,
         ssh_key_file=None,
+        ssh_passphrase=None,
         tags=None,
         ephemeral_disks=None,
         persistent_disks=None,
@@ -72,6 +73,8 @@ class K8sWorkerProxy(base.BaseProxy):
             file may also be provided, by default None.
         ssh_key_file : str, optional
             The SSH key file path, by default None
+        ssh_passphrase: str, optional
+            The SSH passphrase
         tags : list, optional
             Tags to use, e.g. /api/v2/tag/1:foo,/api/v2/tag/1:bar,
             by default None
@@ -136,6 +139,7 @@ class K8sWorkerProxy(base.BaseProxy):
         worker_id = base.get_client().k8s_worker.create_with_ssh_key(
             ip=ip,
             ssh_key_data=ssh_key,
+            ssh_passphrase=ssh_passphrase,
             tags=tags_parsed,
         )
 
