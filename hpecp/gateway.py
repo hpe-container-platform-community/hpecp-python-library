@@ -220,6 +220,8 @@ class GatewayController(AbstractWaitableResourceController):
             this name.
         ssh_key_data: str
             The ssh key data as a string.
+        ssh_passphrase: str
+            The ssh passphrase
         tags: list
             Tags to use, e.g. "{ 'tag1': 'foo', 'tag2', 'bar' }".
 
@@ -249,6 +251,9 @@ class GatewayController(AbstractWaitableResourceController):
             "proxy_nodes_hostname": proxy_node_hostname,
             "purpose": "proxy",
         }
+
+        if ssh_passphrase is not None:
+            data['credentials']['ssh_passphrase'] = ssh_passphrase
 
         response = self.client._request(
             url="/api/v1/workers/",

@@ -52,6 +52,7 @@ class GatewayProxy(base.BaseProxy):
         proxy_node_hostname,
         ssh_key=None,
         ssh_key_file=None,
+        ssh_passphrase=None,
         tags=[],
     ):
         """Create a Gateway using SSH key authentication.
@@ -70,6 +71,8 @@ class GatewayProxy(base.BaseProxy):
         ssh_key_file: string
             The file path to the ssh key.  Alternatively, use the
             ssh_key parameter.
+        ssh_passphrase: string
+            The passphrase
         tags: string
             Tags to add to the gateway, for example:
             "{ 'tag1': 'foo', 'tag2', 'bar' }".
@@ -96,6 +99,7 @@ class GatewayProxy(base.BaseProxy):
             ip=ip,
             proxy_node_hostname=proxy_node_hostname,
             ssh_key_data=ssh_key,
+            ssh_passphrase=ssh_passphrase,
             tags=tags,
         )
         print(gateway_id)
