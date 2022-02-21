@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.22.5 (2022-02-21)
+### Fix
+* **gateway:** Missing arg ([`c5d0d21`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/c5d0d21b3fab24b2c2220dbe6f9814a8161d1192))
+
 ## v0.22.4 (2022-02-21)
 ### Fix
 * **build:** Fix broken build ([`9ee71bf`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/9ee71bf01e824f9200ce6e4e09b94ff8ad5583ca))
