@@ -298,7 +298,7 @@
         <span class="p">}</span>
 
         <span class="k">if</span> <span class="n">ssh_passphrase</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">data</span><span class="p">[</span><span class="s1">&#39;credentials&#39;</span><span class="p">][</span><span class="s1">&#39;ssh_passphrase&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ssh_passphrase</span>
+            <span class="n">data</span><span class="p">[</span><span class="s1">&#39;credentials&#39;</span><span class="p">][</span><span class="s1">&#39;ssh_key_passphrase&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ssh_passphrase</span>
 
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
             <span class="n">url</span><span class="o">=</span><span class="s2">&quot;/api/v1/workers/&quot;</span><span class="p">,</span>
