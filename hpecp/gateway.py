@@ -253,7 +253,7 @@ class GatewayController(AbstractWaitableResourceController):
         }
 
         if ssh_passphrase is not None:
-            data['credentials']['ssh_passphrase'] = ssh_passphrase
+            data['credentials']['ssh_key_passphrase'] = ssh_passphrase
 
         response = self.client._request(
             url="/api/v1/workers/",
