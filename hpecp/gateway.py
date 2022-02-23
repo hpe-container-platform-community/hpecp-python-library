@@ -205,7 +205,7 @@ class GatewayController(AbstractWaitableResourceController):
     #     raise NotImplementedError()
 
     def create_with_ssh_key(
-        self, ip, proxy_node_hostname, ssh_key_data, ssh_passphrase, tags=[]
+        self, ip, proxy_node_hostname, ssh_key_data, ssh_passphrase=None, tags=[]
     ):
         """Create a gateway instance using SSH key credentials to access the
         host.
