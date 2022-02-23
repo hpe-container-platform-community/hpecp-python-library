@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.22.7 (2022-02-22)
+### Fix
+* **ssh:** Ssh key passphrase ([`b3589c5`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/b3589c5a82c78263b6e419e0a5e7322430fcd188))
+
 ## v0.22.6 (2022-02-21)
 ### Fix
 * **k8sworker:** Ssh passphrase ([`c9d3849`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/c9d3849e56ccab0e946150bdcc517ca6fbeb407a))
