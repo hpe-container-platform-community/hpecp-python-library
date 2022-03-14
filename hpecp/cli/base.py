@@ -164,7 +164,10 @@ class BaseProxy:
         self.client_module_property = getattr(
             self.client, self.client_module_name
         )
-        response = self.client_module_property.get(id=id, params=params)
+        if params:
+            response = self.client_module_property.get(id=id, params=params)
+        else:
+            response = self.client_module_property.get(id=id)
         json_data = response.json
 
         if output == "json":
