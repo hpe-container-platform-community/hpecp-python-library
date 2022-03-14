@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.22.10 (2022-03-14)
+### Fix
+* **gateway:** Issue with params ([`e0b14f0`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/e0b14f06b8e2c1353ce76ad4b48ea89d9f2af038))
+
 ## v0.22.9 (2022-02-23)
 ### Fix
 * **ssh:** Ssh key passphrase ([`555a7c3`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/555a7c3568179457e7077693cd53df52416cc0cc))
