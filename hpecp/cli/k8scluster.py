@@ -561,8 +561,8 @@ class K8sClusterProxy(base.BaseProxy):
     
         Parameters
         ------
-        :param id: The k8s cluster ID, integer number in resource path /api/v2/k8scluster/<id>
-        :param op: operation to pass to kubectl, one of 'create', 'delete', 'update'
+        :param id: The k8s cluster ID, as full resource path </api/v2/k8scluster/1>
+        :param op: operation to pass to kubectl, either 'create' or 'delete'
         :param yaml: base64 encoded yaml file to operate
 
         Returns
