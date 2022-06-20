@@ -508,9 +508,9 @@ datafabric_name: str optional</p>
 <span class="sig-name descname"><span class="pre">run_kubectl_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">op</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'create'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yaml</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_cluster.html#K8sClusterController.run_kubectl_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hpecp.k8s_cluster.K8sClusterController.run_kubectl_command" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run a kubectl command on k8s cluster.</p>
 <dl class="simple">
-<dt>id: str</dt><dd><p>The k8s cluster ID (ID = 1 or 2 etc, not the base path as /api/v2/k8s_cluster/1)</p>
+<dt>id: str</dt><dd><p>The k8s cluster ID (i.e., ‘/api/v2/k8s_cluster/1’)</p>
 </dd>
-<dt>op: str</dt><dd><p>op can be one of create,delete,update</p>
+<dt>op: str</dt><dd><p>op can be either ‘create’ or ‘delete’</p>
 </dd>
 <dt>yaml: str</dt><dd><p>base64 encoding of the yaml file</p>
 </dd>

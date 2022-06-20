@@ -724,9 +724,9 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ------</span>
 <span class="sd">        id: str</span>
-<span class="sd">            The k8s cluster ID (ID = 1 or 2 etc, not the base path as /api/v2/k8s_cluster/1)</span>
+<span class="sd">            The k8s cluster ID (i.e., &#39;/api/v2/k8s_cluster/1&#39;)</span>
 <span class="sd">        op: str</span>
-<span class="sd">            op can be one of create,delete,update</span>
+<span class="sd">            op can be either &#39;create&#39; or &#39;delete&#39;</span>
 <span class="sd">        yaml: str</span>
 <span class="sd">            base64 encoding of the yaml file</span>
 
@@ -745,14 +745,14 @@
             <span class="p">}</span>
 
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
-            <span class="n">url</span><span class="o">=</span><span class="s2">&quot;/api/v2/k8scluster/</span><span class="si">{id}</span><span class="s2">/kubectl&quot;</span><span class="p">,</span>
+            <span class="n">url</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">/kubectl&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span>
             <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;post&quot;</span><span class="p">,</span>
             <span class="n">description</span><span class="o">=</span><span class="p">(</span>
                 <span class="s2">&quot;K8sClusterController/&quot;</span> <span class="s2">&quot;run_kubectl_command&quot;</span>
             <span class="p">),</span>
-            <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></div></div>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span></div></div>
 </pre></div>
 
             <div class="clearer"></div>
