@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.22.13 (2022-06-20)
+### Fix
+* **run_kubectl_command:** With apply typos fixed ([`054029e`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/054029eb85aaee33a2c1bb252b90cfcbddfd56fc))
+
 ## v0.22.12 (2022-06-20)
 ### Fix
 * **cli:** Bump minor release ([`a54a076`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/a54a07622152be28fee14faac0f2b496668a0494))
