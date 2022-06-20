@@ -2,10 +2,10 @@
 
 <!doctype html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>hpecp.gateway module &#8212; HPE Container Platform Python Library  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
@@ -14,6 +14,7 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -52,11 +53,11 @@
           <div class="body" role="main">
             
   <section id="module-hpecp.gateway">
-<span id="hpecp-gateway-module"></span><h1>hpecp.gateway module<a class="headerlink" href="#module-hpecp.gateway" title="Permalink to this headline">¶</a></h1>
+<span id="hpecp-gateway-module"></span><h1>hpecp.gateway module<a class="headerlink" href="#module-hpecp.gateway" title="Permalink to this heading">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="hpecp.gateway.GatewayStatus">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hpecp.gateway.</span></span><span class="sig-name descname"><span class="pre">GatewayStatus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hpecp.gateway.GatewayStatus" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
 <p>Bases: enum.Enum</p>
 <p>The statuses for a Gateway</p>
 <p><strong>Note:</strong></p>
@@ -148,7 +149,7 @@ integer value.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="hpecp.gateway.Gateway">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hpecp.gateway.</span></span><span class="sig-name descname"><span class="pre">Gateway</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#Gateway"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hpecp.gateway.Gateway" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="hpecp.base_resource.html#hpecp.base_resource.AbstractResource" title="hpecp.base_resource.AbstractResource"><code class="xref py py-class docutils literal notranslate"><span class="pre">hpecp.base_resource.AbstractResource</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="hpecp.base_resource.html#hpecp.base_resource.AbstractResource" title="hpecp.base_resource.AbstractResource"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractResource</span></code></a></p>
 <p>Create an instance of Gateway from json data returned from the HPE</p>
 <p>Container Platform API. Users of this library are not expected to create an
 instance of this class.</p>
@@ -247,7 +248,7 @@ instance of this class.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="hpecp.gateway.GatewayController">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hpecp.gateway.</span></span><span class="sig-name descname"><span class="pre">GatewayController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/gateway.html#GatewayController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hpecp.gateway.GatewayController" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="hpecp.base_resource.html#hpecp.base_resource.AbstractWaitableResourceController" title="hpecp.base_resource.AbstractWaitableResourceController"><code class="xref py py-class docutils literal notranslate"><span class="pre">hpecp.base_resource.AbstractWaitableResourceController</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="hpecp.base_resource.html#hpecp.base_resource.AbstractWaitableResourceController" title="hpecp.base_resource.AbstractWaitableResourceController"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractWaitableResourceController</span></code></a></p>
 <p>Class that users will interact with to work with Gateways. An instance
 of this class is available in the
 client.ContainerPlatformClient with the attribute name
@@ -263,13 +264,13 @@ example below:</p>
 <span class="sig-name descname"><span class="pre">base_resource_path</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'/api/v1/workers'</span></em><a class="headerlink" href="#hpecp.gateway.GatewayController.base_resource_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Declare the resource base path for the API resource.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Getter</dt>
+<dt class="field-odd">Getter<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Returns the resource base path</p>
 </dd>
-<dt class="field-even">Setter</dt>
+<dt class="field-even">Setter<span class="colon">:</span></dt>
 <dd class="field-even"><p>Sets the resource base path</p>
 </dd>
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>str</p>
 </dd>
 </dl>
@@ -287,13 +288,13 @@ base_resource_path = “/api/v2/k8scluster”</p>
 The resource list path is where the resources are after the
 ‘_embedded’ element in the API response json.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Getter</dt>
+<dt class="field-odd">Getter<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Returns the resource list path</p>
 </dd>
-<dt class="field-even">Setter</dt>
+<dt class="field-even">Setter<span class="colon">:</span></dt>
 <dd class="field-even"><p>Sets the resource list path</p>
 </dd>
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>str</p>
 </dd>
 </dl>
@@ -307,13 +308,13 @@ resource_list_path = “k8sclusters”</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="hpecp.gateway.GatewayController.resource_class">
 <span class="sig-name descname"><span class="pre">resource_class</span></span><a class="headerlink" href="#hpecp.gateway.GatewayController.resource_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#hpecp.gateway.Gateway" title="hpecp.gateway.Gateway"><code class="xref py py-class docutils literal notranslate"><span class="pre">hpecp.gateway.Gateway</span></code></a></p>
+<dd><p>alias of <a class="reference internal" href="#hpecp.gateway.Gateway" title="hpecp.gateway.Gateway"><code class="xref py py-class docutils literal notranslate"><span class="pre">Gateway</span></code></a></p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="hpecp.gateway.GatewayController.status_class">
 <span class="sig-name descname"><span class="pre">status_class</span></span><a class="headerlink" href="#hpecp.gateway.GatewayController.status_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#hpecp.gateway.GatewayStatus" title="hpecp.gateway.GatewayStatus"><code class="xref py py-class docutils literal notranslate"><span class="pre">hpecp.gateway.GatewayStatus</span></code></a></p>
+<dd><p>alias of <a class="reference internal" href="#hpecp.gateway.GatewayStatus" title="hpecp.gateway.GatewayStatus"><code class="xref py py-class docutils literal notranslate"><span class="pre">GatewayStatus</span></code></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -322,13 +323,13 @@ resource_list_path = “k8sclusters”</p>
 <dd><p>Declare the Status fieldname in the API resource.</p>
 <p>Usually either: status or state</p>
 <dl class="field-list simple">
-<dt class="field-odd">Getter</dt>
+<dt class="field-odd">Getter<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Returns the Status fieldname</p>
 </dd>
-<dt class="field-even">Setter</dt>
+<dt class="field-even">Setter<span class="colon">:</span></dt>
 <dd class="field-even"><p>Sets the Status fieldname</p>
 </dd>
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>str</p>
 </dd>
 </dl>
@@ -457,7 +458,7 @@ the property self.resource_class</p>
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -484,7 +485,7 @@ the property self.resource_class</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Chris Snow.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
     </div>
   </body>
 </html>

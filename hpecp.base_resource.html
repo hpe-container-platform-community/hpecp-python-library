@@ -2,10 +2,10 @@
 
 <!doctype html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>hpecp.base_resource module &#8212; HPE Container Platform Python Library  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
@@ -14,6 +14,7 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -52,7 +53,7 @@
           <div class="body" role="main">
             
   <section id="hpecp-base-resource-module">
-<h1>hpecp.base_resource module<a class="headerlink" href="#hpecp-base-resource-module" title="Permalink to this headline">¶</a></h1>
+<h1>hpecp.base_resource module<a class="headerlink" href="#hpecp-base-resource-module" title="Permalink to this heading">¶</a></h1>
 <span class="target" id="module-hpecp.base_resource"></span><p>Base classes for Controllers and Resources.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="hpecp.base_resource.AbstractResourceController">
@@ -64,13 +65,13 @@
 <em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">base_resource_path</span></span><a class="headerlink" href="#hpecp.base_resource.AbstractResourceController.base_resource_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Declare the resource base path for the API resource.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Getter</dt>
+<dt class="field-odd">Getter<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Returns the resource base path</p>
 </dd>
-<dt class="field-even">Setter</dt>
+<dt class="field-even">Setter<span class="colon">:</span></dt>
 <dd class="field-even"><p>Sets the resource base path</p>
 </dd>
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>str</p>
 </dd>
 </dl>
@@ -88,13 +89,13 @@ base_resource_path = “/api/v2/k8scluster”</p>
 The resource class contains properties mapping to attributes in the
 response.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Getter</dt>
+<dt class="field-odd">Getter<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Returns the Resource class</p>
 </dd>
-<dt class="field-even">Setter</dt>
+<dt class="field-even">Setter<span class="colon">:</span></dt>
 <dd class="field-even"><p>Sets the Resource class</p>
 </dd>
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>class</p>
 </dd>
 </dl>
@@ -112,13 +113,13 @@ resource_class = K8sCluster</p>
 The resource list path is where the resources are after the
 ‘_embedded’ element in the API response json.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Getter</dt>
+<dt class="field-odd">Getter<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Returns the resource list path</p>
 </dd>
-<dt class="field-even">Setter</dt>
+<dt class="field-even">Setter<span class="colon">:</span></dt>
 <dd class="field-even"><p>Sets the resource list path</p>
 </dd>
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>str</p>
 </dd>
 </dl>
@@ -184,7 +185,7 @@ the property self.resource_class</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="hpecp.base_resource.AbstractWaitableResourceController">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hpecp.base_resource.</span></span><span class="sig-name descname"><span class="pre">AbstractWaitableResourceController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/base_resource.html#AbstractWaitableResourceController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hpecp.base_resource.AbstractWaitableResourceController" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#hpecp.base_resource.AbstractResourceController" title="hpecp.base_resource.AbstractResourceController"><code class="xref py py-class docutils literal notranslate"><span class="pre">hpecp.base_resource.AbstractResourceController</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#hpecp.base_resource.AbstractResourceController" title="hpecp.base_resource.AbstractResourceController"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractResourceController</span></code></a></p>
 <p>Resource Controller that is able to wait for the resource’s status.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="hpecp.base_resource.AbstractWaitableResourceController.status_class">
@@ -193,13 +194,13 @@ the property self.resource_class</p>
 The status class contains properties mapping to attributes in the
 response.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Getter</dt>
+<dt class="field-odd">Getter<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Returns the Status class</p>
 </dd>
-<dt class="field-even">Setter</dt>
+<dt class="field-even">Setter<span class="colon">:</span></dt>
 <dd class="field-even"><p>Sets the Status class</p>
 </dd>
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>class</p>
 </dd>
 </dl>
@@ -216,13 +217,13 @@ status_class = K8sClusterStatus</p>
 <dd><p>Declare the Status fieldname in the API resource.</p>
 <p>Usually either: status or state</p>
 <dl class="field-list simple">
-<dt class="field-odd">Getter</dt>
+<dt class="field-odd">Getter<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Returns the Status fieldname</p>
 </dd>
-<dt class="field-even">Setter</dt>
+<dt class="field-even">Setter<span class="colon">:</span></dt>
 <dd class="field-even"><p>Sets the Status fieldname</p>
 </dd>
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>str</p>
 </dd>
 </dl>
@@ -399,7 +400,7 @@ for more information</p>
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -426,7 +427,7 @@ for more information</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Chris Snow.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
     </div>
   </body>
 </html>

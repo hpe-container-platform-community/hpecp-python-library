@@ -2,10 +2,10 @@
 
 <!doctype html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>hpecp.k8s_cluster module &#8212; HPE Container Platform Python Library  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
@@ -14,6 +14,7 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -52,11 +53,11 @@
           <div class="body" role="main">
             
   <section id="module-hpecp.k8s_cluster">
-<span id="hpecp-k8s-cluster-module"></span><h1>hpecp.k8s_cluster module<a class="headerlink" href="#module-hpecp.k8s_cluster" title="Permalink to this headline">¶</a></h1>
+<span id="hpecp-k8s-cluster-module"></span><h1>hpecp.k8s_cluster module<a class="headerlink" href="#module-hpecp.k8s_cluster" title="Permalink to this heading">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="hpecp.k8s_cluster.K8sClusterStatus">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hpecp.k8s_cluster.</span></span><span class="sig-name descname"><span class="pre">K8sClusterStatus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_cluster.html#K8sClusterStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hpecp.k8s_cluster.K8sClusterStatus" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
 <p>Bases: enum.Enum</p>
 <p>The statuses for a K8S Cluster</p>
 <p><strong>Note:</strong></p>
@@ -103,7 +104,7 @@ integer value.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="hpecp.k8s_cluster.K8sCluster">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hpecp.k8s_cluster.</span></span><span class="sig-name descname"><span class="pre">K8sCluster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_cluster.html#K8sCluster"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hpecp.k8s_cluster.K8sCluster" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="hpecp.base_resource.html#hpecp.base_resource.AbstractResource" title="hpecp.base_resource.AbstractResource"><code class="xref py py-class docutils literal notranslate"><span class="pre">hpecp.base_resource.AbstractResource</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="hpecp.base_resource.html#hpecp.base_resource.AbstractResource" title="hpecp.base_resource.AbstractResource"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractResource</span></code></a></p>
 <p>Create an instance of K8sCluster from json data returned from the HPE
 Container Platform API.</p>
 <p>Users of this library are not expected to create an instance of this
@@ -257,7 +258,7 @@ values.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="hpecp.k8s_cluster.K8sClusterController">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hpecp.k8s_cluster.</span></span><span class="sig-name descname"><span class="pre">K8sClusterController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_cluster.html#K8sClusterController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hpecp.k8s_cluster.K8sClusterController" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="hpecp.base_resource.html#hpecp.base_resource.AbstractWaitableResourceController" title="hpecp.base_resource.AbstractWaitableResourceController"><code class="xref py py-class docutils literal notranslate"><span class="pre">hpecp.base_resource.AbstractWaitableResourceController</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="hpecp.base_resource.html#hpecp.base_resource.AbstractWaitableResourceController" title="hpecp.base_resource.AbstractWaitableResourceController"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractWaitableResourceController</span></code></a></p>
 <p>Class for interacting with K8S Clusters.</p>
 <p>An instance of this class is available in the
 client.ContainerPlatformClient with the attribute name
@@ -273,13 +274,13 @@ See the example below:</p>
 <span class="sig-name descname"><span class="pre">base_resource_path</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'/api/v2/k8scluster'</span></em><a class="headerlink" href="#hpecp.k8s_cluster.K8sClusterController.base_resource_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Declare the resource base path for the API resource.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Getter</dt>
+<dt class="field-odd">Getter<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Returns the resource base path</p>
 </dd>
-<dt class="field-even">Setter</dt>
+<dt class="field-even">Setter<span class="colon">:</span></dt>
 <dd class="field-even"><p>Sets the resource base path</p>
 </dd>
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>str</p>
 </dd>
 </dl>
@@ -297,13 +298,13 @@ base_resource_path = “/api/v2/k8scluster”</p>
 The resource list path is where the resources are after the
 ‘_embedded’ element in the API response json.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Getter</dt>
+<dt class="field-odd">Getter<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Returns the resource list path</p>
 </dd>
-<dt class="field-even">Setter</dt>
+<dt class="field-even">Setter<span class="colon">:</span></dt>
 <dd class="field-even"><p>Sets the resource list path</p>
 </dd>
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>str</p>
 </dd>
 </dl>
@@ -317,13 +318,13 @@ resource_list_path = “k8sclusters”</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="hpecp.k8s_cluster.K8sClusterController.resource_class">
 <span class="sig-name descname"><span class="pre">resource_class</span></span><a class="headerlink" href="#hpecp.k8s_cluster.K8sClusterController.resource_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#hpecp.k8s_cluster.K8sCluster" title="hpecp.k8s_cluster.K8sCluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">hpecp.k8s_cluster.K8sCluster</span></code></a></p>
+<dd><p>alias of <a class="reference internal" href="#hpecp.k8s_cluster.K8sCluster" title="hpecp.k8s_cluster.K8sCluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">K8sCluster</span></code></a></p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="hpecp.k8s_cluster.K8sClusterController.status_class">
 <span class="sig-name descname"><span class="pre">status_class</span></span><a class="headerlink" href="#hpecp.k8s_cluster.K8sClusterController.status_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#hpecp.k8s_cluster.K8sClusterStatus" title="hpecp.k8s_cluster.K8sClusterStatus"><code class="xref py py-class docutils literal notranslate"><span class="pre">hpecp.k8s_cluster.K8sClusterStatus</span></code></a></p>
+<dd><p>alias of <a class="reference internal" href="#hpecp.k8s_cluster.K8sClusterStatus" title="hpecp.k8s_cluster.K8sClusterStatus"><code class="xref py py-class docutils literal notranslate"><span class="pre">K8sClusterStatus</span></code></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -332,13 +333,13 @@ resource_list_path = “k8sclusters”</p>
 <dd><p>Declare the Status fieldname in the API resource.</p>
 <p>Usually either: status or state</p>
 <dl class="field-list simple">
-<dt class="field-odd">Getter</dt>
+<dt class="field-odd">Getter<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Returns the Status fieldname</p>
 </dd>
-<dt class="field-even">Setter</dt>
+<dt class="field-even">Setter<span class="colon">:</span></dt>
 <dd class="field-even"><p>Sets the Status fieldname</p>
 </dd>
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>str</p>
 </dd>
 </dl>
@@ -502,6 +503,22 @@ datafabric_name: str optional</p>
 <p>APIException</p>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="hpecp.k8s_cluster.K8sClusterController.run_kubectl_command">
+<span class="sig-name descname"><span class="pre">run_kubectl_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">op</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'create'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yaml</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/k8s_cluster.html#K8sClusterController.run_kubectl_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hpecp.k8s_cluster.K8sClusterController.run_kubectl_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run a kubectl command on k8s cluster.</p>
+<dl class="simple">
+<dt>id: str</dt><dd><p>The k8s cluster ID (ID = 1 or 2 etc, not the base path as /api/v2/k8s_cluster/1)</p>
+</dd>
+<dt>op: str</dt><dd><p>op can be one of create,delete,update</p>
+</dd>
+<dt>yaml: str</dt><dd><p>base64 encoding of the yaml file</p>
+</dd>
+</dl>
+<p>TODO</p>
+<p>APIException</p>
+</dd></dl>
+
 </dd></dl>
 
 </section>
@@ -563,7 +580,7 @@ datafabric_name: str optional</p>
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -590,7 +607,7 @@ datafabric_name: str optional</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Chris Snow.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
     </div>
   </body>
 </html>

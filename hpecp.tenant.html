@@ -2,10 +2,10 @@
 
 <!doctype html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>hpecp.tenant module &#8212; HPE Container Platform Python Library  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
@@ -14,6 +14,7 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -52,11 +53,11 @@
           <div class="body" role="main">
             
   <section id="module-hpecp.tenant">
-<span id="hpecp-tenant-module"></span><h1>hpecp.tenant module<a class="headerlink" href="#module-hpecp.tenant" title="Permalink to this headline">¶</a></h1>
+<span id="hpecp-tenant-module"></span><h1>hpecp.tenant module<a class="headerlink" href="#module-hpecp.tenant" title="Permalink to this heading">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="hpecp.tenant.TenantStatus">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hpecp.tenant.</span></span><span class="sig-name descname"><span class="pre">TenantStatus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/tenant.html#TenantStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hpecp.tenant.TenantStatus" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
 <p>Bases: enum.Enum</p>
 <p>The statuses for Tenant</p>
 <p><strong>Note:</strong></p>
@@ -103,7 +104,7 @@ integer value.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="hpecp.tenant.Tenant">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hpecp.tenant.</span></span><span class="sig-name descname"><span class="pre">Tenant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/tenant.html#Tenant"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hpecp.tenant.Tenant" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="hpecp.base_resource.html#hpecp.base_resource.AbstractResource" title="hpecp.base_resource.AbstractResource"><code class="xref py py-class docutils literal notranslate"><span class="pre">hpecp.base_resource.AbstractResource</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="hpecp.base_resource.html#hpecp.base_resource.AbstractResource" title="hpecp.base_resource.AbstractResource"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractResource</span></code></a></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="hpecp.tenant.Tenant.all_fields">
 <span class="sig-name descname"><span class="pre">all_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['id',</span> <span class="pre">'name',</span> <span class="pre">'description',</span> <span class="pre">'status',</span> <span class="pre">'tenant_type',</span> <span class="pre">'external_user_groups']</span></em><a class="headerlink" href="#hpecp.tenant.Tenant.all_fields" title="Permalink to this definition">¶</a></dt>
@@ -150,7 +151,7 @@ integer value.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="hpecp.tenant.TenantController">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hpecp.tenant.</span></span><span class="sig-name descname"><span class="pre">TenantController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hpecp/tenant.html#TenantController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hpecp.tenant.TenantController" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="hpecp.base_resource.html#hpecp.base_resource.AbstractWaitableResourceController" title="hpecp.base_resource.AbstractWaitableResourceController"><code class="xref py py-class docutils literal notranslate"><span class="pre">hpecp.base_resource.AbstractWaitableResourceController</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="hpecp.base_resource.html#hpecp.base_resource.AbstractWaitableResourceController" title="hpecp.base_resource.AbstractWaitableResourceController"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractWaitableResourceController</span></code></a></p>
 <p>Class that users will interact with to work with tenants.</p>
 <p>An instance of this class is available in
 <cite>client.ContainerPlatformClient</cite> with the attribute name
@@ -166,13 +167,13 @@ below.</p>
 <span class="sig-name descname"><span class="pre">base_resource_path</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'/api/v1/tenant/'</span></em><a class="headerlink" href="#hpecp.tenant.TenantController.base_resource_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Declare the resource base path for the API resource.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Getter</dt>
+<dt class="field-odd">Getter<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Returns the resource base path</p>
 </dd>
-<dt class="field-even">Setter</dt>
+<dt class="field-even">Setter<span class="colon">:</span></dt>
 <dd class="field-even"><p>Sets the resource base path</p>
 </dd>
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>str</p>
 </dd>
 </dl>
@@ -186,7 +187,7 @@ base_resource_path = “/api/v2/k8scluster”</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="hpecp.tenant.TenantController.resource_class">
 <span class="sig-name descname"><span class="pre">resource_class</span></span><a class="headerlink" href="#hpecp.tenant.TenantController.resource_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#hpecp.tenant.Tenant" title="hpecp.tenant.Tenant"><code class="xref py py-class docutils literal notranslate"><span class="pre">hpecp.tenant.Tenant</span></code></a></p>
+<dd><p>alias of <a class="reference internal" href="#hpecp.tenant.Tenant" title="hpecp.tenant.Tenant"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tenant</span></code></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -196,13 +197,13 @@ base_resource_path = “/api/v2/k8scluster”</p>
 The resource list path is where the resources are after the
 ‘_embedded’ element in the API response json.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Getter</dt>
+<dt class="field-odd">Getter<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Returns the resource list path</p>
 </dd>
-<dt class="field-even">Setter</dt>
+<dt class="field-even">Setter<span class="colon">:</span></dt>
 <dd class="field-even"><p>Sets the resource list path</p>
 </dd>
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>str</p>
 </dd>
 </dl>
@@ -216,7 +217,7 @@ resource_list_path = “k8sclusters”</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="hpecp.tenant.TenantController.status_class">
 <span class="sig-name descname"><span class="pre">status_class</span></span><a class="headerlink" href="#hpecp.tenant.TenantController.status_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#hpecp.tenant.TenantStatus" title="hpecp.tenant.TenantStatus"><code class="xref py py-class docutils literal notranslate"><span class="pre">hpecp.tenant.TenantStatus</span></code></a></p>
+<dd><p>alias of <a class="reference internal" href="#hpecp.tenant.TenantStatus" title="hpecp.tenant.TenantStatus"><code class="xref py py-class docutils literal notranslate"><span class="pre">TenantStatus</span></code></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -225,13 +226,13 @@ resource_list_path = “k8sclusters”</p>
 <dd><p>Declare the Status fieldname in the API resource.</p>
 <p>Usually either: status or state</p>
 <dl class="field-list simple">
-<dt class="field-odd">Getter</dt>
+<dt class="field-odd">Getter<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Returns the Status fieldname</p>
 </dd>
-<dt class="field-even">Setter</dt>
+<dt class="field-even">Setter<span class="colon">:</span></dt>
 <dd class="field-even"><p>Sets the Status fieldname</p>
 </dd>
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>str</p>
 </dd>
 </dl>
@@ -367,7 +368,7 @@ APIException</p>
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -394,7 +395,7 @@ APIException</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Chris Snow.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
     </div>
   </body>
 </html>

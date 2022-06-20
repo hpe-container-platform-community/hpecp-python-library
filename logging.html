@@ -2,10 +2,10 @@
 
 <!doctype html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>Logging &#8212; HPE Container Platform Python Library  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
@@ -14,6 +14,7 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -51,9 +52,9 @@
           <div class="body" role="main">
             
   <section id="logging">
-<h1>Logging<a class="headerlink" href="#logging" title="Permalink to this headline">¶</a></h1>
+<h1>Logging<a class="headerlink" href="#logging" title="Permalink to this heading">¶</a></h1>
 <section id="logging-level">
-<h2>Logging level<a class="headerlink" href="#logging-level" title="Permalink to this headline">¶</a></h2>
+<h2>Logging level<a class="headerlink" href="#logging-level" title="Permalink to this heading">¶</a></h2>
 <p>Log level is controlled with the environment variable <cite>LOG_LEVEL</cite>.</p>
 <p>Typical valid values are <cite>ERROR</cite>, <cite>WARNING</cite>, <cite>INFO</cite>, <cite>DEBUG</cite> - the default value is <cite>INFO</cite>.</p>
 <ul class="simple">
@@ -72,7 +73,7 @@ hpecp license platform-id
 <p>See <a class="reference external" href="https://docs.python.org/3.7/howto/logging.html">https://docs.python.org/3.7/howto/logging.html</a> for much more info on logging.</p>
 </section>
 <section id="logging-configuration">
-<h2>Logging Configuration<a class="headerlink" href="#logging-configuration" title="Permalink to this headline">¶</a></h2>
+<h2>Logging Configuration<a class="headerlink" href="#logging-configuration" title="Permalink to this heading">¶</a></h2>
 <p>To change logging configuration, e.g. to log to a file, set the environment variable <cite>HPECP_LOG_CONFIG_FILE</cite> and provide a configuration file.</p>
 <p>Example: <cite>HPECP_LOG_CONFIG_FILE=~/.hpecp_logging.conf</cite>:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">[</span>loggers<span class="o">]</span>
@@ -167,7 +168,7 @@ hpecp license platform-id
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -193,7 +194,7 @@ hpecp license platform-id
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Chris Snow.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
     </div>
   </body>
 </html>
