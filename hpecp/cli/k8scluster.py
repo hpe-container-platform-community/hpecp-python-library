@@ -64,6 +64,7 @@ class K8sClusterProxy(base.BaseProxy):
             "statuses",
             "upgrade_cluster",
             "wait_for_status",
+            "run_kubectl_command"
         ]
 
     def __init__(self):
@@ -549,5 +550,31 @@ class K8sClusterProxy(base.BaseProxy):
         print(
             base.get_client().k8s_cluster.import_generic_cluster_with_json(
                 json_content
+            )
+        )
+
+    @base.intercept_exception
+    def run_kubectl_command(
+        self, id, op, yaml
+    ):
+        """Run a kubectl command on k8s cluster.
+    
+        Parameters
+        ------
+        :param id: The k8s cluster ID, integer number in resource path /api/v2/k8scluster/<id>
+        :param op: operation to pass to kubectl, one of 'create', 'delete', 'update'
+        :param yaml: base64 encoded yaml file to operate
+
+        Returns
+        -------
+        TODO
+
+        Raises
+        ------
+        APIException
+        """
+        print(
+            base.get_client().k8s_cluster.run_kubectl_command(
+                id, op, yaml
             )
         )
