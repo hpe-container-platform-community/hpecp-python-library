@@ -718,15 +718,15 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">CaseInsensitiveDict</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">)[</span><span class="s2">&quot;Location&quot;</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="K8sClusterController.run_kubectl_command"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.run_kubectl_command">[docs]</a>    <span class="k">def</span> <span class="nf">run_kubectl_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">op</span><span class="o">=</span><span class="s1">&#39;create&#39;</span><span class="p">,</span> <span class="n">yaml</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="K8sClusterController.run_kubectl_command"><a class="viewcode-back" href="../../hpecp.k8s_cluster.html#hpecp.k8s_cluster.K8sClusterController.run_kubectl_command">[docs]</a>    <span class="k">def</span> <span class="nf">run_kubectl_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">op</span><span class="o">=</span><span class="s2">&quot;apply&quot;</span><span class="p">,</span> <span class="n">yaml</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Run a kubectl command on k8s cluster.</span>
-<span class="sd">    </span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ------</span>
 <span class="sd">        id: str</span>
 <span class="sd">            The k8s cluster ID (i.e., &#39;/api/v2/k8s_cluster/1&#39;)</span>
 <span class="sd">        op: str</span>
-<span class="sd">            op can be either &#39;create&#39; or &#39;delete&#39;</span>
+<span class="sd">            op can be either &#39;create&#39;, &#39;apply&#39; or &#39;delete&#39;</span>
 <span class="sd">        yaml: str</span>
 <span class="sd">            base64 encoding of the yaml file</span>
 
@@ -739,17 +739,24 @@
 <span class="sd">        APIException</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;op&quot;</span><span class="p">:</span> <span class="n">op</span><span class="p">,</span>
-            <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">yaml</span>
-            <span class="p">}</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
+            <span class="nb">id</span><span class="p">,</span> <span class="n">basestring</span>
+        <span class="p">),</span> <span class="s2">&quot;ID must be provided in /api/v2/k8scluster/&lt;int&gt; format&quot;</span>
+
+        <span class="k">assert</span> <span class="n">op</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="s2">&quot;create&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;apply&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;delete&quot;</span><span class="p">,</span>
+        <span class="p">],</span> <span class="s1">&#39;op must be either &quot;create&quot;, &quot;apply&quot;, &quot;delete&quot;&#39;</span>
+
+        <span class="c1"># TODO: assert yaml is a valid base64 encoded string of a yaml</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;op&quot;</span><span class="p">:</span> <span class="n">op</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">yaml</span><span class="p">}</span>
 
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_request</span><span class="p">(</span>
             <span class="n">url</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">/kubectl&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span>
             <span class="n">http_method</span><span class="o">=</span><span class="s2">&quot;post&quot;</span><span class="p">,</span>
-            <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-                <span class="s2">&quot;K8sClusterController/&quot;</span> <span class="s2">&quot;run_kubectl_command&quot;</span>
-            <span class="p">),</span>
+            <span class="n">description</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;K8sClusterController/&quot;</span> <span class="s2">&quot;run_kubectl_command&quot;</span><span class="p">),</span>
             <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span></div></div>
