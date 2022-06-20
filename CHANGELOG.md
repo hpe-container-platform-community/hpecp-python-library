@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.22.12 (2022-06-20)
+### Fix
+* **cli:** Bump minor release ([`a54a076`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/a54a07622152be28fee14faac0f2b496668a0494))
+
 ## v0.22.11 (2022-06-20)
 ### Fix
 * **cli:** Add run-kubernetes-command ([`44b0a07`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/44b0a07a17f2f0c1550c4b2b2f4738948bf3a94a))
