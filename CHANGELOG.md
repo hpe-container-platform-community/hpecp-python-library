@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.22.11 (2022-06-20)
+### Fix
+* **cli:** Add run-kubernetes-command ([`44b0a07`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/44b0a07a17f2f0c1550c4b2b2f4738948bf3a94a))
+
 ## v0.22.10 (2022-03-14)
 ### Fix
 * **gateway:** Issue with params ([`e0b14f0`](https://github.com/hpe-container-platform-community/hpecp-python-library/commit/e0b14f06b8e2c1353ce76ad4b48ea89d9f2af038))
