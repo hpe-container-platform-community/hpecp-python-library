@@ -671,3 +671,39 @@ class K8sClusterController(AbstractWaitableResourceController):
             data=json,
         )
         return CaseInsensitiveDict(response.headers)["Location"]
+
+    def run_kubectl_command(self, id, op='create', yaml=''):
+        """Run a kubectl command on k8s cluster.
+    
+        Parameters
+        ------
+        id: str
+            The k8s cluster ID (ID = 1 or 2 etc, not the base path as /api/v2/k8s_cluster/1)
+        op: str
+            op can be one of create,delete,update
+        yaml: str
+            base64 encoding of the yaml file
+
+        Returns
+        -------
+        TODO
+
+        Raises
+        ------
+        APIException
+        """
+
+        data = {
+            "op": op,
+            "data": yaml
+            }
+
+        response = self.client._request(
+            url="/api/v2/k8scluster/{id}/kubectl",
+            http_method="post",
+            description=(
+                "K8sClusterController/" "run_kubectl_command"
+            ),
+            data=json,
+        )
+        return response.json()
