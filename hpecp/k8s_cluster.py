@@ -678,9 +678,9 @@ class K8sClusterController(AbstractWaitableResourceController):
         Parameters
         ------
         id: str
-            The k8s cluster ID (ID = 1 or 2 etc, not the base path as /api/v2/k8s_cluster/1)
+            The k8s cluster ID (i.e., '/api/v2/k8s_cluster/1')
         op: str
-            op can be one of create,delete,update
+            op can be either 'create' or 'delete'
         yaml: str
             base64 encoding of the yaml file
 
@@ -699,11 +699,11 @@ class K8sClusterController(AbstractWaitableResourceController):
             }
 
         response = self.client._request(
-            url="/api/v2/k8scluster/{id}/kubectl",
+            url="{}/kubectl".format(id),
             http_method="post",
             description=(
                 "K8sClusterController/" "run_kubectl_command"
             ),
-            data=json,
+            data=data,
         )
-        return response.json()
+        return response.text
