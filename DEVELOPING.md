@@ -143,16 +143,11 @@ black hpecp
 
 ### RELEASING
 
- - Not applicable while pre-alpha.
+ - Releasing is done using semantic releases.  
+ - The commit message will determine the release numbering, e.g.
+   - `fix(sometext): fix message` - this will call a minor jump e.g. X.Y.Z to X.Y.Z+1
+   - `feat(sometext): feature message` - this will call a major jump e.g. X.Y.Z to X.Y+1.Z
 
-```
-vi setup.py # increment version
-git add ...
-git commit -m '...'
-git tag 0.0.9  -m "Add pypi python versions"
-git push origin 0.0.9 
-python setup.py sdist upload -r pypi
-```
 
 ### TROUBLESHOOTING
 
