@@ -672,15 +672,15 @@ class K8sClusterController(AbstractWaitableResourceController):
         )
         return CaseInsensitiveDict(response.headers)["Location"]
 
-    def run_kubectl_command(self, id, op='create', yaml=''):
+    def run_kubectl_command(self, id, op="apply", yaml=""):
         """Run a kubectl command on k8s cluster.
-    
+
         Parameters
         ------
         id: str
             The k8s cluster ID (i.e., '/api/v2/k8s_cluster/1')
         op: str
-            op can be either 'create' or 'delete'
+            op can be either 'create', 'apply' or 'delete'
         yaml: str
             base64 encoding of the yaml file
 
@@ -693,17 +693,24 @@ class K8sClusterController(AbstractWaitableResourceController):
         APIException
         """
 
-        data = {
-            "op": op,
-            "data": yaml
-            }
+        assert isinstance(
+            id, basestring
+        ), "ID must be provided in /api/v2/k8scluster/<int> format"
+
+        assert op in [
+            "create",
+            "apply",
+            "delete",
+        ], 'op must be either "create", "apply", "delete"'
+
+        # TODO: assert yaml is a valid base64 encoded string of a yaml
+
+        data = {"op": op, "data": yaml}
 
         response = self.client._request(
             url="{}/kubectl".format(id),
             http_method="post",
-            description=(
-                "K8sClusterController/" "run_kubectl_command"
-            ),
+            description=("K8sClusterController/" "run_kubectl_command"),
             data=data,
         )
         return response.text

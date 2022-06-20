@@ -64,7 +64,7 @@ class K8sClusterProxy(base.BaseProxy):
             "statuses",
             "upgrade_cluster",
             "wait_for_status",
-            "run_kubectl_command"
+            "run_kubectl_command",
         ]
 
     def __init__(self):
@@ -321,7 +321,7 @@ class K8sClusterProxy(base.BaseProxy):
                 print(
                     "'k8s_version' parameter must be quoted, e.g. \\\"1.20.11\\\" or \"'1.20.11'\"",
                     file=sys.stderr,
-                    )
+                )
                 sys.exit(1)
             print(
                 base.get_client().k8s_cluster.get_available_addons(
@@ -554,15 +554,13 @@ class K8sClusterProxy(base.BaseProxy):
         )
 
     @base.intercept_exception
-    def run_kubectl_command(
-        self, id, op, yaml
-    ):
+    def run_kubectl_command(self, id, op, yaml):
         """Run a kubectl command on k8s cluster.
-    
+
         Parameters
         ------
         :param id: The k8s cluster ID, as full resource path </api/v2/k8scluster/1>
-        :param op: operation to pass to kubectl, either 'create' or 'delete'
+        :param op: operation to pass to kubectl, either 'create', 'apply' or 'delete'
         :param yaml: base64 encoded yaml file to operate
 
         Returns
@@ -573,8 +571,4 @@ class K8sClusterProxy(base.BaseProxy):
         ------
         APIException
         """
-        print(
-            base.get_client().k8s_cluster.run_kubectl_command(
-                id, op, yaml
-            )
-        )
+        print(base.get_client().k8s_cluster.run_kubectl_command(id, op, yaml))

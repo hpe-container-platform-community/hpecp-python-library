@@ -55,7 +55,7 @@ def get_profile():
     """Retrieve the profile - if supplied."""
     profile = os.getenv("PROFILE", default="default")
     _log.debug(
-        "PROFILE envirionment variable exists with value '{}'".format(profile)
+        "PROFILE environment variable exists with value '{}'".format(profile)
     )
     return profile
 
